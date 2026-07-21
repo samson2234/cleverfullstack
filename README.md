@@ -24,7 +24,7 @@ Open `index.html` in a browser — no build step required.
 
 ## Deployment
 
-Push to `main` branch to trigger automatic deployment via GitHub Pages.
+Connect the repo to [Vercel](https://vercel.com) for automatic deployments on every push.
 
 ## License
 
