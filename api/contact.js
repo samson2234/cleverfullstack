@@ -1,4 +1,4 @@
-export const config = { runtime: 'nodejs18.x' };
+export const config = { runtime: 'nodejs' };
 
 // api/contact.js — Contact Form Handler with Database + Email
 //
