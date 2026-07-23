@@ -16,6 +16,34 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  /* Cookie consent banner */
+  var cookieKey = 'cleverstack_cookie_consent';
+  if (!localStorage.getItem(cookieKey)) {
+    var banner = document.createElement('div');
+    banner.className = 'cookie-banner';
+    banner.setAttribute('role', 'dialog');
+    banner.setAttribute('aria-label', 'Cookie consent');
+    banner.innerHTML =
+      '<p>We use cookies to improve your experience and analyze site traffic. ' +
+      'By continuing, you agree to our use of cookies. ' +
+      'Read our <a href="privacy.html">Privacy Policy</a> for details.</p>' +
+      '<div class="cookie-actions">' +
+        '<button class="btn btn-accept" data-consent="accepted">Accept</button>' +
+        '<button class="btn btn-reject" data-consent="rejected">Reject</button>' +
+      '</div>';
+    document.body.appendChild(banner);
+
+    banner.querySelectorAll('button[data-consent]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        localStorage.setItem(cookieKey, btn.getAttribute('data-consent'));
+        banner.classList.remove('show');
+        setTimeout(function () { banner.remove(); }, 400);
+      });
+    });
+
+    setTimeout(function () { banner.classList.add('show'); }, 1200);
+  }
+
   /* Combined IntersectionObserver for reveal + stagger (single observer = better perf) */
   if ('IntersectionObserver' in window) {
     var revealIo = new IntersectionObserver(function (entries) {
@@ -173,20 +201,71 @@ document.addEventListener('DOMContentLoaded', function () {
     }, { passive: true });
   }
 
-  /* Contact form — front-end only demo handling */
+  /* Contact form — real submission via Vercel API */
   var form = document.querySelector('.contact-form');
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var btn = form.querySelector('button[type="submit"]');
-      var original = btn.textContent;
-      btn.textContent = 'Message sent \u2713';
+      var status = form.querySelector('.form-status');
+      var originalText = btn.innerHTML;
+
+      btn.innerHTML = 'Sending\u2026';
       btn.disabled = true;
-      form.reset();
-      setTimeout(function () {
-        btn.textContent = original;
-        btn.disabled = false;
-      }, 2800);
+      btn.style.opacity = '0.7';
+
+      var formData = {
+        name: form.querySelector('[name="name"]').value,
+        email: form.querySelector('[name="email"]').value,
+        phone: form.querySelector('[name="phone"]').value,
+        message: form.querySelector('[name="message"]').value
+      };
+
+      fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data.success) {
+          btn.innerHTML = 'Message Sent \u2713';
+          btn.style.background = 'var(--success, #10B981)';
+          btn.style.boxShadow = '0 0 20px rgba(16,185,129,0.3)';
+          if (status) {
+            status.textContent = data.message || 'Thank you! We will respond within 24 hours.';
+            status.style.color = 'var(--success, #10B981)';
+            status.style.display = 'block';
+          }
+          form.reset();
+          setTimeout(function () {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.background = '';
+            btn.style.boxShadow = '';
+            if (status) status.style.display = 'none';
+          }, 4000);
+        } else {
+          throw new Error(data.error || 'Something went wrong');
+        }
+      })
+      .catch(function (err) {
+        btn.innerHTML = 'Failed \u2717';
+        btn.style.background = 'var(--error, #EF4444)';
+        if (status) {
+          status.textContent = err.message || 'Something went wrong. Please email us at cleverdigitals70@gmail.com';
+          status.style.color = 'var(--error, #EF4444)';
+          status.style.display = 'block';
+        }
+        setTimeout(function () {
+          btn.innerHTML = originalText;
+          btn.disabled = false;
+          btn.style.opacity = '1';
+          btn.style.background = '';
+          if (status) status.style.display = 'none';
+        }, 4000);
+      });
     });
   }
 

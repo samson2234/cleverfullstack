@@ -1,0 +1,25 @@
+{
+  "name": "cleverstack",
+  "version": "1.0.0",
+  "description": "A static marketing website for CleverStack, a full-stack development studio based in Ibadan, Nigeria. Built for international ad campaigns — this site must convert visitors into booked calls and paying clients across borders.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samson2234/cleverfullstack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/samson2234/cleverfullstack/issues"
+  },
+  "homepage": "https://github.com/samson2234/cleverfullstack#readme",
+  "dependencies": {
+    "@libsql/client": "^0.17.4",
+    "resend": "^6.18.0"
+  }
+}

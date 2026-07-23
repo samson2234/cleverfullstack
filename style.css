@@ -677,6 +677,8 @@ section{ position:relative; }
   outline:none; border-color:var(--indigo); box-shadow:0 0 0 3px rgba(79,70,229,.14);
 }
 .form-field textarea{ resize:vertical; min-height:130px; }
+.form-status{ transition:opacity .3s ease; }
+.form-status:empty{ display:none; }
 .contact-info-item{ display:flex; gap:16px; padding:18px 0; border-bottom:1px solid var(--border-light); }
 .contact-info-item .ic{ width:40px;height:40px;border-radius:10px; background:rgba(0,194,168,.14); color:var(--teal); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .contact-info-item b{ display:block; font-size:14.5px; margin-bottom:2px; }
@@ -747,6 +749,38 @@ section{ position:relative; }
 /* reveal-on-scroll */
 .reveal{ opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease; will-change:opacity, transform; }
 .reveal.in{ opacity:1; transform:translateY(0); }
+
+/* --- cookie consent banner --- */
+.cookie-banner{
+  position:fixed; bottom:0; left:0; right:0; z-index:2000;
+  background:var(--ink);
+  border-top:1px solid var(--border-light);
+  padding:20px 24px;
+  display:flex; align-items:center; justify-content:center; gap:24px; flex-wrap:wrap;
+  transform:translateY(100%);
+  transition:transform .4s ease;
+  box-shadow:0 -8px 30px rgba(0,0,0,.2);
+}
+.cookie-banner.show{ transform:translateY(0); }
+.cookie-banner p{
+  font-size:14px; color:var(--text-light-muted); max-width:600px; margin:0;
+  line-height:1.5;
+}
+.cookie-banner p a{ color:var(--teal); text-decoration:underline; }
+.cookie-banner .cookie-actions{ display:flex; gap:10px; flex-shrink:0; }
+.cookie-banner .btn{
+  padding:10px 22px; font-size:13px;
+}
+.cookie-banner .btn-accept{ background:var(--teal); color:var(--ink); border-color:var(--teal); }
+.cookie-banner .btn-accept:hover{ background:var(--teal-dark); border-color:var(--teal-dark); color:var(--ink); }
+.cookie-banner .btn-reject{
+  background:transparent; color:var(--text-light-muted);
+  border-color:rgba(255,255,255,.2);
+}
+.cookie-banner .btn-reject:hover{ border-color:var(--text-light); color:#fff; }
+@media(max-width:640px){
+  .cookie-banner{ flex-direction:column; text-align:center; padding:20px 16px; gap:16px; }
+}
 
 /* stagger children */
 .stagger > *{ opacity:0; transform:translateY(20px); transition:opacity .5s ease, transform .5s ease; }
