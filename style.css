@@ -795,3 +795,46 @@ section{ position:relative; }
 @media (prefers-reduced-motion: reduce){
   *{ animation-duration:.001ms !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
 }
+
+/* WhatsApp floating button */
+.wa-float{
+  position:fixed; bottom:24px; right:24px; z-index:1500;
+  width:60px; height:60px; border-radius:50%;
+  background:#25D366; color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 24px rgba(37,211,102,.4);
+  transition:transform .2s, box-shadow .2s;
+  text-decoration:none;
+}
+.wa-float:hover{ transform:scale(1.1); box-shadow:0 6px 32px rgba(37,211,102,.55); }
+.wa-float svg{ width:32px; height:32px; fill:#fff; }
+.wa-float .wa-tooltip{
+  position:absolute; right:72px; top:50%; transform:translateY(-50%);
+  background:var(--ink); color:#fff; padding:8px 14px; border-radius:8px;
+  font-size:13px; white-space:nowrap; opacity:0; pointer-events:none;
+  transition:opacity .2s;
+}
+.wa-float:hover .wa-tooltip{ opacity:1; }
+@media(max-width:640px){
+  .wa-float{ bottom:16px; right:16px; width:54px; height:54px; }
+  .wa-float svg{ width:28px; height:28px; }
+  .wa-float .wa-tooltip{ display:none; }
+}
+
+/* WhatsApp inline button (hero/contact) */
+.btn-wa{
+  display:inline-flex; align-items:center; gap:8px;
+  background:#25D366; color:#fff; border:none;
+  padding:14px 28px; border-radius:var(--radius-sm);
+  font-size:1rem; font-weight:600; cursor:pointer;
+  font-family:var(--font-body); text-decoration:none;
+  transition:transform .15s, box-shadow .15s;
+}
+.btn-wa:hover{ transform:translateY(-2px); box-shadow:0 6px 24px rgba(37,211,102,.35); color:#fff; }
+.btn-wa svg{ width:20px; height:20px; fill:#fff; flex-shrink:0; }
+
+/* Calendly embed */
+.calendly-inline-widget{ min-height:620px; }
+.calendly-section{ background:var(--paper-3); border-radius:var(--radius); padding:40px; margin-top:32px; }
+.calendly-section h3{ font-size:1.3rem; margin-bottom:8px; }
+.calendly-section p{ color:var(--text-muted); margin-bottom:20px; }
