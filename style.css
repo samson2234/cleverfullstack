@@ -350,16 +350,13 @@ section{ position:relative; }
 .stack-visual .stack-caption .cursor{ display:inline-block; width:7px; height:14px; background:var(--teal); margin-left:2px; animation:blink 1s steps(1) infinite; vertical-align:middle; }
 
 /* browser-frame mockup (signature imagery device) */
-.hero-visual{ position:relative; margin-bottom:40px; }
-.hero-badge{
-  display:inline-flex; align-items:center; gap:8px;
-  background:var(--ink); color:#fff;
-  padding:10px 20px; border-radius:100px;
-  font-size:13px; font-weight:600;
-  margin-top:20px; box-shadow:var(--shadow-sm);
+.hero-visual{ position:relative; }
+.hero-visual .browser-frame{ position:relative; z-index:1; }
+.hero-floater{
+  position:absolute; right:-20px; bottom:-30px; width:55%;
+  z-index:2;
 }
-.hero-badge .badge-icon{ font-size:16px; }
-.hero-badge .badge-text{ color:var(--text-light); }
+@media(max-width:960px){ .hero-floater{ position:static; width:100%; margin-top:20px; } }
 .browser-frame{
   background:var(--paper-2);
   border-radius:16px;
