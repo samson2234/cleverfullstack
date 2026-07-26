@@ -350,14 +350,8 @@ section{ position:relative; }
 .stack-visual .stack-caption .cursor{ display:inline-block; width:7px; height:14px; background:var(--teal); margin-left:2px; animation:blink 1s steps(1) infinite; vertical-align:middle; }
 
 /* browser-frame mockup (signature imagery device) */
-.hero-visual{ margin-bottom:40px; }
-.hero-visual-row{
-  display:grid; grid-template-columns:1.1fr .9fr; gap:20px; align-items:start;
-}
-@media(max-width:960px){ .hero-visual-row{ grid-template-columns:1fr; } }
-.hero-floater{
-  position:static; width:100%;
-}
+.hero-visual{ display:flex; align-items:center; justify-content:center; }
+.hero-terminal{ width:100%; max-width:480px; padding:32px; }
 .browser-frame{
   background:var(--paper-2);
   border-radius:16px;
