@@ -8,9 +8,15 @@
   --paper-2:    #FFFFFF;
   --paper-3:    #ECEEF7;
   --indigo:     #4F46E5;
+  --indigo-dark:#3730A3;
   --indigo-light:#7C74F0;
   --teal:       #00C2A8;
+  --teal-dark:  #00A68E;
+  --teal-light: #33D4BC;
   --coral:      #FF6B4A;
+  --success:    #10B981;
+  --warning:    #F59E0B;
+  --error:      #EF4444;
   --text-dark:  #10142B;
   --text-muted: #5B6079;
   --text-light: #C7CBE8;
