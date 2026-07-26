@@ -351,6 +351,15 @@ section{ position:relative; }
 
 /* browser-frame mockup (signature imagery device) */
 .hero-visual{ position:relative; margin-bottom:40px; }
+.hero-badge{
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--ink); color:#fff;
+  padding:10px 20px; border-radius:100px;
+  font-size:13px; font-weight:600;
+  margin-top:20px; box-shadow:var(--shadow-sm);
+}
+.hero-badge .badge-icon{ font-size:16px; }
+.hero-badge .badge-text{ color:var(--text-light); }
 .browser-frame{
   background:var(--paper-2);
   border-radius:16px;
