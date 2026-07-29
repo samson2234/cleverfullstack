@@ -504,7 +504,7 @@ section{ position:relative; }
 .filter-btn:hover{ border-color:var(--indigo); color:var(--indigo); }
 .filter-btn.active{ background:var(--indigo); color:#fff; border-color:var(--indigo); }
 
-.project-card{ border-radius:var(--radius); overflow:hidden; background:var(--paper-2); border:1px solid var(--border); transition:transform .3s ease, box-shadow .3s ease, opacity .3s ease; }
+.project-card{ border-radius:var(--radius); overflow:hidden; background:var(--paper-2); border:1px solid var(--border); transition:transform .3s ease, box-shadow .3s ease, opacity .3s ease; display:block; text-decoration:none; color:inherit; }
 .project-card:hover{ transform:translateY(-6px); box-shadow:var(--shadow-sm); }
 .project-card .thumb{ position:relative; display:flex; flex-direction:column; }
 .project-card .thumb .thumb-chrome{ flex-shrink:0; }
