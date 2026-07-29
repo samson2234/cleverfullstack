@@ -704,11 +704,19 @@ section{ position:relative; }
 .skill-pill{ font-family:var(--font-mono); font-size:12.5px; font-weight:600; padding:8px 16px; border-radius:100px; border:1px solid var(--border); background:var(--paper-2); }
 
 /* ---------- PRICING CARDS ---------- */
+.pricing-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+}
+@media(max-width:960px){ .pricing-grid{ grid-template-columns:repeat(2,1fr); } }
+@media(max-width:640px){ .pricing-grid{ grid-template-columns:1fr; } }
+
 .pricing-card{
   background:var(--paper-2);
   border:1px solid var(--border);
   border-radius:var(--radius);
-  padding:36px 32px;
+  padding:36px 28px;
   text-align:center;
   transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
   position:relative;
@@ -720,17 +728,104 @@ section{ position:relative; }
   box-shadow:0 0 0 3px rgba(79,70,229,.08), var(--shadow-sm);
 }
 .pricing-card.featured::before{
-  content:"Popular"; position:absolute; top:16px; right:-28px;
+  content:"Popular"; position:absolute; top:18px; right:-28px;
   background:var(--indigo); color:#fff; font-family:var(--font-mono);
   font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;
   padding:4px 36px; transform:rotate(45deg);
 }
-.pricing-card .price{ font-family:var(--font-display); font-size:44px; font-weight:700; color:var(--text-dark); margin:10px 0 6px; }
-.pricing-card .price span{ font-size:18px; color:var(--text-muted); font-weight:400; }
-.pricing-card .desc{ color:var(--text-muted); font-size:14px; margin-bottom:24px; }
-.pricing-card ul{ text-align:left; margin-bottom:28px; }
-.pricing-card ul li{ padding:8px 0; font-size:14px; color:var(--text-muted); display:flex; align-items:center; gap:10px; }
-.pricing-card ul li::before{ content:"✓"; color:var(--teal); font-weight:700; }
+.pricing-card .price{ margin:8px 0 4px; display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap; }
+.pricing-card .price .old-price{ font-family:var(--font-display); font-size:28px; font-weight:600; color:var(--text-light-muted); text-decoration:line-through; opacity:.6; }
+.pricing-card .price .new-price{ font-family:var(--font-display); font-size:32px; font-weight:700; color:var(--teal); }
+.pricing-card .badge-save{
+  display:inline-block;
+  font-family:var(--font-mono);
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.06em;
+  padding:4px 12px;
+  border-radius:100px;
+  background:rgba(0,194,168,.15);
+  color:var(--teal);
+  margin-bottom:12px;
+}
+.pricing-card .desc{ color:var(--text-light-muted); font-size:13.5px; margin-bottom:22px; line-height:1.5; }
+.pricing-card ul{ text-align:left; margin-bottom:24px; }
+.pricing-card ul li{ padding:7px 0; font-size:13.5px; color:var(--text-light-muted); display:flex; align-items:center; gap:10px; line-height:1.4; }
+.pricing-card ul li::before{ content:"✓"; color:var(--teal); font-weight:700; flex-shrink:0; }
+.pricing-card h3{ font-size:19px; }
+
+/* ---------- PRICE CALCULATOR ---------- */
+.calc-grid{
+  display:grid;
+  grid-template-columns:1.3fr 1fr;
+  gap:36px;
+  align-items:start;
+}
+@media(max-width:860px){ .calc-grid{ grid-template-columns:1fr; } }
+.calc-panel h3{ font-size:17px; margin-bottom:14px; }
+.calc-options{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+@media(max-width:500px){ .calc-options{ grid-template-columns:1fr; } }
+.calc-opt{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 16px;
+  border-radius:10px;
+  border:2px solid var(--border);
+  background:var(--paper-2);
+  cursor:pointer;
+  transition:border-color .2s, background .2s;
+}
+.calc-opt:hover{ border-color:var(--indigo-light); }
+.calc-opt.active{ border-color:var(--indigo); background:rgba(79,70,229,.06); }
+.calc-opt .opt-title{ font-size:14px; font-weight:600; color:var(--text-dark); }
+.calc-opt .opt-price{ font-family:var(--font-display); font-size:16px; font-weight:700; color:var(--indigo); }
+.calc-features{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+@media(max-width:500px){ .calc-features{ grid-template-columns:1fr; } }
+.calc-feat{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 12px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--paper-2);
+  cursor:pointer;
+  font-size:13.5px;
+  color:var(--text-dark);
+  font-weight:500;
+  transition:border-color .2s, background .2s;
+  user-select:none;
+}
+.calc-feat:hover{ border-color:var(--indigo-light); }
+.calc-feat:has(input:checked){ border-color:var(--indigo); background:rgba(79,70,229,.06); }
+.calc-feat input{ width:16px; height:16px; accent-color:var(--indigo); flex-shrink:0; }
+.calc-feat small{ color:var(--text-muted); font-weight:400; margin-left:4px; }
+.calc-summary{
+  position:sticky;
+  top:100px;
+}
+.calc-summary-inner{
+  background:var(--ink);
+  border-radius:var(--radius);
+  padding:36px 30px;
+  border:1px solid var(--border-light);
+}
+.calc-summary-inner h3{ color:#fff; font-size:19px; margin-bottom:20px; }
+.calc-total-wrap{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--border-light);
+}
+.calc-total-label{ font-size:14px; color:var(--text-light-muted); }
+.calc-total{ font-family:var(--font-display); font-size:36px; font-weight:700; color:var(--teal); }
+.calc-breakdown{ margin-bottom:20px; }
+.calc-line{ display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13.5px; color:var(--text-light-muted); }
+.calc-line span:last-child{ color:var(--text-light); font-weight:600; }
+.calc-note{ font-size:13px; color:var(--text-light-muted); margin:14px 0 0; line-height:1.5; }
 
 /* contact page */
 .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; }
@@ -902,11 +997,12 @@ section{ position:relative; }
 .btn-wa:hover{ transform:translateY(-2px); box-shadow:0 6px 24px rgba(37,211,102,.35); color:#fff; }
 .btn-wa svg{ width:20px; height:20px; fill:#fff; flex-shrink:0; }
 
-/* Calendly embed */
-.calendly-inline-widget{ min-height:620px; }
-.calendly-section{ background:var(--paper-3); border-radius:var(--radius); padding:40px; margin-top:32px; }
-.calendly-section h3{ font-size:1.3rem; margin-bottom:8px; }
-.calendly-section p{ color:var(--text-muted); margin-bottom:20px; }
+/* Calendly section */
+.calendly-section{
+  background:var(--paper-3);
+  border-radius:var(--radius);
+  padding:44px 36px;
+}
 
 /* Sticky mobile CTA bar */
 .mobile-cta-bar{

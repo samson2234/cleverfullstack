@@ -295,6 +295,61 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  /* Price calculator */
+  var calc = document.getElementById('priceCalculator');
+  if (calc) {
+    var baseOptions = calc.querySelectorAll('.calc-opt');
+    var featureChecks = calc.querySelectorAll('#calcFeatures input[type="checkbox"]');
+    var calcTotal = document.getElementById('calcTotal');
+    var calcBreakdown = document.getElementById('calcBreakdown');
+
+    function formatPrice(n) {
+      return '$' + n.toLocaleString('en-US');
+    }
+
+    function updateCalculator() {
+      var activeOpt = calc.querySelector('.calc-opt.active');
+      var basePrice = activeOpt ? parseInt(activeOpt.getAttribute('data-price')) : 500;
+      var baseName = activeOpt ? activeOpt.querySelector('.opt-title').textContent : 'Starter Website';
+
+      var featuresTotal = 0;
+      var featuresHtml = '';
+      featureChecks.forEach(function (cb) {
+        if (cb.checked) {
+          var p = parseInt(cb.getAttribute('data-price'));
+          featuresTotal += p;
+          var label = cb.parentElement.textContent.trim().replace(/\s*\+\$[\d,]+/, '').trim();
+          featuresHtml += '<div class="calc-line"><span>' + label + '</span><span>' + formatPrice(p) + '</span></div>';
+        }
+      });
+
+      var total = basePrice + featuresTotal;
+
+      var breakdownHtml = '<div class="calc-line"><span>Base: ' + baseName + '</span><span>' + formatPrice(basePrice) + '</span></div>';
+      if (featuresHtml) {
+        breakdownHtml += featuresHtml;
+      }
+      calcBreakdown.innerHTML = breakdownHtml;
+      calcTotal.textContent = formatPrice(total);
+    }
+
+    baseOptions.forEach(function (opt) {
+      opt.addEventListener('click', function () {
+        baseOptions.forEach(function (o) { o.classList.remove('active'); });
+        opt.classList.add('active');
+        var radio = opt.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+        updateCalculator();
+      });
+    });
+
+    featureChecks.forEach(function (cb) {
+      cb.addEventListener('change', updateCalculator);
+    });
+
+    updateCalculator();
+  }
+
   /* Smooth parallax on hero gradient orbs — passive + RAF + throttled */
   var orbs = document.querySelectorAll('.mesh-bg .orb');
   var orbTicking = false;

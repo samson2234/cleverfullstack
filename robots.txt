@@ -1,0 +1,7 @@
+# CleverStack
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://cleverfullstack.vercel.app/sitemap.xml
