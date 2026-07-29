@@ -530,29 +530,91 @@ section{ position:relative; }
 .project-card[data-cat]{ transition:opacity .3s ease, transform .3s ease; }
 .project-card.hide{ display:none; }
 
-/* testimonials */
-.testimonial-card{ padding:34px 30px; position:relative; overflow:hidden; }
-.testimonial-card::before{
-  content:"\201C"; position:absolute; top:10px; left:20px;
-  font-size:80px; line-height:1; color:var(--indigo);
-  opacity:0.1; font-family:var(--font-display);
+/* testimonials carousel */
+.testimonial-carousel{
+  position:relative;
+  overflow:hidden;
 }
-.testimonial-card .stars{ color:var(--teal); font-size:14px; letter-spacing:2px; margin-bottom:16px; }
-.testimonial-card blockquote{ font-size:16px; margin:0 0 22px; color:var(--text-dark); position:relative; z-index:1; }
-.section-dark .testimonial-card blockquote{ color:#fff; }
+.testimonial-track{
+  display:flex;
+  gap:20px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  scroll-behavior:smooth;
+  padding:4px 0 8px;
+}
+.testimonial-track::-webkit-scrollbar{ display:none; }
+.testimonial-carousel .testi-prev,
+.testimonial-carousel .testi-next{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:44px; height:44px; border-radius:50%;
+  background:rgba(14,19,48,.7); color:#fff;
+  border:1px solid rgba(255,255,255,.15);
+  font-size:24px; cursor:pointer; z-index:10;
+  display:flex; align-items:center; justify-content:center;
+  backdrop-filter:blur(8px);
+  transition:background .2s, transform .2s;
+  line-height:1;
+}
+.testimonial-carousel .testi-prev:hover,
+.testimonial-carousel .testi-next:hover{
+  background:var(--indigo);
+  transform:translateY(-50%) scale(1.08);
+}
+.testimonial-carousel .testi-prev{ left:8px; }
+.testimonial-carousel .testi-next{ right:8px; }
+@media(max-width:640px){
+  .testimonial-carousel .testi-prev,
+  .testimonial-carousel .testi-next{ display:none; }
+}
+
+.testimonial-card{
+  flex:0 0 calc(33.333% - 14px);
+  min-width:280px;
+  scroll-snap-align:start;
+  padding:30px 26px;
+  border-radius:var(--radius);
+  background:linear-gradient(135deg,rgba(23,29,69,.65) 0%,rgba(14,19,48,.8) 100%);
+  border:1px solid rgba(255,255,255,.08);
+  position:relative;
+  overflow:hidden;
+  transition:border-color .3s, transform .3s;
+}
+.testimonial-card:hover{
+  border-color:var(--accent,var(--indigo-light));
+  transform:translateY(-3px);
+}
+.testimonial-card::before{
+  content:'';
+  position:absolute; top:-30px; right:-30px;
+  width:120px; height:120px;
+  background:radial-gradient(circle,var(--accent,var(--indigo-light)),transparent 70%);
+  opacity:.12;
+  border-radius:50%;
+  pointer-events:none;
+}
+.testimonial-card::after{
+  content:'';
+  position:absolute; bottom:-20px; left:-20px;
+  width:80px; height:80px;
+  background:radial-gradient(circle,var(--accent,var(--teal)),transparent 70%);
+  opacity:.08;
+  border-radius:50%;
+  pointer-events:none;
+}
+.testimonial-card .stars{ color:var(--accent,var(--teal)); font-size:14px; letter-spacing:2px; margin-bottom:14px; }
+.testimonial-card blockquote{ font-size:15px; margin:0 0 20px; color:var(--text-light); position:relative; z-index:1; line-height:1.6; }
 .testimonial-card .person{ display:flex; align-items:center; gap:12px; }
-.testimonial-card .avatar{ width:42px;height:42px;border-radius:50%; overflow:hidden; flex-shrink:0; }
+.testimonial-card .avatar{ width:40px;height:40px;border-radius:50%; overflow:hidden; flex-shrink:0; border:2px solid var(--accent,var(--indigo-light)); }
 .testimonial-card .avatar img{ width:100%; height:100%; object-fit:cover; }
-.testimonial-card .who b{ display:block; font-size:14.5px; }
-.testimonial-card .who span{ font-size:13px; color:var(--text-muted); }
-.section-dark .testimonial-card .who span{ color:var(--text-light-muted); }
+.testimonial-card .who b{ display:block; font-size:14px; color:#fff; }
+.testimonial-card .who span{ font-size:12.5px; color:var(--text-light-muted); }
 
 /* testimonial carousel dots */
-.testimonial-dots{ display:flex; gap:10px; justify-content:center; margin-top:32px; }
-.testimonial-dot{ width:10px; height:10px; border-radius:50%; background:var(--border); cursor:pointer; transition:all .3s ease; border:none; }
-.testimonial-dot.active{ background:var(--indigo); width:28px; border-radius:100px; }
-.section-dark .testimonial-dot{ background:rgba(255,255,255,.15); }
-.section-dark .testimonial-dot.active{ background:var(--teal); }
+.testimonial-dots{ display:flex; gap:10px; justify-content:center; margin-top:28px; }
+.testimonial-dot{ width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,.15); cursor:pointer; transition:all .3s ease; border:none; padding:0; }
+.testimonial-dot.active{ background:var(--teal); width:28px; border-radius:100px; }
 
 /* process steps */
 .process-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; position:relative; }
@@ -845,3 +907,31 @@ section{ position:relative; }
 .calendly-section{ background:var(--paper-3); border-radius:var(--radius); padding:40px; margin-top:32px; }
 .calendly-section h3{ font-size:1.3rem; margin-bottom:8px; }
 .calendly-section p{ color:var(--text-muted); margin-bottom:20px; }
+
+/* Sticky mobile CTA bar */
+.mobile-cta-bar{
+  display:none;
+  position:fixed; bottom:0; left:0; right:0; z-index:1600;
+  background:rgba(14,19,48,.97); backdrop-filter:blur(12px);
+  padding:10px 16px;
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.mobile-cta-bar .cta-inner{
+  display:flex; gap:10px; align-items:center;
+  max-width:500px; margin:0 auto;
+}
+.mobile-cta-bar .cta-inner a{
+  flex:1; text-align:center; padding:12px; border-radius:8px;
+  font-size:14px; font-weight:600; text-decoration:none;
+  font-family:var(--font-body);
+}
+.mobile-cta-bar .cta-wa{
+  background:#25D366; color:#fff;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+}
+.mobile-cta-bar .cta-wa svg{ width:18px; height:18px; fill:#fff; }
+.mobile-cta-bar .cta-book{ background:var(--indigo); color:#fff; }
+@media(max-width:640px){
+  .mobile-cta-bar{ display:block; }
+  .wa-float{ bottom:80px; }
+}

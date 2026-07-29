@@ -118,32 +118,58 @@ document.addEventListener('DOMContentLoaded', function () {
     statStrips.forEach(function (s) { counterObserver.observe(s); });
   }
 
-  /* Testimonial carousel */
-  var testimonialContainer = document.querySelector('.testimonial-carousel');
+  /* Testimonial carousel - scrollable 3-up */
+  var testimonialTrack = document.getElementById('testimonial-track');
   var testimonialDots = document.querySelector('.testimonial-dots');
-  if (testimonialContainer && testimonialDots) {
-    var cards = testimonialContainer.querySelectorAll('.testimonial-card');
+  var testiPrev = document.querySelector('.testi-prev');
+  var testiNext = document.querySelector('.testi-next');
+  if (testimonialTrack && testimonialDots) {
+    var cards = testimonialTrack.querySelectorAll('.testimonial-card');
     var dots = testimonialDots.querySelectorAll('.testimonial-dot');
-    var current = 0;
+    var cardsPerPage = 3;
+    var totalPages = Math.ceil(cards.length / cardsPerPage);
+    var currentPage = 0;
 
-    function showTestimonial(idx) {
-      cards.forEach(function (c, i) {
-        c.style.display = i === idx ? 'block' : 'none';
-        if (i === idx) { c.classList.add('in'); }
-      });
+    function getCardWidth() {
+      if (cards.length === 0) return 0;
+      var rect = cards[0].getBoundingClientRect();
+      var gap = 20;
+      return rect.width + gap;
+    }
+
+    function scrollToPage(page) {
+      if (page < 0) page = 0;
+      if (page >= totalPages) page = totalPages - 1;
+      currentPage = page;
+      var cardW = getCardWidth();
+      testimonialTrack.scrollTo({ left: cardW * page * cardsPerPage, behavior: 'smooth' });
       dots.forEach(function (d, i) {
-        d.classList.toggle('active', i === idx);
+        d.classList.toggle('active', i === page);
       });
-      current = idx;
+    }
+
+    function updatePageFromScroll() {
+      var cardW = getCardWidth();
+      if (cardW === 0) return;
+      var approx = Math.round(testimonialTrack.scrollLeft / (cardW * cardsPerPage));
+      if (approx !== currentPage && approx >= 0 && approx < totalPages) {
+        currentPage = approx;
+        dots.forEach(function (d, i) {
+          d.classList.toggle('active', i === approx);
+        });
+      }
     }
 
     if (cards.length > 0) {
       dots.forEach(function (dot, i) {
-        dot.addEventListener('click', function () { showTestimonial(i); });
+        dot.addEventListener('click', function () { scrollToPage(i); });
       });
-      showTestimonial(0);
+      testiPrev.addEventListener('click', function () { scrollToPage(currentPage - 1); });
+      testiNext.addEventListener('click', function () { scrollToPage(currentPage + 1); });
+      testimonialTrack.addEventListener('scroll', updatePageFromScroll);
+      scrollToPage(0);
       setInterval(function () {
-        showTestimonial((current + 1) % cards.length);
+        scrollToPage((currentPage + 1) % totalPages);
       }, 5000);
     }
   }
