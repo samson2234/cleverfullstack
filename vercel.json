@@ -2,7 +2,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "functions": {
-    "api/og.jsx": { "memory": 300, "maxDuration": 10 }
+    "api/og.jsx": { "maxDuration": 10 }
   },
   "headers": [
     {
@@ -28,7 +28,6 @@
   ],
   "rewrites": [
     { "source": "/blog", "destination": "/blog/index.html" },
-    { "source": "/blog/", "destination": "/blog/index.html" },
-    { "source": "/blog/:match*", "destination": "/blog/:match*.html" }
+    { "source": "/blog/", "destination": "/blog/index.html" }
   ]
 }
