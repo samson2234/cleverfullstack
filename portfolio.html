@@ -9,13 +9,21 @@
 <meta property="og:description" content="Real projects, real results. See what we've built.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://cleverfullstack.vercel.app/portfolio.html">
-<meta property="og:image" content="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80">
+<meta property="og:image" content="https://cleverfullstack.vercel.app/api/og?title=Portfolio+-+Our+Recent+Projects&amp;type=website">
+<meta property="og:site_name" content="CleverStack">
+<meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Portfolio — Projects by CleverStack">
+<meta name="twitter:description" content="Real projects, real results. See what we've built.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='20' height='20' rx='5' fill='%234F46E5'/><rect y='40' width='20' height='20' rx='5' fill='%2300C2A8'/><rect y='80' width='20' height='20' rx='5' fill='%23FF6B4A'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="canonical" href="https://cleverfullstack.vercel.app/portfolio">
+<link rel="alternate" hreflang="en" href="https://cleverfullstack.vercel.app/portfolio">
+<link rel="alternate" hreflang="fr" href="https://cleverfullstack.vercel.app/portfolio?lang=fr">
+<link rel="alternate" hreflang="x-default" href="https://cleverfullstack.vercel.app/portfolio">
 <link rel="stylesheet" href="style.css">
+<script src="analytics.js" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -38,20 +46,41 @@
   "telephone": "+2349165400534"
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": ["CollectionPage", "ItemList"],
+  "name": "Portfolio — CleverStack",
+  "description": "Websites and apps built for real businesses.",
+  "url": "https://cleverfullstack.vercel.app/portfolio",
+  "mainEntity": { "@id": "https://cleverfullstack.vercel.app/#organization" }
+}
+</script>
 </head>
 <body>
+
+<div class="scroll-progress"></div>
+<div class="page-load-bar"></div>
+
+<div class="page-preloader">
+  <div class="loader-logo"><span class="stackmark"></span>Clever<span class="dot">Stack</span><span class="stackmark"></span></div>
+  <div class="loader-bar"><div class="loader-bar-inner"></div></div>
+</div>
 
 <header class="site-header">
   <div class="container">
     <a href="index.html" class="logo"><span class="stackmark"></span>Clever<span class="dot">Stack</span></a>
     <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="services.html">Services</a>
-      <a href="portfolio.html" class="active">Portfolio</a>
-      <a href="contact.html">Contact</a>
+      <a href="index.html" data-i18n="nav.home">Home</a>
+      <a href="about.html" data-i18n="nav.about">About</a>
+      <a href="services.html" data-i18n="nav.services">Services</a>
+      <a href="portfolio.html" class="active" data-i18n="nav.portfolio">Portfolio</a>
+      <a href="blog/index.html" data-i18n="nav.blog">Blog</a>
+      <a href="contact.html" data-i18n="nav.contact">Contact</a>
     </nav>
     <div class="header-actions">
+      <button class="dark-toggle" aria-label="Switch to dark mode">&#9788;</button>
+      <button class="lang-toggle" aria-label="Switch to French">FR</button>
       <a href="https://wa.me/2349165400534?text=Hi%20CleverStack%2C%20I%27d%20like%20to%20discuss%20a%20project" class="btn btn-wa" target="_blank" rel="noopener" style="padding:10px 16px; font-size:0.85rem;">
         <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:18px; height:18px;"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.058 9.374L1.054 31.25l6.118-1.97C9.72 30.878 12.748 32 16.004 32 24.83 32 32 24.822 32 16S24.83 0 16.004 0zm9.318 22.594c-.39 1.096-1.932 2.006-3.166 2.27-.844.18-1.946.322-5.656-1.216-4.75-1.966-7.806-6.79-8.04-7.104-.226-.314-1.896-2.524-1.896-4.814s1.2-3.414 1.626-3.882c.39-.428.924-.57 1.23-.57.31 0 .62.002.89.016.284.014.664-.106 1.038.79.39.93 1.334 3.244 1.45 3.48.116.236.194.51.04.824-.15.314-.224.51-.448.824-.224.314-.42.558-.636.894-.208.314-.44.646-.186.1.254.664 1.124 1.85 2.41 2.996 1.664 1.476 3.066 1.934 3.526 2.154.39.19.614.158.84-.09.236-.26.99-1.154 1.256-1.554.264-.39.53-.326.89-.196.364.126 2.298 1.086 2.692 1.284.394.198.658.296.754.46.096.164.096.946-.294 2.042z" fill="#fff"/></svg>
       </a>
@@ -65,9 +94,9 @@
 
   <section class="page-hero section-light">
     <div class="container">
-      <div class="eyebrow">Portfolio</div>
-      <h1>Real projects, real results.</h1>
-      <p>A selection of websites and applications we've designed, built, and shipped across web, app, and e-commerce work.</p>
+      <div class="eyebrow" data-i18n="portfolio.page.eyebrow">Portfolio</div>
+      <h1 data-i18n="portfolio.page.h1">Real projects, real results.</h1>
+      <p data-i18n="portfolio.page.sub">A selection of websites and applications we've designed, built, and shipped across web, app, and e-commerce work.</p>
     </div>
   </section>
 
@@ -75,14 +104,14 @@
     <div class="container">
 
       <div class="filter-bar reveal">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="web">Web</button>
-        <button class="filter-btn" data-filter="ecommerce">E-Commerce</button>
+        <button class="filter-btn active" data-filter="all" data-i18n="portfolio.filter.all">All</button>
+        <button class="filter-btn" data-filter="web" data-i18n="portfolio.filter.web">Web</button>
+        <button class="filter-btn" data-filter="ecommerce" data-i18n="portfolio.filter.ecom">E-Commerce</button>
       </div>
 
       <div class="grid grid-3">
 
-        <a href="portfolio-detail.html?id=alexfit" class="project-card reveal" data-cat="web">
+        <a href="portfolio-detail.html?id=alexfit" class="project-card reveal tilt-card" data-cat="web">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_fitness.png" alt="AlexFit Coaching - fitness business website" loading="lazy" decoding="async" width="800" height="600">
@@ -95,7 +124,7 @@
           </div>
         </a>
 
-        <a href="portfolio-detail.html?id=spicesavor" class="project-card reveal" data-cat="web">
+        <a href="portfolio-detail.html?id=spicesavor" class="project-card reveal tilt-card" data-cat="web">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_restaurant.png" alt="Spice & Savor restaurant web app" loading="lazy" decoding="async" width="800" height="600">
@@ -108,7 +137,7 @@
           </div>
         </a>
 
-        <a href="portfolio-detail.html?id=pureenergy" class="project-card reveal" data-cat="web">
+        <a href="portfolio-detail.html?id=pureenergy" class="project-card reveal tilt-card" data-cat="web">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_smoothie.png" alt="Pure Energy smoothie brand landing page" loading="lazy" decoding="async" width="800" height="600">
@@ -121,7 +150,7 @@
           </div>
         </a>
 
-        <a href="portfolio-detail.html?id=sparkleclean" class="project-card reveal" data-cat="web">
+        <a href="portfolio-detail.html?id=sparkleclean" class="project-card reveal tilt-card" data-cat="web">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_cleaning.png" alt="Sparkle Clean cleaning services website" loading="lazy" decoding="async" width="800" height="600">
@@ -134,7 +163,7 @@
           </div>
         </a>
 
-        <a href="portfolio-detail.html?id=affiliateblog" class="project-card reveal" data-cat="web">
+        <a href="portfolio-detail.html?id=affiliateblog" class="project-card reveal tilt-card" data-cat="web">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_affiliate.png" alt="Affiliate marketing blog" loading="lazy" decoding="async" width="800" height="600">
@@ -147,7 +176,7 @@
           </div>
         </a>
 
-        <a href="portfolio-detail.html?id=sonicaudio" class="project-card reveal" data-cat="ecommerce">
+        <a href="portfolio-detail.html?id=sonicaudio" class="project-card reveal tilt-card" data-cat="ecommerce">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_ecom.png" alt="Sonic Audio e-commerce store" loading="lazy" decoding="async" width="800" height="600">
@@ -162,7 +191,7 @@
 
         <!-- +++++ FIVERR PORTFOLIO PROJECTS +++++ -->
 
-        <a href="portfolio-detail.html?id=helenmay" class="project-card reveal" data-cat="web">
+        <a href="portfolio-detail.html?id=helenmay" class="project-card reveal tilt-card" data-cat="web">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto/v1/attachments/project_item/attachment/8fa468843c209829556257b0df792de0-1760582053038/original-6b6db31bb8a95caf756509d0f5d5f062_1_.png" alt="Helen May Coaching – Premium Personal Growth Platform" loading="lazy" decoding="async" width="800" height="600">
@@ -175,7 +204,7 @@
           </div>
         </a>
 
-        <a href="portfolio-detail.html?id=dreamvoyage" class="project-card reveal" data-cat="web">
+        <a href="portfolio-detail.html?id=dreamvoyage" class="project-card reveal tilt-card" data-cat="web">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto/v1/attachments/project_item/attachment/371dbeb4ec017a1351d7cdfd8433fc18-1760579912921/684e2778-df92-4b98-b033-b9ee7990c013_1_.png" alt="Dream Voyage – Premium Travel & Blog Website" loading="lazy" decoding="async" width="800" height="600">
@@ -188,7 +217,7 @@
           </div>
         </a>
 
-        <a href="portfolio-detail.html?id=akkira" class="project-card reveal" data-cat="web">
+        <a href="portfolio-detail.html?id=akkira" class="project-card reveal tilt-card" data-cat="web">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto/v1/attachments/project_item/attachment/86c5ffd30565068d61f56a5c1929fcdc-1782997150271/Modern%20Web%20Template%20Design%20for%20Sleek%20Online%20Presence.jfif" alt="AKKIRA – Creative UX/UI & Web Design Portfolio" loading="lazy" decoding="async" width="800" height="600">
@@ -201,7 +230,7 @@
           </div>
         </a>
 
-        <a href="portfolio-detail.html?id=aiskincare" class="project-card reveal" data-cat="web">
+        <a href="portfolio-detail.html?id=aiskincare" class="project-card reveal tilt-card" data-cat="web">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto/v1/attachments/project_item/attachment/4fbc79f25ade02dd8fbc66b645f30884-1775495277798/original-ca10fc8754650fd1b03637f8a7e098df.png" alt="AI-Powered Skincare Mobile Application" loading="lazy" decoding="async" width="800" height="600">
@@ -214,7 +243,7 @@
           </div>
         </a>
 
-        <a href="portfolio-detail.html?id=fittrack" class="project-card reveal" data-cat="web">
+        <a href="portfolio-detail.html?id=fittrack" class="project-card reveal tilt-card" data-cat="web">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto/v1/attachments/project_item/attachment/80184ef014cbbc3a69c36dd90461e4ee-1775494238132/f337dfae4adcf34c90e6bd5a4ebbf40a.png" alt="Modern Fitness Tracking Mobile App" loading="lazy" decoding="async" width="800" height="600">
@@ -227,7 +256,7 @@
           </div>
         </a>
 
-        <a href="portfolio-detail.html?id=enterprisedash" class="project-card reveal" data-cat="web">
+        <a href="portfolio-detail.html?id=enterprisedash" class="project-card reveal tilt-card" data-cat="web">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="https://fiverr-res.cloudinary.com/image/upload/f_auto,q_auto/v1/attachments/project_item/attachment/15fd9a8374eae963180551bcf74daa11-1782997760936/download.jfif" alt="Enterprise High-Performance Full-Stack Dashboards" loading="lazy" decoding="async" width="800" height="600">
@@ -265,7 +294,7 @@
     <div class="footer-grid">
       <div>
         <a href="index.html" class="logo"><span class="stackmark"></span>Clever<span class="dot">Stack</span></a>
-        <p>A full-stack development studio building fast, scalable websites and web applications for founders and growing businesses.</p>
+        <p data-i18n="footer.desc">A full-stack development studio building fast, scalable websites and web applications for founders and growing businesses.</p>
         <div class="social-row">
           <a href="#" aria-label="Twitter">𝕏</a>
           <a href="#" aria-label="LinkedIn">in</a>
@@ -273,28 +302,29 @@
         </div>
       </div>
       <div class="footer-col">
-        <h4>Quick Links</h4>
+        <h4 data-i18n="footer.quick_links">Quick Links</h4>
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="portfolio.html">Portfolio</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="privacy.html">Privacy Policy</a></li>
-          <li><a href="terms.html">Terms of Service</a></li>
+          <li><a href="index.html" data-i18n="footer.link_home">Home</a></li>
+          <li><a href="about.html" data-i18n="footer.link_about">About</a></li>
+          <li><a href="portfolio.html" data-i18n="footer.link_portfolio">Portfolio</a></li>
+          <li><a href="blog/index.html" data-i18n="footer.link_blog">Blog</a></li>
+          <li><a href="contact.html" data-i18n="footer.link_contact">Contact</a></li>
+          <li><a href="privacy.html" data-i18n="footer.link_privacy">Privacy Policy</a></li>
+          <li><a href="terms.html" data-i18n="footer.link_terms">Terms of Service</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Services</h4>
+        <h4 data-i18n="footer.services">Services</h4>
         <ul>
-          <li><a href="services.html">Web Development</a></li>
-          <li><a href="services.html">Web App Development</a></li>
-          <li><a href="services.html">E-Commerce</a></li>
-          <li><a href="services.html">CMS Development</a></li>
-          <li><a href="services.html">SEO & Marketing</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_web">Web Development</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_app">Web App Development</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_ecom">E-Commerce</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_cms">CMS Development</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_seo">SEO & Marketing</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Contact</h4>
+        <h4 data-i18n="footer.contact_heading">Contact</h4>
         <ul>
           <li><a href="mailto:cleverdigitals70@gmail.com">cleverdigitals70@gmail.com</a></li>
           <li><a href="tel:+2349165400534">+234 916 540 0534</a></li>
@@ -303,8 +333,8 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 CleverStack. All rights reserved.</span>
-      <span>Built with the stack we sell.</span>
+      <span data-i18n="footer.copyright">© 2026 CleverStack. All rights reserved.</span>
+      <span data-i18n="footer.tagline">Built with the stack we sell.</span>
     </div>
   </div>
 </footer>
@@ -312,18 +342,35 @@
 <!-- WhatsApp Floating Button -->
 <a href="https://wa.me/2349165400534?text=Hi%20CleverStack%2C%20I%27d%20like%20to%20discuss%20a%20project" class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
   <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.058 9.374L1.054 31.25l6.118-1.97C9.72 30.878 12.748 32 16.004 32 24.83 32 32 24.822 32 16S24.83 0 16.004 0zm9.318 22.594c-.39 1.096-1.932 2.006-3.166 2.27-.844.18-1.946.322-5.656-1.216-4.75-1.966-7.806-6.79-8.04-7.104-.226-.314-1.896-2.524-1.896-4.814s1.2-3.414 1.626-3.882c.39-.428.924-.57 1.23-.57.31 0 .62.002.89.016.284.014.664-.106 1.038.79.39.93 1.334 3.244 1.45 3.48.116.236.194.51.04.824-.15.314-.224.51-.448.824-.224.314-.42.558-.636.894-.208.314-.44.646-.186.1.254.664 1.124 1.85 2.41 2.996 1.664 1.476 3.066 1.934 3.526 2.154.39.19.614.158.84-.09.236-.26.99-1.154 1.256-1.554.264-.39.53-.326.89-.196.364.126 2.298 1.086 2.692 1.284.394.198.658.296.754.46.096.164.096.946-.294 2.042z"/></svg>
-  <span class="wa-tooltip">Chat on WhatsApp</span>
+  <span class="wa-tooltip" data-i18n="nav.chat_wa">Chat on WhatsApp</span>
 </a>
 
 <div class="mobile-cta-bar">
   <div class="cta-inner">
     <a href="https://wa.me/2349165400534?text=Hi%20CleverStack%2C%20I%27d%20like%20to%20discuss%20a%20project" target="_blank" rel="noopener" class="cta-wa">
       <svg viewBox="0 0 32 32"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.058 9.374L1.054 31.25l6.118-1.97C9.72 30.878 12.748 32 16.004 32 24.83 32 32 24.822 32 16S24.83 0 16.004 0zm9.318 22.594c-.39 1.096-1.932 2.006-3.166 2.27-.844.18-1.946.322-5.656-1.216-4.75-1.966-7.806-6.79-8.04-7.104-.226-.314-1.896-2.524-1.896-4.814s1.2-3.414 1.626-3.882c.39-.428.924-.57 1.23-.57.31 0 .62.002.89.016.284.014.664-.106 1.038.79.39.93 1.334 3.244 1.45 3.48.116.236.194.51.04.824-.15.314-.224.51-.448.824-.224.314-.42.558-.636.894-.208.314-.44.646-.186.1.254.664 1.124 1.85 2.41 2.996 1.664 1.476 3.066 1.934 3.526 2.154.39.19.614.158.84-.09.236-.26.99-1.154 1.256-1.554.264-.39.53-.326.89-.196.364.126 2.298 1.086 2.692 1.284.394.198.658.296.754.46.096.164.096.946-.294 2.042z"/></svg>
-      WhatsApp
+      <span data-i18n="mobile.wa">WhatsApp</span>
     </a>
-    <a href="https://calendly.com/samsonfalope326/30min" target="_blank" rel="noopener" class="cta-book">Book a Free Call</a>
+    <a href="https://calendly.com/samsonfalope326/30min" target="_blank" rel="noopener" class="cta-book" data-i18n="mobile.book">Book a Free Call</a>
   </div>
 </div>
+<button class="back-to-top" aria-label="Back to top">&#8593;</button>
+
+<div class="lightbox-overlay">
+  <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
+  <img class="lightbox-img" src="" alt="">
+</div>
+
 <script src="script.js"></script>
+<!-- Tawk.to Live Chat -->
+<script>
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+    var s1=document.createElement("script"), s0=document.getElementsByTagName("script")[0];
+    s1.async=true; s1.src='https://embed.tawk.to/66e1e4e4ea492f34bc0a6c0b/1i7j1pdbg';
+    s1.charset='UTF-8'; s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+  })();
+</script>
 </body>
 </html>

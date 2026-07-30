@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>CleverStack Blog</title>
+    <link>https://cleverfullstack.vercel.app/blog/</link>
+    <description>Articles on web development, e-commerce, SEO, and growing your business online — from the CleverStack team.</description>
+    <language>en</language>
+    <lastBuildDate>Wed, 05 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://cleverfullstack.vercel.app/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Why Custom Web Development Beats Templates (Every Time)</title>
+      <link>https://cleverfullstack.vercel.app/blog/web-development-nigeria</link>
+      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/web-development-nigeria</guid>
+      <pubDate>Wed, 15 Jul 2026 00:00:00 +0000</pubDate>
+      <category>Web Development</category>
+      <author>henry@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[Off-the-shelf templates cost less upfront but cost you leads every single day. Here's why custom development wins for serious businesses.]]></description>
+    </item>
+    <item>
+      <title>Shopify vs WooCommerce: Which Platform Makes You More Money?</title>
+      <link>https://cleverfullstack.vercel.app/blog/shopify-vs-woocommerce-nigeria</link>
+      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/shopify-vs-woocommerce-nigeria</guid>
+      <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
+      <category>E-Commerce</category>
+      <author>henry@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[Both platforms work. But the right choice depends on your payment gateway, inventory size, and growth plan.]]></description>
+    </item>
+    <item>
+      <title>7 SEO Tips That Actually Work in 2026 (From a Developer Who Builds for Google)</title>
+      <link>https://cleverfullstack.vercel.app/blog/seo-tips-2026</link>
+      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/seo-tips-2026</guid>
+      <pubDate>Sun, 28 Jun 2026 00:00:00 +0000</pubDate>
+      <category>SEO</category>
+      <author>henry@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[SEO changes every year. These 7 tactics are working right now based on real client results, not theory.]]></description>
+    </item>
+    <item>
+      <title>How Much Should a Website Cost in 2026? (A Transparent Breakdown)</title>
+      <link>https://cleverfullstack.vercel.app/blog/website-cost-2026</link>
+      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/website-cost-2026</guid>
+      <pubDate>Wed, 22 Jul 2026 00:00:00 +0000</pubDate>
+      <category>Web Development</category>
+      <author>henry@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[We break down exactly what goes into a custom website budget and why the cheapest option almost always costs you more.]]></description>
+    </item>
+    <item>
+      <title>5 Website Mistakes That Are Killing Your Conversions (And How to Fix Them)</title>
+      <link>https://cleverfullstack.vercel.app/blog/website-mistakes-conversions</link>
+      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/website-mistakes-conversions</guid>
+      <pubDate>Wed, 29 Jul 2026 00:00:00 +0000</pubDate>
+      <category>Web Development</category>
+      <author>henry@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[These common design and UX mistakes could be costing you 50% or more of your potential leads.]]></description>
+    </item>
+    <item>
+      <title>Custom Web Development vs No-Code Tools: What Growing Businesses Should Pick</title>
+      <link>https://cleverfullstack.vercel.app/blog/custom-vs-nocode</link>
+      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/custom-vs-nocode</guid>
+      <pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate>
+      <category>Web Development</category>
+      <author>henry@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[No-code tools are tempting. But when do they cost you more than they save? Here's when to build custom and when to use off-the-shelf.]]></description>
+    </item>
+  </channel>
+</rss>

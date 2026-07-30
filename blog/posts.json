@@ -1,0 +1,62 @@
+[
+  {
+    "id": "web-development-nigeria",
+    "title": "Why Custom Web Development Beats Templates (Every Time)",
+    "excerpt": "Off-the-shelf templates cost less upfront but cost you leads every single day. Here\u2019s why custom development wins for serious businesses.",
+    "author": "Henry George",
+    "date": "2026-07-15",
+    "category": "Web Development",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+    "readingTime": "5 min read"
+  },
+  {
+    "id": "shopify-vs-woocommerce-nigeria",
+    "title": "Shopify vs WooCommerce: Which Platform Makes You More Money?",
+    "excerpt": "Both platforms work. But the right choice depends on your payment gateway, inventory size, and growth plan.",
+    "author": "Henry George",
+    "date": "2026-07-08",
+    "category": "E-Commerce",
+    "image": "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
+    "readingTime": "6 min read"
+  },
+  {
+    "id": "seo-tips-2026",
+    "title": "7 SEO Tips That Actually Work in 2026 (From a Developer Who Builds for Google)",
+    "excerpt": "SEO changes every year. These 7 tactics are working right now based on real client results, not theory.",
+    "author": "Henry George",
+    "date": "2026-06-28",
+    "category": "SEO",
+    "image": "https://images.unsplash.com/photo-1432889821006-3149403d6fd4?auto=format&fit=crop&w=800&q=80",
+    "readingTime": "4 min read"
+  },
+  {
+    "id": "website-cost-2026",
+    "title": "How Much Should a Website Cost in 2026? (A Transparent Breakdown)",
+    "excerpt": "We break down exactly what goes into a custom website budget and why the cheapest option almost always costs you more.",
+    "author": "Henry George",
+    "date": "2026-07-22",
+    "category": "Web Development",
+    "image": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80",
+    "readingTime": "5 min read"
+  },
+  {
+    "id": "website-mistakes-conversions",
+    "title": "5 Website Mistakes That Are Killing Your Conversions (And How to Fix Them)",
+    "excerpt": "These common design and UX mistakes could be costing you 50% or more of your potential leads.",
+    "author": "Henry George",
+    "date": "2026-07-29",
+    "category": "Web Development",
+    "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+    "readingTime": "4 min read"
+  },
+  {
+    "id": "custom-vs-nocode",
+    "title": "Custom Web Development vs No-Code Tools: What Growing Businesses Should Pick",
+    "excerpt": "No-code tools are tempting. But when do they cost you more than they save? Here\u2019s when to build custom and when to use off-the-shelf.",
+    "author": "Henry George",
+    "date": "2026-08-05",
+    "category": "Web Development",
+    "image": "https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?auto=format&fit=crop&w=800&q=80",
+    "readingTime": "5 min read"
+  }
+]

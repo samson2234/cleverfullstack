@@ -120,7 +120,44 @@ export default async function handler(req, res) {
     }
   }
 
-  // LAYER 3 (FALLBACK): Web3Forms if no Resend configured
+  // LAYER 3: Auto-responder — send confirmation to the submitter
+  let autoResponded = false;
+  if (process.env.RESEND_API_KEY && submission.email) {
+    try {
+      const autoRes = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + process.env.RESEND_API_KEY,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'CleverStack <onboarding@resend.dev>',
+          to: [submission.email],
+          subject: 'We received your message — CleverStack',
+          html: '<div style="font-family:sans-serif;max-width:520px;margin:0 auto;">' +
+            '<h2 style="color:#4F46E5;">Thank you, ' + submission.name + '!</h2>' +
+            '<p>We received your message and will respond within <strong>24 business hours</strong>.</p>' +
+            '<p>Here is a copy of what you sent:</p>' +
+            '<blockquote style="border-left:3px solid #4F46E5;padding:12px 16px;margin:16px 0;background:#f6f7fb;border-radius:6px;">' +
+            '<p style="margin:0 0 4px;"><strong>Message:</strong></p>' +
+            '<p style="margin:0;color:#5B6079;">' + submission.message.replace(/\n/g, '<br>') + '</p>' +
+            '</blockquote>' +
+            '<p style="color:#5B6079;font-size:14px;">In the meantime, you can book a free strategy call:</p>' +
+            '<a href="https://calendly.com/samsonfalope326/30min" style="display:inline-block;background:#00C2A8;color:#fff;padding:12px 24px;border-radius:100px;text-decoration:none;font-weight:600;">Book a Free Call</a>' +
+            '<p style="color:#aaa;font-size:12px;margin-top:24px;">CleverStack — Ibadan, Nigeria</p>' +
+            '</div>'
+        })
+      });
+      if (autoRes.ok) {
+        autoResponded = true;
+        console.log('Auto-response sent to', submission.email);
+      }
+    } catch (err) {
+      console.error('Auto-responder failed:', err.message);
+    }
+  }
+
+  // LAYER 4 (FALLBACK): Web3Forms if no Resend configured
   if (!emailSent && process.env.WEB3FORMS_ACCESS_KEY) {
     try {
       const w3Res = await fetch('https://api.web3forms.com/submit', {

@@ -9,13 +9,21 @@
 <meta property="og:description" content="Full-stack services built to generate leads and revenue.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://cleverfullstack.vercel.app/services.html">
-<meta property="og:image" content="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80">
+<meta property="og:image" content="https://cleverfullstack.vercel.app/api/og?title=Services+-+Web%2C+App+and+E-Commerce+Development&amp;type=website">
+<meta property="og:site_name" content="CleverStack">
+<meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Services — Web, App, E-Commerce & SEO Development | CleverStack">
+<meta name="twitter:description" content="Full-stack services built to generate leads and revenue.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='20' height='20' rx='5' fill='%234F46E5'/><rect y='40' width='20' height='20' rx='5' fill='%2300C2A8'/><rect y='80' width='20' height='20' rx='5' fill='%23FF6B4A'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="canonical" href="https://cleverfullstack.vercel.app/services">
+<link rel="alternate" hreflang="en" href="https://cleverfullstack.vercel.app/services">
+<link rel="alternate" hreflang="fr" href="https://cleverfullstack.vercel.app/services?lang=fr">
+<link rel="alternate" hreflang="x-default" href="https://cleverfullstack.vercel.app/services">
 <link rel="stylesheet" href="style.css">
+<script src="analytics.js" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -147,17 +155,28 @@
 </head>
 <body>
 
+<div class="scroll-progress"></div>
+<div class="page-load-bar"></div>
+
+<div class="page-preloader">
+  <div class="loader-logo"><span class="stackmark"></span>Clever<span class="dot">Stack</span><span class="stackmark"></span></div>
+  <div class="loader-bar"><div class="loader-bar-inner"></div></div>
+</div>
+
 <header class="site-header">
   <div class="container">
     <a href="index.html" class="logo"><span class="stackmark"></span>Clever<span class="dot">Stack</span></a>
     <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="services.html" class="active">Services</a>
-      <a href="portfolio.html">Portfolio</a>
-      <a href="contact.html">Contact</a>
+      <a href="index.html" data-i18n="nav.home">Home</a>
+      <a href="about.html" data-i18n="nav.about">About</a>
+      <a href="services.html" class="active" data-i18n="nav.services">Services</a>
+      <a href="portfolio.html" data-i18n="nav.portfolio">Portfolio</a>
+      <a href="blog/index.html" data-i18n="nav.blog">Blog</a>
+      <a href="contact.html" data-i18n="nav.contact">Contact</a>
     </nav>
     <div class="header-actions">
+      <button class="dark-toggle" aria-label="Switch to dark mode">&#9788;</button>
+      <button class="lang-toggle" aria-label="Switch to French">FR</button>
       <a href="https://wa.me/2349165400534?text=Hi%20CleverStack%2C%20I%27d%20like%20to%20discuss%20a%20project" class="btn btn-wa" target="_blank" rel="noopener" style="padding:10px 16px; font-size:0.85rem;">
         <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:18px; height:18px;"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.058 9.374L1.054 31.25l6.118-1.97C9.72 30.878 12.748 32 16.004 32 24.83 32 32 24.822 32 16S24.83 0 16.004 0zm9.318 22.594c-.39 1.096-1.932 2.006-3.166 2.27-.844.18-1.946.322-5.656-1.216-4.75-1.966-7.806-6.79-8.04-7.104-.226-.314-1.896-2.524-1.896-4.814s1.2-3.414 1.626-3.882c.39-.428.924-.57 1.23-.57.31 0 .62.002.89.016.284.014.664-.106 1.038.79.39.93 1.334 3.244 1.45 3.48.116.236.194.51.04.824-.15.314-.224.51-.448.824-.224.314-.42.558-.636.894-.208.314-.44.646-.186.1.254.664 1.124 1.85 2.41 2.996 1.664 1.476 3.066 1.934 3.526 2.154.39.19.614.158.84-.09.236-.26.99-1.154 1.256-1.554.264-.39.53-.326.89-.196.364.126 2.298 1.086 2.692 1.284.394.198.658.296.754.46.096.164.096.946-.294 2.042z" fill="#fff"/></svg>
       </a>
@@ -176,9 +195,9 @@
       <div class="orb"></div>
     </div>
     <div class="container" style="position:relative; z-index:1;">
-      <div class="eyebrow">Services</div>
-      <h1>Every layer of your product, built by one team.</h1>
-      <p>From the pixels a visitor sees to the database your app runs on, we design, build, and optimize the whole stack — so your site doesn't just look good, it performs.</p>
+      <div class="eyebrow" data-i18n="services.page.eyebrow">Services</div>
+      <h1 data-i18n="services.page.h1">Every layer of your product, built by one team.</h1>
+      <p data-i18n="services.page.sub">From the pixels a visitor sees to the database your app runs on, we design, build, and optimize the whole stack — so your site doesn't just look good, it performs.</p>
     </div>
   </section>
 
@@ -187,68 +206,68 @@
     <div class="container">
       <div class="grid grid-2" style="gap:24px;">
 
-        <div class="card service-card reveal" style="--layer-color:var(--indigo)">
-          <span class="layer-tag">Frontend</span>
-          <h3>Web Development</h3>
-          <p>Marketing sites and landing pages built on WordPress, Wix, Squarespace, or hand-coded HTML/React — fast, responsive, and structured to convert.</p>
-          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;">Benefit: more qualified leads per visitor, without spending more on ads.</p>
-          <a href="contact.html" class="card-link">Book a call about this →</a>
+        <div class="card service-card reveal tilt-card" style="--layer-color:var(--indigo)">
+          <span class="layer-tag" data-i18n="service.1.tag">Frontend</span>
+          <h3 data-i18n="services.svc.1.title">Web Development</h3>
+          <p data-i18n="services.svc.1.desc">Marketing sites and landing pages built on WordPress, Wix, Squarespace, or hand-coded HTML/React — fast, responsive, and structured to convert.</p>
+          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;" data-i18n="services.svc.1.benefit">Benefit: more qualified leads per visitor, without spending more on ads.</p>
+          <a href="contact.html" class="card-link" data-i18n="services.call_link">Book a call about this →</a>
         </div>
 
-        <div class="card service-card reveal" style="--layer-color:var(--teal)">
-          <span class="layer-tag">Backend</span>
-          <h3>Web App Development</h3>
-          <p>Custom dashboards, client portals, and internal tools built with React, Next.js, Node.js, and Laravel — tailored to how your business actually operates.</p>
-          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;">Benefit: automate manual work and scale operations without hiring.</p>
-          <a href="contact.html" class="card-link">Book a call about this →</a>
+        <div class="card service-card reveal tilt-card" style="--layer-color:var(--teal)">
+          <span class="layer-tag" data-i18n="service.2.tag">Backend</span>
+          <h3 data-i18n="services.svc.2.title">Web App Development</h3>
+          <p data-i18n="services.svc.2.desc">Custom dashboards, client portals, and internal tools built with React, Next.js, Node.js, and Laravel — tailored to how your business actually operates.</p>
+          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;" data-i18n="services.svc.2.benefit">Benefit: automate manual work and scale operations without hiring.</p>
+          <a href="contact.html" class="card-link" data-i18n="services.call_link">Book a call about this →</a>
         </div>
 
-        <div class="card service-card reveal" style="--layer-color:var(--coral)">
-          <span class="layer-tag">Commerce</span>
-          <h3>E-Commerce Development</h3>
-          <p>Shopify and WooCommerce stores engineered for checkout completion — clean product pages, fast load times, and payment flows that don't leak sales.</p>
-          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;">Benefit: lower cart abandonment and higher average order value.</p>
-          <a href="contact.html" class="card-link">Book a call about this →</a>
+        <div class="card service-card reveal tilt-card" style="--layer-color:var(--coral)">
+          <span class="layer-tag" data-i18n="service.3.tag">Commerce</span>
+          <h3 data-i18n="services.svc.3.title">E-Commerce Development</h3>
+          <p data-i18n="services.svc.3.desc">Shopify and WooCommerce stores engineered for checkout completion — clean product pages, fast load times, and payment flows that don't leak sales.</p>
+          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;" data-i18n="services.svc.3.benefit">Benefit: lower cart abandonment and higher average order value.</p>
+          <a href="contact.html" class="card-link" data-i18n="services.call_link">Book a call about this →</a>
         </div>
 
-        <div class="card service-card reveal" style="--layer-color:var(--indigo-light)">
-          <span class="layer-tag">Integrations</span>
-          <h3>API & Integrations</h3>
-          <p>Payment gateways, CRMs, GTM/GA4 tracking, email marketing, and third-party APIs connected cleanly so your tools actually talk to each other.</p>
-          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;">Benefit: accurate data and fewer manual handoffs between systems.</p>
-          <a href="contact.html" class="card-link">Book a call about this →</a>
+        <div class="card service-card reveal tilt-card" style="--layer-color:var(--indigo-light)">
+          <span class="layer-tag" data-i18n="service.4.tag">Integrations</span>
+          <h3 data-i18n="services.svc.4.title">API & Integrations</h3>
+          <p data-i18n="services.svc.4.desc">Payment gateways, CRMs, GTM/GA4 tracking, email marketing, and third-party APIs connected cleanly so your tools actually talk to each other.</p>
+          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;" data-i18n="services.svc.4.benefit">Benefit: accurate data and fewer manual handoffs between systems.</p>
+          <a href="contact.html" class="card-link" data-i18n="services.call_link">Book a call about this →</a>
         </div>
 
-        <div class="card service-card reveal" style="--layer-color:var(--indigo)">
-          <span class="layer-tag">Growth</span>
-          <h3>Optimization & SEO</h3>
-          <p>Technical SEO, Core Web Vitals, and performance tuning that gets your site found on Google and keeps it fast once it is.</p>
-          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;">Benefit: more organic traffic, without an ongoing ad budget.</p>
-          <a href="contact.html" class="card-link">Book a call about this →</a>
+        <div class="card service-card reveal tilt-card" style="--layer-color:var(--indigo)">
+          <span class="layer-tag" data-i18n="services.svc.5.tag">Growth</span>
+          <h3 data-i18n="services.svc.5.title">Optimization & SEO</h3>
+          <p data-i18n="services.svc.5.desc">Technical SEO, Core Web Vitals, and performance tuning that gets your site found on Google and keeps it fast once it is.</p>
+          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;" data-i18n="services.svc.5.benefit">Benefit: more organic traffic, without an ongoing ad budget.</p>
+          <a href="contact.html" class="card-link" data-i18n="services.call_link">Book a call about this →</a>
         </div>
 
-        <div class="card service-card reveal" style="--layer-color:var(--teal-light)">
-          <span class="layer-tag">CMS</span>
-          <h3>CMS Development & Migration</h3>
-          <p>WordPress, Wix, Squarespace, or headless CMS (Sanity, Contentful) — we build, migrate, or fix sites on any platform so your team can manage content without developer support.</p>
-          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;">Benefit: full editorial control without monthly dev fees.</p>
-          <a href="contact.html" class="card-link">Book a call about this →</a>
+        <div class="card service-card reveal tilt-card" style="--layer-color:var(--teal-light)">
+          <span class="layer-tag" data-i18n="services.svc.6.tag">CMS</span>
+          <h3 data-i18n="services.svc.6.title">CMS Development & Migration</h3>
+          <p data-i18n="services.svc.6.desc">WordPress, Wix, Squarespace, or headless CMS (Sanity, Contentful) — we build, migrate, or fix sites on any platform so your team can manage content without developer support.</p>
+          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;" data-i18n="services.svc.6.benefit">Benefit: full editorial control without monthly dev fees.</p>
+          <a href="contact.html" class="card-link" data-i18n="services.call_link">Book a call about this →</a>
         </div>
 
-        <div class="card service-card reveal" style="--layer-color:var(--warning)">
-          <span class="layer-tag">Marketing</span>
-          <h3>SEO & Search Marketing</h3>
-          <p>On-page SEO, technical audits, keyword strategy, Google Business optimization, and local SEO — engineered to get your site ranking before you spend a dollar on ads.</p>
-          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;">Benefit: predictable organic traffic growth without ongoing ad spend.</p>
-          <a href="contact.html" class="card-link">Book a call about this →</a>
+        <div class="card service-card reveal tilt-card" style="--layer-color:var(--warning)">
+          <span class="layer-tag" data-i18n="services.svc.7.tag">Marketing</span>
+          <h3 data-i18n="services.svc.7.title">SEO & Search Marketing</h3>
+          <p data-i18n="services.svc.7.desc">On-page SEO, technical audits, keyword strategy, Google Business optimization, and local SEO — engineered to get your site ranking before you spend a dollar on ads.</p>
+          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;" data-i18n="services.svc.7.benefit">Benefit: predictable organic traffic growth without ongoing ad spend.</p>
+          <a href="contact.html" class="card-link" data-i18n="services.call_link">Book a call about this →</a>
         </div>
 
-        <div class="card service-card reveal" style="--layer-color:var(--success)">
-          <span class="layer-tag">Growth</span>
-          <h3>Website Marketing & Growth</h3>
-          <p>Conversion rate optimization, email capture flows, analytics setup (GA4/GSC), A/B testing, and lead generation systems — turn your site into a 24/7 sales machine.</p>
-          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;">Benefit: more revenue from the same traffic you already have.</p>
-          <a href="contact.html" class="card-link">Book a call about this →</a>
+        <div class="card service-card reveal tilt-card" style="--layer-color:var(--success)">
+          <span class="layer-tag" data-i18n="services.svc.8.tag">Growth</span>
+          <h3 data-i18n="services.svc.8.title">Website Marketing & Growth</h3>
+          <p data-i18n="services.svc.8.desc">Conversion rate optimization, email capture flows, analytics setup (GA4/GSC), A/B testing, and lead generation systems — turn your site into a 24/7 sales machine.</p>
+          <p style="font-size:13.5px; color:var(--text-dark); font-weight:600; margin-bottom:6px;" data-i18n="services.svc.8.benefit">Benefit: more revenue from the same traffic you already have.</p>
+          <a href="contact.html" class="card-link" data-i18n="services.call_link">Book a call about this →</a>
         </div>
 
       </div>
@@ -259,29 +278,29 @@
   <section class="section-pad section-light" style="background:var(--paper-3)">
     <div class="container">
       <div class="section-head reveal">
-        <div class="eyebrow">How It Works</div>
-        <h2>From first call to launch, in four steps.</h2>
+        <div class="eyebrow" data-i18n="services.process.eyebrow">How It Works</div>
+        <h2 data-i18n="services.process.heading">From first call to launch, in four steps.</h2>
       </div>
       <div class="process-row reveal">
         <div class="process-step">
           <span class="num">Step 1</span>
-          <h3>Discovery call</h3>
-          <p>We learn your business goals, current pain points, and what "success" looks like in numbers.</p>
+          <h3 data-i18n="services.step.1">Discovery call</h3>
+          <p data-i18n="services.step.1.desc">We learn your business goals, current pain points, and what "success" looks like in numbers.</p>
         </div>
         <div class="process-step">
           <span class="num">Step 2</span>
-          <h3>Proposal & plan</h3>
-          <p>You get a clear scope, timeline, and fixed price — no vague hourly estimates.</p>
+          <h3 data-i18n="services.step.2">Proposal & plan</h3>
+          <p data-i18n="services.step.2.desc">You get a clear scope, timeline, and fixed price — no vague hourly estimates.</p>
         </div>
         <div class="process-step">
           <span class="num">Step 3</span>
-          <h3>Build & review</h3>
-          <p>We build in stages with regular check-ins, so you see progress and can course-correct early.</p>
+          <h3 data-i18n="services.step.3">Build & review</h3>
+          <p data-i18n="services.step.3.desc">We build in stages with regular check-ins, so you see progress and can course-correct early.</p>
         </div>
         <div class="process-step">
           <span class="num">Step 4</span>
-          <h3>Launch & optimize</h3>
-          <p>We ship, monitor performance, and hand over documentation — or stay on for ongoing support.</p>
+          <h3 data-i18n="services.step.4">Launch & optimize</h3>
+          <p data-i18n="services.step.4.desc">We ship, monitor performance, and hand over documentation — or stay on for ongoing support.</p>
         </div>
       </div>
     </div>
@@ -291,13 +310,13 @@
   <section class="section-pad section-dark" id="pricing">
     <div class="container">
       <div class="section-head reveal">
-        <div class="eyebrow">Investment</div>
-        <h2>Clear pricing. No hidden fees.</h2>
-        <p>Pick a package that fits your budget. Every plan includes responsive design, SEO basics, and a satisfaction guarantee.</p>
+        <div class="eyebrow" data-i18n="services.pricing.eyebrow">Investment</div>
+        <h2 data-i18n="services.pricing.heading">Clear pricing. No hidden fees.</h2>
+        <p data-i18n="services.pricing.sub">Pick a package that fits your budget. Every plan includes responsive design, SEO basics, and a satisfaction guarantee.</p>
       </div>
       <div class="pricing-grid stagger">
         <!-- 1. Starter Website -->
-        <div class="pricing-card reveal" style="background:var(--ink-2); border-color:var(--border-light);">
+        <div class="pricing-card reveal tilt-card" style="background:var(--ink-2); border-color:var(--border-light);">
           <h3 style="color:#fff;">Starter Website</h3>
           <div class="price">
             <span class="old-price">$650</span>
@@ -316,11 +335,11 @@
             <li>Basic analytics setup</li>
             <li>Delivery in 5&ndash;7 days</li>
           </ul>
-          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener">Get Started</a>
+          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener" data-i18n="services.pricing.cta">Get Started</a>
         </div>
 
         <!-- 2. Business Website -->
-        <div class="pricing-card reveal" style="background:var(--ink-2); border-color:var(--border-light);">
+        <div class="pricing-card reveal tilt-card" style="background:var(--ink-2); border-color:var(--border-light);">
           <h3 style="color:#fff;">Business Website</h3>
           <div class="price">
             <span class="old-price">$1,200</span>
@@ -340,11 +359,11 @@
             <li>Editor training video</li>
             <li>Delivery in 7&ndash;14 days</li>
           </ul>
-          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener">Get Started</a>
+          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener" data-i18n="services.pricing.cta">Get Started</a>
         </div>
 
         <!-- 3. E-Commerce Store -->
-        <div class="pricing-card reveal" style="background:var(--ink-2); border-color:var(--border-light);">
+        <div class="pricing-card reveal tilt-card" style="background:var(--ink-2); border-color:var(--border-light);">
           <h3 style="color:#fff;">E-Commerce Store</h3>
           <div class="price">
             <span class="old-price">$2,000</span>
@@ -364,11 +383,11 @@
             <li>2 rounds of revisions</li>
             <li>Delivery in 10&ndash;18 days</li>
           </ul>
-          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener">Get Started</a>
+          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener" data-i18n="services.pricing.cta">Get Started</a>
         </div>
 
         <!-- 4. Custom Web App -->
-        <div class="pricing-card reveal featured" style="background:var(--ink-2); border-color:var(--indigo);">
+        <div class="pricing-card reveal featured tilt-card" style="background:var(--ink-2); border-color:var(--indigo);">
           <h3 style="color:#fff;">Custom Web App</h3>
           <div class="price">
             <span class="old-price">$3,500</span>
@@ -387,11 +406,11 @@
             <li>3 rounds of revisions</li>
             <li>Delivery in 14&ndash;28 days</li>
           </ul>
-          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener">Get Started</a>
+          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener" data-i18n="services.pricing.cta">Get Started</a>
         </div>
 
         <!-- 5. SEO & Growth -->
-        <div class="pricing-card reveal" style="background:var(--ink-2); border-color:var(--border-light);">
+        <div class="pricing-card reveal tilt-card" style="background:var(--ink-2); border-color:var(--border-light);">
           <h3 style="color:#fff;">SEO & Growth</h3>
           <div class="price">
             <span class="old-price">$750</span>
@@ -411,11 +430,11 @@
             <li>1 round of revisions</li>
             <li>Delivery in 3&ndash;5 days</li>
           </ul>
-          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener">Get Started</a>
+          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener" data-i18n="services.pricing.cta">Get Started</a>
         </div>
 
         <!-- 6. Fix & Redesign -->
-        <div class="pricing-card reveal" style="background:var(--ink-2); border-color:var(--border-light);">
+        <div class="pricing-card reveal tilt-card" style="background:var(--ink-2); border-color:var(--border-light);">
           <h3 style="color:#fff;">Fix & Redesign</h3>
           <div class="price">
             <span class="old-price">$1,000</span>
@@ -435,7 +454,7 @@
             <li>2 rounds of revisions</li>
             <li>Delivery in 5&ndash;10 days</li>
           </ul>
-          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener">Get Started</a>
+          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener" data-i18n="services.pricing.cta">Get Started</a>
         </div>
       </div>
     </div>
@@ -445,13 +464,13 @@
   <section class="section-pad section-light" style="background:var(--paper-3)" id="calculator">
     <div class="container">
       <div class="section-head reveal">
-        <div class="eyebrow">Build Your Own</div>
-        <h2>Not sure what you need? Build a custom package.</h2>
-        <p>Select the services and features you want, and we'll give you an instant price estimate — no commitment required.</p>
+        <div class="eyebrow" data-i18n="services.calc.eyebrow">Build Your Own</div>
+        <h2 data-i18n="services.calc.heading">Not sure what you need? Build a custom package.</h2>
+        <p data-i18n="services.calc.sub">Select the services and features you want, and we'll give you an instant price estimate — no commitment required.</p>
       </div>
       <div class="calc-grid reveal" id="priceCalculator">
         <div class="calc-panel">
-          <h3>1. Choose your base service</h3>
+          <h3 data-i18n="services.calc.base">1. Choose your base service</h3>
           <div class="calc-options" id="calcBase">
             <label class="calc-opt active" data-base="website" data-price="500">
               <input type="radio" name="calcBase" value="website" checked hidden>
@@ -485,7 +504,7 @@
             </label>
           </div>
 
-          <h3 style="margin-top:28px;">2. Add features you need</h3>
+          <h3 style="margin-top:28px;" data-i18n="services.calc.features">2. Add features you need</h3>
           <div class="calc-features" id="calcFeatures">
             <label class="calc-feat"><input type="checkbox" data-price="150"><span>Blog setup <small>+$150</small></span></label>
             <label class="calc-feat"><input type="checkbox" data-price="50"><span>Custom domain & SSL <small>+$50</small></span></label>
@@ -524,17 +543,17 @@
 
         <div class="calc-summary">
           <div class="calc-summary-inner">
-            <h3>Your Estimate</h3>
+            <h3 data-i18n="services.calc.estimate">Your Estimate</h3>
             <div class="calc-total-wrap">
-              <span class="calc-total-label">Estimated Total</span>
+              <span class="calc-total-label" data-i18n="services.calc.total">Estimated Total</span>
               <span class="calc-total" id="calcTotal">$500</span>
             </div>
             <div class="calc-breakdown" id="calcBreakdown">
               <div class="calc-line"><span>Base: Starter Website</span><span>$500</span></div>
             </div>
-            <p class="calc-note">This is a rough estimate. Final pricing is confirmed after a quick discovery call.</p>
-            <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener">Book a Free Call <span class="btn-arrow">→</span></a>
-            <p class="calc-note" style="margin-top:10px; font-size:12px; color:var(--text-muted);">No commitment — we'll discuss your needs first.</p>
+            <p class="calc-note" data-i18n="services.calc.note">This is a rough estimate. Final pricing is confirmed after a quick discovery call.</p>
+            <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary btn-block" target="_blank" rel="noopener" data-i18n="cta.primary">Book a Free Call <span class="btn-arrow">→</span></a>
+            <p class="calc-note" style="margin-top:10px; font-size:12px; color:var(--text-muted);" data-i18n="services.calc.note2">No commitment — we'll discuss your needs first.</p>
           </div>
         </div>
       </div>
@@ -545,33 +564,33 @@
   <section class="section-pad section-light">
     <div class="container">
       <div class="section-head reveal">
-        <div class="eyebrow">Common Questions</div>
-        <h2>Before you book a call.</h2>
+        <div class="eyebrow" data-i18n="services.faq.eyebrow">Common Questions</div>
+        <h2 data-i18n="services.faq.heading">Before you book a call.</h2>
       </div>
       <div class="reveal" style="max-width:760px;">
         <div class="faq-item">
-          <div class="faq-q"><span>How long does a typical project take?</span><span class="plus">+</span></div>
-          <div class="faq-a"><p>A marketing website usually takes 2–4 weeks. Web applications and e-commerce builds typically run 4–10 weeks depending on scope. You'll get a specific timeline in your proposal before any work starts.</p></div>
+          <div class="faq-q"><span data-i18n="services.faq.1.q">How long does a typical project take?</span><span class="plus">+</span></div>
+          <div class="faq-a"><p data-i18n="services.faq.1.a">A marketing website usually takes 2–4 weeks. Web applications and e-commerce builds typically run 4–10 weeks depending on scope. You'll get a specific timeline in your proposal before any work starts.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span>What if I already have a website that just needs fixing?</span><span class="plus">+</span></div>
-          <div class="faq-a"><p>We regularly take over existing sites — auditing performance, fixing broken flows, and rebuilding only what's actually holding you back, instead of starting from zero.</p></div>
+          <div class="faq-q"><span data-i18n="services.faq.2.q">What if I already have a website that just needs fixing?</span><span class="plus">+</span></div>
+          <div class="faq-a"><p data-i18n="services.faq.2.a">We regularly take over existing sites — auditing performance, fixing broken flows, and rebuilding only what's actually holding you back, instead of starting from zero.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span>Do you work with WordPress, or only custom code?</span><span class="plus">+</span></div>
-          <div class="faq-a"><p>Both. We'll recommend WordPress, Wix, or Squarespace when it fits your budget and maintenance needs, and custom React/Next.js when your product needs more flexibility than a CMS can offer.</p></div>
+          <div class="faq-q"><span data-i18n="services.faq.3.q">Do you work with WordPress, or only custom code?</span><span class="plus">+</span></div>
+          <div class="faq-a"><p data-i18n="services.faq.3.a">Both. We'll recommend WordPress, Wix, or Squarespace when it fits your budget and maintenance needs, and custom React/Next.js when your product needs more flexibility than a CMS can offer.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span>How much does a project cost?</span><span class="plus">+</span></div>
-          <div class="faq-a"><p>It depends on scope — a landing page and a multi-role web application are priced very differently. We give a fixed quote after the discovery call, once we understand exactly what you need.</p></div>
+          <div class="faq-q"><span data-i18n="services.faq.4.q">How much does a project cost?</span><span class="plus">+</span></div>
+          <div class="faq-a"><p data-i18n="services.faq.4.a">It depends on scope — a landing page and a multi-role web application are priced very differently. We give a fixed quote after the discovery call, once we understand exactly what you need.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span>Will I be able to update the site myself after launch?</span><span class="plus">+</span></div>
-          <div class="faq-a"><p>Yes. We build with content management in mind and provide a short walkthrough so your team can update text, images, and products without calling us for every small change.</p></div>
+          <div class="faq-q"><span data-i18n="services.faq.5.q">Will I be able to update the site myself after launch?</span><span class="plus">+</span></div>
+          <div class="faq-a"><p data-i18n="services.faq.5.a">Yes. We build with content management in mind and provide a short walkthrough so your team can update text, images, and products without calling us for every small change.</p></div>
         </div>
         <div class="faq-item">
-          <div class="faq-q"><span>Do you offer support after launch?</span><span class="plus">+</span></div>
-          <div class="faq-a"><p>Yes — every project includes a post-launch check-in window, and we offer ongoing maintenance plans for clients who want continuous updates, monitoring, and optimization.</p></div>
+          <div class="faq-q"><span data-i18n="services.faq.6.q">Do you offer support after launch?</span><span class="plus">+</span></div>
+          <div class="faq-a"><p data-i18n="services.faq.6.a">Yes — every project includes a post-launch check-in window, and we offer ongoing maintenance plans for clients who want continuous updates, monitoring, and optimization.</p></div>
         </div>
       </div>
     </div>
@@ -581,9 +600,9 @@
   <section class="section-pad section-light">
     <div class="container">
       <div class="final-cta reveal">
-        <div class="eyebrow" style="color:var(--teal); justify-content:center;">Get Started</div>
-        <h2>Tell us what you're building. We'll tell you what it takes.</h2>
-        <p>Book a free 20-minute call and walk away with a clear plan, whether or not you hire us.</p>
+        <div class="eyebrow" style="color:var(--teal); justify-content:center;" data-i18n="services.cta.eyebrow">Get Started</div>
+        <h2 data-i18n="services.cta.heading">Tell us what you're building. We'll tell you what it takes.</h2>
+        <p data-i18n="services.cta.sub">Book a free 20-minute call and walk away with a clear plan, whether or not you hire us.</p>
         <div class="ctas">
           <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary" target="_blank" rel="noopener">Book a Free Call <span class="btn-arrow">→</span></a>
         </div>
@@ -598,7 +617,7 @@
     <div class="footer-grid">
       <div>
         <a href="index.html" class="logo"><span class="stackmark"></span>Clever<span class="dot">Stack</span></a>
-        <p>A full-stack development studio building fast, scalable websites and web applications for founders and growing businesses.</p>
+        <p data-i18n="footer.desc">A full-stack development studio building fast, scalable websites and web applications for founders and growing businesses.</p>
         <div class="social-row">
           <a href="#" aria-label="Twitter">𝕏</a>
           <a href="#" aria-label="LinkedIn">in</a>
@@ -606,28 +625,29 @@
         </div>
       </div>
       <div class="footer-col">
-        <h4>Quick Links</h4>
+        <h4 data-i18n="footer.quick_links">Quick Links</h4>
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="portfolio.html">Portfolio</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="privacy.html">Privacy Policy</a></li>
-          <li><a href="terms.html">Terms of Service</a></li>
+          <li><a href="index.html" data-i18n="footer.link_home">Home</a></li>
+          <li><a href="about.html" data-i18n="footer.link_about">About</a></li>
+          <li><a href="portfolio.html" data-i18n="footer.link_portfolio">Portfolio</a></li>
+          <li><a href="blog/index.html" data-i18n="footer.link_blog">Blog</a></li>
+          <li><a href="contact.html" data-i18n="footer.link_contact">Contact</a></li>
+          <li><a href="privacy.html" data-i18n="footer.link_privacy">Privacy Policy</a></li>
+          <li><a href="terms.html" data-i18n="footer.link_terms">Terms of Service</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Services</h4>
+        <h4 data-i18n="footer.services">Services</h4>
         <ul>
-          <li><a href="services.html">Web Development</a></li>
-          <li><a href="services.html">Web App Development</a></li>
-          <li><a href="services.html">E-Commerce</a></li>
-          <li><a href="services.html">CMS Development</a></li>
-          <li><a href="services.html">SEO & Marketing</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_web">Web Development</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_app">Web App Development</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_ecom">E-Commerce</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_cms">CMS Development</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_seo">SEO & Marketing</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Contact</h4>
+        <h4 data-i18n="footer.contact_heading">Contact</h4>
         <ul>
           <li><a href="mailto:cleverdigitals70@gmail.com">cleverdigitals70@gmail.com</a></li>
           <li><a href="tel:+2349165400534">+234 916 540 0534</a></li>
@@ -636,8 +656,8 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 CleverStack. All rights reserved.</span>
-      <span>Built with the stack we sell.</span>
+      <span data-i18n="footer.copyright">© 2026 CleverStack. All rights reserved.</span>
+      <span data-i18n="footer.tagline">Built with the stack we sell.</span>
     </div>
   </div>
 </footer>
@@ -645,18 +665,36 @@
 <!-- WhatsApp Floating Button -->
 <a href="https://wa.me/2349165400534?text=Hi%20CleverStack%2C%20I%27d%20like%20to%20discuss%20a%20project" class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
   <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.058 9.374L1.054 31.25l6.118-1.97C9.72 30.878 12.748 32 16.004 32 24.83 32 32 24.822 32 16S24.83 0 16.004 0zm9.318 22.594c-.39 1.096-1.932 2.006-3.166 2.27-.844.18-1.946.322-5.656-1.216-4.75-1.966-7.806-6.79-8.04-7.104-.226-.314-1.896-2.524-1.896-4.814s1.2-3.414 1.626-3.882c.39-.428.924-.57 1.23-.57.31 0 .62.002.89.016.284.014.664-.106 1.038.79.39.93 1.334 3.244 1.45 3.48.116.236.194.51.04.824-.15.314-.224.51-.448.824-.224.314-.42.558-.636.894-.208.314-.44.646-.186.1.254.664 1.124 1.85 2.41 2.996 1.664 1.476 3.066 1.934 3.526 2.154.39.19.614.158.84-.09.236-.26.99-1.154 1.256-1.554.264-.39.53-.326.89-.196.364.126 2.298 1.086 2.692 1.284.394.198.658.296.754.46.096.164.096.946-.294 2.042z"/></svg>
-  <span class="wa-tooltip">Chat on WhatsApp</span>
+  <span class="wa-tooltip" data-i18n="nav.chat_wa">Chat on WhatsApp</span>
 </a>
 
 <div class="mobile-cta-bar">
   <div class="cta-inner">
     <a href="https://wa.me/2349165400534?text=Hi%20CleverStack%2C%20I%27d%20like%20to%20discuss%20a%20project" target="_blank" rel="noopener" class="cta-wa">
       <svg viewBox="0 0 32 32"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.058 9.374L1.054 31.25l6.118-1.97C9.72 30.878 12.748 32 16.004 32 24.83 32 32 24.822 32 16S24.83 0 16.004 0zm9.318 22.594c-.39 1.096-1.932 2.006-3.166 2.27-.844.18-1.946.322-5.656-1.216-4.75-1.966-7.806-6.79-8.04-7.104-.226-.314-1.896-2.524-1.896-4.814s1.2-3.414 1.626-3.882c.39-.428.924-.57 1.23-.57.31 0 .62.002.89.016.284.014.664-.106 1.038.79.39.93 1.334 3.244 1.45 3.48.116.236.194.51.04.824-.15.314-.224.51-.448.824-.224.314-.42.558-.636.894-.208.314-.44.646-.186.1.254.664 1.124 1.85 2.41 2.996 1.664 1.476 3.066 1.934 3.526 2.154.39.19.614.158.84-.09.236-.26.99-1.154 1.256-1.554.264-.39.53-.326.89-.196.364.126 2.298 1.086 2.692 1.284.394.198.658.296.754.46.096.164.096.946-.294 2.042z"/></svg>
-      WhatsApp
+      <span data-i18n="mobile.wa">WhatsApp</span>
     </a>
-    <a href="https://calendly.com/samsonfalope326/30min" target="_blank" rel="noopener" class="cta-book">Book a Free Call</a>
+    <a href="https://calendly.com/samsonfalope326/30min" target="_blank" rel="noopener" class="cta-book" data-i18n="mobile.book">Book a Free Call</a>
   </div>
 </div>
+<button class="back-to-top" aria-label="Back to top">&#8593;</button>
+
+<div class="lightbox-overlay">
+  <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
+  <img class="lightbox-img" src="" alt="">
+</div>
+
+<script src="i18n.js"></script>
 <script src="script.js"></script>
+<!-- Tawk.to Live Chat -->
+<script>
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+    var s1=document.createElement("script"), s0=document.getElementsByTagName("script")[0];
+    s1.async=true; s1.src='https://embed.tawk.to/66e1e4e4ea492f34bc0a6c0b/1i7j1pdbg';
+    s1.charset='UTF-8'; s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+  })();
+</script>
 </body>
 </html>

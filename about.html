@@ -9,13 +9,21 @@
 <meta property="og:description" content="Learn our story, mission, and what makes us different.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://cleverfullstack.vercel.app/about.html">
-<meta property="og:image" content="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80">
+<meta property="og:image" content="https://cleverfullstack.vercel.app/api/og?title=About+CleverStack&amp;type=website">
+<meta property="og:site_name" content="CleverStack">
+<meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About CleverStack — Full-Stack Development Studio">
+<meta name="twitter:description" content="Learn our story, mission, and what makes us different.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='20' height='20' rx='5' fill='%234F46E5'/><rect y='40' width='20' height='20' rx='5' fill='%2300C2A8'/><rect y='80' width='20' height='20' rx='5' fill='%23FF6B4A'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="canonical" href="https://cleverfullstack.vercel.app/about">
+<link rel="alternate" hreflang="en" href="https://cleverfullstack.vercel.app/about">
+<link rel="alternate" hreflang="fr" href="https://cleverfullstack.vercel.app/about?lang=fr">
+<link rel="alternate" hreflang="x-default" href="https://cleverfullstack.vercel.app/about">
 <link rel="stylesheet" href="style.css">
+<script src="analytics.js" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -38,20 +46,41 @@
   "telephone": "+2349165400534"
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": "About CleverStack",
+  "description": "Learn about CleverStack's mission, founder Henry George, and the full-stack development process.",
+  "url": "https://cleverfullstack.vercel.app/about",
+  "mainEntity": { "@id": "https://cleverfullstack.vercel.app/#organization" }
+}
+</script>
 </head>
 <body>
+
+<div class="scroll-progress"></div>
+<div class="page-load-bar"></div>
+
+<div class="page-preloader">
+  <div class="loader-logo"><span class="stackmark"></span>Clever<span class="dot">Stack</span><span class="stackmark"></span></div>
+  <div class="loader-bar"><div class="loader-bar-inner"></div></div>
+</div>
 
 <header class="site-header">
   <div class="container">
     <a href="index.html" class="logo"><span class="stackmark"></span>Clever<span class="dot">Stack</span></a>
     <nav class="main-nav">
-      <a href="index.html">Home</a>
-      <a href="about.html" class="active">About</a>
-      <a href="services.html">Services</a>
-      <a href="portfolio.html">Portfolio</a>
-      <a href="contact.html">Contact</a>
+      <a href="index.html" data-i18n="nav.home">Home</a>
+      <a href="about.html" class="active" data-i18n="nav.about">About</a>
+      <a href="services.html" data-i18n="nav.services">Services</a>
+      <a href="portfolio.html" data-i18n="nav.portfolio">Portfolio</a>
+      <a href="blog/index.html" data-i18n="nav.blog">Blog</a>
+      <a href="contact.html" data-i18n="nav.contact">Contact</a>
     </nav>
     <div class="header-actions">
+      <button class="dark-toggle" aria-label="Switch to dark mode">&#9788;</button>
+      <button class="lang-toggle" aria-label="Switch to French">FR</button>
       <a href="https://wa.me/2349165400534?text=Hi%20CleverStack%2C%20I%27d%20like%20to%20discuss%20a%20project" class="btn btn-wa" target="_blank" rel="noopener" style="padding:10px 16px; font-size:0.85rem;">
         <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:18px; height:18px;"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.058 9.374L1.054 31.25l6.118-1.97C9.72 30.878 12.748 32 16.004 32 24.83 32 32 24.822 32 16S24.83 0 16.004 0zm9.318 22.594c-.39 1.096-1.932 2.006-3.166 2.27-.844.18-1.946.322-5.656-1.216-4.75-1.966-7.806-6.79-8.04-7.104-.226-.314-1.896-2.524-1.896-4.814s1.2-3.414 1.626-3.882c.39-.428.924-.57 1.23-.57.31 0 .62.002.89.016.284.014.664-.106 1.038.79.39.93 1.334 3.244 1.45 3.48.116.236.194.51.04.824-.15.314-.224.51-.448.824-.224.314-.42.558-.636.894-.208.314-.44.646-.186.1.254.664 1.124 1.85 2.41 2.996 1.664 1.476 3.066 1.934 3.526 2.154.39.19.614.158.84-.09.236-.26.99-1.154 1.256-1.554.264-.39.53-.326.89-.196.364.126 2.298 1.086 2.692 1.284.394.198.658.296.754.46.096.164.096.946-.294 2.042z" fill="#fff"/></svg>
       </a>
@@ -70,9 +99,9 @@
       <div class="orb"></div>
     </div>
     <div class="container" style="position:relative; z-index:1;">
-      <div class="eyebrow">About CleverStack</div>
-      <h1>I got tired of watching good businesses run on bad websites.</h1>
-      <p>I'm Henry — the founder and lead developer behind CleverStack. I started this studio after years of freelancing on Fiverr and contracting for companies that needed more than a "web guy." I own the entire build from frontend to database so you work with one accountable partner, not three disconnected vendors.</p>
+      <div class="eyebrow" data-i18n="about.eyebrow">About CleverStack</div>
+      <h1 data-i18n="about.h1">I got tired of watching good businesses run on bad websites.</h1>
+      <p data-i18n="about.lead">I'm Henry — the founder and lead developer behind CleverStack. I started this studio after years of freelancing on Fiverr and contracting for companies that needed more than a "web guy." I own the entire build from frontend to database so you work with one accountable partner, not three disconnected vendors.</p>
     </div>
   </section>
 
@@ -84,17 +113,17 @@
           <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=900&q=80" alt="Henry — founder of CleverStack" loading="lazy" decoding="async" width="900" height="600">
         </div>
         <div class="about-photo-badge">
-          <span class="num">200+</span>
-          <span class="txt">Webships delivered across 5+ years</span>
+          <span class="num" data-i18n="about.badge_num">200+</span>
+          <span class="txt" data-i18n="about.badge_txt">Webships delivered across 5+ years</span>
         </div>
       </div>
       <div class="reveal">
-        <h2 style="font-size:26px; margin-bottom:16px;">Full-stack developer. 5+ years. 200+ websites shipped.</h2>
-        <p style="color:var(--text-muted); font-size:15px; line-height:1.7;">I'm a full-stack web developer helping brands and businesses develop, design, fix, and optimize websites that look stunning and perform flawlessly. I specialize in website and app development, redesign, SEO, and speed optimization — building modern, mobile-responsive sites that load fast, rank higher, and convert better.</p>
-        <p style="color:var(--text-muted); font-size:15px; line-height:1.7;">Whether you need to fix broken layouts, repair mobile issues, optimize SEO, integrate eCommerce, or revamp your site entirely, I deliver clean, high-converting solutions built for growth. From business websites and portfolios to online stores and landing pages across every niche. <a href="portfolio.html" style="color:var(--indigo); font-weight:600;">See recent projects →</a></p>
+        <h2 style="font-size:26px; margin-bottom:16px;" data-i18n="about.bio.heading">Full-stack developer. 5+ years. 200+ websites shipped.</h2>
+        <p style="color:var(--text-muted); font-size:15px; line-height:1.7;" data-i18n="about.bio.p1">I'm a full-stack web developer helping brands and businesses develop, design, fix, and optimize websites that look stunning and perform flawlessly. I specialize in website and app development, redesign, SEO, and speed optimization — building modern, mobile-responsive sites that load fast, rank higher, and convert better.</p>
+        <p style="color:var(--text-muted); font-size:15px; line-height:1.7;" data-i18n="about.bio.p2">Whether you need to fix broken layouts, repair mobile issues, optimize SEO, integrate eCommerce, or revamp your site entirely, I deliver clean, high-converting solutions built for growth. From business websites and portfolios to online stores and landing pages across every niche. <a href="portfolio.html" style="color:var(--indigo); font-weight:600;" data-i18n="about.bio.see_portfolio">See recent projects →</a></p>
         <div class="ctas" style="margin-top:20px;">
-          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary" target="_blank" rel="noopener">Book a Free Call <span class="btn-arrow">→</span></a>
-          <a href="https://wa.me/2349165400534?text=Hi%20CleverStack%2C%20I%27d%20like%20to%20discuss%20a%20project" class="btn-wa" target="_blank" rel="noopener">
+          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary" target="_blank" rel="noopener" data-i18n="about_preview.cta_1">Book a Free Call <span class="btn-arrow">→</span></a>
+          <a href="https://wa.me/2349165400534?text=Hi%20CleverStack%2C%20I%27d%20like%20to%20discuss%20a%20project" class="btn-wa" target="_blank" rel="noopener" data-i18n="nav.chat_wa">
             <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;margin-right:6px;"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.058 9.374L1.054 31.25l6.118-1.97C9.72 30.878 12.748 32 16.004 32 24.83 32 32 24.822 32 16S24.83 0 16.004 0zm9.318 22.594c-.39 1.096-1.932 2.006-3.166 2.27-.844.18-1.946.322-5.656-1.216-4.75-1.966-7.806-6.79-8.04-7.104-.226-.314-1.896-2.524-1.896-4.814s1.2-3.414 1.626-3.882c.39-.428.924-.57 1.23-.57.31 0 .62.002.89.016.284.014.664-.106 1.038.79.39.93 1.334 3.244 1.45 3.48.116.236.194.51.04.824-.15.314-.224.51-.448.824-.224.314-.42.558-.636.894-.208.314-.44.646-.186.1.254.664 1.124 1.85 2.41 2.996 1.664 1.476 3.066 1.934 3.526 2.154.39.19.614.158.84-.09.236-.26.99-1.154 1.256-1.554.264-.39.53-.326.89-.196.364.126 2.298 1.086 2.692 1.284.394.198.658.296.754.46.096.164.096.946-.294 2.042z"/></svg>
             Chat on WhatsApp
           </a>
@@ -107,22 +136,22 @@
   <section class="section-pad section-light">
     <div class="container">
       <div class="section-head reveal">
-        <div class="eyebrow">Experience</div>
-        <h2>Built for real companies, not just freelance gigs.</h2>
-        <p>I've delivered full-stack solutions for banks, e-commerce brands, and startups across the US.</p>
+        <div class="eyebrow" data-i18n="about.experience.eyebrow">Experience</div>
+        <h2 data-i18n="about.experience.heading">Built for real companies, not just freelance gigs.</h2>
+        <p data-i18n="about.experience.sub">I've delivered full-stack solutions for banks, e-commerce brands, and startups across the US.</p>
       </div>
       <div class="reveal">
         <div class="diff-row">
           <span class="idx">01</span>
-          <div><h3>Frontend & Headless CMS Developer</h3><p><strong>Independent Bank Group</strong> — Mar 2023 - Present<br>Building high-performance frontend applications with Next.js, React, and Tailwind CSS, integrating headless CMS platforms like Sanity and Contentful for scalable, content-driven websites. <a href="services.html" style="color:var(--indigo); font-weight:600;">View our CMS services →</a></p></div>
+          <div><h3 data-i18n="about.exp.1.title">Frontend & Headless CMS Developer</h3><p data-i18n="about.exp.1.detail"><strong>Independent Bank Group</strong> — Mar 2023 - Present<br>Building high-performance frontend applications with Next.js, React, and Tailwind CSS, integrating headless CMS platforms like Sanity and Contentful for scalable, content-driven websites. <a href="services.html" style="color:var(--indigo); font-weight:600;">View our CMS services →</a></p></div>
         </div>
         <div class="diff-row">
           <span class="idx">02</span>
-          <div><h3>Full-Stack Web Developer</h3><p><strong>Fiverr</strong> — Jul 2022 - Present<br>Delivering modern, scalable, conversion-focused web applications using Next.js, React, Node.js, and PostgreSQL. Built everything from business sites to custom dashboards and SaaS applications.</p></div>
+          <div><h3 data-i18n="about.exp.2.title">Full-Stack Web Developer</h3><p data-i18n="about.exp.2.detail"><strong>Fiverr</strong> — Jul 2022 - Present<br>Delivering modern, scalable, conversion-focused web applications using Next.js, React, Node.js, and PostgreSQL. Built everything from business sites to custom dashboards and SaaS applications.</p></div>
         </div>
         <div class="diff-row">
           <span class="idx">03</span>
-          <div><h3>eCommerce Web Developer</h3><p><strong>Store Fixtures Direct</strong> — Jun 2022 - Present<br>Develop and optimize Shopify, WooCommerce, and custom-built stores. Focus on checkout flow, payment integration (Stripe, PayPal), speed optimization, and conversion rate improvement.</p></div>
+          <div><h3 data-i18n="about.exp.3.title">eCommerce Web Developer</h3><p data-i18n="about.exp.3.detail"><strong>Store Fixtures Direct</strong> — Jun 2022 - Present<br>Develop and optimize Shopify, WooCommerce, and custom-built stores. Focus on checkout flow, payment integration (Stripe, PayPal), speed optimization, and conversion rate improvement.</p></div>
         </div>
       </div>
     </div>
@@ -132,25 +161,25 @@
   <section class="section-pad section-light" style="background:var(--paper-3)">
     <div class="container">
       <div class="section-head reveal">
-        <div class="eyebrow">What Makes Us Different</div>
-        <h2>Four things most agencies don't offer you.</h2>
+        <div class="eyebrow" data-i18n="about.diff.eyebrow">What Makes Us Different</div>
+        <h2 data-i18n="about.diff.heading">Four things most agencies don't offer you.</h2>
       </div>
       <div class="reveal">
         <div class="diff-row">
           <span class="idx">01</span>
-          <div><h3>One accountable team, not a relay race</h3><p>The same person who designs your site builds it, ships it, and optimizes it after launch — nothing gets lost in handoffs between contractors.</p></div>
+          <div><h3 data-i18n="about.diff.1.title">One accountable team, not a relay race</h3><p data-i18n="about.diff.1.desc">The same person who designs your site builds it, ships it, and optimizes it after launch — nothing gets lost in handoffs between contractors.</p></div>
         </div>
         <div class="diff-row">
           <span class="idx">02</span>
-          <div><h3>Business outcomes over deliverables</h3><p>We measure success in leads, load time, and conversion rate — not just "pages completed." Every decision traces back to revenue.</p></div>
+          <div><h3 data-i18n="about.diff.2.title">Business outcomes over deliverables</h3><p data-i18n="about.diff.2.desc">We measure success in leads, load time, and conversion rate — not just "pages completed." Every decision traces back to revenue.</p></div>
         </div>
         <div class="diff-row">
           <span class="idx">03</span>
-          <div><h3>Platform-flexible, not platform-locked</h3><p>WordPress, Shopify, Wix, Squarespace, or fully custom React — we recommend what actually fits your budget and growth stage, not whatever we're used to selling.</p></div>
+          <div><h3 data-i18n="about.diff.3.title">Platform-flexible, not platform-locked</h3><p data-i18n="about.diff.3.desc">WordPress, Shopify, Wix, Squarespace, or fully custom React — we recommend what actually fits your budget and growth stage, not whatever we're used to selling.</p></div>
         </div>
         <div class="diff-row">
           <span class="idx">04</span>
-          <div><h3>SEO and performance built in, not bolted on</h3><p>Speed and search visibility are engineered into the build from day one, not handed off as a separate "marketing" afterthought.</p></div>
+          <div><h3 data-i18n="about.diff.4.title">SEO and performance built in, not bolted on</h3><p data-i18n="about.diff.4.desc">Speed and search visibility are engineered into the build from day one, not handed off as a separate "marketing" afterthought.</p></div>
         </div>
       </div>
     </div>
@@ -160,9 +189,9 @@
   <section class="section-pad section-dark">
     <div class="container">
       <div class="section-head reveal">
-        <div class="eyebrow">Skills & Tools</div>
-        <h2>The full stack, covered.</h2>
-        <p>Every layer of a modern web product, handled in-house.</p>
+        <div class="eyebrow" data-i18n="about.skills.eyebrow">Skills & Tools</div>
+        <h2 data-i18n="about.skills.heading">The full stack, covered.</h2>
+        <p data-i18n="about.skills.sub">Every layer of a modern web product, handled in-house.</p>
       </div>
       <div class="grid grid-4 reveal">
         <div class="card" style="background:var(--ink-2); border-color:var(--border-light)">
@@ -216,11 +245,11 @@
           <div class="orb"></div>
           <div class="orb"></div>
         </div>
-        <div class="eyebrow" style="color:var(--teal); justify-content:center;">Work With Us</div>
-        <h2>Ready to see what a full-stack team can do for your business?</h2>
-        <p>Book a free call — no pitch deck, just a straight conversation about what your website should be doing for you.</p>
+        <div class="eyebrow" style="color:var(--teal); justify-content:center;" data-i18n="about.cta.eyebrow">Work With Us</div>
+        <h2 data-i18n="about.cta.heading">Ready to see what a full-stack team can do for your business?</h2>
+        <p data-i18n="about.cta.sub">Book a free call — no pitch deck, just a straight conversation about what your website should be doing for you.</p>
         <div class="ctas">
-          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary" target="_blank" rel="noopener">Book a Free Call <span class="btn-arrow">→</span></a>
+          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary" target="_blank" rel="noopener" data-i18n="cta.primary">Book a Free Call <span class="btn-arrow">→</span></a>
         </div>
       </div>
     </div>
@@ -233,7 +262,7 @@
     <div class="footer-grid">
       <div>
         <a href="index.html" class="logo"><span class="stackmark"></span>Clever<span class="dot">Stack</span></a>
-        <p>A full-stack development studio building fast, scalable websites and web applications for founders and growing businesses.</p>
+        <p data-i18n="footer.desc">A full-stack development studio building fast, scalable websites and web applications for founders and growing businesses.</p>
         <div class="social-row">
           <a href="#" aria-label="Twitter">𝕏</a>
           <a href="#" aria-label="LinkedIn">in</a>
@@ -241,28 +270,29 @@
         </div>
       </div>
       <div class="footer-col">
-        <h4>Quick Links</h4>
+        <h4 data-i18n="footer.quick_links">Quick Links</h4>
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="portfolio.html">Portfolio</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="privacy.html">Privacy Policy</a></li>
-          <li><a href="terms.html">Terms of Service</a></li>
+          <li><a href="index.html" data-i18n="footer.link_home">Home</a></li>
+          <li><a href="about.html" data-i18n="footer.link_about">About</a></li>
+          <li><a href="portfolio.html" data-i18n="footer.link_portfolio">Portfolio</a></li>
+          <li><a href="blog/index.html" data-i18n="footer.link_blog">Blog</a></li>
+          <li><a href="contact.html" data-i18n="footer.link_contact">Contact</a></li>
+          <li><a href="privacy.html" data-i18n="footer.link_privacy">Privacy Policy</a></li>
+          <li><a href="terms.html" data-i18n="footer.link_terms">Terms of Service</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Services</h4>
+        <h4 data-i18n="footer.services">Services</h4>
         <ul>
-          <li><a href="services.html">Web Development</a></li>
-          <li><a href="services.html">Web App Development</a></li>
-          <li><a href="services.html">E-Commerce</a></li>
-          <li><a href="services.html">CMS Development</a></li>
-          <li><a href="services.html">SEO & Marketing</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_web">Web Development</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_app">Web App Development</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_ecom">E-Commerce</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_cms">CMS Development</a></li>
+          <li><a href="services.html" data-i18n="footer.svc_seo">SEO & Marketing</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Contact</h4>
+        <h4 data-i18n="footer.contact_heading">Contact</h4>
         <ul>
           <li><a href="mailto:cleverdigitals70@gmail.com">cleverdigitals70@gmail.com</a></li>
           <li><a href="tel:+2349165400534">+234 916 540 0534</a></li>
@@ -271,8 +301,8 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 CleverStack. All rights reserved.</span>
-      <span>Built with the stack we sell.</span>
+      <span data-i18n="footer.copyright">© 2026 CleverStack. All rights reserved.</span>
+      <span data-i18n="footer.tagline">Built with the stack we sell.</span>
     </div>
   </div>
 </footer>
@@ -280,18 +310,36 @@
 <!-- WhatsApp Floating Button -->
 <a href="https://wa.me/2349165400534?text=Hi%20CleverStack%2C%20I%27d%20like%20to%20discuss%20a%20project" class="wa-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
   <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.058 9.374L1.054 31.25l6.118-1.97C9.72 30.878 12.748 32 16.004 32 24.83 32 32 24.822 32 16S24.83 0 16.004 0zm9.318 22.594c-.39 1.096-1.932 2.006-3.166 2.27-.844.18-1.946.322-5.656-1.216-4.75-1.966-7.806-6.79-8.04-7.104-.226-.314-1.896-2.524-1.896-4.814s1.2-3.414 1.626-3.882c.39-.428.924-.57 1.23-.57.31 0 .62.002.89.016.284.014.664-.106 1.038.79.39.93 1.334 3.244 1.45 3.48.116.236.194.51.04.824-.15.314-.224.51-.448.824-.224.314-.42.558-.636.894-.208.314-.44.646-.186.1.254.664 1.124 1.85 2.41 2.996 1.664 1.476 3.066 1.934 3.526 2.154.39.19.614.158.84-.09.236-.26.99-1.154 1.256-1.554.264-.39.53-.326.89-.196.364.126 2.298 1.086 2.692 1.284.394.198.658.296.754.46.096.164.096.946-.294 2.042z"/></svg>
-  <span class="wa-tooltip">Chat on WhatsApp</span>
+  <span class="wa-tooltip" data-i18n="nav.chat_wa">Chat on WhatsApp</span>
 </a>
 
 <div class="mobile-cta-bar">
   <div class="cta-inner">
     <a href="https://wa.me/2349165400534?text=Hi%20CleverStack%2C%20I%27d%20like%20to%20discuss%20a%20project" target="_blank" rel="noopener" class="cta-wa">
       <svg viewBox="0 0 32 32"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.058 9.374L1.054 31.25l6.118-1.97C9.72 30.878 12.748 32 16.004 32 24.83 32 32 24.822 32 16S24.83 0 16.004 0zm9.318 22.594c-.39 1.096-1.932 2.006-3.166 2.27-.844.18-1.946.322-5.656-1.216-4.75-1.966-7.806-6.79-8.04-7.104-.226-.314-1.896-2.524-1.896-4.814s1.2-3.414 1.626-3.882c.39-.428.924-.57 1.23-.57.31 0 .62.002.89.016.284.014.664-.106 1.038.79.39.93 1.334 3.244 1.45 3.48.116.236.194.51.04.824-.15.314-.224.51-.448.824-.224.314-.42.558-.636.894-.208.314-.44.646-.186.1.254.664 1.124 1.85 2.41 2.996 1.664 1.476 3.066 1.934 3.526 2.154.39.19.614.158.84-.09.236-.26.99-1.154 1.256-1.554.264-.39.53-.326.89-.196.364.126 2.298 1.086 2.692 1.284.394.198.658.296.754.46.096.164.096.946-.294 2.042z"/></svg>
-      WhatsApp
+      <span data-i18n="mobile.wa">WhatsApp</span>
     </a>
-    <a href="https://calendly.com/samsonfalope326/30min" target="_blank" rel="noopener" class="cta-book">Book a Free Call</a>
+    <a href="https://calendly.com/samsonfalope326/30min" target="_blank" rel="noopener" class="cta-book" data-i18n="mobile.book">Book a Free Call</a>
   </div>
 </div>
+<button class="back-to-top" aria-label="Back to top">&#8593;</button>
+
+<div class="lightbox-overlay">
+  <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
+  <img class="lightbox-img" src="" alt="">
+</div>
+
+<script src="i18n.js"></script>
 <script src="script.js"></script>
+<!-- Tawk.to Live Chat -->
+<script>
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+    var s1=document.createElement("script"), s0=document.getElementsByTagName("script")[0];
+    s1.async=true; s1.src='https://embed.tawk.to/66e1e4e4ea492f34bc0a6c0b/1i7j1pdbg';
+    s1.charset='UTF-8'; s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+  })();
+</script>
 </body>
 </html>
