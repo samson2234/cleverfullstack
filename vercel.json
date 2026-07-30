@@ -1,9 +1,7 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": null,
-  "outputDirectory": ".",
-  "cleanUrls": true,
-  "trailingSlash": false,
+  "functions": {
+    "api/og.jsx": { "memory": 300, "maxDuration": 10 }
+  },
   "headers": [
     {
       "source": "/(.*)",
@@ -14,19 +12,22 @@
       ]
     },
     {
-      "source": "/(.*).html",
+      "source": "/:path(*)\\.html",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
       ]
     },
     {
-      "source": "/(.*).{css,js}",
+      "source": "/:path(*)\\.(css|js)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
       ]
     }
   ],
   "rewrites": [
-    { "source": "/((?!404|api).*)", "destination": "/$1.html" }
+    { "source": "/blog", "destination": "/blog/index.html" },
+    { "source": "/blog/", "destination": "/blog/index.html" },
+    { "source": "/blog/:path((?!.*\\..+).*)", "destination": "/blog/:path.html" },
+    { "source": "/:path((?!api/|.*\\..+).*)", "destination": "/:path.html" }
   ]
 }
