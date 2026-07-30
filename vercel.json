@@ -1,4 +1,6 @@
 {
+  "cleanUrls": true,
+  "trailingSlash": false,
   "functions": {
     "api/og.jsx": { "memory": 300, "maxDuration": 10 }
   },
@@ -27,7 +29,6 @@
   "rewrites": [
     { "source": "/blog", "destination": "/blog/index.html" },
     { "source": "/blog/", "destination": "/blog/index.html" },
-    { "source": "/blog/:path((?!.*\\..+).*)", "destination": "/blog/:path.html" },
-    { "source": "/:path((?!api/|.*\\..+).*)", "destination": "/:path.html" }
+    { "source": "/blog/:match*", "destination": "/blog/:match*.html" }
   ]
 }

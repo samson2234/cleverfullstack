@@ -11,8 +11,8 @@
     <atom:link href="https://cleverfullstack.vercel.app/blog/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>Why Custom Web Development Beats Templates (Every Time)</title>
-      <link>https://cleverfullstack.vercel.app/blog/web-development-nigeria</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/web-development-nigeria</guid>
+      <link>https://cleverfullstack.vercel.app/blog/web-development</link>
+      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/web-development</guid>
       <pubDate>Wed, 15 Jul 2026 00:00:00 +0000</pubDate>
       <category>Web Development</category>
       <author>henry@cleverstack.dev (Henry George)</author>
@@ -20,8 +20,8 @@
     </item>
     <item>
       <title>Shopify vs WooCommerce: Which Platform Makes You More Money?</title>
-      <link>https://cleverfullstack.vercel.app/blog/shopify-vs-woocommerce-nigeria</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/shopify-vs-woocommerce-nigeria</guid>
+      <link>https://cleverfullstack.vercel.app/blog/shopify-vs-woocommerce</link>
+      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/shopify-vs-woocommerce</guid>
       <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
       <category>E-Commerce</category>
       <author>henry@cleverstack.dev (Henry George)</author>

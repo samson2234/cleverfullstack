@@ -1,6 +1,6 @@
 [
   {
-    "id": "web-development-nigeria",
+    "id": "web-development",
     "title": "Why Custom Web Development Beats Templates (Every Time)",
     "excerpt": "Off-the-shelf templates cost less upfront but cost you leads every single day. Here\u2019s why custom development wins for serious businesses.",
     "author": "Henry George",
@@ -10,7 +10,7 @@
     "readingTime": "5 min read"
   },
   {
-    "id": "shopify-vs-woocommerce-nigeria",
+    "id": "shopify-vs-woocommerce",
     "title": "Shopify vs WooCommerce: Which Platform Makes You More Money?",
     "excerpt": "Both platforms work. But the right choice depends on your payment gateway, inventory size, and growth plan.",
     "author": "Henry George",
@@ -37,7 +37,7 @@
     "date": "2026-07-22",
     "category": "Web Development",
     "image": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80",
-    "readingTime": "5 min read"
+    "readingTime": "6 min read"
   },
   {
     "id": "website-mistakes-conversions",
@@ -47,7 +47,7 @@
     "date": "2026-07-29",
     "category": "Web Development",
     "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
-    "readingTime": "4 min read"
+    "readingTime": "6 min read"
   },
   {
     "id": "custom-vs-nocode",
@@ -57,6 +57,6 @@
     "date": "2026-08-05",
     "category": "Web Development",
     "image": "https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?auto=format&fit=crop&w=800&q=80",
-    "readingTime": "5 min read"
+    "readingTime": "6 min read"
   }
 ]

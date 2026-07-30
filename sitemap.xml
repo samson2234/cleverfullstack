@@ -51,12 +51,12 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://cleverfullstack.vercel.app/blog/web-development-nigeria</loc>
+    <loc>https://cleverfullstack.vercel.app/blog/web-development</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://cleverfullstack.vercel.app/blog/shopify-vs-woocommerce-nigeria</loc>
+    <loc>https://cleverfullstack.vercel.app/blog/shopify-vs-woocommerce</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
