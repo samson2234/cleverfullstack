@@ -4,6 +4,14 @@
   "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/web-development", "destination": "/blog/web-development", "permanent": true },
+    { "source": "/shopify-vs-woocommerce", "destination": "/blog/shopify-vs-woocommerce", "permanent": true },
+    { "source": "/seo-tips-2026", "destination": "/blog/seo-tips-2026", "permanent": true },
+    { "source": "/website-cost-2026", "destination": "/blog/website-cost-2026", "permanent": true },
+    { "source": "/website-mistakes-conversions", "destination": "/blog/website-mistakes-conversions", "permanent": true },
+    { "source": "/custom-vs-nocode", "destination": "/blog/custom-vs-nocode", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",
