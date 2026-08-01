@@ -411,10 +411,10 @@ Study these agency websites for design/UX inspiration:
 - [x] **5.1** Add blog section (static HTML + JSON metadata listing)
 - [x] **5.2** Add French language version (i18n.js with EN/FR dictionaries + hreflang)
 - [x] **5.3** Add dark mode toggle
-- [ ] **5.4** Upgrade animations to GSAP or Framer Motion
-- [ ] **5.5** Add interactive ROI calculator
+- [x] **5.4** Upgrade animations to GSAP or Framer Motion
+- [x] **5.5** Add interactive ROI calculator
 - [ ] **5.6** Add before/after sliders for case studies
-- [ ] **5.7** Add image lightbox for portfolio
+- [x] **5.7** Add image lightbox for portfolio
 - [x] **5.8** Add page transition effects (page-load-bar + entrance animations)
 - [ ] **5.9** Add 3D/interactive hero element (WebGL/Three.js)
 - [ ] **5.10** Consider migration to Next.js/Astro for SSR, ISR, and better SEO

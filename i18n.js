@@ -83,6 +83,19 @@ var i18n = (function () {
       'about_preview.stat_3': 'Core technologies',
       'about_preview.stat_4': 'Avg. client rating',
 
+      /* ROI Calculator */
+      'roi.eyebrow': 'ROI Calculator',
+      'roi.heading': 'What is your website actually worth to you?',
+      'roi.sub': 'Drag the sliders. See what a conversion-optimized site could add to your revenue every single month.',
+      'roi.visitors.label': 'Monthly website visitors',
+      'roi.conv.label': 'Current conversion rate',
+      'roi.aov.label': 'Avg. value per lead / sale',
+      'roi.results.current': 'Current monthly revenue',
+      'roi.results.project': 'With CleverStack (est.)',
+      'roi.results.diff': 'Extra revenue / month',
+      'roi.note': 'Assumes an average 60% conversion uplift after performance + conversion optimization. Estimates only.',
+      'roi.cta': 'Get a Free Audit',
+
       /* Final CTA */
       'cta.eyebrow': 'Let\'s Build',
       'cta.heading': 'Your competitors already have a fast, optimized website. Do you?',
@@ -378,6 +391,19 @@ var i18n = (function () {
       'about_preview.stat_2': 'Livraison à temps',
       'about_preview.stat_3': 'Technologies maîtrisées',
       'about_preview.stat_4': 'Note client moyenne',
+
+      /* ROI Calculator */
+      'roi.eyebrow': 'Calculateur de ROI',
+      'roi.heading': 'Combien vaut réellement votre site web ?',
+      'roi.sub': 'Déplacez les curseurs. Découvrez ce qu\'un site optimisé pour la conversion pourrait ajouter à votre chiffre d\'affaires chaque mois.',
+      'roi.visitors.label': 'Visiteurs mensuels du site',
+      'roi.conv.label': 'Taux de conversion actuel',
+      'roi.aov.label': 'Valeur moyenne par lead / vente',
+      'roi.results.current': 'Revenu mensuel actuel',
+      'roi.results.project': 'Avec CleverStack (est.)',
+      'roi.results.diff': 'Revenu supplémentaire / mois',
+      'roi.note': 'Hypothèse : +60 % de conversion après optimisation des performances et de la conversion. Estimations uniquement.',
+      'roi.cta': 'Obtenir un audit gratuit',
 
       /* Final CTA */
       'cta.eyebrow': 'Construisons ensemble',

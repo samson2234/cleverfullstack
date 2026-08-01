@@ -63,29 +63,57 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () { banner.classList.add('show'); }, 1200);
   }
 
-  /* Combined IntersectionObserver for reveal + stagger (single observer = better perf) */
-  if ('IntersectionObserver' in window) {
-    var revealIo = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          var el = entry.target;
-          var delay = el.getAttribute('data-delay');
-          if (delay) {
-            setTimeout(function () { el.classList.add('in'); }, parseInt(delay, 10));
-          } else {
-            el.classList.add('in');
-          }
-          revealIo.unobserve(el);
-        }
+  /* Scroll-triggered animations — GSAP + ScrollTrigger (progressive enhancement, safe fallbacks) */
+  var revealSel = '.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger';
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var gsapReady = false;
+
+  function revealAllNow() {
+    document.querySelectorAll(revealSel).forEach(function (el) { el.classList.add('in'); });
+  }
+
+  function initGsapAnimations() {
+    if (gsapReady) return;
+    gsapReady = true;
+    if (!window.gsap || !window.ScrollTrigger) { revealAllNow(); return; }
+    document.documentElement.classList.add('gsap');
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* Hero intro — stagger hero content in on load */
+    var hero = document.querySelector('.hero, .page-hero');
+    if (hero) {
+      var heroEls = hero.querySelectorAll('.eyebrow, h1, p, .ctas, .hero-stack');
+      if (heroEls.length) {
+        gsap.fromTo(heroEls, { autoAlpha: 0, y: 26 }, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.12 });
+      }
+    }
+
+    /* Scroll reveals — same classes and behaviour, GSAP-powered */
+    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(function (el) {
+      var from = { autoAlpha: 0, y: 24 };
+      if (el.classList.contains('reveal-left')) from = { autoAlpha: 0, x: -30 };
+      else if (el.classList.contains('reveal-right')) from = { autoAlpha: 0, x: 30 };
+      else if (el.classList.contains('reveal-scale')) from = { autoAlpha: 0, scale: 0.92 };
+      gsap.fromTo(el, from, {
+        autoAlpha: 1, x: 0, y: 0, scale: 1, duration: 0.8, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger').forEach(function (el) {
-      revealIo.observe(el);
     });
+
+    /* Staggered children */
+    document.querySelectorAll('.stagger').forEach(function (s) {
+      gsap.fromTo(s.children, { autoAlpha: 0, y: 20 }, {
+        autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out',
+        scrollTrigger: { trigger: s, start: 'top 88%', once: true }
+      });
+    });
+  }
+
+  if (reduceMotion) {
+    revealAllNow();
   } else {
-    document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger').forEach(function (el) {
-      el.classList.add('in');
-    });
+    initGsapAnimations();
+    setTimeout(function () { if (!gsapReady) revealAllNow(); }, 3000);
   }
 
   /* Hero stack layer cycling (signature element) */
@@ -373,6 +401,43 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     updateCalculator();
+  }
+
+  /* ROI calculator */
+  var roiCalc = document.getElementById('roiCalculator');
+  if (roiCalc) {
+    var roiVisitors = document.getElementById('roiVisitors');
+    var roiConv = document.getElementById('roiConv');
+    var roiAOV = document.getElementById('roiAOV');
+    var roiVisitorsVal = document.getElementById('roiVisitorsVal');
+    var roiConvVal = document.getElementById('roiConvVal');
+    var roiAOVVal = document.getElementById('roiAOVVal');
+    var roiCurrent = document.getElementById('roiCurrent');
+    var roiProjected = document.getElementById('roiProjected');
+    var roiDiff = document.getElementById('roiDiff');
+
+    var ROI_UPLIFT = 1.6;
+    function fmtCurrency(n) {
+      return '$' + Math.round(n).toLocaleString('en-US');
+    }
+    function updateRoi() {
+      var visitors = parseInt(roiVisitors.value, 10);
+      var convPct = parseInt(roiConv.value, 10) / 10;
+      var aov = parseInt(roiAOV.value, 10);
+      var current = visitors * (convPct / 100) * aov;
+      var projected = visitors * (convPct / 100) * ROI_UPLIFT * aov;
+      var diff = projected - current;
+      roiVisitorsVal.textContent = visitors.toLocaleString('en-US');
+      roiConvVal.textContent = convPct.toFixed(1) + '%';
+      roiAOVVal.textContent = fmtCurrency(aov);
+      roiCurrent.textContent = fmtCurrency(current);
+      roiProjected.textContent = fmtCurrency(projected);
+      roiDiff.textContent = '+' + fmtCurrency(diff);
+    }
+    [roiVisitors, roiConv, roiAOV].forEach(function (input) {
+      input.addEventListener('input', updateRoi);
+    });
+    updateRoi();
   }
 
   /* Scroll progress bar */

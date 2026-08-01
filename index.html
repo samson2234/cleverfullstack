@@ -24,6 +24,8 @@
 <link rel="alternate" hreflang="x-default" href="https://cleverfullstack.vercel.app/">
 <link rel="stylesheet" href="style.css">
 <script src="analytics.js" defer></script>
+<script src="vendor/gsap.min.js" defer></script>
+<script src="vendor/ScrollTrigger.min.js" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -250,6 +252,52 @@
     </div>
   </section>
 
+  <!-- ROI CALCULATOR -->
+  <section class="section-pad section-dark" id="roi-calculator">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow" data-i18n="roi.eyebrow">ROI Calculator</div>
+        <h2 data-i18n="roi.heading">What is your website actually worth to you?</h2>
+        <p data-i18n="roi.sub">Drag the sliders. See what a conversion-optimized site could add to your revenue every single month.</p>
+      </div>
+      <div class="roi-grid reveal" id="roiCalculator">
+        <div class="roi-controls">
+          <div class="roi-field">
+            <label for="roiVisitors" data-i18n="roi.visitors.label">Monthly website visitors</label>
+            <input type="range" id="roiVisitors" min="500" max="50000" step="500" value="3000">
+            <div class="roi-value"><span id="roiVisitorsVal">3,000</span></div>
+          </div>
+          <div class="roi-field">
+            <label for="roiConv" data-i18n="roi.conv.label">Current conversion rate</label>
+            <input type="range" id="roiConv" min="5" max="100" step="5" value="15">
+            <div class="roi-value"><span id="roiConvVal">1.5%</span></div>
+          </div>
+          <div class="roi-field">
+            <label for="roiAOV" data-i18n="roi.aov.label">Avg. value per lead / sale</label>
+            <input type="range" id="roiAOV" min="10" max="2000" step="10" value="150">
+            <div class="roi-value"><span id="roiAOVVal">$150</span></div>
+          </div>
+        </div>
+        <div class="roi-results">
+          <div class="roi-row">
+            <div class="roi-label" data-i18n="roi.results.current">Current monthly revenue</div>
+            <div class="roi-amount" id="roiCurrent">$6,750</div>
+          </div>
+          <div class="roi-row roi-row-project">
+            <div class="roi-label" data-i18n="roi.results.project">With CleverStack (est.)</div>
+            <div class="roi-amount roi-amount-teal" id="roiProjected">$10,800</div>
+          </div>
+          <div class="roi-row roi-row-diff">
+            <div class="roi-label" data-i18n="roi.results.diff">Extra revenue / month</div>
+            <div class="roi-amount roi-amount-indigo" id="roiDiff">+$4,050</div>
+          </div>
+          <p class="roi-note" data-i18n="roi.note">Assumes an average 60% conversion uplift after performance + conversion optimization. Estimates only.</p>
+          <a href="https://calendly.com/samsonfalope326/30min" class="btn btn-primary" target="_blank" rel="noopener" data-i18n="roi.cta">Get a Free Audit <span class="btn-arrow">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- PORTFOLIO PREVIEW -->
   <section class="section-pad section-light">
     <div class="container">
@@ -258,79 +306,7 @@
         <h2 data-i18n="portfolio.heading">Products we've taken from brief to launch.</h2>
       </div>
       <div class="grid grid-3">
-        <a href="portfolio-detail.html?id=alexfit" class="project-card reveal tilt-card">
-          <div class="thumb">
-            <div class="thumb-chrome"><span></span><span></span><span></span></div>
-            <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_fitness.png" alt="AlexFit Coaching - fitness business website" loading="lazy" decoding="async" width="800" height="600">
-            <div class="view-badge"><span>View Details →</span></div>
-          </div></div>
-          <div class="body">
-            <h3>AlexFit Coaching</h3>
-            <p>Fitness • Business Site — Modern brand-focused website with scheduling and service showcase.</p>
-            <div class="project-tags"><span class="tag-mono">HTML/CSS</span><span class="tag-mono">JavaScript</span></div>
-          </div>
-        </a>
-        <a href="portfolio-detail.html?id=spicesavor" class="project-card reveal tilt-card">
-          <div class="thumb">
-            <div class="thumb-chrome"><span></span><span></span><span></span></div>
-            <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_restaurant.png" alt="Spice & Savor restaurant web app" loading="lazy" decoding="async" width="800" height="600">
-            <div class="view-badge"><span>View Details →</span></div>
-          </div></div>
-          <div class="body">
-            <h3>Spice & Savor</h3>
-            <p>Restaurant • Web App — Interactive menu, online reservations, and location discovery.</p>
-            <div class="project-tags"><span class="tag-mono">React</span><span class="tag-mono">API</span></div>
-          </div>
-        </a>
-        <a href="portfolio-detail.html?id=pureenergy" class="project-card reveal tilt-card">
-          <div class="thumb">
-            <div class="thumb-chrome"><span></span><span></span><span></span></div>
-            <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_smoothie.png" alt="Pure Energy smoothie brand landing page" loading="lazy" decoding="async" width="800" height="600">
-            <div class="view-badge"><span>View Details →</span></div>
-          </div></div>
-          <div class="body">
-            <h3>Pure Energy</h3>
-            <p>Food & Beverage • Landing Page — High-converting brand launch page with product showcase.</p>
-            <div class="project-tags"><span class="tag-mono">HTML/CSS</span><span class="tag-mono">JS</span></div>
-          </div>
-        </a>
-        <a href="portfolio-detail.html?id=sparkleclean" class="project-card reveal tilt-card">
-          <div class="thumb">
-            <div class="thumb-chrome"><span></span><span></span><span></span></div>
-            <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_cleaning.png" alt="Sparkle Clean cleaning services website" loading="lazy" decoding="async" width="800" height="600">
-            <div class="view-badge"><span>View Details →</span></div>
-          </div></div>
-          <div class="body">
-            <h3>Sparkle Clean</h3>
-            <p>Cleaning Services • Business Site — Trust-driven service page with instant quote booking.</p>
-            <div class="project-tags"><span class="tag-mono">HTML/CSS</span><span class="tag-mono">Formspree</span></div>
-          </div>
-        </a>
-        <a href="portfolio-detail.html?id=affiliateblog" class="project-card reveal tilt-card">
-          <div class="thumb">
-            <div class="thumb-chrome"><span></span><span></span><span></span></div>
-            <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_affiliate.png" alt="Affiliate marketing blog" loading="lazy" decoding="async" width="800" height="600">
-            <div class="view-badge"><span>View Details →</span></div>
-          </div></div>
-          <div class="body">
-            <h3>Affiliate Marketing Blog</h3>
-            <p>WordPress • Blog — SEO-optimized content site with ad integration and reader analytics.</p>
-            <div class="project-tags"><span class="tag-mono">WordPress</span><span class="tag-mono">SEO</span></div>
-          </div>
-        </a>
-        <a href="portfolio-detail.html?id=sonicaudio" class="project-card reveal tilt-card">
-          <div class="thumb">
-            <div class="thumb-chrome"><span></span><span></span><span></span></div>
-            <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_ecom.png" alt="Sonic Audio e-commerce store" loading="lazy" decoding="async" width="800" height="600">
-            <div class="view-badge"><span>View Details →</span></div>
-          </div></div>
-          <div class="body">
-            <h3>Sonic Audio</h3>
-            <p>E-Commerce • Shopify — Custom Shopify store with product filtering and quick checkout.</p>
-            <div class="project-tags"><span class="tag-mono">Shopify</span><span class="tag-mono">Liquid</span></div>
-          </div>
-        </a>
-        <a href="portfolio-detail.html?id=meloforge" class="project-card reveal tilt-card">
+<a href="portfolio-detail.html?id=meloforge" class="project-card reveal tilt-card">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="https://www.justinch.dev/meloforge.png" alt="MeloForge AI music and Web3 platform" loading="lazy" decoding="async" width="800" height="600">
@@ -342,7 +318,7 @@
             <div class="project-tags"><span class="tag-mono">Next.js</span><span class="tag-mono">Solana</span><span class="tag-mono">Gemini AI</span></div>
           </div>
         </a>
-        <a href="portfolio-detail.html?id=researchhub" class="project-card reveal tilt-card">
+<a href="portfolio-detail.html?id=researchhub" class="project-card reveal tilt-card">
           <div class="thumb">
             <div class="thumb-chrome"><span></span><span></span><span></span></div>
             <div class="shot-area"><img src="https://www.justinch.dev/crmp.png" alt="ResearchHUB collaborative research management platform" loading="lazy" decoding="async" width="800" height="600">
@@ -354,7 +330,55 @@
             <div class="project-tags"><span class="tag-mono">Express</span><span class="tag-mono">Next.js</span></div>
           </div>
         </a>
-      </div>
+<a href="portfolio-detail.html?id=sonicaudio" class="project-card reveal tilt-card">
+          <div class="thumb">
+            <div class="thumb-chrome"><span></span><span></span><span></span></div>
+            <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_ecom.png" alt="Sonic Audio e-commerce store" loading="lazy" decoding="async" width="800" height="600">
+            <div class="view-badge"><span>View Details →</span></div>
+          </div></div>
+          <div class="body">
+            <h3>Sonic Audio</h3>
+            <p>E-Commerce • Shopify — Custom Shopify store with product filtering and quick checkout.</p>
+            <div class="project-tags"><span class="tag-mono">Shopify</span><span class="tag-mono">Liquid</span></div>
+          </div>
+        </a>
+<a href="portfolio-detail.html?id=alexfit" class="project-card reveal tilt-card">
+          <div class="thumb">
+            <div class="thumb-chrome"><span></span><span></span><span></span></div>
+            <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_fitness.png" alt="AlexFit Coaching - fitness business website" loading="lazy" decoding="async" width="800" height="600">
+            <div class="view-badge"><span>View Details →</span></div>
+          </div></div>
+          <div class="body">
+            <h3>AlexFit Coaching</h3>
+            <p>Fitness • Business Site — Modern brand-focused website with scheduling and service showcase.</p>
+            <div class="project-tags"><span class="tag-mono">HTML/CSS</span><span class="tag-mono">JavaScript</span></div>
+          </div>
+        </a>
+<a href="portfolio-detail.html?id=spicesavor" class="project-card reveal tilt-card">
+          <div class="thumb">
+            <div class="thumb-chrome"><span></span><span></span><span></span></div>
+            <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_restaurant.png" alt="Spice & Savor restaurant web app" loading="lazy" decoding="async" width="800" height="600">
+            <div class="view-badge"><span>View Details →</span></div>
+          </div></div>
+          <div class="body">
+            <h3>Spice & Savor</h3>
+            <p>Restaurant • Web App — Interactive menu, online reservations, and location discovery.</p>
+            <div class="project-tags"><span class="tag-mono">React</span><span class="tag-mono">API</span></div>
+          </div>
+        </a>
+<a href="portfolio-detail.html?id=sparkleclean" class="project-card reveal tilt-card">
+          <div class="thumb">
+            <div class="thumb-chrome"><span></span><span></span><span></span></div>
+            <div class="shot-area"><img src="http://ersurajverma.in/wp-content/uploads/2026/05/portfolio_cleaning.png" alt="Sparkle Clean cleaning services website" loading="lazy" decoding="async" width="800" height="600">
+            <div class="view-badge"><span>View Details →</span></div>
+          </div></div>
+          <div class="body">
+            <h3>Sparkle Clean</h3>
+            <p>Cleaning Services • Business Site — Trust-driven service page with instant quote booking.</p>
+            <div class="project-tags"><span class="tag-mono">HTML/CSS</span><span class="tag-mono">Formspree</span></div>
+          </div>
+        </a>
+      </div>      </div>
       <div style="text-align:center; margin-top:44px;">
         <a href="portfolio.html" class="btn btn-ghost" data-i18n="portfolio.view_all">View Full Portfolio <span class="btn-arrow">→</span></a>
       </div>
