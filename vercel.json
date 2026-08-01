@@ -1,9 +1,9 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "outputDirectory": ".",
-  "functions": {
-    "api/og.jsx": { "maxDuration": 10 }
-  },
+  "cleanUrls": true,
+  "trailingSlash": false,
   "headers": [
     {
       "source": "/(.*)",
@@ -27,22 +27,12 @@
     }
   ],
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/about", "destination": "/about.html" },
-    { "source": "/services", "destination": "/services.html" },
-    { "source": "/portfolio", "destination": "/portfolio.html" },
-    { "source": "/portfolio-detail", "destination": "/portfolio-detail.html" },
-    { "source": "/contact", "destination": "/contact.html" },
-    { "source": "/privacy", "destination": "/privacy.html" },
-    { "source": "/terms", "destination": "/terms.html" },
-    { "source": "/404", "destination": "/404.html" },
-    { "source": "/blog", "destination": "/blog/index.html" },
-    { "source": "/blog/", "destination": "/blog/index.html" },
     { "source": "/blog/web-development", "destination": "/blog/web-development.html" },
     { "source": "/blog/shopify-vs-woocommerce", "destination": "/blog/shopify-vs-woocommerce.html" },
     { "source": "/blog/seo-tips-2026", "destination": "/blog/seo-tips-2026.html" },
     { "source": "/blog/website-cost-2026", "destination": "/blog/website-cost-2026.html" },
     { "source": "/blog/website-mistakes-conversions", "destination": "/blog/website-mistakes-conversions.html" },
-    { "source": "/blog/custom-vs-nocode", "destination": "/blog/custom-vs-nocode.html" }
+    { "source": "/blog/custom-vs-nocode", "destination": "/blog/custom-vs-nocode.html" },
+    { "source": "/((?!404|api).*)", "destination": "/$1.html" }
   ]
 }
