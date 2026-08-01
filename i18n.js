@@ -168,6 +168,9 @@ var i18n = (function () {
       'about.cta.eyebrow': 'Work With Us',
       'about.cta.heading': 'Ready to see what a full-stack team can do for your business?',
       'about.cta.sub': 'Book a free call — no pitch deck, just a straight conversation about what your website should be doing for you.',
+      'about.team.eyebrow': 'The Team',
+      'about.team.heading': 'A team of specialists, not a one-man show.',
+      'about.team.sub': 'Design, development, SEO, and e-commerce — covered by people who do it every day.',
 
       /* Services Page */
       'services.page.eyebrow': 'Services',
@@ -275,6 +278,8 @@ var i18n = (function () {
       'portfolio.page.sub': 'Each project represents a different challenge — e-commerce, membership sites, blogs, lead generation, and custom web apps.',
       'portfolio.filter.all': 'All',
       'portfolio.filter.web': 'Websites',
+      'portfolio.filter.ai': 'AI / Web3',
+      'portfolio.filter.fullstack': 'Fullstack',
       'portfolio.filter.ecom': 'E-Commerce',
       'portfolio.filter.app': 'Web Apps',
       'portfolio.filter.seo': 'SEO',
@@ -459,6 +464,9 @@ var i18n = (function () {
       'about.cta.eyebrow': 'Travaillez avec nous',
       'about.cta.heading': 'Prêt à voir ce qu\'une équipe full-stack peut faire pour votre entreprise ?',
       'about.cta.sub': 'Réservez un appel gratuit — pas de pitch commercial, juste une conversation franche sur ce que votre site devrait faire pour vous.',
+      'about.team.eyebrow': 'L\'équipe',
+      'about.team.heading': 'Une équipe de spécialistes, pas un one-man show.',
+      'about.team.sub': 'Design, développement, SEO et e-commerce — assurés par des experts qui le pratiquent chaque jour.',
 
       /* Services Page */
       'services.page.eyebrow': 'Services',
@@ -566,6 +574,8 @@ var i18n = (function () {
       'portfolio.page.sub': 'Chaque projet représente un défi différent — e-commerce, site d\'adhésion, blog, génération de leads et apps web sur mesure.',
       'portfolio.filter.all': 'Tous',
       'portfolio.filter.web': 'Sites web',
+      'portfolio.filter.ai': 'IA / Web3',
+      'portfolio.filter.fullstack': 'Fullstack',
       'portfolio.filter.ecom': 'E-Commerce',
       'portfolio.filter.app': 'Apps Web',
       'portfolio.filter.seo': 'SEO',
