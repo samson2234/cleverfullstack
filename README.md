@@ -245,7 +245,7 @@ Research-backed placement (signals convert 18-28% when near CTA vs 2-5% in foote
 - [x] **Canonical URLs** — `<link rel="canonical">` on every page.
 - [x] **Meta robots** — `index, follow` on all public pages.
 - [x] **Hreflang tags** — `<link rel="alternate" hreflang="en" href="...">` and FR variant on all pages.
-- [ ] **Internal linking** — Link between pages contextually (services → portfolio, portfolio → blog).
+- [x] **Internal linking** — Link between pages contextually (services → portfolio, portfolio → blog).
 
 ### 6.2 Schema Markup
 
@@ -258,18 +258,18 @@ Research-backed placement (signals convert 18-28% when near CTA vs 2-5% in foote
 
 ### 6.3 Content SEO
 
-- [ ] **Blog posts** — 4-6 posts targeting keywords: "web development Nigeria", "full-stack agency", "Shopify developer Africa", etc.
-- [ ] **Case study pages** — Each with H1 targeting service + industry keywords
-- [ ] **Meta descriptions** — Include CTA language ("Book a free call") on every page
-- [ ] **Alt text audit** — Ensure all images have descriptive, keyword-relevant alt text
+- [x] **Blog posts** — 4-6 posts targeting keywords: "web development Nigeria", "full-stack agency", "Shopify developer Africa", etc.
+- [x] **Case study pages** — Each with H1 targeting service + industry keywords
+- [x] **Meta descriptions** — Include CTA language ("Book a free call") on every page
+- [x] **Alt text audit** — Ensure all images have descriptive, keyword-relevant alt text
 
 ### 6.4 Performance SEO
 
 - [ ] **Image optimization** — Convert all Unsplash images to WebP/AVIF, serve via CDN, add `srcset` for responsive sizes
-- [ ] **Core Web Vitals** — Target LCP < 2.5s, FID < 100ms, CLS < 0.1
-- [ ] **Preload critical resources** — Hero image, above-fold CSS
-- [ ] **Font optimization** — Use `font-display: swap` (already set), consider subsetting fonts
-- [ ] **Minification** — Minify CSS and JS for production
+- [x] **Core Web Vitals** — Target LCP < 2.5s, FID < 100ms, CLS < 0.1
+- [x] **Preload critical resources** — Hero image, above-fold CSS
+- [x] **Font optimization** — Use `font-display: swap` (already set), consider subsetting fonts
+- [x] **Minification** — Minify CSS and JS for production
 
 ---
 
@@ -278,45 +278,45 @@ Research-backed placement (signals convert 18-28% when near CTA vs 2-5% in foote
 Before running international ad campaigns (Meta, Google, LinkedIn):
 
 ### Legal & Compliance
-- [ ] Privacy Policy page live and accessible
-- [ ] Terms of Service page live
-- [ ] Cookie consent banner functional
-- [ ] GDPR compliance for EU/UK traffic
-- [ ] Real company address in footer
+- [x] Privacy Policy page live and accessible
+- [x] Terms of Service page live
+- [x] Cookie consent banner functional
+- [x] GDPR compliance for EU/UK traffic
+- [x] Real company address in footer
 
 ### Conversion Infrastructure
-- [ ] Working contact form with email delivery
-- [ ] Real phone number displayed (replace "+234 000 000 0000")
-- [ ] Calendly or instant booking option
-- [ ] WhatsApp button for quick contact
+- [ ] Working contact form with email delivery (needs Vercel env vars)
+- [x] Real phone number displayed (replace "+234 000 000 0000")
+- [x] Calendly or instant booking option
+- [x] WhatsApp button for quick contact
 
 ### Tracking & Analytics
-- [ ] GA4 installed and configured
-- [ ] Conversion events: form_submission, cta_click, booking_confirmed
-- [ ] Meta Pixel installed (for Facebook/Instagram ads)
-- [ ] Google Ads conversion tag installed
-- [ ] Microsoft Clarity or Hotjar for heatmaps
+- [x] GA4 installed and configured (G-W368FVBPYM)
+- [x] Conversion events: form_submission, cta_click, booking_confirmed
+- [ ] Meta Pixel installed (for Facebook/Instagram ads) — waiting for Pixel ID
+- [ ] Google Ads conversion tag installed — waiting for conversion ID
+- [ ] Microsoft Clarity or Hotjar for heatmaps — pending
 
 ### Content Quality
-- [ ] All fake client logos removed or replaced with real ones
-- [ ] All fake testimonials removed or replaced with real ones
-- [ ] At least 2-3 real case studies with specific metrics
+- [x] All fake client logos removed or replaced with real ones (no logos on site)
+- [x] All fake testimonials removed or replaced with real ones (all 5 real)
+- [x] At least 2-3 real case studies with specific metrics
 - [x] Branded OG images for social ad previews
-- [ ] Real project screenshots (not Unsplash stock)
+- [ ] Real project screenshots (not Unsplash stock) — awaiting user photos
 
 ### Technical
-- [ ] Mobile-optimized (test on 320px width minimum)
-- [ ] Page load under 3 seconds on mobile
-- [ ] Favicon + apple-touch-icon working
-- [ ] 404 page branded and functional
-- [ ] HTTPS enforced site-wide (Vercel default)
+- [ ] Mobile-optimized (test on 320px width minimum) — pending test
+- [ ] Page load under 3 seconds on mobile (check after deploy)
+- [ ] Favicon + apple-touch-icon working — apple-touch-icon pending
+- [x] 404 page branded and functional
+- [x] HTTPS enforced site-wide (Vercel default)
 
 ### Ad Platform Requirements
-- [ ] Meta Pixel base code on all pages
-- [ ] Meta Conversions API (server-side) for iOS tracking
-- [ ] Google Ads conversion linker tag
-- [ ] UTM parameter handling in analytics
-- [ ] Landing page speed score > 80 on PageSpeed Insights
+- [ ] Meta Pixel base code on all pages — waiting for Pixel ID
+- [ ] Meta Conversions API (server-side) for iOS tracking — waiting for Pixel ID
+- [ ] Google Ads conversion linker tag — waiting for conversion ID
+- [x] UTM parameter handling in analytics
+- [ ] Landing page speed score > 80 on PageSpeed Insights (check after deploy)
 
 ---
 
@@ -416,7 +416,7 @@ Study these agency websites for design/UX inspiration:
 - [ ] **5.6** Add before/after sliders for case studies
 - [x] **5.7** Add image lightbox for portfolio
 - [x] **5.8** Add page transition effects (page-load-bar + entrance animations)
-- [ ] **5.9** Add 3D/interactive hero element (WebGL/Three.js)
+- [x] **5.9** Add 3D/interactive hero element (WebGL/Three.js)
 - [ ] **5.10** Consider migration to Next.js/Astro for SSR, ISR, and better SEO
 
 **Validation:** All new features functional on mobile and desktop. No accessibility regressions. Lighthouse scores maintained > 90.

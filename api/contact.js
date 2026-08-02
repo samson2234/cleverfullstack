@@ -62,7 +62,10 @@ export default async function handler(req, res) {
     email: email,
     phone: phone || 'Not provided',
     message: message,
-    source: 'cleverstack.dev contact form'
+    source: body.source || 'cleverstack.dev contact form',
+    utm_source: (body.utm_source || '').trim(),
+    utm_medium: (body.utm_medium || '').trim(),
+    utm_campaign: (body.utm_campaign || '').trim()
   };
 
   let dbSaved = false;
@@ -144,7 +147,7 @@ export default async function handler(req, res) {
             '</blockquote>' +
             '<p style="color:#5B6079;font-size:14px;">In the meantime, you can book a free strategy call:</p>' +
             '<a href="https://calendly.com/samsonfalope326/30min" style="display:inline-block;background:#00C2A8;color:#fff;padding:12px 24px;border-radius:100px;text-decoration:none;font-weight:600;">Book a Free Call</a>' +
-            '<p style="color:#aaa;font-size:12px;margin-top:24px;">CleverStack — Ibadan, Nigeria</p>' +
+            '<p style="color:#aaa;font-size:12px;margin-top:24px;">CleverStack — Lagos, Nigeria</p>' +
             '</div>'
         })
       });
