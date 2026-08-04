@@ -1,9 +1,13 @@
 export const config = { runtime: 'nodejs' };
 
-// api/contact.js — Contact Form Handler with Database + Email
+// api/contact.js — Contact Form Handler with Database + Email + CRM
 //
 // LAYER 1 (PRIMARY): Turso database — every submission saved permanently
 // LAYER 2 (BACKUP): Resend email — instant notification to your inbox
+// LAYER 3: Auto-responder — confirmation to the submitter
+// LAYER 4: Newsletter opt-in — if the visitor checked "subscribe", they're
+//          added to the subscribers table and get the welcome email.
+// LAYER 5 (FALLBACK): Web3Forms if no Resend configured
 //
 // Even if email fails, the submission is in the database.
 // Even if the database has issues, the email was sent.
@@ -17,10 +21,17 @@ export const config = { runtime: 'nodejs' };
 //
 //   2. Resend email (free tier): https://resend.com
 //      - Vercel Env Vars: RESEND_API_KEY, CONTACT_EMAIL=cleverdigitals70@gmail.com
+//      - Optional: RESEND_FROM for a verified domain (see lib/email.js)
 //
-//   3. Database auto-initializes on first request (creates submissions table)
+//   3. Database auto-initializes on first request (creates tables)
 
-import { saveSubmission } from '../lib/db.js';
+import { saveSubmission, addSubscriber, logEmail } from '../lib/db.js';
+import {
+  sendResendEmail,
+  contactNotificationTemplate,
+  welcomeEmailTemplate,
+  ownerEmail
+} from '../lib/email.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -40,6 +51,7 @@ export default async function handler(req, res) {
   const email = (body.email || '').trim();
   const phone = (body.phone || '').trim();
   const message = (body.message || '').trim();
+  const subscribeOptIn = body.subscribe === true || body.subscribe === 'true';
 
   if (!name || !email || !message) {
     return res.status(400).json({
@@ -88,36 +100,21 @@ export default async function handler(req, res) {
   let emailSent = false;
   if (process.env.RESEND_API_KEY) {
     try {
-      const contactEmail = process.env.CONTACT_EMAIL || 'cleverdigitals70@gmail.com';
-      const resendRes = await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + process.env.RESEND_API_KEY,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          from: 'CleverStack Contact <onboarding@resend.dev>',
-          to: [contactEmail],
-          subject: 'New Contact: ' + submission.name + ' — CleverStack',
-          html: '<h2>New Contact Form Submission</h2>' +
-            '<p><strong>Name:</strong> ' + submission.name + '</p>' +
-            '<p><strong>Email:</strong> ' + submission.email + '</p>' +
-            '<p><strong>Phone:</strong> ' + submission.phone + '</p>' +
-            '<p><strong>Message:</strong></p>' +
-            '<p>' + submission.message.replace(/\n/g, '<br>') + '</p>' +
-            '<hr>' +
-            '<p style="color:#666;font-size:12px;">Submitted at ' + new Date().toISOString() + ' from cleverstack.dev</p>',
-          reply_to: submission.email
-        })
+      const result = await sendResendEmail({
+        to: ownerEmail(),
+        subject: 'New Contact: ' + submission.name + ' — CleverStack',
+        html: contactNotificationTemplate(submission),
+        replyTo: submission.email
       });
-
-      if (resendRes.ok) {
-        emailSent = true;
-        console.log('Email notification sent via Resend');
-      } else {
-        const errBody = await resendRes.json();
-        console.error('Resend error:', errBody);
-      }
+      emailSent = result.ok;
+      await logEmail({
+        to_email: ownerEmail(),
+        type: 'contact_notify',
+        subject: 'New Contact: ' + submission.name,
+        status: result.ok ? 'sent' : 'failed',
+        error: result.ok ? '' : result.error
+      });
+      if (!result.ok) console.error('Resend error:', result.error);
     } catch (err) {
       console.error('Resend request failed:', err.message);
     }
@@ -134,7 +131,7 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: 'CleverStack <onboarding@resend.dev>',
+          from: process.env.RESEND_FROM || 'CleverStack <onboarding@resend.dev>',
           to: [submission.email],
           subject: 'We received your message — CleverStack',
           html: '<div style="font-family:sans-serif;max-width:520px;margin:0 auto;">' +
@@ -160,7 +157,38 @@ export default async function handler(req, res) {
     }
   }
 
-  // LAYER 4 (FALLBACK): Web3Forms if no Resend configured
+  // LAYER 4: Newsletter opt-in — add subscriber + send welcome email
+  let subscribed = false;
+  if (subscribeOptIn && process.env.TURSO_DATABASE_URL && submission.email) {
+    try {
+      const result = await addSubscriber(submission.email, submission.name, 'contact form opt-in');
+      if (result.added) {
+        subscribed = true;
+        if (process.env.RESEND_API_KEY) {
+          try {
+            const wRes = await sendResendEmail({
+              to: submission.email,
+              subject: 'Welcome to CleverStack!',
+              html: welcomeEmailTemplate(submission.name, submission.email)
+            });
+            await logEmail({
+              to_email: submission.email,
+              type: 'welcome',
+              subject: 'Welcome to CleverStack!',
+              status: wRes.ok ? 'sent' : 'failed',
+              error: wRes.ok ? '' : wRes.error
+            });
+          } catch (err) {
+            console.error('Welcome email (opt-in) failed:', err.message);
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Newsletter opt-in failed:', err.message);
+    }
+  }
+
+  // LAYER 5 (FALLBACK): Web3Forms if no Resend configured
   if (!emailSent && process.env.WEB3FORMS_ACCESS_KEY) {
     try {
       const w3Res = await fetch('https://api.web3forms.com/submit', {
@@ -193,7 +221,8 @@ export default async function handler(req, res) {
       _meta: {
         saved_to_db: dbSaved,
         email_sent: emailSent,
-        submission_id: submissionId
+        submission_id: submissionId,
+        subscribed: subscribed
       }
     });
   }

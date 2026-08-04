@@ -7,7 +7,7 @@
     <link>https://cleverfullstack.vercel.app/blog/</link>
     <description>Articles on web development, e-commerce, SEO, and growing your business online — from the CleverStack team.</description>
     <language>en</language>
-    <lastBuildDate>Wed, 05 Aug 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 01 Aug 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://cleverfullstack.vercel.app/blog/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>Why Custom Web Development Beats Templates (Every Time)</title>
@@ -58,7 +58,7 @@
       <title>Custom Web Development vs No-Code Tools: What Growing Businesses Should Pick</title>
       <link>https://cleverfullstack.vercel.app/blog/custom-vs-nocode</link>
       <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/custom-vs-nocode</guid>
-      <pubDate>Wed, 05 Aug 2026 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
       <category>Web Development</category>
       <author>henry@cleverstack.dev (Henry George)</author>
       <description><![CDATA[No-code tools are tempting. But when do they cost you more than they save? Here's when to build custom and when to use off-the-shelf.]]></description>

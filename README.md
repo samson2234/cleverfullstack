@@ -32,6 +32,71 @@ Connect the repo to [Vercel](https://vercel.com) for automatic deployments on ev
 
 ---
 
+# MINI-CRM & NEWSLETTER SYSTEM
+
+> **Added Aug 2026.** Turns the admin inbox into a full lead-management pipeline, adds a newsletter signup across the site, and wires instant email notifications + welcome emails. All data lives in the existing Turso database; all email goes through Resend.
+
+## Features
+
+**Admin CRM (`admin.html`)**
+- **Dashboard** — total/unread/new-today/this-week leads, subscriber count, win rate, leads-by-source bars, pipeline breakdown (new → contacted → proposal → won/lost), follow-ups due list.
+- **Leads** — search by name/email/message, filter by pipeline status, pagination, per-lead actions: set status, set follow-up date, add notes, **reply by email** (via Resend), copy email, delete. Unread leads highlighted.
+- **Subscribers** — list + search, delete, **broadcast email** to all active subscribers.
+- **Email Log** — every email sent (notifications, replies, welcomes, broadcasts) with status.
+- **Export** — CSV download of leads and subscribers.
+
+**Newsletter capture (site-wide)**
+- Footer subscribe form on all 9 pages (`index`, `about`, `services`, `portfolio`, `portfolio-detail`, `contact`, `blog/index`, `blog/web-development`, `404`).
+- Dedicated newsletter CTA section on the blog index.
+- Contact form has a hidden newsletter opt-in (`subscribe` flag in the POST body).
+
+**Instant notifications (owner)**
+- New contact form submission → immediate email to `CONTACT_EMAIL`.
+- New newsletter subscriber → immediate email to `CONTACT_EMAIL`.
+- Both emails are also stored in the `email_log` table.
+
+**Welcome email (subscriber)**
+- On first signup the subscriber gets a branded welcome email with an unsubscribe link.
+- One-click unsubscribe at `/api/unsubscribe?email=...` (removes them from the DB).
+
+## New / changed files
+
+| File | Purpose |
+|------|---------|
+| `api/subscribe.js` | Newsletter signup: save subscriber → welcome email → owner notification |
+| `api/unsubscribe.js` | One-click unsubscribe page |
+| `api/admin.js` | Expanded: stats, search, status, notes, follow-ups, reply, broadcast, subscribers, email log, CSV export |
+| `api/contact.js` | Refactored to shared email layer + optional newsletter opt-in |
+| `lib/db.js` | New `subscribers` + `email_log` tables; `submissions` gains `status`, `notes`, `follow_up_date` columns; search/stats helpers |
+| `lib/email.js` | Shared Resend send + HTML templates (welcome, notifications, reply, broadcast) |
+| `admin.html` | Full CRM UI (Dashboard / Leads / Subscribers / Email Log) |
+| `script.js` | Subscribe-form handler + `newsletter_subscribe` GA4/pixel event |
+| `i18n.js` | Newsletter strings added (EN + FR) |
+| `scripts/inject-newsletter.js` | One-time tool: adds the footer form to every page |
+
+## Env vars (Vercel)
+
+| Var | Required | Purpose |
+|-----|----------|---------|
+| `TURSO_DATABASE_URL` | Yes | Turso DB URL (tables auto-create on first request) |
+| `TURSO_AUTH_TOKEN` | Yes | Turso auth token |
+| `ADMIN_PASSWORD` | Yes | Admin login password (sent as Bearer token) |
+| `RESEND_API_KEY` | Yes (for email) | Resend API key |
+| `RESEND_FROM` | Recommended | Sender, e.g. `CleverStack <hello@cleverstack.dev>` — must be a **verified domain** in Resend |
+| `CONTACT_EMAIL` | Recommended | Owner inbox for notifications (defaults to `cleverdigitals70@gmail.com`) |
+
+> **IMPORTANT — verify your Resend domain:** welcome emails to subscribers and broadcasts will fail from the sandbox `onboarding@resend.dev`. Set up a domain in [Resend → Domains](https://resend.com/domains) (add their DNS records to your domain), then set `RESEND_FROM` to an address on it. Only then do real subscribers receive the welcome email.
+
+## Deployment checklist (after this change)
+
+1. `npm run minify` — compresses CSS/JS/HTML (skips `api/`, `lib/`, `analytics.js`).
+2. Deploy to Vercel.
+3. Set the env vars above in Vercel → Settings → Environment Variables.
+4. Test: submit the contact form, subscribe via a footer form, log into `/admin.html`.
+5. Update the auto-responder Calendly link in `api/contact.js` when the client's real Calendly is ready (see Ad-Readiness section).
+
+---
+
 # FULL WEBSITE AUDIT & IMPROVEMENT PLAN
 
 > **Purpose:** Comprehensive audit of faults, layout improvements, color system, frontend/backend features, SEO, ad-readiness, and step-by-step implementation roadmap. Each section is a checklist item you can complete and validate through CI/CD (lint, build, deploy preview).
@@ -555,6 +620,98 @@ cleverstack/
     workflows/
       validate.yml        # CI/CD validation (NEW)
 ```
+
+---
+
+# THINGS TO FIX
+
+> **Source:** Live-site audit of `cleverfullstack.vercel.app` (all 20 URLs verified, contact API tested, every HTML/CSS/JS file scanned). Prioritized — fix before running ads.
+
+---
+
+## 🔴 Critical (Breaking — Fix Before Running Ads)
+
+- [x] **OG images were dead on every page** — `api/og.jsx` imported `@vercel/og` but it was **not in `package.json`**. Fix applied: added `@vercel/og` + `react` to `dependencies` and ran `npm install`. Re-verify `https://cleverfullstack.vercel.app/api/og?title=test` returns `200 image/png` after redeploy.
+- [x] **`ersurajverma.in` portfolio images restored** — 16 image URLs (6 homepage + portfolio + portfolio-detail) pointed at `ersurajverma.in`, which appeared dead during the audit. Per client instruction they have been **restored to the original `http://ersurajverma.in` URLs** so real project screenshots show. Note: the host now resolves (185.151.30.200, TCP 80 open) but HTTP responses were unresponsive from the audit environment — confirm they load from the deployment region.
+  - `fiverr-res.cloudinary.com` (6 images) — **verified working** (full-length URLs return 200; earlier 404s were truncated test URLs). No action needed.
+  - `justinch.dev` (2 images) — working.
+- [x] **`ersurajverma.in` images referenced over `http://`** — restored as-is per client request. If the site is served over HTTPS, these may be blocked as mixed content; revisit if the client provides `https://` variants or local assets.
+- [ ] **Fake testimonials still live** — homepage has 10 testimonials with Unsplash stock avatars + fabricated names ("Drake Walker", "Alex Rodriguez", etc.), and `portfolio-detail.html` contains 11 fake clients. This contradicts the "all fake testimonials removed" claim in this README and violates Meta/FTC ad policy. Fix: replace with real testimonials (full name, company, real photo, specific results) or remove them.
+
+---
+
+## 🟠 High Priority
+
+- [x] **Remove unused `image.png` (898 KB)** — deleted from the repo. The LocalBusiness schema referenced `og-image.png` (404); updated the schema `image` to use the `/api/og` URL instead.
+- [x] **Conflicting trust stats** — hero now reads "200+ websites built personally" (EN/FR) and the stats section reads "50+ Projects shipped as a team" (per client clarification).
+- [x] **Google Fonts CSS loaded 3× on every page** — investigated: the 3 `css2` references are the **correct async font pattern** (`<link rel="preload">` + `media="print" onload` swap + `<noscript>` fallback), not a duplicate stylesheet. No change needed.
+- [x] **Sitemap listed the `/404` page** — removed `https://cleverfullstack.vercel.app/404` from `sitemap.xml`.
+- [x] **Blog post dated Aug 5, 2026** (`blog/custom-vs-nocode.html` + `posts.json` + `feed.xml`) — re-dated to Aug 1, 2026 in all three files (HTML, posts.json, feed.xml `pubDate` + `lastBuildDate`).
+
+---
+
+## 🟡 Minor
+
+- [x] **`admin.html` missing meta tags** — added meta description. (`noindex, nofollow` internal dashboard — canonical/OG/hreflang intentionally omitted as it is not indexed or shared.)
+- [x] **`404.html` missing meta description** — added for consistency.
+- [x] **No `favicon.ico` / `apple-touch-icon.png` file** — generated `favicon.ico` (brand 3-block mark, 64px) and `apple-touch-icon.png` (180px) at repo root. Pages keep the inline SVG data-URI favicon as a modern fallback.
+- [x] **Responsive images** — added `srcset` (480w/800w/1200w) + `sizes` to all 16 Unsplash portfolio/blog images; all variants verified 200. (Fiverr/Cloudinary images left untouched.)
+- [ ] **Blog post images still use Unsplash stock** — pending real project screenshots (already tracked as Sprint 2.3 in this README).
+- [x] **`blog/custom-vs-nocode.html` future-dated in `feed.xml`** — `lastBuildDate` and `pubDate` updated to Aug 1, 2026, in sync with the corrected post date.
+
+---
+
+## 📋 Ad-Readiness Checklist (Section 7) — Validated Aug 2026
+
+> **Source:** Audit of `cleverfullstack.vercel.app` against the README Section 7 ad-readiness checklist. Items below still need work before running Meta/Google/LinkedIn ads. Item states reflect the **local** codebase — the live site is currently **stale** and must be redeployed to pick up any fixes.
+
+### 🔴 Critical (Blocks Running Ads)
+
+- [ ] **Calendly links point to the wrong account** — every booking link (`index.html` ×5, `contact.html`, mobile CTA bar, and the auto-responder email in `api/contact.js`) uses `https://calendly.com/samsonfalope326/30min`. This is **someone else's calendar**. Fix: replace with the client's own Calendly URL in all locations.
+- [ ] **Meta Pixel ID is a placeholder** — `analytics.js` has `META_PIXEL_ID = '000000000000000'` so `initMeta()` exits early and the Pixel never loads on any page. Fix: insert the real Pixel ID (then the existing consent-gated `fbq` code + `csEvent` custom-event sync starts working automatically).
+- [ ] **Fake client logos still live** — homepage "Trusted By" strip shows 6 invented SVG logos (ORBITAL, NORTHLOOM, MARLOW & REID, FIELDWORK OPS, HAVENPOINT, BARE BOTANICALS). Fix: replace with real client logos, or remove the strip until real ones exist.
+- [ ] **Fake testimonials still live** — homepage 10 testimonials (fabricated names "Drake Walker", "Alex Rodriguez", etc. + Unsplash avatars) and `portfolio-detail.html` clients. Fix: swap in real testimonials (name, company, real photo, specific results) when the client provides them; some clients want privacy so use approved Unsplash avatars that match the names.
+
+### 🟠 High Priority
+
+- [ ] **Google Ads conversion tag not installed** — no `AW-XXXX` conversion tracking or conversion linker anywhere. Fix: add the Google Ads global site tag + conversion linker + a conversion event fired from `csEvent` (e.g. map `form_submission` / `booking_confirmed`).
+- [ ] **Meta Conversions API (CAPI) not implemented** — only browser Pixel base code exists (and it's placeholder). Server-side CAPI is required for reliable iOS attribution. Fix: add a server endpoint (e.g. `api/meta-capi.js`) called from `/api/contact` and CTA events, sending `eventID` + `client_user_agent` + `client_ip_address` for deduplication.
+- [ ] **Microsoft Clarity / Hotjar not installed** — no heatmap/session recording tool. Fix: add Clarity (free, lightweight, consent-gated like Tawk.to) or Hotjar; gate behind the existing cookie consent.
+- [ ] **No real case studies with specific metrics** — `portfolio-detail.html` has 14 projects with qualitative `outcome` text but no hard numbers. Fix: add concrete metrics (e.g. "+40% revenue in Q1", "3.2× faster load", "35% conversion lift") to at least 2-3 flagship projects using real client data.
+- [ ] **Real company address missing in footer** — footer shows only "Lagos, Nigeria — remote worldwide" and schema has only `addressLocality`. Meta/Google require a verifiable physical address for business ads. Fix: add full street address (or registered business address) to footer + LocalBusiness schema (`streetAddress`, `postalCode`).
+
+### 🟡 Minor
+
+- [ ] **`apple-touch-icon` not linked in HTML** — `apple-touch-icon.png` (180px) exists at repo root but no `<link rel="apple-touch-icon" href="/apple-touch-icon.png">` on pages, so iOS Safari still uses the SVG data-URI favicon. Fix: add the link tag to the `<head>` of all pages (and reference `favicon.ico` as the default).
+- [ ] **Live deployment is stale** — `cleverfullstack.vercel.app/api/og` returns 404, `apple-touch-icon.png` 404, homepage still shows old "30+ Projects" stat and old avatar set. All recent local fixes (OG images, stats, avatars, favicon) are **not live yet**. Fix: redeploy to Vercel, then re-verify `/api/og`, icons, stats.
+- [ ] **PageSpeed score unverified** — site is minified + lazy-loaded so it should pass, but no PageSpeed Insights run has been done. Fix: run PSI on mobile after redeploy; target > 80.
+
+### ✅ Already Passing (Verified)
+
+- Privacy Policy + Terms of Service pages live and linked in footer.
+- Cookie consent banner functional (Accept/Reject, GDPR-gated GA4/Tawk.to/Meta).
+- Contact form with email delivery (`/api/contact`: Turso DB + Resend + Web3Forms fallback + auto-responder).
+- Real phone number displayed (`+234 916 540 0534`).
+- WhatsApp button (header + float + mobile bar).
+- GA4 installed (`G-W368FVBPYM`, consent-gated) + `form_submission` / `cta_click` / `booking_confirmed` events wired.
+- UTM parameter handling — `csUtm` captures `utm_source/medium/campaign/term/content` + `gclid`/`fbclid`, sent to `/api/contact` and GA4.
+- Mobile-optimized (responsive, mobile CTA bar), HTTPS enforced (Vercel), branded 404 page.
+- Branded OG images (`api/og`) — **after redeploy**.
+
+---
+
+## ✅ Verified Working (No Action Needed)
+
+- All 20 public URLs return 200; nonexistent URLs return the custom 404.
+- Contact form backend (`/api/contact`) functional — Turso DB + Resend + Web3Forms fallback.
+- Cookie consent banner (GDPR) correctly gates GA4 loading.
+- EN/FR i18n — 267 keys, 100% coverage.
+- SEO base — sitemap, robots.txt, canonical, hreflang, JSON-LD schemas.
+- GA4 events (`form_submission`, `cta_click`, `booking_confirmed`) + UTM capture wired.
+- Security headers (X-Content-Type-Options, X-Frame-Options, Referrer-Policy) in `vercel.json`.
+- WhatsApp float, Tawk.to chat, Calendly, dark mode, calculators, 3D hero, lightbox, before/after slider, skeleton loading, GSAP animations all implemented.
+- `favicon.ico` and `apple-touch-icon.png` now exist at repo root.
+- `npm run minify` passes clean on all CSS/JS/HTML (idempotent).
 
 ---
 

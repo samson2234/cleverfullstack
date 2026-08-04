@@ -1,16 +1,41 @@
 export const config = { runtime: 'nodejs' };
 
-// api/admin.js — Admin Dashboard API
+// api/admin.js — Admin Dashboard API (Mini-CRM)
 //
-// Handles listing, marking as read, and deleting submissions.
+// Handles: dashboard stats, lead pipeline (list/search/filter/status/notes/
+// follow-up/reply-by-email/delete), subscribers (list/delete/broadcast),
+// email log, and CSV export.
+//
 // Auth: Bearer token using ADMIN_PASSWORD env var.
 //
 // SETUP:
 //   1. Vercel Env Var: ADMIN_PASSWORD = choose_a_strong_password
 //   2. Access at: cleverstack.dev/admin.html
 //   3. Login with your admin password
+//
+// Email features require RESEND_API_KEY (+ RESEND_FROM for real delivery).
 
-import { getSubmissions, getSubmissionCount, markAsRead, getSubmission, deleteSubmission, getClient } from '../lib/db.js';
+import {
+  getSubmissions,
+  getSubmissionCount,
+  getDashboardStats,
+  markAsRead,
+  getSubmission,
+  deleteSubmission,
+  updateSubmissionStatus,
+  addSubmissionNote,
+  setSubmissionFollowUp,
+  getSubscribers,
+  getSubscriberCount,
+  deleteSubscriber,
+  getEmailLog,
+  logEmail
+} from '../lib/db.js';
+import {
+  sendResendEmail,
+  replyEmailTemplate,
+  broadcastEmailTemplate
+} from '../lib/email.js';
 
 function verifyAuth(req) {
   const auth = req.headers.authorization || '';
@@ -26,6 +51,20 @@ function verifyAuth(req) {
   }
 
   return { ok: true };
+}
+
+function readParams(req) {
+  const url = req.url || '';
+  return new URLSearchParams(url.split('?')[1] || '');
+}
+
+function jsonToCsv(headers, rows) {
+  const esc = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+  const lines = [headers.map(esc).join(',')];
+  for (const r of rows) {
+    lines.push(headers.map((h) => esc(r[h])).join(','));
+  }
+  return '\uFEFF' + lines.join('\r\n');
 }
 
 export default async function handler(req, res) {
@@ -49,67 +88,218 @@ export default async function handler(req, res) {
   }
 
   try {
-    // GET — list submissions
+    // ===================== GET =====================
     if (req.method === 'GET') {
-      const url = req.url || '';
-      const params = new URLSearchParams(url.split('?')[1] || '');
+      const params = readParams(req);
+      const view = params.get('view') || 'submissions';
 
-      const limit = parseInt(params.get('limit')) || 50;
-      const offset = parseInt(params.get('offset')) || 0;
-      const unreadOnly = params.get('unread') === 'true';
-      const countOnly = params.get('count') === 'true';
-
-      if (countOnly) {
-        const total = await getSubmissionCount(false);
-        const unread = await getSubmissionCount(true);
-        return res.status(200).json({ total: total, unread: unread });
+      // Dashboard stats
+      if (params.get('stats') === 'true') {
+        const stats = await getDashboardStats();
+        return res.status(200).json(stats);
       }
 
-      const submissions = await getSubmissions({
-        limit: limit,
-        offset: offset,
-        unread: unreadOnly
-      });
+      // CSV export of leads
+      if (params.get('export') === 'leads') {
+        const all = await getSubmissions({ limit: 10000, offset: 0 });
+        const csv = jsonToCsv(
+          ['id', 'name', 'email', 'phone', 'status', 'source', 'utm_source', 'utm_medium', 'utm_campaign', 'is_read', 'created_at', 'message'],
+          all.map((r) => ({ ...r }))
+        );
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', 'attachment; filename="cleverstack-leads.csv"');
+        return res.status(200).send(csv);
+      }
 
-      const total = await getSubmissionCount(false);
-      const unread = await getSubmissionCount(true);
+      // CSV export of subscribers
+      if (params.get('export') === 'subscribers') {
+        const all = await getSubscribers({ limit: 10000, offset: 0 });
+        const csv = jsonToCsv(
+          ['id', 'email', 'name', 'source', 'status', 'created_at'],
+          all.map((r) => ({ ...r }))
+        );
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', 'attachment; filename="cleverstack-subscribers.csv"');
+        return res.status(200).send(csv);
+      }
+
+      // Subscribers list
+      if (view === 'subscribers') {
+        const limit = parseInt(params.get('limit')) || 100;
+        const offset = parseInt(params.get('offset')) || 0;
+        const search = params.get('q') || '';
+        const subscribers = await getSubscribers({ limit, offset, search });
+        const total = await getSubscriberCount();
+        return res.status(200).json({ subscribers, total, limit, offset });
+      }
+
+      // Email log
+      if (view === 'email_log') {
+        const limit = parseInt(params.get('limit')) || 100;
+        const log = await getEmailLog(limit);
+        return res.status(200).json({ log, limit });
+      }
+
+      // Submissions / leads list (default)
+      const limit = parseInt(params.get('limit')) || 100;
+      const offset = parseInt(params.get('offset')) || 0;
+      const unreadOnly = params.get('unread') === 'true';
+      const status = params.get('status') || '';
+      const search = params.get('q') || '';
+
+      const submissions = await getSubmissions({ limit, offset, unread: unreadOnly, status, search });
+      const total = await getSubmissionCount({ unread: unreadOnly, status, search });
+      const unread = await getSubmissionCount({ unread: true });
+      const totalAll = await getSubmissionCount();
 
       return res.status(200).json({
-        submissions: submissions,
-        total: total,
-        unread: unread,
-        limit: limit,
-        offset: offset
+        submissions,
+        total,
+        totalAll,
+        unread,
+        limit,
+        offset
       });
     }
 
-    // POST — mark as read, get, or delete
+    // ===================== POST =====================
     if (req.method === 'POST') {
       const body = req.body || {};
       const action = body.action;
-      const id = body.id;
 
-      if (!action || !id) {
-        return res.status(400).json({ error: 'action and id are required' });
+      if (!action) {
+        return res.status(400).json({ error: 'action is required' });
       }
 
+      // ---- Lead actions ----
       if (action === 'mark_read') {
-        await markAsRead(id);
+        if (!body.id) return res.status(400).json({ error: 'id required' });
+        await markAsRead(body.id);
         return res.status(200).json({ success: true, message: 'Marked as read' });
       }
 
       if (action === 'get') {
-        const submission = await getSubmission(id);
-        if (!submission) {
-          return res.status(404).json({ error: 'Submission not found' });
-        }
-        await markAsRead(id);
-        return res.status(200).json({ submission: submission });
+        if (!body.id) return res.status(400).json({ error: 'id required' });
+        const submission = await getSubmission(body.id);
+        if (!submission) return res.status(404).json({ error: 'Submission not found' });
+        await markAsRead(body.id);
+        return res.status(200).json({ submission });
       }
 
       if (action === 'delete') {
-        await deleteSubmission(id);
+        if (!body.id) return res.status(400).json({ error: 'id required' });
+        await deleteSubmission(body.id);
         return res.status(200).json({ success: true, message: 'Deleted' });
+      }
+
+      if (action === 'set_status') {
+        if (!body.id || !body.status) return res.status(400).json({ error: 'id and status required' });
+        await updateSubmissionStatus(body.id, body.status);
+        return res.status(200).json({ success: true, message: 'Status updated to ' + body.status });
+      }
+
+      if (action === 'add_note') {
+        if (!body.id || !body.note) return res.status(400).json({ error: 'id and note required' });
+        await addSubmissionNote(body.id, String(body.note).slice(0, 2000));
+        return res.status(200).json({ success: true, message: 'Note added' });
+      }
+
+      if (action === 'set_follow_up') {
+        if (!body.id) return res.status(400).json({ error: 'id required' });
+        const date = body.follow_up_date || '';
+        if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+          return res.status(400).json({ error: 'follow_up_date must be YYYY-MM-DD' });
+        }
+        await setSubmissionFollowUp(body.id, date || null);
+        return res.status(200).json({ success: true, message: date ? 'Follow-up set for ' + date : 'Follow-up cleared' });
+      }
+
+      if (action === 'reply') {
+        if (!body.id || !body.body) return res.status(400).json({ error: 'id and body required' });
+        const submission = await getSubmission(body.id);
+        if (!submission) return res.status(404).json({ error: 'Submission not found' });
+
+        const subject = body.subject || 'Re: Your message to CleverStack';
+        const result = await sendResendEmail({
+          to: submission.email,
+          subject,
+          html: replyEmailTemplate(submission, String(body.body).slice(0, 10000)),
+          replyTo: process.env.CONTACT_EMAIL || 'cleverdigitals70@gmail.com'
+        });
+        await logEmail({
+          to_email: submission.email,
+          type: 'reply',
+          subject,
+          status: result.ok ? 'sent' : 'failed',
+          error: result.ok ? '' : result.error
+        });
+        if (result.ok) {
+          await markAsRead(body.id);
+          return res.status(200).json({ success: true, message: 'Reply sent to ' + submission.email });
+        }
+        return res.status(500).json({ error: 'Email failed: ' + result.error });
+      }
+
+      // ---- Subscriber actions ----
+      if (action === 'delete_subscriber') {
+        if (!body.id) return res.status(400).json({ error: 'id required' });
+        await deleteSubscriber(body.id);
+        return res.status(200).json({ success: true, message: 'Subscriber deleted' });
+      }
+
+      if (action === 'broadcast') {
+        if (!body.subject || !body.body) return res.status(400).json({ error: 'subject and body required' });
+        const all = await getSubscribers({ limit: 10000, offset: 0 });
+        const active = all.filter((s) => s.status === 'active' || !s.status);
+        const target = active.map((s) => s.email);
+
+        if (target.length === 0) {
+          return res.status(200).json({ success: true, message: 'No active subscribers to send to', sent: 0 });
+        }
+
+        let sent = 0;
+        let failed = 0;
+        const BATCH = 50;
+        for (let i = 0; i < target.length; i += BATCH) {
+          const batch = target.slice(i, i + BATCH);
+          const htmlBatch = batch.map((email) =>
+            broadcastEmailTemplate(String(body.body).slice(0, 10000)).replace('__EMAIL__', encodeURIComponent(email))
+          );
+          for (let j = 0; j < batch.length; j++) {
+            try {
+              const result = await sendResendEmail({
+                to: batch[j],
+                subject: String(body.subject),
+                html: htmlBatch[j]
+              });
+              await logEmail({
+                to_email: batch[j],
+                type: 'broadcast',
+                subject: String(body.subject),
+                status: result.ok ? 'sent' : 'failed',
+                error: result.ok ? '' : result.error
+              });
+              if (result.ok) sent++; else failed++;
+            } catch (err) {
+              failed++;
+              await logEmail({
+                to_email: batch[j],
+                type: 'broadcast',
+                subject: String(body.subject),
+                status: 'failed',
+                error: err.message
+              });
+            }
+          }
+        }
+
+        return res.status(200).json({
+          success: true,
+          message: 'Broadcast complete: ' + sent + ' sent, ' + failed + ' failed',
+          sent,
+          failed,
+          total: target.length
+        });
       }
 
       return res.status(400).json({ error: 'Unknown action: ' + action });
