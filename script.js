@@ -2,10 +2,13 @@ document.addEventListener("DOMContentLoaded",function(){if("undefined"!=typeof i
 
 /* === Sprint 8: Optimized Performance === */
 
-/* Rotating Hero Text - rAF-based, cleans up on page hide */
-var rotatingWords=["websites","web apps","e-commerce stores","digital products","SaaS platforms","landing pages"];
-var rotatingEl=document.querySelector(".rotating-text");
-if(rotatingEl){var currentWord=0,rotateTimer=null;function rotateWord(){rotatingEl.classList.add("fade-out");setTimeout(function(){currentWord=(currentWord+1)%rotatingWords.length;rotatingEl.textContent=rotatingWords[currentWord];rotatingEl.classList.remove("fade-out");rotatingEl.classList.add("fade-in")},250);setTimeout(function(){rotatingEl.classList.remove("fade-in")},300)}rotateTimer=setInterval(rotateWord,2400);document.addEventListener("visibilitychange",function(){if(document.hidden){clearInterval(rotateTimer);rotateTimer=null}else if(!rotateTimer){rotateTimer=setInterval(rotateWord,2400)}})}
+/* Typewriter Hero Text - types, pauses, clears, cycles 4 phrases */
+var twDefault=["turn visitors into leads, sales, and revenue.","eliminate conversion leaks and bounce rates.","automate your pipeline and scale your operations.","turn complex workflows into effortless sales."];
+var twWords=twDefault.slice(0);
+function twLoadWords(){var w=[];if(typeof i18n!=="undefined"&&typeof i18n.get==="function"){for(var k=1;k<=4;k++){var v=i18n.get("hero.rotate."+k);if(v&&v.indexOf("hero.rotate.")!==0)w.push(v)}}if(w.length===4)twWords=w}
+var twEl=document.getElementById("rotatingText");
+var twReduced=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(twEl){twLoadWords();if(twReduced){twEl.textContent=twWords[0]}else{var twIndex=0,twTimer=null,twHidden=false;function twStop(){twHidden=true;clearTimeout(twTimer)}function twClear(){var j=twWords[twIndex].length;(function step(){if(twHidden)return;twEl.textContent=twWords[twIndex].slice(0,j);if(j>0){j--;twTimer=setTimeout(step,25)}else{twIndex=(twIndex+1)%twWords.length;twTimer=setTimeout(twType,400)}})()}function twType(){var w=twWords[twIndex],i=0;(function step(){if(twHidden)return;twEl.textContent=w.slice(0,i);if(i<w.length){i++;twTimer=setTimeout(step,45)}else{twTimer=setTimeout(twClear,1800)}})()}document.addEventListener("visibilitychange",function(){if(document.hidden){twStop()}else if(twHidden){twHidden=false;twEl=document.getElementById("rotatingText");twLoadWords();twType()}});if(typeof MutationObserver!=="undefined"){new MutationObserver(function(){if(twEl&&!document.body.contains(twEl)){twStop();twHidden=false;twEl=document.getElementById("rotatingText");twLoadWords();twType()}}).observe(document.body,{childList:true,subtree:true})}twType()}}
 
 /* Blog Preview - single innerHTML build, no per-card reflow */
 var blogPreviewEl=document.getElementById("blog-preview-list");

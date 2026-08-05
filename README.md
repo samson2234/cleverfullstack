@@ -700,6 +700,75 @@ cleverstack/
 
 ---
 
+# NFR AUDIT & REMEDIATION TRACKER (Aug 2026)
+
+> **Source:** Full non-functional-requirements audit of the codebase (performance, scalability, reliability, security, SEO, conversion, monitoring, accessibility, cross-device responsiveness). Every item is a tracked checkbox so we never lose the plan. **Status reflects the local codebase — redeploy to Vercel to make fixes live.**
+
+## Performance
+
+- [x] **Duplicate `hero3d.js` script tag removed** — was loaded twice in `index.html` (double parse/execute, wasted work). Now loaded once.
+- [x] **Mixed-content `http://` portfolio images upgraded to `https://`** — `index.html` (4: ecom, fitness, restaurant, cleaning) + `portfolio.html` (6: fitness, restaurant, smoothie, cleaning, affiliate, ecom). `https://ersurajverma.in` verified returning 200.
+- [x] **Caching** — `Cache-Control` headers (html/css/js: `max-age=3600, stale-while-revalidate=86400`) in `vercel.json`. Verified.
+- [x] **Fonts** — async load (preconnect + preload + `media="print"` onload swap + noscript fallback). Verified.
+- [x] **Images** — 17/17 `<img>` on home have `width`/`height` + `loading="lazy"` + `decoding="async"` (no image CLS). Verified.
+- [ ] **`srcset`/`sizes` for responsive images** — no `srcset` anywhere; mobile downloads desktop-size images. Add responsive sizes + WebP.
+- [ ] **External portfolio images not CDN-optimized** — `ersurajverma.in` images served raw; consider local/next/image optimization.
+- [ ] **Core Web Vitals measurement** — run Lighthouse/PageSpeed Insights after redeploy (target LCP < 2.5s, CLS < 0.1, score > 90).
+
+## Scalability
+
+- [ ] **Rate limiting on `/api/contact`, `/api/subscribe`, `/api/admin`** — none currently; a spam flood can burn Turso rows + Resend quota. Add per-IP in-memory limiter (e.g. 5–10 req/min).
+
+## Reliability
+
+- [x] **Email fallback chain** — Resend → Web3Forms fallback + DB error handling in `api/contact.js`/`api/subscribe.js`. Verified.
+- [x] **DB auto-init** — Turso tables auto-create on first request (`lib/db.js`). Verified.
+
+## Security
+
+- [x] **Existing headers** — `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy` in `vercel.json`. Verified.
+- [x] **Input validation** — email regex + length caps in `api/contact.js`/`api/subscribe.js`. Verified.
+- [x] **No secrets in repo** — all credentials via env vars. Verified.
+- [ ] **HSTS header** — `Strict-Transport-Security` not set in `vercel.json` (Vercel only adds on Pro). Add.
+- [ ] **CSP header** — no Content-Security-Policy in `vercel.json`. Add.
+- [ ] **Spam protection on forms** — no honeypot field or captcha/Turnstile anywhere on contact + newsletter forms. Add honeypot or Turnstile.
+- [ ] **Admin auth hardening** — `api/admin.js` uses plain `===` Bearer-token comparison (not timing-safe) with no attempt limiting. Add `crypto.timingSafeEqual` + lockout.
+
+## SEO
+
+- [x] **Canonical tags** — present on all 11 public pages + 7 blog posts (only `admin.html` intentionally omits it). Verified.
+- [x] **Schema.org** — `LocalBusiness` + `AggregateRating` (home), `Service` + `Offer` + `FAQPage` (services), `Article` w/ author+publisher (blog), `BreadcrumbList` + `Organization` everywhere, `Blog`/`AboutPage`/`CollectionPage`/`ErrorPage`. Verified.
+- [x] **`sitemap.xml` + `robots.txt`** — correct, domain `cleverfullstack.vercel.app`. Verified.
+- [x] **Clean URLs + redirects** — `cleanUrls` + blog 301 redirects in `vercel.json`. Verified.
+
+## Conversion
+
+- [x] **GA4** (`G-W368FVBPYM`) — consent-gated, `form_submission`/`cta_click`/`booking_confirmed` beacon events + UTM capture. Verified.
+- [x] **CTA infrastructure** — multiple CTAs, WhatsApp float/header/mobile bar, Calendly, forms with `aria-live` status. Verified.
+- [ ] **Meta Pixel real ID** — placeholder `000000000000000` in `analytics.js`; Pixel never loads. Insert real ID when available.
+- [ ] **Google Ads conversion tag** — no `AW-XXXX` conversion linker/tag. Add when conversion ID available.
+
+## Monitoring
+
+- [x] **GA4 analytics** — page views + events. Verified.
+- [ ] **Uptime monitoring** — none (BetterStack/UptimeRobot not wired).
+- [ ] **Error tracking** — none (Sentry / Vercel Analytics not wired).
+
+## Accessibility
+
+- [x] **Typewriter** — `aria-live="polite"` + visually-hidden full phrase list + `prefers-reduced-motion` static fallback. Verified.
+- [x] **Images** — 17/17 have `alt` (1 decorative). Verified.
+- [x] **Forms/controls** — `aria-label` on inputs, `role="status"` on form status. Verified.
+- [ ] **Skip-to-content link** — none present anywhere. Add.
+- [ ] **Social icon links** — `href="#"` dead placeholders (Twitter/LinkedIn/Instagram). Point to real profiles or remove.
+
+## Cross-device Responsiveness
+
+- [x] **Desktop + mobile regression** — verified after fixes (EN + FR, 0 console errors, stable hero `1437.7` / `h1 322`).
+- [ ] **Final sweep** — re-test 320px/768px/1024px/1440px after all tracker items land.
+
+---
+
 ## ✅ Verified Working (No Action Needed)
 
 - All 20 public URLs return 200; nonexistent URLs return the custom 404.

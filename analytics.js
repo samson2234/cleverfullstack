@@ -71,8 +71,25 @@
 
   // Unified event helper used by conversion tracking:
   // window.csEvent('cta_click', { cta: 'Book a Free Call' })
+  // Beacon transport keeps events delivered even when the submit navigates away.
   window.csEvent = function (eventName, params) {
-    if (typeof window.gtag === 'function') { gtag('event', eventName, params || {}); }
+    if (typeof window.gtag === 'function') {
+      var p = params || {};
+      p.transport_type = 'beacon';
+      gtag('event', eventName, p);
+    }
     if (typeof window.fbq === 'function') { fbq('trackCustom', eventName, params || {}); }
   };
+
+  // Fire form_submission conversion events on contact + newsletter submits
+  document.addEventListener('submit', function (e) {
+    var f = e.target;
+    if (f && f.matches && f.matches('.contact-form, .subscribe-form')) {
+      var isContact = f.classList.contains('contact-form');
+      window.csEvent('form_submission', {
+        form: isContact ? 'contact' : 'newsletter',
+        form_name: isContact ? 'Contact Form' : 'Newsletter Subscribe'
+      });
+    }
+  }, true);
 })();

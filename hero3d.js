@@ -1,1 +1,278 @@
-!function(){"use strict";var e;e=function(){var e=document.querySelector(".hero");if(e){var t=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches,r=document.createElement("canvas");r.className="hero3d-canvas",r.setAttribute("aria-hidden","true"),r.style.position="absolute",r.style.top="0",r.style.left="0",r.style.width="100%",r.style.height="100%",r.style.zIndex="0",r.style.pointerEvents="none",e.appendChild(r);var a=r.getContext("webgl",{antialias:!0,alpha:!0,depth:!1,stencil:!1,powerPreference:"high-performance",preserveDrawingBuffer:!0});if(a){var o,n=M(F("--indigo","#4F46E5")),i=M(F("--teal","#00C2A8")),u=M(F("--coral","#FF6B4A")),c=["attribute vec3 aP;","attribute float aAmp;","uniform float uTime;","uniform vec2 uMouse;","uniform float uScale;","uniform vec2 uCenter;","uniform float uDPR;","uniform vec3 uC0;","uniform vec3 uC1;","uniform vec3 uC2;","varying float vA;","varying vec3 vC;","void main(){","  float seed = aP.z;","  float w = sin(aP.x * 0.55 + uTime * 1.2 + seed * 3.0) * cos(aP.y * 0.4 - uTime * 0.8 + seed * 2.0);","  vec3 p = vec3(aP.x, w * aAmp * 0.55, aP.y);","  float ang = uTime * 0.10;","  float ca = cos(ang); float sa = sin(ang);","  float rx = p.x * ca - p.z * sa;","  float rz = p.x * sa + p.z * ca;","  p.x = rx; p.z = rz;","  float pitch = -0.35;","  float cp = cos(pitch); float sp = sin(pitch);","  float ry = p.y * cp - p.z * sp;","  float rz2 = p.y * sp + p.z * cp;","  p.y = ry; p.z = rz2;","  float persp = 1.0 / (1.0 + p.z * 0.16);","  vec2 pos = p.xy * persp * uScale + uCenter;","  pos += uMouse * vec2(18.0, 12.0) * persp;","  gl_Position = vec4(pos, 0.0, 1.0);","  gl_PointSize = clamp((4.5 + seed * 6.5) * persp * uDPR, 2.0, 30.0);","  float nx = aP.x * 0.9;","  float edgeX = smoothstep(-0.95, -0.5, nx) * (1.0 - smoothstep(0.5, 0.95, nx));","  float edgeZ = smoothstep(-1.0, -0.4, aP.y) * (1.0 - smoothstep(0.4, 1.0, aP.y));","  vA = aAmp * edgeX * edgeZ * persp;","  float t = clamp(aP.x * 0.5 + 0.5, 0.0, 1.0);","  vC = t < 0.5 ? mix(uC0, uC1, t * 2.0) : mix(uC1, uC2, (t - 0.5) * 2.0);","}"].join("\n"),m=["precision mediump float;","varying float vA;","varying vec3 vC;","uniform float uAlpha;","void main(){","  vec2 uv = gl_PointCoord - 0.5;","  float d = length(uv);","  float a = smoothstep(0.5, 0.08, d);","  gl_FragColor = vec4(vC * a, a * vA * uAlpha);","}"].join("\n");try{function U(e,t){var r=a.createShader(e);if(a.shaderSource(r,t),a.compileShader(r),!a.getShaderParameter(r,a.COMPILE_STATUS))throw new Error(a.getShaderInfoLog(r)||"shader error");return r}if(o=a.createProgram(),a.attachShader(o,U(a.VERTEX_SHADER,c)),a.attachShader(o,U(a.FRAGMENT_SHADER,m)),a.linkProgram(o),!a.getProgramParameter(o,a.LINK_STATUS))throw new Error(a.getProgramInfoLog(o)||"link error");a.useProgram(o)}catch(z){return void r.remove()}for(var f=a.getAttribLocation(o,"aP"),s=a.getAttribLocation(o,"aAmp"),l=a.getUniformLocation(o,"uTime"),d=a.getUniformLocation(o,"uMouse"),p=a.getUniformLocation(o,"uScale"),h=a.getUniformLocation(o,"uCenter"),v=a.getUniformLocation(o,"uDPR"),g=a.getUniformLocation(o,"uC0"),A=a.getUniformLocation(o,"uC1"),y=a.getUniformLocation(o,"uC2"),w=a.getUniformLocation(o,"uAlpha"),P=new Float32Array(11440),x=0,C=0;C<26;C++)for(var E=0;E<110;E++)P[x++]=1.8*E/109-.9,P[x++]=1.6*C/25-.8,P[x++]=(.137*E+.513*C)%1,P[x++]=1;var b=a.createBuffer();a.bindBuffer(a.ARRAY_BUFFER,b),a.bufferData(a.ARRAY_BUFFER,P,a.STATIC_DRAW),a.enableVertexAttribArray(f),a.vertexAttribPointer(f,3,a.FLOAT,!1,16,0),a.enableVertexAttribArray(s),a.vertexAttribPointer(s,1,a.FLOAT,!1,16,12);var L=P.length/4;a.disable(a.DEPTH_TEST),a.enable(a.BLEND),_(),a.uniform3f(g,n[0],n[1],n[2]),a.uniform3f(A,i[0],i[1],i[2]),a.uniform3f(y,u[0],u[1],u[2]),a.uniform2f(h,.18,-.05),I(),window.addEventListener("resize",I),new MutationObserver(_).observe(document.documentElement,{attributes:!0,attributeFilter:["data-theme"]});var S=!0;"IntersectionObserver"in window&&new IntersectionObserver(function(e){S=e[0].isIntersecting},{threshold:.05}).observe(e);var T={x:0,y:0},R={x:0,y:0};e.addEventListener("mousemove",function(e){R.x=e.clientX/window.innerWidth*2-1,R.y=e.clientY/window.innerHeight*2-1}),e.addEventListener("mouseleave",function(){R.x=0,R.y=0}),t?(a.uniform1f(l,0),a.uniform2f(d,0,0),a.clearColor(0,0,0,0),a.clear(a.COLOR_BUFFER_BIT),a.drawArrays(a.POINTS,0,L)):requestAnimationFrame(function e(r){S&&(T.x+=.05*(R.x-T.x),T.y+=.05*(R.y-T.y),a.uniform1f(l,r/1e3),a.uniform2f(d,T.x,T.y),a.clearColor(0,0,0,0),a.clear(a.COLOR_BUFFER_BIT),a.drawArrays(a.POINTS,0,L)),t||requestAnimationFrame(e)})}else r.remove()}function F(e,t){return getComputedStyle(document.documentElement).getPropertyValue(e).trim()||t}function M(e){var t=e.replace("#","");return 3===t.length&&(t=t.split("").map(function(e){return e+e}).join("")),[parseInt(t.slice(0,2),16)/255,parseInt(t.slice(2,4),16)/255,parseInt(t.slice(4,6),16)/255]}function _(){var e,t=(e=document.documentElement.getAttribute("data-theme"))?"dark"===e:window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches;a.blendFunc(a.ONE,a.ONE_MINUS_SRC_ALPHA),a.uniform1f(w,t?.42:.3)}function I(){var t=e.getBoundingClientRect(),o=Math.min(window.devicePixelRatio||1,1.75);r.width=Math.max(1,Math.round(t.width*o)),r.height=Math.max(1,Math.round(t.height*o)),a.viewport(0,0,r.width,r.height);var n=t.width/Math.max(t.height,1);a.uniform1f(p,Math.min(.9,.44*n)),a.uniform1f(v,o)}},"loading"===document.readyState?document.addEventListener("DOMContentLoaded",e):e()}();
+(function () {
+  'use strict';
+  var wrap = document.getElementById('hero3d');
+  var canvas = document.getElementById('hero-canvas');
+  if (!wrap || !canvas || typeof THREE === 'undefined') return;
+
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  var palette = {
+    dark: { primary: 0x7c74f0, secondary: 0x33d4bc, accent: 0xff6b4a, dust: 0xc7cbe8, glow: '124,116,240', glowOpacity: 0.5 },
+    light: { primary: 0x4f46e5, secondary: 0x00a68e, accent: 0xff5a3c, dust: 0x6b7099, glow: '79,70,229', glowOpacity: 0.42 }
+  };
+
+  var renderer, scene, camera, group;
+  var knot, knotWire, core, ringA, ringB, dust, glowSprite, glowTex;
+  var light1, light2, light3;
+  var clock = new THREE.Clock();
+  var currentFade = 1, targetFade = 1;
+  var visible = true;
+
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+  } catch (e) {
+    canvas.remove();
+    return;
+  }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setClearColor(0x000000, 0);
+
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  camera.position.set(0, 0, 7);
+
+  group = new THREE.Group();
+  scene.add(group);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+  light1 = new THREE.PointLight(0xffffff, 1.4, 40);
+  light1.position.set(4, 3, 5);
+  scene.add(light1);
+  light2 = new THREE.PointLight(0xffffff, 1.1, 40);
+  light2.position.set(-4, -2, 4);
+  scene.add(light2);
+  light3 = new THREE.PointLight(0xffffff, 0.5, 30);
+  light3.position.set(0, -4, -2);
+  scene.add(light3);
+
+  function buildScene(colors) {
+    knot = new THREE.Mesh(
+      new THREE.TorusKnotGeometry(1.02, 0.3, 180, 24),
+      new THREE.MeshStandardMaterial({
+        color: colors.primary,
+        metalness: 0.55,
+        roughness: 0.28,
+        emissive: colors.primary,
+        emissiveIntensity: 0.1
+      })
+    );
+    group.add(knot);
+
+    knotWire = new THREE.Mesh(
+      new THREE.TorusKnotGeometry(1.02, 0.3, 180, 24),
+      new THREE.MeshBasicMaterial({
+        color: colors.primary,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.15,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      })
+    );
+    knotWire.scale.setScalar(1.025);
+    group.add(knotWire);
+
+    core = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(0.42, 1),
+      new THREE.MeshStandardMaterial({
+        color: colors.secondary,
+        metalness: 0.7,
+        roughness: 0.25,
+        emissive: colors.secondary,
+        emissiveIntensity: 0.22,
+        flatShading: true
+      })
+    );
+    group.add(core);
+
+    var coreWire = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(0.42, 1),
+      new THREE.MeshBasicMaterial({
+        color: colors.secondary,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.5,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      })
+    );
+    coreWire.scale.setScalar(1.25);
+    core.add(coreWire);
+
+    ringA = makeRing(340, 2.35, colors.primary, 0.055, colors.glowOpacity);
+    ringA.rotation.set(1.15, 0, 0.4);
+    group.add(ringA);
+
+    ringB = makeRing(210, 2.95, colors.accent, 0.04, colors.glowOpacity * 0.8);
+    ringB.rotation.set(-0.85, 0.4, 0.2);
+    group.add(ringB);
+
+    dust = makeDust(150, colors.dust, 0.35);
+    group.add(dust);
+
+    glowTex = makeGlowTexture(colors.glow);
+    glowSprite = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: glowTex,
+        transparent: true,
+        opacity: colors.glowOpacity,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      })
+    );
+    glowSprite.scale.set(6.5, 6.5, 1);
+    group.add(glowSprite);
+  }
+
+  function makeRing(count, radius, color, size, opacity) {
+    var geo = new THREE.BufferGeometry();
+    var pos = new Float32Array(count * 3);
+    for (var i = 0; i < count; i++) {
+      var a = (i / count) * Math.PI * 2;
+      pos[i * 3] = Math.cos(a) * radius;
+      pos[i * 3 + 1] = Math.sin(a) * radius * 0.35;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 0.3;
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    var mat = new THREE.PointsMaterial({
+      color: color,
+      size: size,
+      transparent: true,
+      opacity: opacity,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    return new THREE.Points(geo, mat);
+  }
+
+  function makeDust(count, color, opacity) {
+    var geo = new THREE.BufferGeometry();
+    var pos = new Float32Array(count * 3);
+    for (var i = 0; i < count; i++) {
+      var r = 3.4 + Math.random() * 1.8;
+      var theta = Math.random() * Math.PI * 2;
+      var phi = Math.acos(2 * Math.random() - 1);
+      pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      pos[i * 3 + 2] = r * Math.cos(phi);
+    }
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    var mat = new THREE.PointsMaterial({
+      color: color,
+      size: 0.035,
+      transparent: true,
+      opacity: opacity,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    return new THREE.Points(geo, mat);
+  }
+
+  function makeGlowTexture(rgb) {
+    var c = document.createElement('canvas');
+    c.width = c.height = 128;
+    var g = c.getContext('2d');
+    var grad = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+    grad.addColorStop(0, 'rgba(' + rgb + ',0.55)');
+    grad.addColorStop(0.4, 'rgba(' + rgb + ',0.18)');
+    grad.addColorStop(1, 'rgba(' + rgb + ',0)');
+    g.fillStyle = grad;
+    g.fillRect(0, 0, 128, 128);
+    return new THREE.CanvasTexture(c);
+  }
+
+  function applyTheme() {
+    var c = palette[isDark ? 'dark' : 'light'];
+    knot.material.color.set(c.primary);
+    knot.material.emissive.set(c.primary);
+    knotWire.material.color.set(c.primary);
+    core.material.color.set(c.secondary);
+    core.material.emissive.set(c.secondary);
+    core.children[0].material.color.set(c.secondary);
+    ringA.material.color.set(c.primary);
+    ringA.material.opacity = c.glowOpacity;
+    ringB.material.color.set(c.accent);
+    ringB.material.opacity = c.glowOpacity * 0.8;
+    dust.material.color.set(c.dust);
+    glowSprite.material.map = makeGlowTexture(c.glow);
+    glowSprite.material.opacity = c.glowOpacity;
+    glowSprite.material.needsUpdate = true;
+    light1.color.set(c.primary);
+    light2.color.set(c.secondary);
+    light3.color.set(c.accent);
+  }
+
+  buildScene(palette[isDark ? 'dark' : 'light']);
+  applyTheme();
+
+  function resize() {
+    var w = wrap.clientWidth || 1;
+    var h = wrap.clientHeight || 1;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+
+  function updateScroll() {
+    var top = window.pageYOffset || document.documentElement.scrollTop || 0;
+    var h = wrap.offsetHeight || 1;
+    targetFade = Math.max(0, Math.min(1, 1 - top / (h * 1.1)));
+    if (reduced) {
+      currentFade = targetFade;
+      wrap.style.opacity = currentFade;
+      wrap.style.transform = 'translateY(' + (1 - currentFade) * 30 + 'px)';
+    }
+  }
+
+  window.addEventListener('scroll', updateScroll, { passive: true });
+  window.addEventListener('resize', resize, { passive: true });
+  window.addEventListener('resize', updateScroll, { passive: true });
+  resize();
+  updateScroll();
+
+  if (typeof IntersectionObserver !== 'undefined') {
+    new IntersectionObserver(function (entries) {
+      visible = entries[0].isIntersecting;
+    }).observe(wrap);
+  }
+
+  new MutationObserver(function () {
+    var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    if (dark !== isDark) {
+      isDark = dark;
+      applyTheme();
+    }
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  function animate() {
+    if (visible) {
+      var t = clock.getElapsedTime();
+      group.rotation.y = t * 0.12;
+      group.rotation.x = Math.sin(t * 0.18) * 0.06;
+      knot.rotation.x = t * 0.05;
+      knot.rotation.y = t * 0.07;
+      knotWire.rotation.x = -t * 0.04;
+      knotWire.rotation.y = t * 0.06;
+      core.rotation.x = -t * 0.18;
+      core.rotation.y = t * 0.22;
+      ringA.rotation.z = t * 0.1;
+      ringB.rotation.z = -t * 0.08;
+      dust.rotation.y = t * 0.02;
+      glowSprite.material.opacity = (isDark ? 0.5 : 0.42) + Math.sin(t * 0.5) * 0.05;
+      renderer.render(scene, camera);
+    }
+    if (!reduced) {
+      currentFade += (targetFade - currentFade) * 0.09;
+      if (Math.abs(currentFade - targetFade) < 0.001) currentFade = targetFade;
+      wrap.style.opacity = currentFade;
+      wrap.style.transform = 'translateY(' + (1 - currentFade) * 30 + 'px) scale(' + (0.97 + currentFade * 0.03) + ')';
+      requestAnimationFrame(animate);
+    }
+  }
+
+  if (reduced) {
+    renderer.render(scene, camera);
+  } else {
+    requestAnimationFrame(animate);
+  }
+})();
