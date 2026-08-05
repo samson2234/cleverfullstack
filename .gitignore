@@ -18,6 +18,7 @@ dist/
 build/
 *.min.js
 *.min.css
+!vendor/*.min.js
 
 # Environment
 .env
