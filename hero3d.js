@@ -15,7 +15,6 @@
   var knot, knotWire, core, ringA, ringB, dust, glowSprite, glowTex;
   var light1, light2, light3;
   var clock = new THREE.Clock();
-  var currentFade = 1, targetFade = 1;
   var visible = true;
 
   try {
@@ -213,22 +212,8 @@
     camera.updateProjectionMatrix();
   }
 
-  function updateScroll() {
-    var top = window.pageYOffset || document.documentElement.scrollTop || 0;
-    var h = wrap.offsetHeight || 1;
-    targetFade = Math.max(0, Math.min(1, 1 - top / (h * 1.1)));
-    if (reduced) {
-      currentFade = targetFade;
-      wrap.style.opacity = currentFade;
-      wrap.style.transform = 'translateY(' + (1 - currentFade) * 30 + 'px)';
-    }
-  }
-
-  window.addEventListener('scroll', updateScroll, { passive: true });
   window.addEventListener('resize', resize, { passive: true });
-  window.addEventListener('resize', updateScroll, { passive: true });
   resize();
-  updateScroll();
 
   if (typeof IntersectionObserver !== 'undefined') {
     new IntersectionObserver(function (entries) {
@@ -262,10 +247,6 @@
       renderer.render(scene, camera);
     }
     if (!reduced) {
-      currentFade += (targetFade - currentFade) * 0.09;
-      if (Math.abs(currentFade - targetFade) < 0.001) currentFade = targetFade;
-      wrap.style.opacity = currentFade;
-      wrap.style.transform = 'translateY(' + (1 - currentFade) * 30 + 'px) scale(' + (0.97 + currentFade * 0.03) + ')';
       requestAnimationFrame(animate);
     }
   }

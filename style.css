@@ -66,3 +66,7 @@
   .stat-number{will-change:auto}
   .logo-marquee-track{animation:none}
 }
+
+/* Hero responsive fixes */
+@media(max-width:960px){.hero{padding:130px 0 72px}.hero-grid{gap:36px}.hero h1{max-width:100%}}@media(min-width:641px) and (max-width:960px){.hero h1{font-size:36px}.hero-3d{max-width:440px}}
+@media(max-width:640px){.hero{padding:118px 0 60px}.hero-grid{gap:34px}.hero h1{font-size:31px}.hero-sub{font-size:15.5px;margin-bottom:26px}.hero-ctas{gap:10px;margin-bottom:30px;flex-direction:column}.hero-ctas .btn,.hero-ctas .btn-wa{width:100%;justify-content:center;text-align:center;padding:13px 18px;font-size:13px}.hero-3d{aspect-ratio:auto;height:auto;padding:18px}.hero-3d .hero-terminal{max-width:none;padding:20px}.stack-visual{padding:20px}.stack-visual .term-dots{margin-bottom:12px}.stack-layer{padding:12px 14px;margin-bottom:8px;font-size:12px}.stack-layer .v{gap:6px}.stack-layer .v em{font-size:10.5px;padding:2px 8px}.stack-visual .stack-caption{margin-top:10px;font-size:10.5px}}
