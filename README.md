@@ -711,13 +711,13 @@ cleverstack/
 - [x] **Caching** — `Cache-Control` headers (html/css/js: `max-age=3600, stale-while-revalidate=86400`) in `vercel.json`. Verified.
 - [x] **Fonts** — async load (preconnect + preload + `media="print"` onload swap + noscript fallback). Verified.
 - [x] **Images** — 17/17 `<img>` on home have `width`/`height` + `loading="lazy"` + `decoding="async"` (no image CLS). Verified.
-- [ ] **`srcset`/`sizes` for responsive images** — no `srcset` anywhere; mobile downloads desktop-size images. Add responsive sizes + WebP.
-- [ ] **External portfolio images not CDN-optimized** — `ersurajverma.in` images served raw; consider local/next/image optimization.
-- [ ] **Core Web Vitals measurement** — run Lighthouse/PageSpeed Insights after redeploy (target LCP < 2.5s, CLS < 0.1, score > 90).
+- [x] **`srcset`/`sizes` for responsive images** — added `srcset` (480w/800w/1024w) + `sizes` to all 6 Cloudinary portfolio images on `portfolio.html` (verified 480×360 / 800×600 / 1024×768 render; mobile saves ~100KB/image). Blog hero images already had `srcset`. Raw external PNGs (`ersurajverma.in`, `justinch.dev`) have no CDN resize support — left as-is (no local copies yet).
+- [ ] **External portfolio images not CDN-optimized** — `ersurajverma.in` images served raw; only fixable with local/`next/image` optimization once the client provides source files. Note: `portfolio-detail.html` mixed-content `http://ersurajverma.in` URLs were upgraded to `https://` (previously browser-blocked = broken images).
+- [x] **Core Web Vitals measurement** — Lighthouse 13 (local, mobile, live site Aug 2026): **Performance 35**, Accessibility 91, Best Practices 100, SEO 92. LCP 4.5s, CLS 0.074 (pass), TBT 6.05s, FCP 4.2s. **Root cause of the perf gap:** the WebGL 3D hero (`three.min.js` + `hero3d.js` + GSAP) consumes ~10s bootup / ~41s main-thread work on throttled mobile — a deliberate signature feature. Reaching perf >90 requires deferring/lightening the hero (a design tradeoff), not a bug fix.
 
 ## Scalability
 
-- [ ] **Rate limiting on `/api/contact`, `/api/subscribe`, `/api/admin`** — none currently; a spam flood can burn Turso rows + Resend quota. Add per-IP in-memory limiter (e.g. 5–10 req/min).
+- [x] **Rate limiting on `/api/contact`, `/api/subscribe`, `/api/admin`** — added `lib/rate-limit.js` (in-memory per-IP sliding window, pruned to stay bounded). `/api/contact` + `/api/subscribe`: 10 req/min, `/api/admin`: 30 req/min (applied before auth to blunt brute force). Returns `429` + `Retry-After`. **Verified live** (15-burst test: 10×200 then 429). Note: per-serverless-instance state — blunts single-IP floods and brute-force, not a distributed limiter.
 
 ## Reliability
 
