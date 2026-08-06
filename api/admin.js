@@ -36,6 +36,7 @@ import {
   replyEmailTemplate,
   broadcastEmailTemplate
 } from '../lib/email.js';
+import { rateLimit } from '../lib/rate-limit.js';
 
 function verifyAuth(req) {
   const auth = req.headers.authorization || '';
@@ -74,6 +75,12 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
+  }
+
+  const rl = rateLimit(req, { limit: 30, windowMs: 60000 });
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(rl.retryAfter));
+    return res.status(429).json({ error: 'Too many requests — please wait a moment and try again.' });
   }
 
   const auth = verifyAuth(req);

@@ -18,6 +18,7 @@ import {
   subscriberNotificationTemplate,
   ownerEmail
 } from '../lib/email.js';
+import { rateLimit } from '../lib/rate-limit.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -26,6 +27,12 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const rl = rateLimit(req, { limit: 10, windowMs: 60000 });
+  if (!rl.allowed) {
+    res.setHeader('Retry-After', String(rl.retryAfter));
+    return res.status(429).json({ error: 'Too many requests — please wait a moment and try again.' });
+  }
 
   const body = req.body || {};
   const email = (body.email || '').trim().toLowerCase();
