@@ -13,7 +13,7 @@ function el(type, props, ...children) {
 
 export default async function handler(req) {
   try {
-    const url = new URL(req.url);
+    const url = new URL(req.url, 'https://cleverfullstack.vercel.app');
     const title = url.searchParams.get('title') || 'Full-Stack Development Studio';
     const type = url.searchParams.get('type') || 'website';
 
