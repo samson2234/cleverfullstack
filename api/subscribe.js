@@ -19,6 +19,7 @@ import {
   ownerEmail
 } from '../lib/email.js';
 import { rateLimit } from '../lib/rate-limit.js';
+import { isBotPayload } from '../lib/honeypot.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -27,6 +28,10 @@ export default async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  if (isBotPayload(req.body)) {
+    return res.status(200).json({ success: true, message: 'Thank you for subscribing!' });
+  }
 
   const rl = rateLimit(req, { limit: 10, windowMs: 60000 });
   if (!rl.allowed) {

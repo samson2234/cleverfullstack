@@ -729,10 +729,11 @@ cleverstack/
 - [x] **Existing headers** — `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy` in `vercel.json`. Verified.
 - [x] **Input validation** — email regex + length caps in `api/contact.js`/`api/subscribe.js`. Verified.
 - [x] **No secrets in repo** — all credentials via env vars. Verified.
-- [ ] **HSTS header** — `Strict-Transport-Security` not set in `vercel.json` (Vercel only adds on Pro). Add.
-- [ ] **CSP header** — no Content-Security-Policy in `vercel.json`. Add.
-- [ ] **Spam protection on forms** — no honeypot field or captcha/Turnstile anywhere on contact + newsletter forms. Add honeypot or Turnstile.
-- [ ] **Admin auth hardening** — `api/admin.js` uses plain `===` Bearer-token comparison (not timing-safe) with no attempt limiting. Add `crypto.timingSafeEqual` + lockout.
+- [x] **HSTS header** — `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload` added to `vercel.json` (Vercel only auto-adds on Pro).
+- [x] **CSP header** — allowlist-only Content-Security-Policy in `vercel.json` (self + Google Fonts/GA4, Tawk, Unsplash/portfolio image hosts, Maps frame; `object-src 'none'`, `frame-ancestors 'none'`, `upgrade-insecure-requests`, no `unsafe-eval`). Verified no console violations headless.
+- [x] **Permissions-Policy** — camera/mic/geolocation disabled in `vercel.json`.
+- [x] **Spam protection on forms** — hidden honeypot field (`company_website`) on contact + all newsletter forms; `lib/honeypot.js` silently drops bot submissions with a 200 in `api/contact.js`/`api/subscribe.js`. Verified.
+- [x] **Admin auth hardening** — `api/admin.js` now uses `crypto.timingSafeEqual` over sha256 digests + per-IP failed-attempt lockout (5 fails → 5 min 429). Verified with unit tests.
 
 ## SEO
 

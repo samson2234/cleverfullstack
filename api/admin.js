@@ -36,18 +36,70 @@ import {
   replyEmailTemplate,
   broadcastEmailTemplate
 } from '../lib/email.js';
-import { rateLimit } from '../lib/rate-limit.js';
+import { rateLimit, clientIp } from '../lib/rate-limit.js';
+import crypto from 'node:crypto';
+
+// Failed-login lockout: after MAX_FAILS wrong passwords from an IP, the IP is
+// blocked for LOCKOUT_MS. Stored in-memory (per instance) — same threat model
+// as lib/rate-limit.js, and pairing with the 30 req/min limiter keeps a
+// distributed brute-force impractical.
+const MAX_FAILS = 5;
+const LOCKOUT_MS = 5 * 60 * 1000;
+const authFailures = new Map();
+
+function getFailureState(ip) {
+  const now = Date.now();
+  let state = authFailures.get(ip);
+  if (!state) {
+    state = { count: 0, lockedUntil: 0 };
+    authFailures.set(ip, state);
+  } else if (state.lockedUntil && state.lockedUntil <= now) {
+    state.count = 0;
+    state.lockedUntil = 0;
+  }
+  if (authFailures.size > 1000) {
+    for (const [k, s] of authFailures) {
+      if (s.lockedUntil <= now && s.count === 0) authFailures.delete(k);
+    }
+  }
+  return state;
+}
+
+function isLockedOut(ip) {
+  const state = getFailureState(ip);
+  return state.lockedUntil > Date.now();
+}
+
+function recordFailure(ip) {
+  const state = getFailureState(ip);
+  state.count += 1;
+  if (state.count >= MAX_FAILS) {
+    state.lockedUntil = Date.now() + LOCKOUT_MS;
+  }
+}
+
+function clearFailures(ip) {
+  const state = authFailures.get(ip);
+  if (state) {
+    state.count = 0;
+    state.lockedUntil = 0;
+  }
+}
 
 function verifyAuth(req) {
   const auth = req.headers.authorization || '';
-  const token = auth.replace('Bearer ', '');
+  const token = auth.replace(/^Bearer\s+/i, '');
   const password = process.env.ADMIN_PASSWORD;
 
   if (!password) {
     return { ok: false, error: 'ADMIN_PASSWORD env var not set' };
   }
 
-  if (token !== password) {
+  // timingSafeEqual requires equal-length inputs, so both sides are hashed
+  // to a fixed-length sha256 digest before comparison.
+  const a = crypto.createHash('sha256').update(token).digest();
+  const b = crypto.createHash('sha256').update(password).digest();
+  if (!crypto.timingSafeEqual(a, b)) {
     return { ok: false, error: 'Invalid password' };
   }
 
@@ -83,10 +135,18 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many requests — please wait a moment and try again.' });
   }
 
+  const ip = clientIp(req);
+  if (isLockedOut(ip)) {
+    res.setHeader('Retry-After', String(Math.ceil((getFailureState(ip).lockedUntil - Date.now()) / 1000)));
+    return res.status(429).json({ error: 'Too many failed attempts — please wait a few minutes and try again.' });
+  }
+
   const auth = verifyAuth(req);
   if (!auth.ok) {
+    recordFailure(ip);
     return res.status(401).json({ error: auth.error });
   }
+  clearFailures(ip);
 
   if (!process.env.TURSO_DATABASE_URL) {
     return res.status(503).json({
