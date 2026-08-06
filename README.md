@@ -752,21 +752,22 @@ cleverstack/
 ## Monitoring
 
 - [x] **GA4 analytics** — page views + events. Verified.
-- [ ] **Uptime monitoring** — none (BetterStack/UptimeRobot not wired).
-- [ ] **Error tracking** — none (Sentry / Vercel Analytics not wired).
+- [x] **Uptime monitoring** — `/api/health` endpoint (Node, no DB) + GitHub Actions `.github/workflows/uptime.yml` polling every 15 min, opens a GitHub issue on failure. Verified (`/api/health` → 200).
+- [x] **Error tracking** — `error` + `unhandledrejection` listeners in `analytics.js` → GA4 `js_error` event (10s throttle, cross-origin `Script error.` ignored). Verified.
 
 ## Accessibility
 
 - [x] **Typewriter** — `aria-live="polite"` + visually-hidden full phrase list + `prefers-reduced-motion` static fallback. Verified.
 - [x] **Images** — 17/17 have `alt` (1 decorative). Verified.
 - [x] **Forms/controls** — `aria-label` on inputs, `role="status"` on form status. Verified.
-- [ ] **Skip-to-content link** — none present anywhere. Add.
+- [x] **Skip-to-content link** — `<a class="skip-link" href="#main">` on all 16 public pages (all `<main id="main">`), keyboard-visible on focus, i18n EN/FR (`a11y.skip`). Verified post-minify.
 - [ ] **Social icon links** — `href="#"` dead placeholders (Twitter/LinkedIn/Instagram). Point to real profiles or remove.
 
 ## Cross-device Responsiveness
 
 - [x] **Desktop + mobile regression** — verified after fixes (EN + FR, 0 console errors, stable hero `1437.7` / `h1 322`).
-- [ ] **Final sweep** — re-test 320px/768px/1024px/1440px after all tracker items land.
+- [x] **Final sweep** — re-tested 320/768/1024/1440 on all 8 key pages. No horizontal overflow (0 console errors; only local `/_vercel/insights` 404 artifact). Fixed pre-existing `contact.html` 320px overflow (`.contact-grid` `1fr` → `minmax(0,1fr)`).
+- [ ] **KNOWN ISSUE — hamburger off-screen ≤385px** — on viewports ≤385px the `.nav-toggle` is pushed past the right edge (logo + 4 header actions exceed the container width) and `body{overflow-x:hidden}` hides it, so the mobile menu is unreachable. Fix deferred (would require hiding a header control on small screens). Revisit before ad traffic.
 
 ---
 

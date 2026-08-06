@@ -92,4 +92,25 @@
       });
     }
   }, true);
+
+  // Lightweight client-side error tracking -> GA4 (consent-gated like all events)
+  var lastErrorSent = 0;
+  function reportError(label, detail) {
+    var now = Date.now();
+    if (now - lastErrorSent < 10000) return; // throttle: max 1 error event / 10s
+    lastErrorSent = now;
+    try {
+      window.csEvent('js_error', { label: label, detail: String(detail || '').slice(0, 300) });
+    } catch (e) {}
+  }
+  window.addEventListener('error', function (e) {
+    var msg = e && e.message ? String(e.message) : '';
+    if (msg === 'Script error.' || !msg) return; // cross-origin opaque errors carry no info
+    reportError('window_error', msg);
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    var r = e && e.reason;
+    var msg = r && r.message ? String(r.message) : String(r || '');
+    reportError('unhandled_rejection', msg);
+  });
 })();

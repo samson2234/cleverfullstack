@@ -1,0 +1,51 @@
+name: Uptime Monitor
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check site health
+        id: health
+        run: |
+          code=$(curl -s -o /tmp/health.json -w '%{http_code}' --max-time 25 https://cleverfullstack.vercel.app/api/health)
+          echo "HTTP $code"
+          cat /tmp/health.json
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+
+      - name: Open alert issue when down
+        if: steps.health.outputs.code != '200'
+        uses: actions/github-script@v7
+        env:
+          CODE: ${{ steps.health.outputs.code }}
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const open = await github.rest.issues.listForRepo({
+              owner, repo, state: 'open'
+            });
+            const dup = open.data.some(i =>
+              i.title.startsWith('Uptime:') && i.user && i.user.type === 'Bot'
+            );
+            if (dup) {
+              console.log('Uptime alert already open, skipping');
+              return;
+            }
+            await github.rest.issues.create({
+              owner,
+              repo,
+              title: 'Uptime: site health check failing',
+              body: 'The health check at https://cleverfullstack.vercel.app/api/health ' +
+                    'returned HTTP ' + process.env.CODE + ' at ' + new Date().toISOString() +
+                    ' (UTC). The workflow retries every 15 minutes; close this issue once ' +
+                    'the check is green again.'
+            });
