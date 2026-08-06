@@ -1,6 +1,8 @@
 import { ImageResponse } from '@vercel/og';
 import React from 'react';
 
+export const config = { runtime: 'edge' };
+
 const accent = '#4F46E5';
 const bg = '#0E1330';
 const bg2 = '#171D45';
