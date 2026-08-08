@@ -83,7 +83,7 @@ Connect the repo to [Vercel](https://vercel.com) for automatic deployments on ev
 | `ADMIN_PASSWORD` | Yes | Admin login password (sent as Bearer token) |
 | `RESEND_API_KEY` | Yes (for email) | Resend API key |
 | `RESEND_FROM` | Recommended | Sender, e.g. `CleverStack <hello@cleverstack.dev>` — must be a **verified domain** in Resend |
-| `CONTACT_EMAIL` | Recommended | Owner inbox for notifications (defaults to `cleverdigitals70@gmail.com`) |
+| `CONTACT_EMAIL` | Recommended | Owner inbox for notifications (defaults to `henryygeorge25@gmail.com`) |
 
 > **IMPORTANT — verify your Resend domain:** welcome emails to subscribers and broadcasts will fail from the sandbox `onboarding@resend.dev`. Set up a domain in [Resend → Domains](https://resend.com/domains) (add their DNS records to your domain), then set `RESEND_FROM` to an address on it. Only then do real subscribers receive the welcome email.
 
@@ -643,7 +643,7 @@ cleverstack/
 ## 🟠 High Priority
 
 - [x] **Remove unused `image.png` (898 KB)** — deleted from the repo. The LocalBusiness schema referenced `og-image.png` (404); updated the schema `image` to use the `/api/og` URL instead.
-- [x] **Conflicting trust stats** — hero now reads "200+ websites built personally" (EN/FR) and the stats section reads "50+ Projects shipped as a team" (per client clarification).
+- [x] **Conflicting trust stats** — hero now reads "200+ websites delivered" (EN/FR) and the stats section reads "50+ Projects shipped as a team" (per client clarification).
 - [x] **Google Fonts CSS loaded 3× on every page** — investigated: the 3 `css2` references are the **correct async font pattern** (`<link rel="preload">` + `media="print" onload` swap + `<noscript>` fallback), not a duplicate stylesheet. No change needed.
 - [x] **Sitemap listed the `/404` page** — removed `https://cleverfullstack.vercel.app/404` from `sitemap.xml`.
 - [x] **Blog post dated Aug 5, 2026** (`blog/custom-vs-nocode.html` + `posts.json` + `feed.xml`) — re-dated to Aug 1, 2026 in all three files (HTML, posts.json, feed.xml `pubDate` + `lastBuildDate`).
@@ -667,10 +667,10 @@ cleverstack/
 
 ### 🔴 Critical (Blocks Running Ads)
 
-- [ ] **Calendly links point to the wrong account** — every booking link (`index.html` ×5, `contact.html`, mobile CTA bar, and the auto-responder email in `api/contact.js`) uses `https://calendly.com/samsonfalope326/30min`. This is **someone else's calendar**. Fix: replace with the client's own Calendly URL in all locations.
+- [x] **Calendly links point to the wrong account** — FIXED. Every booking link (all pages + mobile CTA bar + the auto-responder email in `api/contact.js`) now points to the owner's calendar `https://calendly.com/henryygeorge25/30min`. Contact email standardized to `henryygeorge25@gmail.com` across all pages, JSON-LD, `api/` and `lib/`.
 - [ ] **Meta Pixel ID is a placeholder** — `analytics.js` has `META_PIXEL_ID = '000000000000000'` so `initMeta()` exits early and the Pixel never loads on any page. Fix: insert the real Pixel ID (then the existing consent-gated `fbq` code + `csEvent` custom-event sync starts working automatically).
 - [ ] **Fake client logos still live** — homepage "Trusted By" strip shows 6 invented SVG logos (ORBITAL, NORTHLOOM, MARLOW & REID, FIELDWORK OPS, HAVENPOINT, BARE BOTANICALS). Fix: replace with real client logos, or remove the strip until real ones exist.
-- [ ] **Fake testimonials still live** — homepage 10 testimonials (fabricated names "Drake Walker", "Alex Rodriguez", etc. + Unsplash avatars) and `portfolio-detail.html` clients. Fix: swap in real testimonials (name, company, real photo, specific results) when the client provides them; some clients want privacy so use approved Unsplash avatars that match the names.
+- [x] **Fake testimonials still live** — FIXED. Homepage now shows 12 real Fiverr client reviews (no stock avatars, interleaved so repeated clients don't sit adjacent). `portfolio-detail.html` fabricated client names still pending (see below).
 
 ### 🟠 High Priority
 
@@ -761,7 +761,7 @@ cleverstack/
 - [x] **Images** — 17/17 have `alt` (1 decorative). Verified.
 - [x] **Forms/controls** — `aria-label` on inputs, `role="status"` on form status. Verified.
 - [x] **Skip-to-content link** — `<a class="skip-link" href="#main">` on all 16 public pages (all `<main id="main">`), keyboard-visible on focus, i18n EN/FR (`a11y.skip`). Verified post-minify.
-- [ ] **Social icon links** — `href="#"` dead placeholders (Twitter/LinkedIn/Instagram). Point to real profiles or remove.
+- [x] **Social icon links** — `href="#"` dead placeholders replaced everywhere: footer Twitter/LinkedIn/Instagram + contact-page social bar (Facebook, Instagram, WhatsApp, Fiverr, Upwork, X, LinkedIn) now point to `/henrygeorge01` handles (placeholder until real profiles are confirmed; Fiverr points to the real `henrygeorge0`).
 
 ## Cross-device Responsiveness
 

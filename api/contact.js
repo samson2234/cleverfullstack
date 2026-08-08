@@ -20,7 +20,7 @@ export const config = { runtime: 'nodejs' };
 //      - Vercel Env Vars: TURSO_DATABASE_URL, TURSO_AUTH_TOKEN
 //
 //   2. Resend email (free tier): https://resend.com
-//      - Vercel Env Vars: RESEND_API_KEY, CONTACT_EMAIL=cleverdigitals70@gmail.com
+//      - Vercel Env Vars: RESEND_API_KEY, CONTACT_EMAIL=henryygeorge25@gmail.com
 //      - Optional: RESEND_FROM for a verified domain (see lib/email.js)
 //
 //   3. Database auto-initializes on first request (creates tables)
@@ -158,8 +158,8 @@ export default async function handler(req, res) {
             '<p style="margin:0;color:#5B6079;">' + submission.message.replace(/\n/g, '<br>') + '</p>' +
             '</blockquote>' +
             '<p style="color:#5B6079;font-size:14px;">In the meantime, you can book a free strategy call:</p>' +
-            '<a href="https://calendly.com/samsonfalope326/30min" style="display:inline-block;background:#00C2A8;color:#fff;padding:12px 24px;border-radius:100px;text-decoration:none;font-weight:600;">Book a Free Call</a>' +
-            '<p style="color:#aaa;font-size:12px;margin-top:24px;">CleverStack — Lagos, Nigeria</p>' +
+            '<a href="https://calendly.com/henryygeorge25/30min" style="display:inline-block;background:#00C2A8;color:#fff;padding:12px 24px;border-radius:100px;text-decoration:none;font-weight:600;">Book a Free Call</a>' +
+            '<p style="color:#aaa;font-size:12px;margin-top:24px;">CleverStack — University of Ibadan (Premier University), Oyo State, Nigeria</p>' +
             '</div>'
         })
       });

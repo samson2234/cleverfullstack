@@ -291,7 +291,7 @@ export default async function handler(req, res) {
           to: submission.email,
           subject,
           html: replyEmailTemplate(submission, String(body.body).slice(0, 10000)),
-          replyTo: process.env.CONTACT_EMAIL || 'cleverdigitals70@gmail.com'
+          replyTo: process.env.CONTACT_EMAIL || 'henryygeorge25@gmail.com'
         });
         await logEmail({
           to_email: submission.email,
