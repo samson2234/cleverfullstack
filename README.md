@@ -704,6 +704,13 @@ cleverstack/
 
 > **Source:** Full non-functional-requirements audit of the codebase (performance, scalability, reliability, security, SEO, conversion, monitoring, accessibility, cross-device responsiveness). Every item is a tracked checkbox so we never lose the plan. **Status reflects the local codebase — redeploy to Vercel to make fixes live.**
 
+## Latest Optimization Pass (Aug 2026)
+
+- [x] **3D hero no longer blocks page load** — `three.min.js` (589 KB) + `hero3d.js` are now injected only after idle time on `index.html` (skipped entirely for `prefers-reduced-motion` users). Same visual result, but FCP/LCP/TBT no longer compete with the WebGL boot on any device.
+- [x] **`portfolio.html` was missing `i18n.js`** — page had 39 `data-i18n` attributes + a lang toggle but never loaded the i18n engine, so FR translation silently did nothing. Fixed: `<script src="i18n.js">` added ahead of `script.js` (now matches every other page).
+- [x] **Homepage footer social links pointed to `href="#"`** — index.html was the only page still using dead placeholder links. Fixed to real profiles (`twitter.com/henrygeorge01`, `linkedin.com/in/henrygeorge01`, `instagram.com/henrygeorge01`), matching all other pages.
+- [x] **Stray closing `</div>` removed from `index.html` + `about.html`** — both files were unbalanced (223/224 and 95/96 div tags). Re-minify produced balanced markup; browsers render identically.
+
 ## Performance
 
 - [x] **Duplicate `hero3d.js` script tag removed** — was loaded twice in `index.html` (double parse/execute, wasted work). Now loaded once.
@@ -767,7 +774,7 @@ cleverstack/
 
 - [x] **Desktop + mobile regression** — verified after fixes (EN + FR, 0 console errors, stable hero `1437.7` / `h1 322`).
 - [x] **Final sweep** — re-tested 320/768/1024/1440 on all 8 key pages. No horizontal overflow (0 console errors; only local `/_vercel/insights` 404 artifact). Fixed pre-existing `contact.html` 320px overflow (`.contact-grid` `1fr` → `minmax(0,1fr)`).
-- [ ] **KNOWN ISSUE — hamburger off-screen ≤385px** — on viewports ≤385px the `.nav-toggle` is pushed past the right edge (logo + 4 header actions exceed the container width) and `body{overflow-x:hidden}` hides it, so the mobile menu is unreachable. Fix deferred (would require hiding a header control on small screens). Revisit before ad traffic.
+- [x] **KNOWN ISSUE — hamburger off-screen ≤385px** — FIXED. `.header-actions .btn-wa` now hides below 480px (WhatsApp stays reachable via the floating button + mobile CTA bar), so the `.nav-toggle` stays on screen and the mobile menu opens at ≤385px.
 
 ---
 
