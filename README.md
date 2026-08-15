@@ -97,6 +97,78 @@ Connect the repo to [Vercel](https://vercel.com) for automatic deployments on ev
 
 ---
 
+# DEEP AUDIT & FIX TRACKER (Aug 13, 2026)
+
+> **Source:** Byte-level audit of local source + live `cleverfullstack.vercel.app` (live site is currently serving this code — git tree clean). Live health ✓ (health 200, OG image 200, npm audit: 0 vulnerabilities). Every item is a checkbox so we can fix them one by one.
+
+## 🔴 Critical (fix before running ads)
+
+- [x] **#1 Fake US phone in contact page schema** — `contact.html` line 62 has `"telephone": "+1 000 111 2222"` in JSON-LD. Everywhere else is `+2349165400534`. Google can surface this in rich results / local packs. **FIXED → `+2349165400534`.**
+- [x] **#2 Landing page sends leads to the wrong mailbox** — `index.html` (3×): `cleverdigitals70@gmail.com` in JSON-LD + footer `mailto:` + footer text. Every other page and `lib/email.js` uses `henryygeorge25@gmail.com`. (README previously claimed "standardized" — that was false.) **FIXED → `henryygeorge25@gmail.com` (3×).**
+- [x] **#3 Contradictory NAP data (local SEO)** — `index.html` says **Lagos**; everything else says **University of Ibadan, Oyo State**. Conflicting name/address/phone breaks local search signals. **FIXED → `addressLocality` "Ibadan" + footer "University of Ibadan (Premier University), Oyo State, Nigeria".**
+- [ ] **#4 CSS mojibake — visible garbage on live pages** — `style.css` `content:"â†’"`, `content:"âœ“"`, `content:"â†”"` (double-encoded `→`/`✔`/`⇔`). Process-step arrows (about.html), pricing checklist ticks (services.html), comparison handle render as garbage glyphs.
+
+## 🟠 High
+
+- [ ] **#5 Fabricated clients still live in portfolio-detail** — 14 projects, 12 invented client names (Drake Walker, Sarah Mitchell, Brooklyn Foster, Emma Wilson, Anna Schmidt, James Whitfield, Alex Rodriguez, David Thompson, Michael Chen, Lukas Weber, MeloForge, ResearchHUB) presented as real work. FTC/Meta ad-policy exposure.
+- [ ] **#6 Stored XSS in admin CRM** — `admin.html:817` `onclick="window.__copyEmail(\'' + escapeHtml(s.email) + '\')"`. `escapeHtml` doesn't escape `'`; the email regex permits it. Crafted email executes when admin clicks **Copy**. (All other render paths are safe.)
+- [ ] **#7 Testimonial authors invisible in light mode** — `style.css`. `.testimonial-card` defined twice; later (dead-grid) block wins → carousel cards get `#fff` backgrounds while `.who b` keeps `color:#fff` → white-on-white author names. Also overrides per-card accent stars.
+- [ ] **#8 `prefers-reduced-motion` kill-switch broken** — `style.css` `animation-duration:NaNs!important; transition-duration:NaNs!important` — `NaN` is invalid CSS, dropped by browsers → infinite animations (mesh orbs, logo scroll, glow pulse, skeleton shimmer) keep running for reduced-motion users. Should be `.01ms`.
+- [ ] **#9 Dark-mode contrast fails WCAG AA** — `style.css`. `--text-light-muted:#6b7099` = 3.4–4.1:1 on dark surfaces (needs 4.5); `.section-light .section-head p` override drops it from 6.27 to 3.92. `--indigo #4F46E5` as text-on-dark = 2.9:1.
+- [ ] **#10 French mode is mostly untranslated** — 9/17 pages show hard-coded English after switching (index portfolio/testimonials/stats, services pricing + calculator, portfolio cards, privacy/terms bodies, all blog bodies, blog cards). Undercuts "international ad campaigns" goal. `<title>` tags also never translate despite `page.title.*` keys existing.
+- [ ] **#11 Domain inconsistency across every layer** — canonical/OG/sitemap/robots use `cleverfullstack.vercel.app`; privacy/terms body, `lib/db.js`, `lib/email.js`, `api/contact.js` reference `cleverstack.dev`. If `cleverstack.dev` is the real domain, all canonical/sitemap/OG URLs are wrong for production SEO.
+
+## 🟡 Medium
+
+- [ ] **Meta Pixel is a placeholder** (`000000000000000`) — never loads; GA4 is real + consent-gated.
+- [ ] **No CI validation** — README §10 specifies `.github/workflows/validate.yml`; only `uptime.yml` exists. The placeholder-content grep (fake numbers, Lorem ipsum) never runs.
+- [ ] **Hotlinked third-party images** (`ersurajverma.in`, `justinch.dev`, `fiverr-res.cloudinary.com`) — no local copies, single point of failure, some are other developers' sites.
+- [ ] **JS-only content** — blog cards + portfolio-detail render from JS arrays; nothing for non-JS crawlers.
+- [ ] **Admin broadcast subject unbounded** — `api/admin.js` slices body at 10k, not subject.
+- [ ] **Contrast/label nits** — WhatsApp green `#25d366` white text = 1.98:1; teal `.new-price` on white = 2.26:1; no `:focus-visible` anywhere; ROI sliders have `outline:0` + no label.
+- [ ] **Contact dividers invisible in light mode** — dark-surface border token used on light bg.
+- [ ] **Rate-limit `X-Forwarded-For` spoofable** + in-memory per-instance (documented tradeoff — acceptable now).
+
+## ✅ Verified solid
+
+- Security headers (HSTS preload, allowlist CSP, no `unsafe-eval`, `frame-ancestors none`), timing-safe admin auth + IP lockout, honeypot, rate limiting, no secrets in repo.
+- i18n dict 282/282 complete with zero dangling keys; one `h1`/page; no missing alts / dup IDs / `href="#"` / `http://`; correct robots disallow of `/admin` + `/api`; custom 404 live.
+- GA4 events + UTM + error tracking + uptime workflow all wired; sane z-index/stacking; `scroll-padding-top` matches fixed header.
+
+## Recommended fix order
+
+**#1–3** (contact info, one commit) → **#4** CSS mojibake → **#6** XSS → **#7–8** CSS bugs → **#5** fake clients → then contrast + i18n.
+
+---
+
+# LEAD FOLLOW-UP EMAIL TEMPLATE (OUTREACH)
+
+> **Purpose:** Follow-up email for leads in the admin CRM. Kept here so we can polish it together, one change at a time.
+
+## Draft v1
+
+Hi David,
+
+Just wanted to follow up on this in case it got buried.
+
+I know you're busy, so I'll keep this short.
+
+I put together a quick structure based on your background (Air Force → federal → PNC) that shows how your experience could be positioned more clearly online.
+
+Happy to send it over if you're open to taking a look.
+
+Should I send it through?
+
+## Edit checklist (fix one by one)
+
+- [ ] Confirm the lead's name ("David") matches the actual contact
+- [ ] Reference the specific project / page the lead engaged with
+- [ ] Add a call to action (book a free call link)
+- [ ] Add sender signature + CleverStack branding
+- [ ] Add unsubscribe / privacy compliance line
+
+---
+
 # FULL WEBSITE AUDIT & IMPROVEMENT PLAN
 
 > **Purpose:** Comprehensive audit of faults, layout improvements, color system, frontend/backend features, SEO, ad-readiness, and step-by-step implementation roadmap. Each section is a checklist item you can complete and validate through CI/CD (lint, build, deploy preview).
