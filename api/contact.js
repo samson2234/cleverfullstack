@@ -65,6 +65,9 @@ export default async function handler(req, res) {
   const name = (body.name || '').trim();
   const email = (body.email || '').trim();
   const phone = (body.phone || '').trim();
+  const country = (body.country || '').trim();
+  const company = (body.company || '').trim();
+  const industry = (body.industry || '').trim();
   const message = (body.message || '').trim();
   const subscribeOptIn = body.subscribe === true || body.subscribe === 'true';
 
@@ -80,7 +83,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid email address' });
   }
 
-  if (name.length > 200 || email.length > 200 || message.length > 5000) {
+  if (name.length > 200 || email.length > 200 || country.length > 100 || company.length > 200 || industry.length > 100 || message.length > 5000) {
     return res.status(400).json({ error: 'Input too long' });
   }
 
@@ -88,6 +91,9 @@ export default async function handler(req, res) {
     name: name,
     email: email,
     phone: phone || 'Not provided',
+    country: country,
+    company: company,
+    industry: industry,
     message: message,
     source: body.source || 'cleverstack.dev contact form',
     utm_source: (body.utm_source || '').trim(),
@@ -214,6 +220,9 @@ export default async function handler(req, res) {
           name: submission.name,
           email: submission.email,
           phone: submission.phone,
+          country: submission.country,
+          company: submission.company,
+          industry: submission.industry,
           message: submission.message,
           subject: 'New Contact from ' + submission.name + ' — CleverStack',
           from_name: 'CleverStack Contact Form'

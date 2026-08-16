@@ -170,7 +170,7 @@ export default async function handler(req, res) {
       if (params.get('export') === 'leads') {
         const all = await getSubmissions({ limit: 10000, offset: 0 });
         const csv = jsonToCsv(
-          ['id', 'name', 'email', 'phone', 'status', 'source', 'utm_source', 'utm_medium', 'utm_campaign', 'is_read', 'created_at', 'message'],
+          ['id', 'name', 'email', 'phone', 'country', 'company', 'industry', 'status', 'source', 'utm_source', 'utm_medium', 'utm_campaign', 'is_read', 'created_at', 'message'],
           all.map((r) => ({ ...r }))
         );
         res.setHeader('Content-Type', 'text/csv; charset=utf-8');
@@ -213,9 +213,11 @@ export default async function handler(req, res) {
       const unreadOnly = params.get('unread') === 'true';
       const status = params.get('status') || '';
       const search = params.get('q') || '';
+      const industry = params.get('industry') || '';
+      const country = params.get('country') || '';
 
-      const submissions = await getSubmissions({ limit, offset, unread: unreadOnly, status, search });
-      const total = await getSubmissionCount({ unread: unreadOnly, status, search });
+      const submissions = await getSubmissions({ limit, offset, unread: unreadOnly, status, search, industry, country });
+      const total = await getSubmissionCount({ unread: unreadOnly, status, search, industry, country });
       const unread = await getSubmissionCount({ unread: true });
       const totalAll = await getSubmissionCount();
 

@@ -1,145 +1,424 @@
-<!DOCTYPE html><html lang="en"><head><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"></noscript><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><meta name="description" content="CleverStack mini-CRM for managing leads, subscribers, and email outreach."><title>CleverStack — CRM</title><link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='20' height='20' rx='5' fill='%234F46E5'/><rect y='40' width='20' height='20' rx='5' fill='%2300C2A8'/><rect y='80' width='20' height='20' rx='5' fill='%23FF6B4A'/></svg>"><link rel="stylesheet" href="style.css"><style>.crm{ --crm-bg:var(--paper); }
-    .admin-login{ min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--paper); }
-    .login-card{ background:var(--paper-2); border-radius:var(--radius); padding:48px 40px; box-shadow:var(--shadow); text-align:center; max-width:420px; width:100%; }
-    .login-card h1{ font-size:1.5rem; margin-bottom:8px; }
-    .login-card p{ color:var(--text-muted); margin-bottom:28px; font-size:0.95rem; }
-    .login-card input{ width:100%; padding:14px 18px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:1rem; font-family:var(--font-body); background:var(--paper); color:var(--text-dark); outline:none; margin-bottom:16px; transition:border-color 0.2s; }
-    .login-card input:focus{ border-color:var(--indigo); }
-    .login-card .btn{ width:100%; padding:14px; background:var(--indigo); color:#fff; border:none; border-radius:var(--radius-sm); font-size:1rem; font-weight:600; cursor:pointer; font-family:var(--font-body); transition:transform 0.15s, box-shadow 0.15s; }
-    .login-card .btn:hover{ transform:translateY(-1px); box-shadow:var(--shadow-sm); }
-    .login-error{ color:var(--coral); font-size:0.9rem; margin-bottom:12px; display:none; }
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="CleverStack mini-CRM for managing leads, subscribers, and email outreach.">
+<title>CleverStack - CRM</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='20' height='20' rx='5' fill='%234F46E5'/><rect y='40' width='20' height='20' rx='5' fill='%2300C2A8'/><rect y='80' width='20' height='20' rx='5' fill='%23FF6B4A'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" media="print" onload="this.media='all'">
+<style>
+  :root{
+    --crm-bg:#0b0b15;
+    --crm-card:#141420;
+    --crm-card-2:#1c1c2e;
+    --crm-line:rgba(255,255,255,.09);
+    --crm-line-soft:rgba(255,255,255,.055);
+    --crm-text:#f4f4f6;
+    --crm-muted:#9aa0b4;
+    --crm-indigo:#6366f1;
+    --crm-teal:#2dd4bf;
+    --crm-coral:#fb7185;
+    --crm-grad:linear-gradient(135deg,#6366f1,#2dd4bf);
+    --crm-radius:14px;
+    --crm-shadow:0 18px 40px -18px rgba(0,0,0,.75);
+  }
+  *{ box-sizing:border-box; }
+  body{ background:var(--crm-bg); color:var(--crm-text); }
 
-    .admin-dashboard{ display:none; min-height:100vh; background:var(--paper); }
-    .admin-header{ background:var(--paper-2); border-bottom:1px solid var(--border); padding:14px 24px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
-    .admin-header .brand{ display:flex; align-items:center; gap:12px; }
-    .admin-header .brand h2{ font-size:1.1rem; font-family:var(--font-display); margin:0; }
-    .admin-header .brand span{ background:var(--indigo); color:#fff; padding:2px 10px; border-radius:100px; font-size:0.75rem; font-weight:600; }
-    .header-actions{ display:flex; gap:10px; align-items:center; }
-    .btn-sm{ padding:8px 16px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--paper-2); color:var(--text-dark); font-size:0.85rem; cursor:pointer; font-family:var(--font-body); font-weight:500; transition:all 0.15s; }
-    .btn-sm:hover{ background:var(--paper-3); }
-    .btn-sm.primary{ background:var(--indigo); border-color:var(--indigo); color:#fff; }
-    .btn-sm.primary:hover{ opacity:0.9; }
-    .btn-sm.danger{ border-color:var(--coral); color:var(--coral); }
-    .btn-sm.danger:hover{ background:var(--coral); color:#fff; }
+  .btn-sm{ padding:9px 16px; border-radius:10px; border:1px solid var(--crm-line); background:rgba(255,255,255,.04); color:var(--crm-text); font-size:.83rem; cursor:pointer; font-family:var(--font-body); font-weight:600; transition:all .18s; display:inline-flex; align-items:center; gap:7px; }
+  .btn-sm:hover{ background:rgba(255,255,255,.09); transform:translateY(-1px); }
+  .btn-sm.primary{ background:var(--crm-grad); border:none; color:#fff; }
+  .btn-sm.primary:hover{ opacity:.92; box-shadow:0 8px 24px -8px rgba(99,102,241,.6); }
+  .btn-sm.danger{ border-color:rgba(251,113,133,.4); color:var(--crm-coral); }
+  .btn-sm.danger:hover{ background:rgba(251,113,133,.12); }
+  .btn-sm.ghost{ background:transparent; }
 
-    .admin-body{ max-width:1180px; margin:0 auto; padding:28px 24px; }
+  .admin-login{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;
+    background:radial-gradient(900px 500px at 15% -10%,rgba(99,102,241,.22),transparent 60%),
+               radial-gradient(700px 400px at 110% 110%,rgba(45,212,191,.16),transparent 60%),
+               var(--crm-bg); }
+  .login-card{ background:var(--crm-card); border:1px solid var(--crm-line); border-radius:var(--crm-radius); padding:48px 42px; box-shadow:var(--crm-shadow); text-align:center; max-width:420px; width:100%; position:relative; overflow:hidden; }
+  .login-card::before{ content:""; position:absolute; top:0; left:0; right:0; height:4px; background:var(--crm-grad); }
+  .login-mark{ width:52px; height:52px; border-radius:14px; background:var(--crm-grad); margin:0 auto 20px; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; font-size:1.5rem; color:#fff; box-shadow:0 10px 28px -8px rgba(99,102,241,.7); }
+  .login-card h1{ font-size:1.5rem; margin:0 0 6px; font-family:var(--font-display); }
+  .login-card p{ color:var(--crm-muted); margin:0 0 28px; font-size:.92rem; }
+  .login-card input{ width:100%; padding:13px 16px; border:1px solid var(--crm-line); border-radius:10px; font-size:.95rem; font-family:var(--font-body); background:var(--crm-card-2); color:var(--crm-text); outline:none; margin-bottom:14px; transition:border-color .2s, box-shadow .2s; }
+  .login-card input:focus{ border-color:var(--crm-indigo); box-shadow:0 0 0 3px rgba(99,102,241,.18); }
+  .login-card .btn{ width:100%; padding:14px; background:var(--crm-grad); color:#fff; border:none; border-radius:10px; font-size:1rem; font-weight:600; cursor:pointer; font-family:var(--font-body); transition:transform .15s, box-shadow .15s; }
+  .login-card .btn:hover{ transform:translateY(-1px); box-shadow:0 10px 28px -8px rgba(99,102,241,.6); }
+  .login-error{ color:var(--crm-coral); font-size:.9rem; margin:0 0 12px; display:none; }
 
-    .tabs{ display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:24px; flex-wrap:wrap; }
-    .tab{ padding:10px 18px; font-size:0.9rem; font-weight:500; color:var(--text-muted); background:none; border:none; border-bottom:2px solid transparent; cursor:pointer; font-family:var(--font-body); transition:color 0.15s; }
-    .tab:hover{ color:var(--text-dark); }
-    .tab.active{ color:var(--indigo); border-bottom-color:var(--indigo); font-weight:600; }
-    .tab .badge{ display:inline-block; margin-left:6px; background:var(--coral); color:#fff; border-radius:100px; padding:1px 8px; font-size:0.7rem; }
+  .admin-dashboard{ display:none; min-height:100vh; background:
+      radial-gradient(800px 400px at 100% 0%,rgba(99,102,241,.07),transparent 55%),
+      var(--crm-bg); }
+  .admin-header{ background:rgba(11,11,21,.82); backdrop-filter:blur(14px); border-bottom:1px solid var(--crm-line); padding:14px 26px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+  .admin-header .brand{ display:flex; align-items:center; gap:12px; }
+  .admin-header .brand-mark{ width:34px; height:34px; border-radius:9px; background:var(--crm-grad); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; color:#fff; font-size:.95rem; }
+  .admin-header .brand h2{ font-size:1.05rem; font-family:var(--font-display); margin:0; }
+  .admin-header .brand h2 span{ background:var(--crm-grad); color:#fff; padding:2px 10px; border-radius:100px; font-size:.7rem; font-weight:700; letter-spacing:.05em; }
+  .header-actions{ display:flex; gap:10px; align-items:center; }
 
-    .view{ display:none; }
-    .view.active{ display:block; }
+  .admin-body{ max-width:1220px; margin:0 auto; padding:28px 24px 60px; }
 
-    .stats-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:28px; }
-    .stat-card{ background:var(--paper-2); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow-sm); }
-    .stat-card .stat-num{ font-size:2rem; font-weight:700; font-family:var(--font-display); color:var(--indigo); line-height:1; }
-    .stat-card .stat-label{ color:var(--text-muted); font-size:0.8rem; margin-top:8px; }
-    .stat-card.accent .stat-num{ color:var(--coral); }
-    .stat-card.teal .stat-num{ color:var(--teal); }
+  .tabs{ display:flex; gap:6px; margin-bottom:26px; flex-wrap:wrap; }
+  .tab{ padding:9px 18px; font-size:.88rem; font-weight:600; color:var(--crm-muted); background:transparent; border:1px solid transparent; border-radius:100px; cursor:pointer; font-family:var(--font-body); transition:all .18s; display:flex; align-items:center; gap:7px; }
+  .tab:hover{ color:var(--crm-text); background:rgba(255,255,255,.05); }
+  .tab.active{ color:#fff; background:var(--crm-grad); box-shadow:0 8px 20px -8px rgba(99,102,241,.65); }
+  .tab .badge{ display:inline-block; min-width:18px; background:rgba(255,255,255,.22); color:#fff; border-radius:100px; padding:0 6px; font-size:.68rem; line-height:18px; text-align:center; }
+  .view{ display:none; }
+  .view.active{ display:block; animation:fadeIn .25s ease; }
+  @keyframes fadeIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:none; } }
 
-    .dash-cols{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
-    .panel{ background:var(--paper-2); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow-sm); }
-    .panel h4{ margin:0 0 16px; font-size:0.95rem; font-family:var(--font-display); }
-    .bar-row{ display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:0.82rem; }
-    .bar-row .bar-label{ width:120px; color:var(--text-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-    .bar-row .bar-track{ flex:1; height:10px; background:var(--paper-3); border-radius:100px; overflow:hidden; }
-    .bar-row .bar-fill{ height:100%; background:var(--indigo); border-radius:100px; }
-    .bar-row .bar-val{ width:40px; text-align:right; font-family:var(--font-mono); color:var(--text-dark); }
-    .pipeline-row{ display:flex; align-items:center; gap:8px; margin-bottom:8px; font-size:0.85rem; }
-    .pipeline-row .p-label{ width:90px; color:var(--text-muted); }
-    .pipeline-row .p-track{ flex:1; height:10px; background:var(--paper-3); border-radius:100px; overflow:hidden; }
-    .pipeline-row .p-fill{ height:100%; border-radius:100px; }
-    .follow-list{ list-style:none; margin:0; padding:0; }
-    .follow-list li{ display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--border); font-size:0.85rem; }
-    .follow-list li:last-child{ border-bottom:none; }
-    .follow-list .f-date{ color:var(--coral); font-family:var(--font-mono); font-size:0.78rem; }
+  .stats-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:14px; margin-bottom:22px; }
+  .stat-card{ background:var(--crm-card); border:1px solid var(--crm-line-soft); border-radius:var(--crm-radius); padding:18px; box-shadow:var(--crm-shadow); position:relative; overflow:hidden; transition:transform .18s, border-color .18s; }
+  .stat-card:hover{ transform:translateY(-3px); border-color:var(--crm-line); }
+  .stat-card .stat-ico{ width:38px; height:38px; border-radius:11px; display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+  .stat-card .stat-ico svg{ width:19px; height:19px; }
+  .stat-card .stat-num{ font-size:1.9rem; font-weight:800; font-family:var(--font-display); line-height:1; letter-spacing:-.02em; }
+  .stat-card .stat-label{ color:var(--crm-muted); font-size:.78rem; margin-top:8px; letter-spacing:.02em; }
+  .stat-card.indigo .stat-ico{ background:rgba(99,102,241,.16); color:#a5b4fc; } .stat-card.indigo .stat-num{ color:#a5b4fc; }
+  .stat-card.coral .stat-ico{ background:rgba(251,113,133,.14); color:#fda4af; } .stat-card.coral .stat-num{ color:#fda4af; }
+  .stat-card.teal .stat-ico{ background:rgba(45,212,191,.14); color:#5eead4; } .stat-card.teal .stat-num{ color:#5eead4; }
+  .stat-card.amber .stat-ico{ background:rgba(245,158,11,.14); color:#fcd34d; } .stat-card.amber .stat-num{ color:#fcd34d; }
 
-    .leads-toolbar{ display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center; }
-    .search-box{ flex:1; min-width:220px; padding:11px 16px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:0.9rem; font-family:var(--font-body); background:var(--paper-2); color:var(--text-dark); outline:none; }
-    .search-box:focus{ border-color:var(--indigo); }
-    .status-filter{ display:flex; gap:6px; flex-wrap:wrap; }
-    .status-filter .chip{ padding:6px 14px; border-radius:100px; border:1px solid var(--border); background:transparent; color:var(--text-muted); font-size:0.8rem; cursor:pointer; font-family:var(--font-body); transition:all 0.15s; }
-    .status-filter .chip.active{ background:var(--indigo); color:#fff; border-color:var(--indigo); }
+  .dash-cols{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-bottom:18px; }
+  .panel{ background:var(--crm-card); border:1px solid var(--crm-line-soft); border-radius:var(--crm-radius); padding:22px; box-shadow:var(--crm-shadow); }
+  .panel h4{ margin:0 0 18px; font-size:.95rem; font-family:var(--font-display); display:flex; align-items:center; gap:9px; }
+  .panel h4::before{ content:""; width:8px; height:8px; border-radius:50%; background:var(--crm-grad); box-shadow:0 0 12px rgba(99,102,241,.7); }
+  .bar-row{ display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:.82rem; }
+  .bar-row .bar-label{ width:130px; color:var(--crm-muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .bar-row .bar-track{ flex:1; height:9px; background:rgba(255,255,255,.06); border-radius:100px; overflow:hidden; }
+  .bar-row .bar-fill{ height:100%; background:var(--crm-grad); border-radius:100px; transition:width .5s ease; }
+  .bar-row .bar-val{ width:38px; text-align:right; font-family:var(--font-mono); color:var(--crm-text); font-size:.78rem; }
+  .pipeline-row{ display:flex; align-items:center; gap:8px; margin-bottom:9px; font-size:.84rem; }
+  .pipeline-row .p-label{ width:84px; color:var(--crm-muted); }
+  .pipeline-row .p-track{ flex:1; height:9px; background:rgba(255,255,255,.06); border-radius:100px; overflow:hidden; }
+  .pipeline-row .p-fill{ height:100%; border-radius:100px; }
+  .follow-list{ list-style:none; margin:0; padding:0; }
+  .follow-list li{ display:flex; align-items:center; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--crm-line-soft); font-size:.85rem; gap:12px; }
+  .follow-list li:last-child{ border-bottom:none; }
+  .follow-list .f-date{ color:var(--crm-coral); font-family:var(--font-mono); font-size:.76rem; white-space:nowrap; }
 
-    .submission-list{ display:flex; flex-direction:column; gap:12px; }
-    .submission-card{ background:var(--paper-2); border-radius:var(--radius); padding:18px 22px; box-shadow:var(--shadow-sm); border-left:4px solid transparent; transition:box-shadow 0.15s; }
-    .submission-card.unread{ border-left-color:var(--coral); }
-    .submission-card .card-top{ display:flex; align-items:center; gap:12px; margin-bottom:6px; flex-wrap:wrap; }
-    .submission-card .card-name{ font-weight:600; font-size:0.98rem; }
-    .submission-card .card-date{ color:var(--text-muted); font-size:0.78rem; }
-    .submission-card .card-email{ color:var(--text-muted); font-size:0.85rem; margin-bottom:4px; }
-    .submission-card .card-snippet{ color:var(--text-muted); font-size:0.9rem; line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; cursor:pointer; }
-    .submission-card .card-actions{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; align-items:center; }
-    .pill{ padding:2px 10px; border-radius:100px; font-size:0.72rem; font-weight:600; }
-    .pill.new{ background:#eef2ff; color:#4F46E5; }
-    .pill.contacted{ background:#ecfeff; color:#0891b2; }
-    .pill.proposal{ background:#fffbeb; color:#d97706; }
-    .pill.won{ background:#ecfdf5; color:#059669; }
-    .pill.lost{ background:#fef2f2; color:#dc2626; }
-    .pill.followup{ background:#fdf4ff; color:#9333ea; }
+  .leads-toolbar{ display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; align-items:center; }
+  .search-box{ flex:1; min-width:200px; padding:11px 16px; border:1px solid var(--crm-line); border-radius:10px; font-size:.88rem; font-family:var(--font-body); background:var(--crm-card); color:var(--crm-text); outline:none; transition:border-color .2s, box-shadow .2s; }
+  .search-box:focus{ border-color:var(--crm-indigo); box-shadow:0 0 0 3px rgba(99,102,241,.16); }
+  .filter-select{ padding:11px 34px 11px 14px; border:1px solid var(--crm-line); border-radius:10px; font-size:.84rem; font-family:var(--font-body); background:var(--crm-card); color:var(--crm-text); outline:none; cursor:pointer; appearance:none; -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%239aa0b4' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 13px center; }
+  .filter-select:focus{ border-color:var(--crm-indigo); }
+  .status-filter{ display:flex; gap:6px; flex-wrap:wrap; }
+  .status-filter .chip{ padding:7px 15px; border-radius:100px; border:1px solid var(--crm-line); background:transparent; color:var(--crm-muted); font-size:.79rem; font-weight:600; cursor:pointer; font-family:var(--font-body); transition:all .15s; }
+  .status-filter .chip:hover{ color:var(--crm-text); background:rgba(255,255,255,.05); }
+  .status-filter .chip.active{ background:var(--crm-card-2); color:var(--crm-text); border-color:rgba(99,102,241,.55); box-shadow:inset 0 0 0 1px rgba(99,102,241,.35); }
+  .toolbar-right{ margin-left:auto; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
 
-    .inline-select{ padding:6px 10px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:0.8rem; font-family:var(--font-body); background:var(--paper); color:var(--text-dark); }
-    .btn-tiny{ padding:6px 12px; border-radius:var(--radius-sm); font-size:0.78rem; cursor:pointer; font-family:var(--font-body); border:1px solid var(--border); background:transparent; color:var(--text-muted); transition:all 0.15s; }
-    .btn-tiny:hover{ background:var(--paper-3); }
-    .btn-tiny.reply{ border-color:var(--indigo); color:var(--indigo); }
-    .btn-tiny.reply:hover{ background:var(--indigo); color:#fff; }
-    .btn-tiny.danger{ border-color:var(--coral); color:var(--coral); }
-    .btn-tiny.danger:hover{ background:var(--coral); color:#fff; }
+  .submission-list{ display:flex; flex-direction:column; gap:12px; }
+  .submission-card{ background:var(--crm-card); border:1px solid var(--crm-line-soft); border-radius:var(--crm-radius); padding:16px 18px; box-shadow:var(--crm-shadow); border-left:3px solid transparent; transition:box-shadow .18s, border-color .18s, transform .18s; }
+  .submission-card:hover{ box-shadow:0 22px 46px -18px rgba(0,0,0,.8); border-color:var(--crm-line); }
+  .submission-card.unread{ border-left-color:var(--crm-indigo); background:linear-gradient(90deg,rgba(99,102,241,.07),transparent 55%),var(--crm-card); }
+  .card-main{ display:flex; gap:14px; cursor:pointer; }
+  .avatar{ width:44px; height:44px; min-width:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.92rem; color:#fff; letter-spacing:.02em; box-shadow:0 6px 16px -6px rgba(0,0,0,.6); }
+  .avatar.sm{ width:34px; height:34px; min-width:34px; font-size:.76rem; border-radius:9px; }
+  .avatar.big{ width:58px; height:58px; min-width:58px; font-size:1.2rem; border-radius:16px; }
+  .card-body{ flex:1; min-width:0; }
+  .card-top{ display:flex; align-items:center; gap:9px; margin-bottom:5px; flex-wrap:wrap; }
+  .card-name{ font-weight:700; font-size:.97rem; }
+  .card-date{ color:var(--crm-muted); font-size:.75rem; margin-left:auto; white-space:nowrap; font-family:var(--font-mono); }
+  .card-email{ color:var(--crm-muted); font-size:.84rem; margin-bottom:7px; }
+  .card-tags{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; }
+  .tag{ display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:100px; font-size:.72rem; font-weight:600; white-space:nowrap; }
+  .tag-co{ background:rgba(255,255,255,.07); color:var(--crm-text); }
+  .tag-country{ background:rgba(45,212,191,.13); color:#5eead4; }
+  .tag-ind{ background:rgba(99,102,241,.14); color:#a5b4fc; }
+  .card-snippet{ color:var(--crm-muted); font-size:.87rem; line-height:1.55; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
 
-    .detail-notes{ margin-top:14px; padding:14px; background:var(--paper); border-radius:var(--radius-sm); font-size:0.85rem; color:var(--text-dark); white-space:pre-wrap; max-height:200px; overflow:auto; display:none; }
-    .detail-notes.open{ display:block; }
-    .notes-input{ margin-top:10px; display:none; gap:8px; }
-    .notes-input.open{ display:flex; }
-    .notes-input input{ flex:1; padding:9px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:0.85rem; font-family:var(--font-body); background:var(--paper); color:var(--text-dark); outline:none; }
-    .notes-input input:focus{ border-color:var(--indigo); }
+  .pill{ padding:3px 11px; border-radius:100px; font-size:.7rem; font-weight:700; letter-spacing:.03em; }
+  .pill.new{ background:rgba(99,102,241,.16); color:#a5b4fc; }
+  .pill.contacted{ background:rgba(45,212,191,.14); color:#5eead4; }
+  .pill.proposal{ background:rgba(245,158,11,.15); color:#fcd34d; }
+  .pill.won{ background:rgba(16,185,129,.17); color:#34d399; }
+  .pill.lost{ background:rgba(251,113,133,.15); color:#fda4af; }
+  .pill.followup{ background:rgba(217,70,239,.16); color:#e879f9; }
+  .inline-select{ padding:7px 10px; border:1px solid var(--crm-line); border-radius:8px; font-size:.8rem; font-family:var(--font-body); background:var(--crm-card-2); color:var(--crm-text); outline:none; cursor:pointer; }
+  .inline-select:focus{ border-color:var(--crm-indigo); }
+  .btn-tiny{ padding:7px 13px; border-radius:8px; font-size:.78rem; font-weight:600; cursor:pointer; font-family:var(--font-body); border:1px solid var(--crm-line); background:transparent; color:var(--crm-muted); transition:all .15s; }
+  .btn-tiny:hover{ background:rgba(255,255,255,.07); color:var(--crm-text); }
+  .btn-tiny.reply{ border-color:rgba(99,102,241,.5); color:#a5b4fc; }
+  .btn-tiny.reply:hover{ background:var(--crm-indigo); border-color:var(--crm-indigo); color:#fff; }
+  .btn-tiny.danger{ border-color:rgba(251,113,133,.45); color:var(--crm-coral); }
+  .btn-tiny.danger:hover{ background:var(--crm-coral); border-color:var(--crm-coral); color:#fff; }
+  .card-actions{ display:flex; gap:8px; margin-top:13px; flex-wrap:wrap; align-items:center; padding-left:58px; }
+  .detail-notes{ margin-top:12px; padding:13px; background:rgba(255,255,255,.035); border:1px solid var(--crm-line-soft); border-radius:10px; font-size:.84rem; color:var(--crm-text); white-space:pre-wrap; max-height:200px; overflow:auto; display:none; }
+  .detail-notes.open{ display:block; }
+  .notes-input{ margin-top:9px; display:none; gap:8px; }
+  .notes-input.open{ display:flex; }
+  .notes-input input{ flex:1; padding:9px 12px; border:1px solid var(--crm-line); border-radius:8px; font-size:.84rem; font-family:var(--font-body); background:var(--crm-card-2); color:var(--crm-text); outline:none; }
+  .notes-input input:focus{ border-color:var(--crm-indigo); }
 
-    .table{ width:100%; border-collapse:collapse; font-size:0.87rem; }
-    .table th{ text-align:left; color:var(--text-muted); font-weight:600; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.04em; padding:10px 12px; border-bottom:1px solid var(--border); }
-    .table td{ padding:10px 12px; border-bottom:1px solid var(--border); }
-    .table tr:last-child td{ border-bottom:none; }
+  .kanban{ display:flex; gap:14px; align-items:flex-start; overflow-x:auto; padding-bottom:16px; margin:-4px; }
+  .kanban-col{ background:rgba(255,255,255,.025); border:1px solid var(--crm-line-soft); border-radius:var(--crm-radius); min-width:252px; flex:1; }
+  .kanban-head{ display:flex; align-items:center; gap:8px; padding:14px 16px; font-size:.84rem; font-weight:700; border-bottom:1px solid var(--crm-line-soft); }
+  .kanban-head .dot{ width:9px; height:9px; border-radius:50%; }
+  .kanban-count{ margin-left:auto; background:rgba(255,255,255,.07); color:var(--crm-muted); border-radius:100px; font-size:.7rem; padding:1px 8px; }
+  .kanban-body{ padding:12px; display:flex; flex-direction:column; gap:10px; min-height:120px; }
+  .kanban-body.drag-over{ background:rgba(99,102,241,.08); border-radius:10px; }
+  .kanban-card{ background:var(--crm-card-2); border:1px solid var(--crm-line-soft); border-radius:11px; padding:12px; cursor:pointer; transition:transform .15s, border-color .15s, box-shadow .15s; }
+  .kanban-card:hover{ transform:translateY(-2px); border-color:rgba(99,102,241,.45); box-shadow:0 12px 26px -12px rgba(0,0,0,.8); }
+  .kanban-card.dragging{ opacity:.45; }
+  .kc-top{ display:flex; align-items:center; gap:9px; margin-bottom:8px; }
+  .kc-name{ font-weight:600; font-size:.85rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .kc-line{ color:var(--crm-muted); font-size:.76rem; margin-bottom:6px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .kc-snip{ color:var(--crm-muted); font-size:.78rem; line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:9px; }
+  .kc-foot{ display:flex; align-items:center; justify-content:space-between; font-size:.7rem; color:var(--crm-muted); font-family:var(--font-mono); }
+  .kc-unread{ background:var(--crm-indigo); color:#fff; border-radius:100px; font-family:var(--font-body); font-weight:700; padding:1px 8px; font-size:.64rem; }
 
-    .empty-state{ text-align:center; padding:60px 20px; color:var(--text-muted); }
-    .empty-state .empty-icon{ font-size:3rem; margin-bottom:12px; opacity:0.4; }
-    .empty-state h4{ color:var(--text-dark); margin-bottom:6px; }
-    .loading{ text-align:center; padding:40px; color:var(--text-muted); }
+  .table-wrap{ background:var(--crm-card); border:1px solid var(--crm-line-soft); border-radius:var(--crm-radius); box-shadow:var(--crm-shadow); overflow:auto; }
+  .table{ width:100%; border-collapse:collapse; font-size:.86rem; min-width:640px; }
+  .table th{ text-align:left; color:var(--crm-muted); font-weight:700; font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; padding:14px 16px; border-bottom:1px solid var(--crm-line); background:rgba(255,255,255,.02); }
+  .table td{ padding:13px 16px; border-bottom:1px solid var(--crm-line-soft); vertical-align:middle; }
+  .table tr:last-child td{ border-bottom:none; }
+  .table tr:hover td{ background:rgba(255,255,255,.025); }
 
-    /* Modal */
-    .modal-overlay{ position:fixed; inset:0; background:rgba(15,18,40,0.55); display:none; align-items:center; justify-content:center; z-index:999; padding:20px; }
-    .modal-overlay.open{ display:flex; }
-    .modal{ background:var(--paper-2); border-radius:var(--radius); max-width:560px; width:100%; max-height:86vh; overflow:auto; padding:28px; box-shadow:var(--shadow); }
-    .modal h3{ margin:0 0 4px; font-family:var(--font-display); }
-    .modal .modal-sub{ color:var(--text-muted); font-size:0.85rem; margin-bottom:18px; }
-    .modal label{ display:block; font-size:0.8rem; font-weight:600; color:var(--text-muted); margin:14px 0 6px; }
-    .modal input, .modal textarea, .modal select{ width:100%; padding:11px 14px; border:1px solid var(--border); border-radius:var(--radius-sm); font-size:0.9rem; font-family:var(--font-body); background:var(--paper); color:var(--text-dark); outline:none; box-sizing:border-box; }
-    .modal input:focus, .modal textarea:focus, .modal select:focus{ border-color:var(--indigo); }
-    .modal textarea{ min-height:120px; resize:vertical; }
-    .modal .modal-actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
+  .empty-state{ text-align:center; padding:60px 20px; color:var(--crm-muted); }
+  .empty-state .empty-icon{ font-size:3rem; margin-bottom:12px; opacity:.35; }
+  .empty-state h4{ color:var(--crm-text); margin-bottom:6px; font-family:var(--font-display); }
+  .loading{ text-align:center; padding:42px; color:var(--crm-muted); }
+  .spinner{ display:inline-block; width:26px; height:26px; border:3px solid rgba(255,255,255,.12); border-top-color:var(--crm-indigo); border-radius:50%; animation:spin .7s linear infinite; margin-bottom:10px; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
 
-    .toast{ position:fixed; bottom:24px; right:24px; background:var(--ink); color:#fff; padding:14px 22px; border-radius:var(--radius-sm); font-size:0.9rem; box-shadow:var(--shadow); opacity:0; transform:translateY(12px); transition:opacity 0.3s, transform 0.3s; z-index:9999; pointer-events:none; }
-    .toast.show{ opacity:1; transform:translateY(0); }
+  .modal-overlay{ position:fixed; inset:0; background:rgba(6,6,12,.72); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; z-index:999; padding:20px; }
+  .modal-overlay.open{ display:flex; animation:fadeIn .2s ease; }
+  .modal{ background:var(--crm-card); border:1px solid var(--crm-line); border-radius:var(--crm-radius); max-width:560px; width:100%; max-height:88vh; overflow:auto; padding:28px; box-shadow:var(--crm-shadow); }
+  .modal-lead{ max-width:620px; }
+  .modal-head{ display:flex; align-items:center; gap:14px; margin-bottom:20px; }
+  .modal-head h3{ margin:0 0 3px; font-family:var(--font-display); font-size:1.15rem; }
+  .modal-sub{ color:var(--crm-muted); font-size:.82rem; }
+  .modal-x{ margin-left:auto; width:34px; height:34px; border-radius:9px; border:1px solid var(--crm-line); background:transparent; color:var(--crm-muted); font-size:1.2rem; cursor:pointer; transition:all .15s; }
+  .modal-x:hover{ background:rgba(255,255,255,.08); color:var(--crm-text); }
+  .modal label{ display:block; font-size:.75rem; font-weight:700; color:var(--crm-muted); margin:14px 0 6px; text-transform:uppercase; letter-spacing:.05em; }
+  .modal input, .modal textarea, .modal select{ width:100%; padding:11px 14px; border:1px solid var(--crm-line); border-radius:10px; font-size:.9rem; font-family:var(--font-body); background:var(--crm-card-2); color:var(--crm-text); outline:none; box-sizing:border-box; transition:border-color .2s; }
+  .modal input:focus, .modal textarea:focus, .modal select:focus{ border-color:var(--crm-indigo); }
+  .modal textarea{ min-height:120px; resize:vertical; }
+  .modal .modal-actions{ display:flex; gap:10px; justify-content:flex-end; margin-top:22px; }
+  .lead-grid{ display:grid; grid-template-columns:1fr 1fr; gap:0 18px; }
+  .lead-field.full{ grid-column:1/-1; }
+  .lead-field .lf-val{ background:var(--crm-card-2); border:1px solid var(--crm-line-soft); border-radius:10px; padding:11px 14px; font-size:.88rem; white-space:pre-wrap; word-break:break-word; }
+  .lead-field.full .lf-val{ max-height:160px; overflow:auto; }
 
-    .pager{ display:flex; gap:8px; align-items:center; justify-content:flex-end; margin-top:16px; font-size:0.8rem; color:var(--text-muted); }
-    .pager button{ padding:6px 12px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--paper-2); cursor:pointer; font-family:var(--font-body); color:var(--text-dark); }
-    .pager button:disabled{ opacity:0.4; cursor:default; }
+  .toast{ position:fixed; bottom:26px; right:26px; background:var(--crm-card-2); color:var(--crm-text); border:1px solid var(--crm-line); padding:14px 22px; border-radius:12px; font-size:.9rem; box-shadow:var(--crm-shadow); opacity:0; transform:translateY(14px); transition:opacity .3s, transform .3s; z-index:9999; pointer-events:none; border-left:3px solid var(--crm-indigo); }
+  .toast.show{ opacity:1; transform:translateY(0); }
+  .pager{ display:flex; gap:8px; align-items:center; justify-content:flex-end; margin-top:18px; font-size:.8rem; color:var(--crm-muted); }
+  .pager button{ padding:7px 14px; border:1px solid var(--crm-line); border-radius:9px; background:var(--crm-card); cursor:pointer; font-family:var(--font-body); color:var(--crm-text); font-weight:600; font-size:.8rem; transition:all .15s; }
+  .pager button:hover:not(:disabled){ border-color:var(--crm-indigo); }
+  .pager button:disabled{ opacity:.35; cursor:default; }
 
-    @media(max-width:760px){
-      .dash-cols{ grid-template-columns:1fr; }
-      .admin-header{ flex-direction:column; gap:10px; }
-      .admin-body{ padding:20px 14px; }
-      .stats-grid{ grid-template-columns:repeat(2,1fr); }
-    }</style></head><body><div class="admin-login" id="loginScreen"><div class="login-card"><h1>CleverStack</h1><p>Mini-CRM — Leads, Subscribers & Outreach</p><div class="login-error" id="loginError"></div><input type="password" id="loginPassword" placeholder="Enter admin password" autofocus> <button class="btn" id="loginBtn">Sign In</button></div></div><div class="admin-dashboard crm" id="dashboard"><div class="admin-header"><div class="brand"><h2>CleverStack <span>CRM</span></h2></div><div class="header-actions"><button class="btn-sm" id="refreshBtn">Refresh</button> <button class="btn-sm" id="logoutBtn">Logout</button></div></div><div class="admin-body"><div class="tabs"><button class="tab active" data-view="dashboard">Dashboard</button> <button class="tab" data-view="leads">Leads <span class="badge" id="unreadBadge" style="display:none;">0</span></button> <button class="tab" data-view="subscribers">Subscribers <span class="badge" id="subsBadge" style="display:none;">0</span></button> <button class="tab" data-view="email_log">Email Log</button></div><div class="view active" id="view-dashboard"><div class="stats-grid" id="statsGrid"><div class="stat-card"><div class="stat-num" id="stTotal">—</div><div class="stat-label">Total Leads</div></div><div class="stat-card accent"><div class="stat-num" id="stUnread">—</div><div class="stat-label">Unread</div></div><div class="stat-card"><div class="stat-num" id="stToday">—</div><div class="stat-label">New Today</div></div><div class="stat-card"><div class="stat-num" id="stWeek">—</div><div class="stat-label">This Week</div></div><div class="stat-card teal"><div class="stat-num" id="stSubs">—</div><div class="stat-label">Subscribers</div></div><div class="stat-card teal"><div class="stat-num" id="stConv">—</div><div class="stat-label">Win Rate</div></div></div><div class="dash-cols"><div class="panel"><h4>Leads by Source</h4><div id="sourceBars"><div class="loading">Loading...</div></div></div><div class="panel"><h4>Pipeline</h4><div id="pipelineBars"><div class="loading">Loading...</div></div></div></div><div class="panel"><h4>Follow-ups due</h4><ul class="follow-list" id="followList"><li style="color:var(--text-muted);">Loading...</li></ul></div></div><div class="view" id="view-leads"><div class="leads-toolbar"><input class="search-box" id="leadSearch" placeholder="Search name, email, message..." autocomplete="off"> <button class="btn-sm" id="exportLeadsBtn">Export CSV</button><div class="status-filter" id="statusFilter"><button class="chip active" data-status="">All</button> <button class="chip" data-status="new">New</button> <button class="chip" data-status="contacted">Contacted</button> <button class="chip" data-status="proposal">Proposal</button> <button class="chip" data-status="won">Won</button> <button class="chip" data-status="lost">Lost</button></div></div><div class="submission-list" id="submissionList"><div class="loading">Loading leads...</div></div><div class="pager" id="leadPager"></div></div><div class="view" id="view-subscribers"><div class="leads-toolbar"><input class="search-box" id="subsSearch" placeholder="Search subscribers..." autocomplete="off"> <button class="btn-sm" id="exportSubsBtn">Export CSV</button> <button class="btn-sm primary" id="broadcastBtn">Broadcast Email</button></div><div class="panel" style="padding:8px 22px;"><table class="table"><thead><tr><th>Email</th><th>Name</th><th>Source</th><th>Joined</th><th>Status</th><th></th></tr></thead><tbody id="subsTable"><tr><td colspan="6" class="loading">Loading...</td></tr></tbody></table></div></div><div class="view" id="view-email_log"><div class="panel" style="padding:8px 22px;"><table class="table"><thead><tr><th>To</th><th>Type</th><th>Subject</th><th>Status</th><th>Sent</th></tr></thead><tbody id="logTable"><tr><td colspan="5" class="loading">Loading...</td></tr></tbody></table></div></div></div></div><div class="modal-overlay" id="replyModal"><div class="modal"><h3>Reply to Lead</h3><p class="modal-sub" id="replyTarget"></p><label>Subject</label><input id="replySubject" value="Re: Your message to CleverStack"><label>Message</label><textarea id="replyBody" placeholder="Write your reply..."></textarea><div class="modal-actions"><button class="btn-sm" onclick="closeModal('replyModal')">Cancel</button><button class="btn-sm primary" id="replySendBtn">Send Reply</button></div></div></div><div class="modal-overlay" id="broadcastModal"><div class="modal"><h3>Broadcast to Subscribers</h3><p class="modal-sub" id="broadcastTarget"></p><label>Subject</label><input id="broadcastSubject" placeholder="Subject line"><label>Message</label><textarea id="broadcastBody" placeholder="Write your newsletter..."></textarea><div class="modal-actions"><button class="btn-sm" onclick="closeModal('broadcastModal')">Cancel</button><button class="btn-sm primary" id="broadcastSendBtn">Send Broadcast</button></div></div></div><div class="toast" id="toast"></div><script>(function(){
+  @media(max-width:820px){
+    .dash-cols{ grid-template-columns:1fr; }
+    .admin-header{ flex-direction:column; gap:10px; }
+    .admin-body{ padding:20px 14px 50px; }
+    .stats-grid{ grid-template-columns:repeat(2,1fr); }
+    .card-actions{ padding-left:0; }
+    .lead-grid{ grid-template-columns:1fr; }
+    .toolbar-right{ margin-left:0; width:100%; }
+  }
+</style>
+</head><body>
+<!-- LOGIN -->
+<div class="admin-login" id="loginScreen">
+  <div class="login-card">
+    <div class="login-mark">CS</div>
+    <h1>CleverStack CRM</h1>
+    <p>Leads, Subscribers &amp; Outreach</p>
+    <div class="login-error" id="loginError"></div>
+    <input type="password" id="loginPassword" placeholder="Enter admin password" autofocus>
+    <button class="btn" id="loginBtn">Sign In</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="admin-dashboard" id="dashboard">
+  <header class="admin-header">
+    <div class="brand">
+      <span class="brand-mark">CS</span>
+      <h2>CleverStack <span>CRM</span></h2>
+    </div>
+    <div class="header-actions">
+      <button class="btn-sm" id="refreshBtn"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Refresh</button>
+      <button class="btn-sm ghost" id="logoutBtn">Logout</button>
+    </div>
+  </header>
+
+  <main class="admin-body">
+    <nav class="tabs">
+      <button class="tab active" data-view="dashboard">Dashboard</button>
+      <button class="tab" data-view="leads">Leads <span class="badge" id="unreadBadge" style="display:none;">0</span></button>
+      <button class="tab" data-view="subscribers">Subscribers <span class="badge" id="subsBadge" style="display:none;">0</span></button>
+      <button class="tab" data-view="email_log">Email Log</button>
+    </nav>
+
+    <!-- DASHBOARD VIEW -->
+    <section class="view active" id="view-dashboard">
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card indigo"><div class="stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="stat-num" id="stTotal">-</div><div class="stat-label">Total Leads</div></div>
+        <div class="stat-card coral"><div class="stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="stat-num" id="stUnread">-</div><div class="stat-label">Unread</div></div>
+        <div class="stat-card teal"><div class="stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div class="stat-num" id="stToday">-</div><div class="stat-label">New Today</div></div>
+        <div class="stat-card amber"><div class="stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="stat-num" id="stWeek">-</div><div class="stat-label">This Week</div></div>
+        <div class="stat-card teal"><div class="stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="stat-num" id="stSubs">-</div><div class="stat-label">Subscribers</div></div>
+        <div class="stat-card indigo"><div class="stat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></div><div class="stat-num" id="stConv">-</div><div class="stat-label">Win Rate</div></div>
+      </div>
+
+      <div class="dash-cols">
+        <div class="panel"><h4>Leads by Source</h4><div id="sourceBars"><div class="loading"><div class="spinner"></div></div></div></div>
+        <div class="panel"><h4>Pipeline</h4><div id="pipelineBars"><div class="loading"><div class="spinner"></div></div></div></div>
+      </div>
+      <div class="dash-cols">
+        <div class="panel"><h4>Top Countries</h4><div id="countryBars"><div class="loading"><div class="spinner"></div></div></div></div>
+        <div class="panel"><h4>Top Industries</h4><div id="industryBars"><div class="loading"><div class="spinner"></div></div></div></div>
+      </div>
+      <div class="dash-cols" style="grid-template-columns:1fr;">
+        <div class="panel"><h4>Follow-ups Due</h4><ul class="follow-list" id="followList"></ul></div>
+      </div>
+    </section>
+
+    <!-- LEADS VIEW -->
+    <section class="view" id="view-leads">
+      <div class="leads-toolbar">
+        <input type="text" class="search-box" id="leadSearch" placeholder="Search leads by name, email, company, country, industry...">
+        <select class="filter-select" id="filterCountry"><option value="all">All countries</option></select>
+        <select class="filter-select" id="filterIndustry"><option value="all">All industries</option></select>
+        <div class="status-filter" id="statusFilter">
+          <button class="chip active" data-status="">All</button>
+          <button class="chip" data-status="new">New</button>
+          <button class="chip" data-status="contacted">Contacted</button>
+          <button class="chip" data-status="proposal">Proposal</button>
+          <button class="chip" data-status="won">Won</button>
+          <button class="chip" data-status="lost">Lost</button>
+        </div>
+        <div class="toolbar-right">
+          <button class="btn-sm ghost" id="toggleViewBtn"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg> Board</button>
+          <button class="btn-sm" id="exportLeadsBtn"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</button>
+        </div>
+      </div>
+      <div class="submission-list" id="submissionList"><div class="loading"><div class="spinner"></div></div></div>
+      <div class="kanban" id="kanbanBoard" style="display:none;"></div>
+      <div class="pager" id="leadPager"></div>
+    </section>
+
+    <!-- SUBSCRIBERS VIEW -->
+    <section class="view" id="view-subscribers">
+      <div class="leads-toolbar">
+        <input type="text" class="search-box" id="subsSearch" placeholder="Search subscribers by email or name...">
+        <div class="toolbar-right">
+          <button class="btn-sm" id="broadcastBtn"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Broadcast</button>
+          <button class="btn-sm" id="exportSubsBtn"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="table"><thead><tr><th>Email</th><th>Name</th><th>Source</th><th>Joined</th><th>Status</th><th></th></tr></thead><tbody id="subsTable"></tbody></table>
+      </div>
+    </section>
+
+    <!-- EMAIL LOG VIEW -->
+    <section class="view" id="view-email_log">
+      <div class="table-wrap">
+        <table class="table"><thead><tr><th>To</th><th>Type</th><th>Subject</th><th>Status</th><th>Time</th></tr></thead><tbody id="logTable"></tbody></table>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- LEAD DETAIL MODAL -->
+<div class="modal-overlay" id="leadModal">
+  <div class="modal modal-lead">
+    <div class="modal-head">
+      <div class="avatar big" id="leadAvatar" style="background:#6366f1;">?</div>
+      <div>
+        <h3 id="leadName">-</h3>
+        <div class="modal-sub" id="leadSub">-</div>
+      </div>
+      <button class="modal-x" onclick="window.closeModal('leadModal')">x</button>
+    </div>
+    <div class="lead-grid">
+      <div class="lead-field"><label>Company</label><div class="lf-val" id="leadCompany">-</div></div>
+      <div class="lead-field"><label>Country</label><div class="lf-val" id="leadCountry">-</div></div>
+      <div class="lead-field"><label>Industry / Niche</label><div class="lf-val" id="leadIndustry">-</div></div>
+      <div class="lead-field"><label>Source</label><div class="lf-val" id="leadSource">-</div></div>
+      <div class="lead-field"><label>Received</label><div class="lf-val" id="leadCreated">-</div></div>
+      <div class="lead-field"><label>Follow-up</label><input type="date" id="leadFollow" onchange="window.__leadFollowChanged()"></div>
+      <div class="lead-field"><label>Status</label><select id="leadStatus" onchange="window.__leadStatusChanged()"></select></div>
+      <div class="lead-field full"><label>Message</label><div class="lf-val" id="leadMessage">-</div></div>
+      <div class="lead-field full"><label>Notes</label><div class="lf-val" id="leadNotes">-</div></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-tiny reply" id="leadReplyBtn">Reply</button>
+      <button class="btn-tiny danger" id="leadDeleteBtn">Delete</button>
+      <button class="btn-sm primary" onclick="window.closeModal('leadModal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- REPLY MODAL -->
+<div class="modal-overlay" id="replyModal">
+  <div class="modal">
+    <h3>Reply to Lead</h3>
+    <div class="modal-sub" id="replyTarget"></div>
+    <label>Subject</label>
+    <input type="text" id="replySubject" placeholder="Re: Your message to CleverStack">
+    <label>Message</label>
+    <textarea id="replyBody" placeholder="Write your reply..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-sm ghost" onclick="window.closeModal('replyModal')">Cancel</button>
+      <button class="btn-sm primary" id="replySendBtn">Send Reply</button>
+    </div>
+  </div>
+</div>
+
+<!-- BROADCAST MODAL -->
+<div class="modal-overlay" id="broadcastModal">
+  <div class="modal">
+    <h3>Send Broadcast</h3>
+    <div class="modal-sub" id="broadcastTarget"></div>
+    <label>Subject</label>
+    <input type="text" id="broadcastSubject" placeholder="Announcement subject">
+    <label>Message</label>
+    <textarea id="broadcastBody" placeholder="Write your newsletter message..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-sm ghost" onclick="window.closeModal('broadcastModal')">Cancel</button>
+      <button class="btn-sm primary" id="broadcastSendBtn">Send Broadcast</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+(function(){
   'use strict';
   var API_BASE = '/api/admin';
   var token = sessionStorage.getItem('admin_token') || '';
   var leads = [];
+  var currentLead = null;
   var currentStatus = '';
+  var currentIndustry = '';
+  var currentCountry = '';
   var leadOffset = 0;
   var leadTotal = 0;
-  var LEAD_LIMIT = 50;
+  var LEAD_LIMIT = 200;
   var searchTimer = null;
+  var boardMode = false;
+  var filtersLoaded = false;
+
+  var STATUS_META = {
+    new: { label:'New', cls:'new' },
+    contacted: { label:'Contacted', cls:'contacted' },
+    proposal: { label:'Proposal', cls:'proposal' },
+    won: { label:'Won', cls:'won' },
+    lost: { label:'Lost', cls:'lost' }
+  };
+  var STATUS_ORDER = ['new','contacted','proposal','won','lost'];
+  var STATUS_COLORS = { new:'#6366f1', contacted:'#2dd4bf', proposal:'#f59e0b', won:'#10b981', lost:'#fb7185' };
+  var AVATAR_COLORS = ['#6366f1','#2dd4bf','#f59e0b','#10b981','#fb7185','#a855f7','#38bdf8','#f97316'];
 
   function $(id){ return document.getElementById(id); }
   var toast = $('toast');
@@ -164,8 +443,15 @@
     return div.innerHTML;
   }
 
+  function initials(name){
+    return String(name || '?').trim().split(/\s+/).map(function(w){ return w.charAt(0); }).join('').slice(0,2).toUpperCase();
+  }
+  function avatarColor(id){
+    return AVATAR_COLORS[(Number(id) || 0) % AVATAR_COLORS.length];
+  }
+
   function formatDate(dateStr){
-    if (!dateStr) return '—';
+    if (!dateStr) return '-';
     var d = new Date(dateStr + 'Z');
     var now = new Date();
     var diff = now - d;
@@ -177,19 +463,11 @@
   }
 
   function fmtDate(dateStr){
-    if (!dateStr) return '—';
+    if (!dateStr) return '-';
     var d = new Date(dateStr + 'Z');
     if (isNaN(d.getTime())) return dateStr;
     return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
   }
-
-  var STATUS_META = {
-    new: { label:'New', cls:'new' },
-    contacted: { label:'Contacted', cls:'contacted' },
-    proposal: { label:'Proposal', cls:'proposal' },
-    won: { label:'Won', cls:'won' },
-    lost: { label:'Lost', cls:'lost' }
-  };
 
   // ---------------- TABS ----------------
   var tabs = document.querySelectorAll('.tab');
@@ -208,6 +486,11 @@
   });
 
   // ---------------- DASHBOARD ----------------
+  function barRow(label, count, max, color){
+    var pct = Math.max(count > 0 ? Math.round((count / max) * 100) : 0, 3);
+    return '<div class="bar-row"><span class="bar-label" title="' + escapeHtml(label) + '">' + escapeHtml(label) + '</span><div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;' + (color ? 'background:' + color + ';' : '') + '"></div></div><span class="bar-val">' + count + '</span></div>';
+  }
+
   async function loadDashboard(){
     try {
       var s = await apiCall('GET', '?stats=true');
@@ -226,28 +509,37 @@
       var maxSrc = 1;
       src.forEach(function(r){ if (r.count > maxSrc) maxSrc = r.count; });
       var srcHtml = src.length ? '' : '<div class="empty-state"><p>No leads yet.</p></div>';
-      src.forEach(function(r){
-        var pct = Math.round((r.count / maxSrc) * 100);
-        srcHtml += '<div class="bar-row"><span class="bar-label">' + escapeHtml(r.source) + '</span><div class="bar-track"><div class="bar-fill" style="width:' + Math.max(pct,4) + '%"></div></div><span class="bar-val">' + r.count + '</span></div>';
-      });
+      src.forEach(function(r){ srcHtml += barRow(r.source, r.count, maxSrc); });
       $('sourceBars').innerHTML = srcHtml;
 
       var statusB = s.statusBreakdown || {};
-      var order = ['new','contacted','proposal','won','lost'];
-      var pipeHtml = '';
       var totalLeads = s.total || 1;
-      order.forEach(function(k){
+      var pipeHtml = '';
+      STATUS_ORDER.forEach(function(k){
         var count = statusB[k] || 0;
         var pct = Math.round((count / totalLeads) * 100);
         var meta = STATUS_META[k] || { label:k, cls:'new' };
-        var color = { new:'#4F46E5', contacted:'#0891b2', proposal:'#d97706', won:'#059669', lost:'#dc2626' }[k] || '#4F46E5';
-        pipeHtml += '<div class="pipeline-row"><span class="p-label">' + meta.label + '</span><div class="p-track"><div class="p-fill" style="width:' + Math.max(pct, 2) + '%;background:' + color + ';"></div></div><span class="bar-val">' + count + '</span></div>';
+        pipeHtml += '<div class="pipeline-row"><span class="p-label">' + meta.label + '</span><div class="p-track"><div class="p-fill" style="width:' + Math.max(pct, 2) + '%;background:' + STATUS_COLORS[k] + ';"></div></div><span class="bar-val">' + count + '</span></div>';
       });
       $('pipelineBars').innerHTML = pipeHtml;
 
+      var tc = s.topCountries || [];
+      var tcMax = 1;
+      tc.forEach(function(r){ if (r.count > tcMax) tcMax = r.count; });
+      var tcHtml = tc.length ? '' : '<div class="empty-state"><p>No country data yet.</p></div>';
+      tc.forEach(function(r){ tcHtml += barRow(r.label, r.count, tcMax, '#2dd4bf'); });
+      $('countryBars').innerHTML = tcHtml;
+
+      var ti = s.topIndustries || [];
+      var tiMax = 1;
+      ti.forEach(function(r){ if (r.count > tiMax) tiMax = r.count; });
+      var tiHtml = ti.length ? '' : '<div class="empty-state"><p>No industry data yet.</p></div>';
+      ti.forEach(function(r){ tiHtml += barRow(r.label, r.count, tiMax, '#6366f1'); });
+      $('industryBars').innerHTML = tiHtml;
+
       var fl = s.followUps || [];
       if (!fl.length){
-        $('followList').innerHTML = '<li style="color:var(--text-muted);">No follow-ups due — all clear! 🎉</li>';
+        $('followList').innerHTML = '<li style="color:var(--crm-muted);">No follow-ups due - all clear.</li>';
       } else {
         var flHtml = '';
         fl.forEach(function(f){
@@ -260,19 +552,52 @@
     }
   }
 
+  // ---------------- FILTER DROPDOWNS ----------------
+  function populateFilters(s){
+    var countrySel = $('filterCountry');
+    var countryOpts = '<option value="all">All countries</option>';
+    (s.topCountries || []).forEach(function(c){
+      countryOpts += '<option value="' + escapeHtml(c.label) + '">' + escapeHtml(c.label) + ' (' + c.count + ')</option>';
+    });
+    countrySel.innerHTML = countryOpts;
+    countrySel.value = currentCountry;
+
+    var indSel = $('filterIndustry');
+    var indOpts = '<option value="all">All industries</option>';
+    (s.topIndustries || []).forEach(function(i){
+      indOpts += '<option value="' + escapeHtml(i.label) + '">' + escapeHtml(i.label) + ' (' + i.count + ')</option>';
+    });
+    indSel.innerHTML = indOpts;
+    indSel.value = currentIndustry;
+  }
+
+  async function ensureFilters(){
+    if (filtersLoaded) return;
+    try {
+      var s = await apiCall('GET', '?stats=true');
+      populateFilters(s);
+      filtersLoaded = true;
+    } catch(e){}
+  }
+
   // ---------------- LEADS ----------------
   async function loadLeads(){
-    $('submissionList').innerHTML = '<div class="loading">Loading leads...</div>';
+    await ensureFilters();
+    var listEl = $('submissionList');
+    listEl.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
     try {
       var path = '?limit=' + LEAD_LIMIT + '&offset=' + leadOffset + '&status=' + encodeURIComponent(currentStatus);
+      if (currentIndustry && currentIndustry !== 'all') path += '&industry=' + encodeURIComponent(currentIndustry);
+      if (currentCountry && currentCountry !== 'all') path += '&country=' + encodeURIComponent(currentCountry);
       if ($('leadSearch').value.trim()) path += '&q=' + encodeURIComponent($('leadSearch').value.trim());
       var data = await apiCall('GET', path);
       leads = data.submissions || [];
       leadTotal = data.total;
-      renderLeads();
+      if (boardMode){ listEl.style.display = 'none'; renderBoard(); }
+      else { listEl.style.display = 'flex'; renderLeads(); }
       renderPager();
     } catch(e){
-      $('submissionList').innerHTML = '<div class="empty-state"><h4>Failed to load</h4><p>' + escapeHtml(e.message) + '</p></div>';
+      listEl.innerHTML = '<div class="empty-state"><h4>Failed to load</h4><p>' + escapeHtml(e.message) + '</p></div>';
     }
   }
 
@@ -280,9 +605,9 @@
     var totalPages = Math.max(1, Math.ceil(leadTotal / LEAD_LIMIT));
     var curPage = Math.floor(leadOffset / LEAD_LIMIT) + 1;
     $('leadPager').innerHTML =
-      '<button ' + (curPage <= 1 ? 'disabled' : '') + ' onclick="window.__leadPage(' + (curPage - 1) + ')">‹ Prev</button>' +
+      '<button ' + (curPage <= 1 ? 'disabled' : '') + ' onclick="window.__leadPage(' + (curPage - 1) + ')">Prev</button>' +
       '<span>Page ' + curPage + ' of ' + totalPages + ' (' + leadTotal + ' leads)</span>' +
-      '<button ' + (curPage >= totalPages ? 'disabled' : '') + ' onclick="window.__leadPage(' + (curPage + 1) + ')">Next ›</button>';
+      '<button ' + (curPage >= totalPages ? 'disabled' : '') + ' onclick="window.__leadPage(' + (curPage + 1) + ')">Next</button>';
   }
   window.__leadPage = function(p){
     leadOffset = (p - 1) * LEAD_LIMIT;
@@ -292,7 +617,7 @@
 
   function renderLeads(){
     if (!leads.length){
-      $('submissionList').innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><h4>No leads found</h4><p>Try a different filter or search.</p></div>';
+      $('submissionList').innerHTML = '<div class="empty-state"><h4>No leads found</h4><p>Try a different filter or search.</p></div>';
       return;
     }
     var html = '';
@@ -302,22 +627,28 @@
       var unreadClass = s.is_read ? '' : ' unread';
       var hasFollow = s.follow_up_date && s.follow_up_date !== '';
       html += '<div class="submission-card' + unreadClass + '" data-id="' + s.id + '">';
-      html += '<div class="card-top"><span class="card-name">' + escapeHtml(s.name) + '</span><span class="pill ' + meta.cls + '">' + meta.label + '</span>' + (hasFollow ? '<span class="pill followup">Follow-up ' + fmtDate(s.follow_up_date) + '</span>' : '') + '<span class="card-date">' + formatDate(s.created_at) + '</span></div>';
+      html += '<div class="card-main" onclick="window.__openLead(' + s.id + ')">';
+      html += '<span class="avatar" style="background:' + avatarColor(s.id) + '">' + initials(s.name) + '</span>';
+      html += '<div class="card-body">';
+      html += '<div class="card-top"><span class="card-name">' + escapeHtml(s.name) + '</span><span class="pill ' + meta.cls + '">' + meta.label + '</span>' + (hasFollow ? '<span class="pill followup">Due ' + fmtDate(s.follow_up_date) + '</span>' : '') + '<span class="card-date">' + formatDate(s.created_at) + '</span></div>';
       html += '<div class="card-email">' + escapeHtml(s.email) + (s.phone && s.phone !== 'Not provided' ? ' · ' + escapeHtml(s.phone) : '') + '</div>';
-      html += '<div class="card-snippet" onclick="window.__toggleNotes(' + s.id + ')">' + escapeHtml(s.message) + '</div>';
-
-      html += '<div class="detail-notes" id="notes-' + s.id + '">' + (s.notes ? escapeHtml(s.notes) : '<em style="color:var(--text-muted);">No notes yet.</em>') + '</div>';
-      html += '<div class="notes-input" id="notesInput-' + s.id + '"><input placeholder="Add a note (source: ' + escapeHtml(s.source || '') + ')" id="noteText-' + s.id + '"><button class="btn-tiny reply" onclick="window.__addNote(' + s.id + ')">Add</button></div>';
-
+      html += '<div class="card-tags">' +
+        (s.company ? '<span class="tag tag-co">' + escapeHtml(s.company) + '</span>' : '') +
+        (s.country ? '<span class="tag tag-country">' + escapeHtml(s.country) + '</span>' : '') +
+        (s.industry ? '<span class="tag tag-ind">' + escapeHtml(s.industry) + '</span>' : '') +
+        '</div>';
+      html += '<div class="card-snippet">' + escapeHtml(s.message) + '</div>';
+      html += '</div></div>';
+      html += '<div class="detail-notes" id="notes-' + s.id + '">' + (s.notes ? escapeHtml(s.notes) : '<em style="color:var(--crm-muted);">No notes yet.</em>') + '</div>';
+      html += '<div class="notes-input" id="notesInput-' + s.id + '"><input placeholder="Add a note" id="noteText-' + s.id + '"><button class="btn-tiny reply" onclick="window.__addNote(' + s.id + ')">Add</button></div>';
       html += '<div class="card-actions">';
       html += '<select class="inline-select" onchange="window.__setStatus(' + s.id + ', this.value)">';
-      ['new','contacted','proposal','won','lost'].forEach(function(st){
-        html += '<option value="' + st + '"' + (status === st ? ' selected' : '') + '>' + (STATUS_META[st].label) + '</option>';
+      STATUS_ORDER.forEach(function(st){
+        html += '<option value="' + st + '"' + (status === st ? ' selected' : '') + '>' + STATUS_META[st].label + '</option>';
       });
       html += '</select>';
       html += '<input type="date" class="inline-select" value="' + escapeHtml(s.follow_up_date || '') + '" onchange="window.__setFollowUp(' + s.id + ', this.value)" title="Set follow-up date">';
       html += '<button class="btn-tiny" onclick="window.__toggleNotes(' + s.id + ')">Notes</button>';
-      html += '<button class="btn-tiny" onclick="window.__addNotePrompt(' + s.id + ')">+ Note</button>';
       html += '<button class="btn-tiny reply" onclick="window.__openReply(' + s.id + ')">Reply</button>';
       html += '<button class="btn-tiny" onclick="window.__copyEmail(\'' + escapeHtml(s.email) + '\')">Copy</button>';
       html += '<button class="btn-tiny danger" onclick="window.__deleteLead(' + s.id + ')">Delete</button>';
@@ -326,17 +657,66 @@
     $('submissionList').innerHTML = html;
   }
 
+  // ---------------- KANBAN ----------------
+  function kanbanCard(s){
+    var meta = STATUS_META[s.status || 'new'] || { label:'', cls:'new' };
+    return '<div class="kanban-card" draggable="true" data-id="' + s.id + '" onclick="window.__openLead(' + s.id + ')" ondragstart="window.__dragStart(event)">' +
+      '<div class="kc-top"><span class="avatar sm" style="background:' + avatarColor(s.id) + '">' + initials(s.name) + '</span><span class="kc-name">' + escapeHtml(s.name) + '</span></div>' +
+      (s.industry ? '<div class="tag tag-ind" style="margin-bottom:8px;">' + escapeHtml(s.industry) + '</div>' : '') +
+      '<div class="kc-line">' + escapeHtml(s.company || (s.country || '')) + '</div>' +
+      '<div class="kc-snip">' + escapeHtml(s.message) + '</div>' +
+      '<div class="kc-foot"><span>' + formatDate(s.created_at) + '</span>' + (s.is_read ? '' : '<span class="kc-unread">New</span>') + '</div>' +
+      '</div>';
+  }
+
+  function renderBoard(){
+    var boardEl = $('kanbanBoard');
+    if (!leads.length){
+      boardEl.innerHTML = '<div class="empty-state"><h4>No leads found</h4><p>Try a different filter or search.</p></div>';
+      return;
+    }
+    var html = '';
+    STATUS_ORDER.forEach(function(st){
+      var meta = STATUS_META[st];
+      var items = leads.filter(function(s){ return (s.status || 'new') === st; });
+      var cards = items.map(kanbanCard).join('');
+      html += '<div class="kanban-col" data-status="' + st + '">' +
+        '<div class="kanban-head"><span class="dot" style="background:' + STATUS_COLORS[st] + ';"></span>' + meta.label + '<span class="kanban-count">' + items.length + '</span></div>' +
+        '<div class="kanban-body" data-status="' + st + '" ondrop="window.__drop(event)" ondragover="window.__dragOver(event)" ondragleave="this.classList.remove(\'drag-over\')">' + (cards || '<div class="empty-state" style="padding:30px 10px;"><p style="font-size:.8rem;">Drop leads here</p></div>') + '</div>' +
+        '</div>';
+    });
+    boardEl.innerHTML = html;
+    boardEl.style.display = 'flex';
+  }
+
+  window.__dragStart = function(e){
+    var el = e.currentTarget;
+    el.classList.add('dragging');
+    e.dataTransfer.setData('text/plain', el.getAttribute('data-id'));
+  };
+  window.__dragOver = function(e){
+    e.preventDefault();
+    e.currentTarget.classList.add('drag-over');
+  };
+  window.__drop = async function(e){
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+    var id = e.dataTransfer.getData('text/plain');
+    var st = e.currentTarget.getAttribute('data-status');
+    if (!id || !st) return;
+    var lead = leads.find(function(l){ return l.id === Number(id); });
+    if (lead && (lead.status || 'new') === st) return;
+    try {
+      await apiCall('POST', '', { action:'set_status', id:Number(id), status:st });
+      showToast('Moved to ' + (STATUS_META[st] || {}).label);
+      loadLeads();
+    } catch(err){ showToast('Error: ' + err.message); }
+  };
+
+  // ---------------- LEAD ACTIONS ----------------
   window.__toggleNotes = function(id){
     var el = $('notes-' + id);
     if (el) el.classList.toggle('open');
-  };
-  window.__addNotePrompt = function(id){
-    var el = $('notesInput-' + id);
-    if (el){
-      el.classList.toggle('open');
-      var inp = $('noteText-' + id);
-      if (inp && el.classList.contains('open')) inp.focus();
-    }
   };
   window.__addNote = async function(id){
     var inp = $('noteText-' + id);
@@ -352,7 +732,7 @@
   window.__setStatus = async function(id, status){
     try {
       await apiCall('POST', '', { action:'set_status', id:id, status:status });
-      showToast('Status → ' + (STATUS_META[status] || {}).label);
+      showToast('Status: ' + (STATUS_META[status] || {}).label);
       loadLeads();
     } catch(e){ showToast('Error: ' + e.message); }
   };
@@ -375,14 +755,72 @@
     navigator.clipboard.writeText(email).then(function(){ showToast('Email copied'); });
   };
 
+  // ---------------- LEAD DETAIL MODAL ----------------
+  window.__openLead = async function(id){
+    try {
+      var d = await apiCall('POST', '', { action:'get', id:id });
+      currentLead = d.submission;
+      if (!currentLead) return;
+      var meta = STATUS_META[currentLead.status || 'new'] || { label:'' };
+      $('leadAvatar').textContent = initials(currentLead.name);
+      $('leadAvatar').style.background = avatarColor(currentLead.id);
+      $('leadName').textContent = currentLead.name;
+      $('leadSub').textContent = currentLead.email + (currentLead.phone && currentLead.phone !== 'Not provided' ? ' · ' + currentLead.phone : '') + '  |  ' + meta.label;
+      $('leadCompany').textContent = currentLead.company || '-';
+      $('leadCountry').textContent = currentLead.country || '-';
+      $('leadIndustry').textContent = currentLead.industry || '-';
+      $('leadSource').textContent = currentLead.source || '-';
+      $('leadCreated').textContent = formatDate(currentLead.created_at);
+      $('leadMessage').textContent = currentLead.message || '-';
+      $('leadNotes').textContent = currentLead.notes || 'No notes yet.';
+      var opts = '';
+      STATUS_ORDER.forEach(function(st){
+        opts += '<option value="' + st + '"' + ((currentLead.status || 'new') === st ? ' selected' : '') + '>' + STATUS_META[st].label + '</option>';
+      });
+      $('leadStatus').innerHTML = opts;
+      $('leadFollow').value = currentLead.follow_up_date || '';
+      openModal('leadModal');
+      loadLeads();
+    } catch(e){ showToast('Error: ' + e.message); }
+  };
+
+  window.__leadStatusChanged = async function(){
+    if (!currentLead) return;
+    var st = $('leadStatus').value;
+    await window.__setStatus(currentLead.id, st);
+    if (currentLead) $('leadSub').textContent = currentLead.email + '  |  ' + (STATUS_META[st] || {}).label;
+  };
+  window.__leadFollowChanged = async function(){
+    if (!currentLead) return;
+    var date = $('leadFollow').value;
+    await window.__setFollowUp(currentLead.id, date);
+  };
+
+  $('leadReplyBtn').addEventListener('click', function(){
+    if (!currentLead) return;
+    __openReply(currentLead.id, currentLead);
+  });
+  $('leadDeleteBtn').addEventListener('click', async function(){
+    if (!currentLead) return;
+    if (!confirm('Delete this lead permanently?')) return;
+    try {
+      await apiCall('POST', '', { action:'delete', id:currentLead.id });
+      closeModal('leadModal');
+      currentLead = null;
+      showToast('Deleted');
+      loadLeads();
+    } catch(e){ showToast('Error: ' + e.message); }
+  });
+
   // ---------------- REPLY ----------------
   var replyLeadId = null;
-  window.__openReply = function(id){
-    var lead = leads.find(function(l){ return l.id === id; });
+  window.__openReply = function(id, leadObj){
+    var lead = leadObj || leads.find(function(l){ return l.id === id; });
     if (!lead) return;
-    replyLeadId = id;
+    replyLeadId = lead.id;
     $('replyTarget').textContent = 'To: ' + lead.name + ' <' + lead.email + '>';
     $('replyBody').value = '';
+    $('replySubject').value = '';
     openModal('replyModal');
     $('replyBody').focus();
   };
@@ -417,7 +855,7 @@
       }
       var html = '';
       rows.forEach(function(s){
-        html += '<tr><td>' + escapeHtml(s.email) + '</td><td>' + escapeHtml(s.name || '—') + '</td><td>' + escapeHtml(s.source || '—') + '</td><td>' + fmtDate(s.created_at) + '</td><td>' + (s.status === 'active' || !s.status ? '✓ Active' : 'Unsubscribed') + '</td><td><button class="btn-tiny danger" onclick="window.__deleteSubscriber(' + s.id + ')">Delete</button></td></tr>';
+        html += '<tr><td>' + escapeHtml(s.email) + '</td><td>' + escapeHtml(s.name || '-') + '</td><td>' + escapeHtml(s.source || '-') + '</td><td>' + fmtDate(s.created_at) + '</td><td>' + (s.status === 'active' || !s.status ? '<span class="pill won">Active</span>' : '<span class="pill lost">Unsubscribed</span>') + '</td><td><button class="btn-tiny danger" onclick="window.__deleteSubscriber(' + s.id + ')">Delete</button></td></tr>';
       });
       $('subsTable').innerHTML = html;
     } catch(e){
@@ -472,8 +910,8 @@
       }
       var html = '';
       rows.forEach(function(e){
-        var color = e.status === 'sent' ? 'var(--teal)' : 'var(--coral)';
-        html += '<tr><td>' + escapeHtml(e.to_email) + '</td><td><span class="pill ' + (e.status === 'sent' ? 'won' : 'lost') + '">' + escapeHtml(e.type) + '</span></td><td>' + escapeHtml(e.subject || '—') + '</td><td style="color:' + color + ';">' + escapeHtml(e.status) + '</td><td>' + formatDate(e.created_at) + '</td></tr>';
+        var color = e.status === 'sent' ? 'var(--crm-teal)' : 'var(--crm-coral)';
+        html += '<tr><td>' + escapeHtml(e.to_email) + '</td><td><span class="pill ' + (e.status === 'sent' ? 'won' : 'lost') + '">' + escapeHtml(e.type) + '</span></td><td>' + escapeHtml(e.subject || '-') + '</td><td style="color:' + color + ';">' + escapeHtml(e.status) + '</td><td>' + formatDate(e.created_at) + '</td></tr>';
       });
       $('logTable').innerHTML = html;
     } catch(e){
@@ -481,7 +919,7 @@
     }
   }
 
-  // ---------------- SEARCH / FILTER ----------------
+  // ---------------- SEARCH / FILTER / VIEW TOGGLE ----------------
   $('leadSearch').addEventListener('input', function(){
     clearTimeout(searchTimer);
     searchTimer = setTimeout(function(){ leadOffset = 0; loadLeads(); }, 350);
@@ -489,6 +927,31 @@
   $('subsSearch').addEventListener('input', function(){
     clearTimeout(searchTimer);
     searchTimer = setTimeout(loadSubscribers, 350);
+  });
+
+  $('filterCountry').addEventListener('change', function(){
+    currentCountry = this.value;
+    leadOffset = 0;
+    loadLeads();
+  });
+  $('filterIndustry').addEventListener('change', function(){
+    currentIndustry = this.value;
+    leadOffset = 0;
+    loadLeads();
+  });
+
+  $('toggleViewBtn').addEventListener('click', function(){
+    boardMode = !boardMode;
+    $('toggleViewBtn').innerHTML = boardMode
+      ? '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg> List'
+      : '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg> Board';
+    if (boardMode){
+      $('submissionList').style.display = 'none';
+      renderBoard();
+    } else {
+      $('kanbanBoard').style.display = 'none';
+      renderLeads();
+    }
   });
 
   var chips = document.querySelectorAll('#statusFilter .chip');
@@ -503,16 +966,7 @@
   });
 
   // ---------------- EXPORT ----------------
-  function download(url, filename){
-    var a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  }
-  $('exportLeadsBtn').addEventListener('click', function(){
-    var url = API_BASE + '?export=leads';
+  function downloadCsv(url){
     fetch(url, { headers: { 'Authorization': 'Bearer ' + token } }).then(function(r){
       if (!r.ok) throw new Error('Export failed');
       return r.text();
@@ -520,24 +974,13 @@
       var blob = new Blob([text], { type:'text/csv;charset=utf-8' });
       var a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'cleverstack-leads.csv';
+      a.download = 'cleverstack.csv';
       a.click();
       URL.revokeObjectURL(a.href);
     }).catch(function(e){ showToast('Error: ' + e.message); });
-  });
-  $('exportSubsBtn').addEventListener('click', function(){
-    fetch(API_BASE + '?export=subscribers', { headers: { 'Authorization': 'Bearer ' + token } }).then(function(r){
-      if (!r.ok) throw new Error('Export failed');
-      return r.text();
-    }).then(function(text){
-      var blob = new Blob([text], { type:'text/csv;charset=utf-8' });
-      var a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'cleverstack-subscribers.csv';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }).catch(function(e){ showToast('Error: ' + e.message); });
-  });
+  }
+  $('exportLeadsBtn').addEventListener('click', function(){ downloadCsv(API_BASE + '?export=leads'); });
+  $('exportSubsBtn').addEventListener('click', function(){ downloadCsv(API_BASE + '?export=subscribers'); });
 
   // ---------------- MODALS ----------------
   window.openModal = function(id){ $(id).classList.add('open'); };
@@ -597,4 +1040,5 @@
       token = '';
     });
   }
-})();</script></body></html>
+})();
+</script></body></html>
