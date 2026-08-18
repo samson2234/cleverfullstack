@@ -19,6 +19,7 @@ import {
   getSubmissions,
   getSubmissionCount,
   getDashboardStats,
+  getFilterOptions,
   markAsRead,
   getSubmission,
   deleteSubmission,
@@ -166,6 +167,12 @@ export default async function handler(req, res) {
         return res.status(200).json(stats);
       }
 
+      // Lightweight filter options (country/industry dropdowns)
+      if (params.get('filters') === 'true') {
+        const filters = await getFilterOptions();
+        return res.status(200).json(filters);
+      }
+
       // CSV export of leads
       if (params.get('export') === 'leads') {
         const all = await getSubmissions({ limit: 10000, offset: 0 });
@@ -218,14 +225,10 @@ export default async function handler(req, res) {
 
       const submissions = await getSubmissions({ limit, offset, unread: unreadOnly, status, search, industry, country });
       const total = await getSubmissionCount({ unread: unreadOnly, status, search, industry, country });
-      const unread = await getSubmissionCount({ unread: true });
-      const totalAll = await getSubmissionCount();
 
       return res.status(200).json({
         submissions,
         total,
-        totalAll,
-        unread,
         limit,
         offset
       });
@@ -334,31 +337,28 @@ export default async function handler(req, res) {
           const htmlBatch = batch.map((email) =>
             broadcastEmailTemplate(String(body.body).slice(0, 10000)).replace('__EMAIL__', encodeURIComponent(email))
           );
-          for (let j = 0; j < batch.length; j++) {
-            try {
-              const result = await sendResendEmail({
-                to: batch[j],
+          // Send all emails in batch in parallel
+          const results = await Promise.allSettled(
+            batch.map((email, j) =>
+              sendResendEmail({
+                to: email,
                 subject: String(body.subject),
                 html: htmlBatch[j]
-              });
-              await logEmail({
-                to_email: batch[j],
-                type: 'broadcast',
-                subject: String(body.subject),
-                status: result.ok ? 'sent' : 'failed',
-                error: result.ok ? '' : result.error
-              });
-              if (result.ok) sent++; else failed++;
-            } catch (err) {
-              failed++;
-              await logEmail({
-                to_email: batch[j],
-                type: 'broadcast',
-                subject: String(body.subject),
-                status: 'failed',
-                error: err.message
-              });
-            }
+              }).then(async (result) => {
+                await logEmail({
+                  to_email: email,
+                  type: 'broadcast',
+                  subject: String(body.subject),
+                  status: result.ok ? 'sent' : 'failed',
+                  error: result.ok ? '' : result.error
+                });
+                return result;
+              })
+            )
+          );
+          for (const r of results) {
+            if (r.status === 'fulfilled' && r.value && r.value.ok) sent++;
+            else failed++;
           }
         }
 

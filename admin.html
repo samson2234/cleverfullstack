@@ -574,7 +574,7 @@
   async function ensureFilters(){
     if (filtersLoaded) return;
     try {
-      var s = await apiCall('GET', '?stats=true');
+      var s = await apiCall('GET', '?filters=true');
       populateFilters(s);
       filtersLoaded = true;
     } catch(e){}
@@ -706,11 +706,18 @@
     if (!id || !st) return;
     var lead = leads.find(function(l){ return l.id === Number(id); });
     if (lead && (lead.status || 'new') === st) return;
+    // Optimistic: update status locally and re-render
+    var oldStatus = lead ? lead.status : null;
+    if (lead) lead.status = st;
+    renderBoard();
     try {
       await apiCall('POST', '', { action:'set_status', id:Number(id), status:st });
       showToast('Moved to ' + (STATUS_META[st] || {}).label);
-      loadLeads();
-    } catch(err){ showToast('Error: ' + err.message); }
+    } catch(err){
+      if (lead) lead.status = oldStatus;
+      renderBoard();
+      showToast('Error: ' + err.message);
+    }
   };
 
   // ---------------- LEAD ACTIONS ----------------
@@ -722,34 +729,86 @@
     var inp = $('noteText-' + id);
     var text = inp ? inp.value.trim() : '';
     if (!text){ showToast('Type a note first'); return; }
+    // Optimistic: update local state immediately
+    var lead = leads.find(function(l){ return l.id === id; });
+    var timestamp = new Date().toISOString().replace('T', ' ').slice(0, 16);
+    var newNote = '[' + timestamp + '] ' + text;
+    if (lead) lead.notes = lead.notes ? lead.notes + '\n' + newNote : newNote;
+    var notesEl = $('notes-' + id);
+    if (notesEl) notesEl.textContent = lead ? lead.notes : newNote;
+    if (inp) inp.value = '';
+    showToast('Note added');
     try {
       await apiCall('POST', '', { action:'add_note', id:id, note:text });
-      if (inp) inp.value = '';
-      showToast('Note added');
-      loadLeads();
-    } catch(e){ showToast('Error: ' + e.message); }
+    } catch(e){
+      // Revert on failure
+      if (lead) lead.notes = lead.notes.replace('\n' + newNote, '').replace(newNote, '');
+      if (notesEl) notesEl.textContent = lead ? (lead.notes || 'No notes yet.') : 'No notes yet.';
+      showToast('Error: ' + e.message);
+    }
   };
   window.__setStatus = async function(id, status){
-    try {
-      await apiCall('POST', '', { action:'set_status', id:id, status:status });
-      showToast('Status: ' + (STATUS_META[status] || {}).label);
-      loadLeads();
-    } catch(e){ showToast('Error: ' + e.message); }
+    // Optimistic: update local state and re-render immediately
+    var lead = leads.find(function(l){ return l.id === id; });
+    if (lead) {
+      var oldStatus = lead.status;
+      lead.status = status;
+      if (boardMode) renderBoard(); else renderLeads();
+      try {
+        await apiCall('POST', '', { action:'set_status', id:id, status:status });
+        showToast('Status: ' + (STATUS_META[status] || {}).label);
+      } catch(e){
+        // Revert on failure
+        if (lead) lead.status = oldStatus;
+        if (boardMode) renderBoard(); else renderLeads();
+        showToast('Error: ' + e.message);
+      }
+    } else {
+      try {
+        await apiCall('POST', '', { action:'set_status', id:id, status:status });
+        showToast('Status: ' + (STATUS_META[status] || {}).label);
+        loadLeads();
+      } catch(e){ showToast('Error: ' + e.message); }
+    }
   };
   window.__setFollowUp = async function(id, date){
+    // Optimistic: update local state immediately
+    var lead = leads.find(function(l){ return l.id === id; });
+    if (lead) {
+      var oldDate = lead.follow_up_date;
+      lead.follow_up_date = date || null;
+      renderLeads();
+    }
     try {
       await apiCall('POST', '', { action:'set_follow_up', id:id, follow_up_date:date || '' });
       showToast(date ? 'Follow-up set for ' + date : 'Follow-up cleared');
-      loadLeads();
-    } catch(e){ showToast('Error: ' + e.message); }
+    } catch(e){
+      if (lead) lead.follow_up_date = oldDate;
+      if (lead) renderLeads();
+      showToast('Error: ' + e.message);
+    }
   };
   window.__deleteLead = async function(id){
     if (!confirm('Delete this lead permanently?')) return;
+    // Optimistic: remove from local array immediately
+    var idx = leads.findIndex(function(l){ return l.id === id; });
+    var removed = idx >= 0 ? leads.splice(idx, 1)[0] : null;
+    leadTotal = Math.max(0, leadTotal - 1);
+    if (boardMode) renderBoard(); else renderLeads();
+    renderPager();
     try {
       await apiCall('POST', '', { action:'delete', id:id });
       showToast('Deleted');
-      loadLeads();
-    } catch(e){ showToast('Error: ' + e.message); }
+    } catch(e){
+      // Revert on failure
+      if (removed) {
+        leads.splice(idx, 0, removed);
+        leadTotal += 1;
+        if (boardMode) renderBoard(); else renderLeads();
+        renderPager();
+      }
+      showToast('Error: ' + e.message);
+    }
   };
   window.__copyEmail = function(email){
     navigator.clipboard.writeText(email).then(function(){ showToast('Email copied'); });
@@ -779,20 +838,25 @@
       });
       $('leadStatus').innerHTML = opts;
       $('leadFollow').value = currentLead.follow_up_date || '';
+      // Update local leads array to mark as read (optimistic)
+      var localLead = leads.find(function(l){ return l.id === id; });
+      if (localLead) localLead.is_read = 1;
       openModal('leadModal');
-      loadLeads();
     } catch(e){ showToast('Error: ' + e.message); }
   };
 
   window.__leadStatusChanged = async function(){
     if (!currentLead) return;
     var st = $('leadStatus').value;
+    // Update modal display immediately
+    $('leadSub').textContent = currentLead.email + '  |  ' + (STATUS_META[st] || {}).label;
+    // __setStatus handles optimistic update of the leads list
     await window.__setStatus(currentLead.id, st);
-    if (currentLead) $('leadSub').textContent = currentLead.email + '  |  ' + (STATUS_META[st] || {}).label;
   };
   window.__leadFollowChanged = async function(){
     if (!currentLead) return;
     var date = $('leadFollow').value;
+    // __setFollowUp handles optimistic update of the leads list
     await window.__setFollowUp(currentLead.id, date);
   };
 
