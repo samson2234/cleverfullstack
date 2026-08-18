@@ -16,7 +16,10 @@
     { "source": "/optimized-website-advantages", "destination": "/blog/optimized-website-advantages", "permanent": true },
     { "source": "/how-much-does-business-website-cost", "destination": "/blog/how-much-does-business-website-cost", "permanent": true },
     { "source": "/best-web-development-company-usa", "destination": "/blog/best-web-development-company-usa", "permanent": true },
-    { "source": "/why-small-business-needs-website", "destination": "/blog/why-small-business-needs-website", "permanent": true }
+    { "source": "/why-small-business-needs-website", "destination": "/blog/why-small-business-needs-website", "permanent": true },
+    { "source": "/privacy", "destination": "/privacy.html", "permanent": true },
+    { "source": "/terms", "destination": "/terms.html", "permanent": true },
+    { "source": "/case-studies", "destination": "/case-studies.html", "permanent": true }
   ],
   "headers": [
     {

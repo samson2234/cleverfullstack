@@ -1,0 +1,32 @@
+# CleverStack - Full-Stack Web & App Development Studio
+
+> CleverStack is a full-stack development studio building fast, scalable websites and web applications for founders and growing businesses in the USA, UK, and Europe.
+
+## Services
+- Starter Website ($499): Up to 5 pages, mobile-responsive, SEO foundation
+- Business Website ($999): Up to 10 pages with CMS, custom theme, advanced SEO
+- E-Commerce Store ($1,749): Up to 20 products on Shopify or WooCommerce
+- Custom Web App ($3,000): React/Next.js/Laravel dashboards with auth and APIs
+- SEO & Growth ($549): Full technical SEO audit, keyword research, on-page optimization
+- Fix & Redesign ($799): Site audit, redesign, speed optimization
+
+## Key Pages
+- Home: https://cleverfullstack.vercel.app/
+- Services: https://cleverfullstack.vercel.app/services
+- Portfolio: https://cleverfullstack.vercel.app/portfolio
+- Blog: https://cleverfullstack.vercel.app/blog
+- Contact: https://cleverfullstack.vercel.app/contact
+- About: https://cleverfullstack.vercel.app/about
+
+## Location Pages
+- Web Development USA: https://cleverfullstack.vercel.app/web-development-usa
+- Web Development UK: https://cleverfullstack.vercel.app/web-development-uk
+- Web Development Europe: https://cleverfullstack.vercel.app/web-development-europe
+
+## Contact
+- Email: henryygeorge25@gmail.com
+- Phone: +2349165400534
+- WhatsApp: https://wa.me/2349165400534
+
+## Founder
+Henry George - Full-stack developer and founder of CleverStack
