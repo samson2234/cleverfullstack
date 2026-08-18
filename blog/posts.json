@@ -58,5 +58,35 @@
     "category": "Web Development",
     "image": "https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?auto=format&fit=crop&w=800&q=80",
     "readingTime": "6 min read"
+  },
+  {
+    "id": "poor-website-killing-business",
+    "title": "How a Poor Website Is Killing Your New Business",
+    "excerpt": "75% of consumers judge a business\u2019s credibility by website design alone. Is yours losing you customers before they ever contact you?",
+    "author": "Henry George",
+    "date": "2026-08-17",
+    "category": "Web Development",
+    "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80",
+    "readingTime": "6 min read"
+  },
+  {
+    "id": "businesses-refuse-to-scale",
+    "title": "Why Some Businesses Refuse to Scale (And What It Costs Them)",
+    "excerpt": "Only 47% of SMEs actively seek to grow. Here\u2019s why founders choose stability over growth \u2014 and what it really costs them.",
+    "author": "Henry George",
+    "date": "2026-08-17",
+    "category": "Business Growth",
+    "image": "https://images.unsplash.com/photo-1553729459-efe14ef6055d?auto=format&fit=crop&w=800&q=80",
+    "readingTime": "7 min read"
+  },
+  {
+    "id": "optimized-website-advantages",
+    "title": "The Real Advantages of Having an Optimized Website and Online Presence",
+    "excerpt": "69% of SMBs say their website is their #1 lead source. Here\u2019s what separates websites that convert from those that just exist.",
+    "author": "Henry George",
+    "date": "2026-08-17",
+    "category": "Web Development",
+    "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
+    "readingTime": "6 min read"
   }
 ]
