@@ -10,7 +10,13 @@
     { "source": "/seo-tips-2026", "destination": "/blog/seo-tips-2026", "permanent": true },
     { "source": "/website-cost-2026", "destination": "/blog/website-cost-2026", "permanent": true },
     { "source": "/website-mistakes-conversions", "destination": "/blog/website-mistakes-conversions", "permanent": true },
-    { "source": "/custom-vs-nocode", "destination": "/blog/custom-vs-nocode", "permanent": true }
+    { "source": "/custom-vs-nocode", "destination": "/blog/custom-vs-nocode", "permanent": true },
+    { "source": "/poor-website-killing-business", "destination": "/blog/poor-website-killing-business", "permanent": true },
+    { "source": "/businesses-refuse-to-scale", "destination": "/blog/businesses-refuse-to-scale", "permanent": true },
+    { "source": "/optimized-website-advantages", "destination": "/blog/optimized-website-advantages", "permanent": true },
+    { "source": "/how-much-does-business-website-cost", "destination": "/blog/how-much-does-business-website-cost", "permanent": true },
+    { "source": "/best-web-development-company-usa", "destination": "/blog/best-web-development-company-usa", "permanent": true },
+    { "source": "/why-small-business-needs-website", "destination": "/blog/why-small-business-needs-website", "permanent": true }
   ],
   "headers": [
     {
@@ -44,6 +50,12 @@
     { "source": "/blog/website-cost-2026", "destination": "/blog/website-cost-2026.html" },
     { "source": "/blog/website-mistakes-conversions", "destination": "/blog/website-mistakes-conversions.html" },
     { "source": "/blog/custom-vs-nocode", "destination": "/blog/custom-vs-nocode.html" },
+    { "source": "/blog/poor-website-killing-business", "destination": "/blog/poor-website-killing-business.html" },
+    { "source": "/blog/businesses-refuse-to-scale", "destination": "/blog/businesses-refuse-to-scale.html" },
+    { "source": "/blog/optimized-website-advantages", "destination": "/blog/optimized-website-advantages.html" },
+    { "source": "/blog/how-much-does-business-website-cost", "destination": "/blog/how-much-does-business-website-cost.html" },
+    { "source": "/blog/best-web-development-company-usa", "destination": "/blog/best-web-development-company-usa.html" },
+    { "source": "/blog/why-small-business-needs-website", "destination": "/blog/why-small-business-needs-website.html" },
     { "source": "/((?!404|api).*)", "destination": "/$1.html" }
   ]
 }

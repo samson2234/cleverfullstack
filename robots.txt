@@ -1,7 +1,6 @@
-# CleverStack
 User-agent: *
 Allow: /
-Disallow: /admin
 Disallow: /api/
+Disallow: /admin.html
 
 Sitemap: https://cleverfullstack.vercel.app/sitemap.xml
