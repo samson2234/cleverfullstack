@@ -139,9 +139,15 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://cleverfullstack.vercel.app/blog/why-small-business-needs-website</loc>
+    <loc>https://cleverfullstack.vercel.app/case-studies</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://cleverfullstack.vercel.app/press</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>
