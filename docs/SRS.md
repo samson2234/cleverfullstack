@@ -46,7 +46,7 @@ Priority: M = must, S = should, C = could.
 ## 4. Non-functional requirements
 | ID | Category | Requirement (measurable) | Status | Evidence / how verified |
 |---|---|---|---|---|
-| NFR-01 | Performance — page weight | Typical page ≤ 100 KB gzipped (excl. images); homepage ≤ 300 KB; no 3D library on phones, slow links or < 4 GB devices | ✅ | `node weight.js` audit: homepage 268 KB, other pages 85–92 KB, About 147 KB (was 1,753 KB); 3D skipped on constrained devices |
+| NFR-01 | Performance — page weight | Typical page ≤ 100 KB gzipped (excl. images); homepage ≤ 200 KB; no WebGL/3D library | ✅ | Weight audit: homepage 161 KB incl. the 40 KB hero still (was 268 KB with the 3D library on capable desktops); other pages 85–92 KB; About 148 KB (was 1,753 KB). The 600 KB three.js layer was replaced by a pre-rendered still image |
 | NFR-02 | Performance — Core Web Vitals | Mobile LCP ≤ 2.5 s, CLS ≤ 0.1, INP ≤ 200 ms (p75) | ⬜ | **Not yet measured.** PageSpeed API was rate-limited; run Lighthouse/PageSpeed on the deployed URL and record results here |
 | NFR-03 | Performance — API | Index-backed queries; CRM list/search/filter ≤ 500 ms at 10,000 contacts | ✅ | scale.test: 6–67 ms locally (Turso adds network latency, budget has headroom) |
 | NFR-04 | Scalability | Static pages served from the CDN; APIs stateless; concurrent bursts neither duplicate nor lose data | ✅ | resilience.test: 50 simultaneous enquiries → 1 contact + 50 submissions; 30 racing review links → 1 review |

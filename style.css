@@ -33,3 +33,11 @@
 /* phones: wrap long tech lists instead of squeezing, slightly larger tap-free text for legibility */
 @media(max-width:480px){.hero-3d .stack-layer{flex-wrap:wrap;gap:8px 10px;padding:12px}.hero-3d .stack-layer .v{justify-content:flex-start}.hero-3d .stack-layer .k{font-size:12px;flex:0 0 100%}}
 @media(max-width:360px){.hero-3d{padding:12px}.hero-3d .hero-terminal{padding:16px}}
+
+/*hero-knot*/
+/* Pre-rendered still of the 3D knot (≈40 KB) replaces the 600 KB WebGL layer: same look, every device, no JS. */
+.hero-3d .hero-knot{position:absolute;left:52%;top:47%;width:min(94%,430px);aspect-ratio:495/520;transform:translate(-50%,-50%);background:url(images/hero-knot-dark.webp) center/contain no-repeat;filter:drop-shadow(0 20px 40px rgba(99,102,241,.4));animation:knot-float 10s ease-in-out infinite;pointer-events:none}
+[data-theme=light] .hero-3d .hero-knot{background-image:url(images/hero-knot-light.webp);filter:drop-shadow(0 20px 36px rgba(79,70,229,.32))}
+@keyframes knot-float{0%,100%{transform:translate(-50%,-50%) rotate(-2.5deg)}50%{transform:translate(-50%,-53%) rotate(2.5deg)}}
+@media(prefers-reduced-motion:reduce){.hero-3d .hero-knot{animation:none}}
+@media(max-width:640px){.hero-3d .hero-knot{width:78%;left:68%;top:30%;opacity:.9}}

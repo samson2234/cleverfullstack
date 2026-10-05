@@ -58,6 +58,9 @@ Goal: make the existing site credible and ready to retain past clients without c
 Delivered: verified-review system (FR-07..11), unified CRM with import/export (FR-02..06), returning-client page + win-back campaigns + unsubscribe (FR-12..14), conversion tracking hooks (FR-15), emails fixed to use `SITE_URL`, per-endpoint + shared rate limiting, single-flight database setup (fixed a cold-start crash), 3D hero skipped on constrained devices, About image 1.6 MB → 58 KB, asset caching, `68+ projects` made consistent, self-awarded rating markup removed, 41 automated tests.
 Not done / carried over: items 1–3 above need production accounts (Vercel preview, Resend domain, Upstash).
 
+### Sprint 1b — hero polish (done, same week)
+Hero stack card made readable in light and dark mode and on phones; the 600 KB WebGL knot replaced by a 40 KB pre-rendered still (same look on every device, desktop homepage 268 → 161 KB); caption now states the offer ("from $499 · fixed price · free audit") and is translated in French (it was never wired to i18n); static trust strip corrected from 31 to 60 reviews to match the displayed number.
+
 ### Sprint 2 — plan
 Goal: *“Ship it and get the first past clients back.”* Items 1, 2, 3, 5. Exit criteria: preview accepted, `npm test` green in CI, Core Web Vitals recorded in the SRS, first campaign sent to an imported segment.
 
