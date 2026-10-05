@@ -29,7 +29,7 @@ Method: Scrum-style, scaled down for a small team. **One-week sprints**, one pot
 1. Acceptance criteria met and demonstrated on a preview deployment.
 2. Automated tests added/updated and **`npm test` is green**; performance-sensitive work also passes `npm run test:scale`.
 3. No new console errors; forms keyboard-usable with labels; works at 375 px width.
-4. If `style.css`, `script.js`, `i18n.js` or `analytics.js` changed, run **`npm run assets`** and commit the result (it re-versions the file URLs so visitors never get stale styles/translations; `npm test` fails if you forget). Page weight does not regress (`weight.js` audit) — no new heavy dependency without justification.
+4. Blog: add posts as `blog-src/<id>.js`, then `npm run blog` (never hand-edit the lists). If `style.css`, `script.js`, `i18n.js` or `analytics.js` changed, run **`npm run assets`** and commit the result (it re-versions the file URLs so visitors never get stale styles/translations; `npm test` fails if you forget). Page weight does not regress (`weight.js` audit) — no new heavy dependency without justification.
 5. No secrets in code; new env vars documented in `docs/SRS.md`/README.
 6. Security reviewed for anything touching auth, email, or personal data (consent, unsubscribe, rate limits).
 7. SRS status column updated honestly (✅ only with evidence).
@@ -63,6 +63,9 @@ Hero stack card made readable in light and dark mode and on phones; the 600 KB W
 
 ### Sprint 1c — ROI calculator rebuild (done)
 Replaced the single flat ×1.6 multiplier (every visitor “gained 60%”, no cost, no payback, US-only, no lead capture) with two honest paths: “just starting out” (customers needed to pay for the site) and “I already have customers” (visitors → enquiries → customers → revenue/profit, visitor-chosen improvement, payback and 12-month return vs the real package price). Small-to-large business range, 5 currencies, English/French, accessible controls, sticky live result on phones, lead form posting the visitor’s numbers to the CRM, analytics events (`roi_start`, `roi_preset`, `roi_mode_change`, `roi_cta_open`, `roi_lead`). 13 new tests.
+
+### Sprint 1d — blog repair + 6 problem-solving guides (done)
+Production bug found and fixed first: my own ad-domain edit had dropped a space in three Content-Security-Policy sources, blocking the blog thumbnails AND the live-chat widget; a new CSP test now guards it. Then six new guides, each solving one or two real client problems: no enquiries (conversion), slow site (speed), Google Maps / local search, getting and using reviews, fix vs refresh vs rebuild, website security basics. Built from `blog-src/` with `npm run blog` (pages, index, RSS, sitemap, prev/next on all 18 posts, homepage preview all stay in sync), branded covers hosted locally (7–9 KB each instead of third-party photos), reading time computed from word count, 8 new blog tests. Found along the way: one older post was never in the sitemap (fixed).
 
 ### Sprint 2 — plan
 Goal: *“Ship it and get the first past clients back.”* Items 1, 2, 3, 5. Exit criteria: preview accepted, `npm test` green in CI, Core Web Vitals recorded in the SRS, first campaign sent to an imported segment.

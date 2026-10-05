@@ -105,3 +105,21 @@
 .roi2-mini{display:none}
 @media(max-width:900px){.roi2-mini{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;position:sticky;top:74px;z-index:6;margin:-6px -6px 18px;padding:10px 14px;border-radius:12px;background:var(--paper-3);border:1px solid var(--teal);box-shadow:0 10px 24px -14px rgba(0,0,0,.6);font-size:12.5px;color:var(--text-muted)}.roi2-mini strong{font:700 19px var(--font-display);color:var(--teal)}.roi2-mini em{font-style:normal;font-weight:600;color:var(--indigo-light)}}
 @media(prefers-reduced-motion:reduce){.roi2-bar i{transition:none}}
+
+/*post-rich*/
+.post-body.rich ul,.post-body.rich ol{margin:0 0 26px;padding-left:24px;color:var(--text-muted);line-height:1.8;font-size:16px}
+.post-body.rich ul{list-style:disc}
+.post-body.rich ol{list-style:decimal}
+.post-body.rich li{margin-bottom:10px;padding-left:4px}
+.post-body.rich li::marker{color:var(--teal);font-weight:700}
+.post-body.rich h3{font-size:19px;margin:30px 0 8px;color:var(--text-dark)}
+.post-body.rich strong{color:var(--text-dark)}
+.post-body.rich a{color:var(--indigo-light);text-decoration:underline;text-underline-offset:3px}
+.post-body.rich a:hover{color:var(--teal)}
+.post-body.rich .callout{border-left:4px solid var(--teal);background:var(--paper-3);padding:18px 22px;border-radius:0 var(--radius) var(--radius) 0;margin:0 0 32px}
+.post-body.rich .callout p{margin:0;color:var(--text-dark);font-size:16px}
+.post-body.rich ul.checklist{list-style:none;padding-left:0}
+.post-body.rich ul.checklist li{position:relative;padding-left:32px}
+.post-body.rich ul.checklist li::before{content:"\2713";position:absolute;left:0;top:0;color:var(--teal);font-weight:800}
+.post-body.rich .keep-reading a{text-decoration:none}
+@media(max-width:640px){.post-body.rich ul,.post-body.rich ol{padding-left:20px;font-size:15.5px}}
