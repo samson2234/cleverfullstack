@@ -29,7 +29,7 @@ Method: Scrum-style, scaled down for a small team. **One-week sprints**, one pot
 1. Acceptance criteria met and demonstrated on a preview deployment.
 2. Automated tests added/updated and **`npm test` is green**; performance-sensitive work also passes `npm run test:scale`.
 3. No new console errors; forms keyboard-usable with labels; works at 375 px width.
-4. Page weight does not regress (`weight.js` audit) — no new heavy dependency without justification.
+4. If `style.css`, `script.js`, `i18n.js` or `analytics.js` changed, run **`npm run assets`** and commit the result (it re-versions the file URLs so visitors never get stale styles/translations; `npm test` fails if you forget). Page weight does not regress (`weight.js` audit) — no new heavy dependency without justification.
 5. No secrets in code; new env vars documented in `docs/SRS.md`/README.
 6. Security reviewed for anything touching auth, email, or personal data (consent, unsubscribe, rate limits).
 7. SRS status column updated honestly (✅ only with evidence).

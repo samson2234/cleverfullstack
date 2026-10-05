@@ -5,8 +5,10 @@
   "description": "CleverStack marketing site — static HTML/CSS/JS, deployed to Vercel",
   "scripts": {
     "minify": "node scripts/minify.js",
-    "test": "node --test tests/reviews.test.mjs tests/crm.test.mjs tests/retention.test.mjs tests/resilience.test.mjs",
-    "test:scale": "node --test tests/scale.test.mjs"
+    "test": "node --test tests/assets.test.mjs tests/reviews.test.mjs tests/crm.test.mjs tests/retention.test.mjs tests/resilience.test.mjs",
+    "test:scale": "node --test tests/scale.test.mjs",
+    "assets": "node scripts/version-assets.js",
+    "assets:check": "node scripts/version-assets.js --check"
   },
   "dependencies": {
     "@libsql/client": "^0.17.4",
