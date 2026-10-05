@@ -61,6 +61,9 @@ Not done / carried over: items 1–3 above need production accounts (Vercel prev
 ### Sprint 1b — hero polish (done, same week)
 Hero stack card made readable in light and dark mode and on phones; the 600 KB WebGL knot replaced by a 40 KB pre-rendered still (same look on every device, desktop homepage 268 → 161 KB); caption now states the offer ("from $499 · fixed price · free audit") and is translated in French (it was never wired to i18n); static trust strip corrected from 31 to 60 reviews to match the displayed number.
 
+### Sprint 1c — ROI calculator rebuild (done)
+Replaced the single flat ×1.6 multiplier (every visitor “gained 60%”, no cost, no payback, US-only, no lead capture) with two honest paths: “just starting out” (customers needed to pay for the site) and “I already have customers” (visitors → enquiries → customers → revenue/profit, visitor-chosen improvement, payback and 12-month return vs the real package price). Small-to-large business range, 5 currencies, English/French, accessible controls, sticky live result on phones, lead form posting the visitor’s numbers to the CRM, analytics events (`roi_start`, `roi_preset`, `roi_mode_change`, `roi_cta_open`, `roi_lead`). 13 new tests.
+
 ### Sprint 2 — plan
 Goal: *“Ship it and get the first past clients back.”* Items 1, 2, 3, 5. Exit criteria: preview accepted, `npm test` green in CI, Core Web Vitals recorded in the SRS, first campaign sent to an imported segment.
 

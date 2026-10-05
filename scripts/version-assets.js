@@ -15,7 +15,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 const root = path.resolve(__dirname, '..');
-const ASSETS = ['style.css', 'script.js', 'i18n.js', 'analytics.js'];
+const ASSETS = ['style.css', 'script.js', 'i18n.js', 'analytics.js', 'roi.js'];
 const check = process.argv.includes('--check');
 
 const hash = (file) => crypto.createHash('sha1').update(fs.readFileSync(path.join(root, file))).digest('hex').slice(0, 8);
