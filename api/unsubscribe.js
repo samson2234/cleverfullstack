@@ -5,6 +5,7 @@ export const config = { runtime: 'nodejs' };
 // GET /api/unsubscribe?email=user@example.com
 
 import { getClient } from '../lib/db.js';
+import { siteUrl } from '../lib/email.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -34,8 +35,8 @@ export default async function handler(req, res) {
     '<style>body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f6f7fb;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;}card{max-width:480px;background:#fff;border-radius:12px;padding:40px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.08);}h1{color:#4F46E5;font-size:22px;}p{color:#5B6079;font-size:15px;line-height:1.6;}a{color:#4F46E5;}</style>' +
     '</head><body><div style="max-width:480px;background:#fff;border-radius:12px;padding:40px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.08);">' +
     '<h1>You\'re unsubscribed</h1>' +
-    '<p>You\'ve been removed from the CleverStack newsletter. No hard feelings — our <a href="https://cleverstack.dev/portfolio.html">portfolio</a> is always open if you want to see what we\'re building.</p>' +
-    '<p style="font-size:13px;color:#8a90a6;">If this was a mistake, you can re-subscribe anytime on <a href="https://cleverstack.dev/">cleverstack.dev</a>.</p>' +
+    '<p>You\'ve been removed from the CleverStack newsletter. No hard feelings — our <a href="' + siteUrl() + '/portfolio.html">portfolio</a> is always open if you want to see what we\'re building.</p>' +
+    '<p style="font-size:13px;color:#8a90a6;">If this was a mistake, you can re-subscribe anytime on <a href="' + siteUrl() + '/">' + siteUrl().replace(/^https?:\/\//, '') + '</a>.</p>' +
     '</div></body></html>'
   );
 }

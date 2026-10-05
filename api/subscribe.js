@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true, message: 'Thank you for subscribing!' });
   }
 
-  const rl = rateLimit(req, { limit: 10, windowMs: 60000 });
+  const rl = rateLimit(req, { limit: 10, windowMs: 60000, key: 'subscribe' });
   if (!rl.allowed) {
     res.setHeader('Retry-After', String(rl.retryAfter));
     return res.status(429).json({ error: 'Too many requests — please wait a moment and try again.' });

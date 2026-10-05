@@ -30,12 +30,21 @@ import {
   getSubscriberCount,
   deleteSubscriber,
   getEmailLog,
-  logEmail
+  logEmail,
+  createReviewInvite,
+  getAdminReviews,
+  getAdminInvites,
+  setReviewStatus,
+  setReviewReply,
+  deleteReview,
+  getPendingReviewCount
 } from '../lib/db.js';
 import {
   sendResendEmail,
   replyEmailTemplate,
-  broadcastEmailTemplate
+  broadcastEmailTemplate,
+  reviewInviteTemplate,
+  siteUrl
 } from '../lib/email.js';
 import { rateLimit, clientIp } from '../lib/rate-limit.js';
 import crypto from 'node:crypto';
@@ -130,7 +139,7 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const rl = rateLimit(req, { limit: 30, windowMs: 60000 });
+  const rl = rateLimit(req, { limit: 30, windowMs: 60000, key: 'admin' });
   if (!rl.allowed) {
     res.setHeader('Retry-After', String(rl.retryAfter));
     return res.status(429).json({ error: 'Too many requests — please wait a moment and try again.' });
@@ -205,6 +214,15 @@ export default async function handler(req, res) {
         const subscribers = await getSubscribers({ limit, offset, search });
         const total = await getSubscriberCount();
         return res.status(200).json({ subscribers, total, limit, offset });
+      }
+
+      // Reviews + invites
+      if (view === 'reviews') {
+        const status = params.get('status') || '';
+        const { rows, total } = await getAdminReviews({ status, limit: parseInt(params.get('limit')) || 200, offset: parseInt(params.get('offset')) || 0 });
+        const invites = await getAdminInvites(100);
+        const pending = await getPendingReviewCount();
+        return res.status(200).json({ reviews: rows, total, pending, invites });
       }
 
       // Email log
@@ -310,6 +328,49 @@ export default async function handler(req, res) {
           return res.status(200).json({ success: true, message: 'Reply sent to ' + submission.email });
         }
         return res.status(500).json({ error: 'Email failed: ' + result.error });
+      }
+
+      // ---- Review actions ----
+      if (action === 'create_invite') {
+        const name = String(body.client_name || '').trim().slice(0, 120);
+        const email = String(body.client_email || '').trim().slice(0, 200);
+        if (name.length < 2) return res.status(400).json({ error: 'client_name required' });
+        if (email && !/^[^s@]+@[^s@]+.[^s@]+$/.test(email)) return res.status(400).json({ error: 'Invalid client_email' });
+        const project = String(body.project || '').trim().slice(0, 160);
+        const invite = await createReviewInvite({ client_name: name, client_email: email, project, days: 30 });
+        const link = siteUrl() + '/review.html?t=' + invite.token;
+        let emailed = false;
+        if (body.send_email && email) {
+          const subject = 'How did we do? A quick review request from CleverStack';
+          const result = await sendResendEmail({
+            to: email,
+            subject,
+            html: reviewInviteTemplate(name, link, project),
+            replyTo: process.env.CONTACT_EMAIL || 'henryygeorge25@gmail.com'
+          });
+          await logEmail({ to_email: email, type: 'review_invite', subject, status: result.ok ? 'sent' : 'failed', error: result.ok ? '' : result.error });
+          emailed = result.ok;
+        }
+        // The raw link is only ever shown now — copy it if you did not email it.
+        return res.status(200).json({ success: true, link, emailed, expires_at: invite.expires_at });
+      }
+
+      if (action === 'review_status') {
+        if (!body.id || !['approved', 'rejected', 'pending'].includes(body.status)) return res.status(400).json({ error: 'id and valid status required' });
+        await setReviewStatus(body.id, body.status, typeof body.verified === 'boolean' ? body.verified : undefined);
+        return res.status(200).json({ success: true, message: 'Review ' + body.status });
+      }
+
+      if (action === 'review_reply') {
+        if (!body.id) return res.status(400).json({ error: 'id required' });
+        await setReviewReply(body.id, String(body.reply || '').trim().slice(0, 1500));
+        return res.status(200).json({ success: true, message: 'Reply saved' });
+      }
+
+      if (action === 'review_delete') {
+        if (!body.id) return res.status(400).json({ error: 'id required' });
+        await deleteReview(body.id);
+        return res.status(200).json({ success: true, message: 'Review deleted' });
       }
 
       // ---- Subscriber actions ----

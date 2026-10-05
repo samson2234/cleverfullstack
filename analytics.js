@@ -81,6 +81,64 @@
     if (typeof window.fbq === 'function') { fbq('trackCustom', eventName, params || {}); }
   };
 
+  // ---- Ads conversions -------------------------------------------------
+  // Fill these in when the ad accounts exist (Google Ads: Tools > Conversions).
+  // Until then the events still reach GA4 and Meta (if its pixel ID is set above).
+  var GOOGLE_ADS_ID = '';            // e.g. 'AW-123456789'
+  var ADS_LABEL_LEAD = '';           // conversion label for a submitted contact form
+  var ADS_LABEL_BOOK = '';           // conversion label for a Calendly "Book a call" click
+
+  function adsConversion(label, value) {
+    if (typeof window.gtag !== 'function' || !GOOGLE_ADS_ID || !label) return;
+    gtag('event', 'conversion', { send_to: GOOGLE_ADS_ID + '/' + label, value: value || 0, currency: 'USD' });
+  }
+  if (GOOGLE_ADS_ID) {
+    // Load the Ads tag through the same consent-gated gtag
+    document.addEventListener('cs-consent-accepted', function () { gtag('config', GOOGLE_ADS_ID); });
+    if (consentGranted()) gtag('config', GOOGLE_ADS_ID);
+  }
+
+  // A lead = the contact API actually accepted the submission (not just a click on Send).
+  var nativeFetch = window.fetch;
+  if (nativeFetch) {
+    window.fetch = function (input, init) {
+      var p = nativeFetch.apply(this, arguments);
+      try {
+        var url = typeof input === 'string' ? input : (input && input.url) || '';
+        var method = ((init && init.method) || (input && input.method) || 'GET').toUpperCase();
+        if (method === 'POST' && url.indexOf('/api/contact') !== -1) {
+          p.then(function (res) {
+            if (res && res.ok) {
+              window.csEvent('generate_lead', { form: 'contact', currency: 'USD', value: 500 });
+              if (typeof window.fbq === 'function') fbq('track', 'Lead');
+              adsConversion(ADS_LABEL_LEAD, 500);
+            }
+          }, function () {});
+        }
+      } catch (e) {}
+      return p;
+    };
+  }
+
+  // Click tracking: booking, WhatsApp, phone, email
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    if (href.indexOf('calendly.com') !== -1) {
+      window.csEvent('book_call_click', { location: location.pathname });
+      if (typeof window.fbq === 'function') fbq('track', 'Schedule');
+      adsConversion(ADS_LABEL_BOOK, 0);
+    } else if (href.indexOf('wa.me') !== -1 || href.indexOf('api.whatsapp.com') !== -1) {
+      window.csEvent('whatsapp_click', { location: location.pathname });
+      if (typeof window.fbq === 'function') fbq('track', 'Contact');
+    } else if (href.indexOf('tel:') === 0) {
+      window.csEvent('phone_click', { location: location.pathname });
+    } else if (href.indexOf('mailto:') === 0) {
+      window.csEvent('email_click', { location: location.pathname });
+    }
+  }, true);
+
   // Fire form_submission conversion events on contact + newsletter submits
   document.addEventListener('submit', function (e) {
     var f = e.target;
