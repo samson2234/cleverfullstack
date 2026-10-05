@@ -1,0 +1,25 @@
+name: Tests
+
+# Runs the automated test suite on every pull request and every push to main,
+# so a broken change cannot be merged unnoticed (see docs/AGILE.md, Definition of Done).
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run test:scale

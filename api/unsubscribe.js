@@ -6,6 +6,7 @@ export const config = { runtime: 'nodejs' };
 
 import { getClient } from '../lib/db.js';
 import { siteUrl } from '../lib/email.js';
+import { markUnsubscribed } from '../lib/contacts.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -23,6 +24,7 @@ export default async function handler(req, res) {
     try {
       const db = getClient();
       await db.execute({ sql: 'DELETE FROM subscribers WHERE email = ?', args: [email] });
+      await markUnsubscribed(email); // CRM contact: never include in campaigns again
     } catch (err) {
       console.error('Unsubscribe DB update failed:', err.message);
     }

@@ -4,7 +4,9 @@
   "private": true,
   "description": "CleverStack marketing site — static HTML/CSS/JS, deployed to Vercel",
   "scripts": {
-    "minify": "node scripts/minify.js"
+    "minify": "node scripts/minify.js",
+    "test": "node --test tests/reviews.test.mjs tests/crm.test.mjs tests/retention.test.mjs tests/resilience.test.mjs",
+    "test:scale": "node --test tests/scale.test.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.17.4",

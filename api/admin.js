@@ -44,6 +44,7 @@ import {
   replyEmailTemplate,
   broadcastEmailTemplate,
   reviewInviteTemplate,
+  campaignEmailTemplate,
   siteUrl
 } from '../lib/email.js';
 import {
@@ -55,7 +56,9 @@ import {
   updateContact,
   addActivity,
   importContacts,
-  exportContacts
+  exportContacts,
+  campaignRecipients,
+  recordCampaignSent
 } from '../lib/contacts.js';
 import { rateLimit, clientIp } from '../lib/rate-limit.js';
 import crypto from 'node:crypto';
@@ -150,7 +153,7 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const rl = rateLimit(req, { limit: 30, windowMs: 60000, key: 'admin' });
+  const rl = await rateLimit(req, { limit: 30, windowMs: 60000, key: 'admin' });
   if (!rl.allowed) {
     res.setHeader('Retry-After', String(rl.retryAfter));
     return res.status(429).json({ error: 'Too many requests — please wait a moment and try again.' });
@@ -209,7 +212,7 @@ export default async function handler(req, res) {
       if (params.get('export') === 'contacts') {
         const all = await exportContacts({
           q: params.get('q') || '', kind: params.get('kind') || '', country: params.get('country') || '',
-          industry: params.get('industry') || '', tag: params.get('tag') || ''
+          industry: params.get('industry') || '', tag: params.get('tag') || '', inactiveDays: params.get('inactive_days')
         });
         const csv = jsonToCsv(
           ['id', 'name', 'email', 'phone', 'company', 'country', 'industry', 'kind', 'source', 'owner', 'tags', 'lifetime_value', 'created_at', 'last_activity_at'],
@@ -233,7 +236,7 @@ export default async function handler(req, res) {
         const data = await listContacts({
           q: params.get('q') || '', kind: params.get('kind') || '', country: params.get('country') || '',
           industry: params.get('industry') || '', tag: params.get('tag') || '', sort: params.get('sort') || 'recent',
-          limit: params.get('limit'), offset: params.get('offset')
+          inactiveDays: params.get('inactive_days'), limit: params.get('limit'), offset: params.get('offset')
         });
         return res.status(200).json(data);
       }
@@ -411,6 +414,51 @@ export default async function handler(req, res) {
         if (!Array.isArray(body.rows) || !body.rows.length) return res.status(400).json({ error: 'rows required' });
         const result = await importContacts(body.rows, { kind: body.kind, source: body.source, tags: body.tags });
         return res.status(200).json({ success: true, ...result });
+      }
+
+      // ---- Win-back / check-in campaigns to a CRM segment ----
+      // Sent in small batches (max 100 per call) so a serverless function never runs long; the
+      // screen calls again until nothing remains. Anyone who unsubscribed or already received this
+      // campaign name is skipped automatically, so re-running is always safe.
+      if (action === 'campaign_preview' || action === 'campaign_send') {
+        const campaign = String(body.campaign || '').replace(/[^A-Za-z0-9 \-]/g, '').trim().slice(0, 60);
+        if (campaign.length < 3) return res.status(400).json({ error: 'Give the campaign a name (letters, numbers, spaces, hyphens)' });
+        const fl = body.filters || {};
+        const filters = {
+          kind: String(fl.kind || ''), country: String(fl.country || ''), industry: String(fl.industry || ''),
+          tag: String(fl.tag || ''), inactiveDays: fl.inactive_days
+        };
+
+        if (action === 'campaign_preview') {
+          const { total } = await campaignRecipients(filters, campaign, 0);
+          return res.status(200).json({ success: true, total });
+        }
+
+        const subject = String(body.subject || '').trim().slice(0, 200);
+        const text = String(body.body || '').trim().slice(0, 10000);
+        if (!subject || !text) return res.status(400).json({ error: 'subject and body required' });
+        if (!process.env.RESEND_API_KEY) return res.status(503).json({ error: 'RESEND_API_KEY is not set, so emails cannot be sent' });
+
+        const { total, rows } = await campaignRecipients(filters, campaign, 100);
+        let sent = 0, failed = 0;
+        for (let i = 0; i < rows.length; i += 10) {
+          const chunk = rows.slice(i, i + 10);
+          const results = await Promise.allSettled(chunk.map(async (c) => {
+            const result = await sendResendEmail({
+              to: c.email,
+              subject,
+              html: campaignEmailTemplate(c.name, text, c.email),
+              replyTo: process.env.CONTACT_EMAIL || 'henryygeorge25@gmail.com'
+            });
+            await logEmail({ to_email: c.email, type: 'campaign', subject, status: result.ok ? 'sent' : 'failed', error: result.ok ? '' : result.error });
+            // Only mark as received when it actually went out, so failures are retried next call.
+            if (result.ok) await recordCampaignSent(c.id, campaign, subject);
+            return result.ok;
+          }));
+          for (const r of results) { if (r.status === 'fulfilled' && r.value) sent++; else failed++; }
+        }
+        // 'remaining' excludes the ones we just handled successfully; failed ones stay in the queue
+        return res.status(200).json({ success: true, sent, failed, remaining: Math.max(0, total - sent), total });
       }
 
       // ---- Review actions ----

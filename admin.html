@@ -315,11 +315,15 @@
         <input type="text" class="search-box" id="ctSearch" placeholder="Search name, email, company, phone...">
         <select class="search-box" id="ctCountry" style="max-width:190px;"><option value="">All countries</option></select>
         <select class="search-box" id="ctIndustry" style="max-width:190px;"><option value="">All industries</option></select>
+        <select class="search-box" id="ctInactive" style="max-width:190px;" title="Find people you have not been in touch with">
+          <option value="">Any activity</option><option value="30">Quiet 30+ days</option><option value="90">Quiet 90+ days</option><option value="180">Quiet 180+ days</option><option value="365">Quiet 1+ year</option>
+        </select>
         <select class="search-box" id="ctSort" style="max-width:160px;">
           <option value="recent">Recent activity</option><option value="newest">Newest</option><option value="name">Name A-Z</option><option value="value">Highest value</option>
         </select>
         <div class="toolbar-right">
           <button class="btn-sm primary" id="ctAdd">+ Add contact</button>
+          <button class="btn-sm" id="ctCampaign" title="Email everyone matching the current filters">Email segment</button>
           <button class="btn-sm" id="ctImport">Import CSV</button>
           <button class="btn-sm" id="ctExport">Export CSV</button>
           <input type="file" id="ctFile" accept=".csv,text/csv" style="display:none;">
@@ -479,6 +483,26 @@
       <button class="btn-sm" id="cfReview" style="display:none;">Request review</button>
       <button class="btn-sm ghost" onclick="window.closeModal('contactModal')">Close</button>
       <button class="btn-sm primary" id="cfSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- CAMPAIGN MODAL (win-back / check-in to the filtered segment) -->
+<div class="modal-overlay" id="campaignModal">
+  <div class="modal">
+    <h3>Email this segment</h3>
+    <div class="modal-sub" id="cmSegment"></div>
+    <label>Campaign name (used to never email the same person twice)</label>
+    <input type="text" id="cmName" placeholder="e.g. Winback Oct 2026">
+    <label>Subject</label>
+    <input type="text" id="cmSubject" placeholder="e.g. It has been a while, can we help with your site?">
+    <label>Message (we add "Hi first name," and an unsubscribe link)</label>
+    <textarea id="cmBody" rows="8" placeholder="Short and personal works best. Say what you can do for them now: a free site health check, updates, a returning-client discount..."></textarea>
+    <div id="cmStatus" style="margin-top:10px;font-size:.85rem;color:var(--crm-muted);"></div>
+    <div class="modal-actions">
+      <button class="btn-sm ghost" onclick="window.closeModal('campaignModal')">Close</button>
+      <button class="btn-sm" id="cmPreview">Count recipients</button>
+      <button class="btn-sm primary" id="cmSend">Send</button>
     </div>
   </div>
 </div>
@@ -1070,6 +1094,7 @@
     var q = $('ctSearch').value.trim(); if (q) p += '&q=' + encodeURIComponent(q);
     if ($('ctCountry').value) p += '&country=' + encodeURIComponent($('ctCountry').value);
     if ($('ctIndustry').value) p += '&industry=' + encodeURIComponent($('ctIndustry').value);
+    if ($('ctInactive').value) p += '&inactive_days=' + $('ctInactive').value;
     return p + (extra || '');
   }
 
@@ -1101,7 +1126,7 @@
       } else {
         $('ctTable').innerHTML = rows.map(function(c){
           var tags = (c.tags || '').split(',').filter(Boolean).map(function(t){ return '<span class="pill new" style="margin-right:4px;">' + escapeHtml(t) + '</span>'; }).join('');
-          return '<tr style="cursor:pointer;" onclick="window.__ctOpen(' + c.id + ')"><td><strong>' + escapeHtml(c.name) + '</strong><div style="color:var(--crm-muted);font-size:.78rem;">' + escapeHtml(c.company || '') + '</div></td><td>' + escapeHtml(c.email) + '</td><td>' + escapeHtml(c.country || '-') + '</td><td><span class="pill ' + (KIND_PILL[c.kind] || 'new') + '">' + escapeHtml(KIND_LABEL[c.kind] || c.kind) + '</span></td><td>' + (tags || '-') + '</td><td>' + formatDate(c.last_activity_at || c.created_at) + '</td></tr>';
+          return '<tr style="cursor:pointer;" onclick="window.__ctOpen(' + c.id + ')"><td><strong>' + escapeHtml(c.name) + '</strong><div style="color:var(--crm-muted);font-size:.78rem;">' + escapeHtml(c.company || '') + '</div></td><td>' + escapeHtml(c.email) + '</td><td>' + escapeHtml(c.country || '-') + '</td><td><span class="pill ' + (KIND_PILL[c.kind] || 'new') + '">' + escapeHtml(KIND_LABEL[c.kind] || c.kind) + '</span>' + (c.unsubscribed_at ? ' <span class="pill lost" title="Unsubscribed: will not receive campaigns">unsubscribed</span>' : '') + '</td><td>' + (tags || '-') + '</td><td>' + formatDate(c.last_activity_at || c.created_at) + '</td></tr>';
         }).join('');
       }
       var from = ctState.total ? ctState.offset + 1 : 0, to = Math.min(ctState.offset + ctState.limit, ctState.total);
@@ -1187,7 +1212,7 @@
   });
 
   ['ctSearch'].forEach(function(id){ $(id).addEventListener('input', function(){ clearTimeout(ctTimer); ctTimer = setTimeout(function(){ ctState.offset = 0; loadContacts(); }, 300); }); });
-  ['ctCountry','ctIndustry','ctSort'].forEach(function(id){ $(id).addEventListener('change', function(){ ctState.offset = 0; loadContacts(); }); });
+  ['ctCountry','ctIndustry','ctSort','ctInactive'].forEach(function(id){ $(id).addEventListener('change', function(){ ctState.offset = 0; loadContacts(); }); });
 
   $('ctExport').addEventListener('click', async function(){
     try {
@@ -1196,6 +1221,7 @@
       if ($('ctSearch').value.trim()) p += '&q=' + encodeURIComponent($('ctSearch').value.trim());
       if ($('ctCountry').value) p += '&country=' + encodeURIComponent($('ctCountry').value);
       if ($('ctIndustry').value) p += '&industry=' + encodeURIComponent($('ctIndustry').value);
+      if ($('ctInactive').value) p += '&inactive_days=' + $('ctInactive').value;
       var res = await fetch(API_BASE + p, { headers:{ 'Authorization':'Bearer ' + token } });
       if (!res.ok) throw new Error('Export failed');
       var blob = await res.blob(); var a = document.createElement('a');
@@ -1219,6 +1245,53 @@
     if (cur !== '' || row.length){ row.push(cur); rows.push(row); }
     return rows;
   }
+
+  function cmFilters(){
+    return { kind:ctState.kind, country:$('ctCountry').value, industry:$('ctIndustry').value, inactive_days:$('ctInactive').value };
+  }
+  function cmDescribe(){
+    var f = cmFilters(), bits = [];
+    bits.push(f.kind ? (KIND_LABEL[f.kind] || f.kind) + 's' : 'All contact types');
+    if (f.country) bits.push(f.country);
+    if (f.industry) bits.push(f.industry);
+    if (f.inactive_days) bits.push('quiet ' + f.inactive_days + '+ days');
+    return bits.join(' \u00b7 ');
+  }
+  $('ctCampaign').addEventListener('click', function(){
+    $('cmSegment').textContent = 'Segment: ' + cmDescribe() + '. Unsubscribed and archived contacts are always skipped.';
+    $('cmStatus').textContent = '';
+    openModal('campaignModal');
+  });
+  function cmName(){ return $('cmName').value.trim(); }
+  $('cmPreview').addEventListener('click', async function(){
+    if (cmName().length < 3){ showToast('Name the campaign first'); return; }
+    try {
+      var r = await apiCall('POST', '', { action:'campaign_preview', campaign:cmName(), filters:cmFilters() });
+      $('cmStatus').textContent = r.total + ' people would receive this (excluding anyone who already got "' + cmName() + '").';
+    } catch(e){ showToast('Error: ' + e.message); }
+  });
+  $('cmSend').addEventListener('click', async function(){
+    var subject = $('cmSubject').value.trim(), body = $('cmBody').value.trim();
+    if (cmName().length < 3 || !subject || !body){ showToast('Fill name, subject and message'); return; }
+    var cnt;
+    try { cnt = (await apiCall('POST', '', { action:'campaign_preview', campaign:cmName(), filters:cmFilters() })).total; }
+    catch(e){ showToast('Error: ' + e.message); return; }
+    if (!cnt){ showToast('Nobody left to email in this segment'); return; }
+    if (!confirm('Send "' + subject + '" to ' + cnt + ' people (' + cmDescribe() + ')? This cannot be undone.')) return;
+    $('cmSend').disabled = true; $('cmPreview').disabled = true;
+    var sent = 0, failed = 0, guard = 0;
+    try {
+      while (guard++ < 200){
+        var r = await apiCall('POST', '', { action:'campaign_send', campaign:cmName(), subject:subject, body:body, filters:cmFilters() });
+        sent += r.sent; failed += r.failed;
+        $('cmStatus').textContent = 'Sent ' + sent + (failed ? ', failed ' + failed : '') + ' \u00b7 ' + r.remaining + ' remaining...';
+        if (!r.remaining || r.sent === 0) break; // stop if a whole batch failed instead of looping forever
+      }
+      showToast('Campaign done: ' + sent + ' sent' + (failed ? ', ' + failed + ' failed' : ''));
+      loadContacts(true);
+    } catch(e){ showToast('Error: ' + e.message + ' (sent so far: ' + sent + ')'); }
+    $('cmSend').disabled = false; $('cmPreview').disabled = false;
+  });
 
   $('ctImport').addEventListener('click', function(){ $('ctFile').click(); });
   $('ctFile').addEventListener('change', async function(){

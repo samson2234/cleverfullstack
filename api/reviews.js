@@ -1,6 +1,6 @@
-﻿export const config = { runtime: 'nodejs' };
+export const config = { runtime: 'nodejs' };
 
-// api/reviews.js â€” public reviews API
+// api/reviews.js — public reviews API
 //
 //   GET  /api/reviews            -> approved reviews + count + average
 //   GET  /api/reviews?t=TOKEN    -> checks an invite link (returns client first name if valid)
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       const url = new URL(req.url || '', 'http://x');
       const t = url.searchParams.get('t');
       if (t) {
-        const rl = rateLimit(req, { limit: 30, windowMs: 60000, key: 'reviews-token' });
+        const rl = await rateLimit(req, { limit: 30, windowMs: 60000, key: 'reviews-token' });
         if (!rl.allowed) return res.status(429).json({ error: 'Too many requests.' });
         const invite = await getValidInvite(t);
         if (!invite) return res.status(410).json({ valid: false });
@@ -44,10 +44,10 @@ export default async function handler(req, res) {
 
     if (isBotPayload(req.body)) return res.status(200).json({ success: true, published: false });
 
-    const rl = rateLimit(req, { limit: 5, windowMs: 3600000, key: 'reviews-post' });
+    const rl = await rateLimit(req, { limit: 5, windowMs: 3600000, key: 'reviews-post' });
     if (!rl.allowed) {
       res.setHeader('Retry-After', String(rl.retryAfter));
-      return res.status(429).json({ error: 'Too many submissions â€” please try again later.' });
+      return res.status(429).json({ error: 'Too many submissions — please try again later.' });
     }
 
     const b = req.body || {};
