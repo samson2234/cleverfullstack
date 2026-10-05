@@ -46,6 +46,17 @@ import {
   reviewInviteTemplate,
   siteUrl
 } from '../lib/email.js';
+import {
+  KINDS,
+  listContacts,
+  getContactStats,
+  getContact,
+  createContact,
+  updateContact,
+  addActivity,
+  importContacts,
+  exportContacts
+} from '../lib/contacts.js';
 import { rateLimit, clientIp } from '../lib/rate-limit.js';
 import crypto from 'node:crypto';
 
@@ -194,6 +205,39 @@ export default async function handler(req, res) {
         return res.status(200).send(csv);
       }
 
+      // CSV export of contacts (respects the same filters as the list)
+      if (params.get('export') === 'contacts') {
+        const all = await exportContacts({
+          q: params.get('q') || '', kind: params.get('kind') || '', country: params.get('country') || '',
+          industry: params.get('industry') || '', tag: params.get('tag') || ''
+        });
+        const csv = jsonToCsv(
+          ['id', 'name', 'email', 'phone', 'company', 'country', 'industry', 'kind', 'source', 'owner', 'tags', 'lifetime_value', 'created_at', 'last_activity_at'],
+          all.map((r) => ({ ...r }))
+        );
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', 'attachment; filename="cleverstack-contacts.csv"');
+        return res.status(200).send(csv);
+      }
+
+      // Contacts: stats / single contact / paginated list
+      if (view === 'contact_stats') {
+        return res.status(200).json(await getContactStats());
+      }
+      if (view === 'contact') {
+        const c = await getContact(parseInt(params.get('id')));
+        if (!c) return res.status(404).json({ error: 'Contact not found' });
+        return res.status(200).json(c);
+      }
+      if (view === 'contacts') {
+        const data = await listContacts({
+          q: params.get('q') || '', kind: params.get('kind') || '', country: params.get('country') || '',
+          industry: params.get('industry') || '', tag: params.get('tag') || '', sort: params.get('sort') || 'recent',
+          limit: params.get('limit'), offset: params.get('offset')
+        });
+        return res.status(200).json(data);
+      }
+
       // CSV export of subscribers
       if (params.get('export') === 'subscribers') {
         const all = await getSubscribers({ limit: 10000, offset: 0 });
@@ -328,6 +372,45 @@ export default async function handler(req, res) {
           return res.status(200).json({ success: true, message: 'Reply sent to ' + submission.email });
         }
         return res.status(500).json({ error: 'Email failed: ' + result.error });
+      }
+
+      // ---- Contact (CRM) actions ----
+      if (action === 'contact_create') {
+        const name = String(body.name || '').trim();
+        const email = String(body.email || '').trim();
+        if (name.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: 'A name and a valid email are required' });
+        try {
+          const id = await createContact(body);
+          await addActivity(id, 'note', 'Contact added manually');
+          return res.status(200).json({ success: true, id });
+        } catch (e) {
+          if (/UNIQUE/i.test(String(e.message))) return res.status(409).json({ error: 'A contact with that email already exists' });
+          throw e;
+        }
+      }
+
+      if (action === 'contact_update') {
+        if (!body.id) return res.status(400).json({ error: 'id required' });
+        const before = await getContact(body.id);
+        if (!before) return res.status(404).json({ error: 'Contact not found' });
+        await updateContact(body.id, body);
+        if (body.kind && body.kind !== before.contact.kind && KINDS.includes(body.kind)) {
+          await addActivity(body.id, 'status', 'Changed from ' + before.contact.kind + ' to ' + body.kind);
+        }
+        return res.status(200).json({ success: true });
+      }
+
+      if (action === 'contact_note') {
+        const text = String(body.note || '').trim();
+        if (!body.id || !text) return res.status(400).json({ error: 'id and note required' });
+        await addActivity(body.id, 'note', text.slice(0, 2000));
+        return res.status(200).json({ success: true });
+      }
+
+      if (action === 'contact_import') {
+        if (!Array.isArray(body.rows) || !body.rows.length) return res.status(400).json({ error: 'rows required' });
+        const result = await importContacts(body.rows, { kind: body.kind, source: body.source, tags: body.tags });
+        return res.status(200).json({ success: true, ...result });
       }
 
       // ---- Review actions ----

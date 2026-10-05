@@ -254,6 +254,7 @@
     <nav class="tabs">
       <button class="tab active" data-view="dashboard">Dashboard</button>
       <button class="tab" data-view="leads">Leads <span class="badge" id="unreadBadge" style="display:none;">0</span></button>
+      <button class="tab" data-view="contacts">Clients &amp; Contacts</button>
       <button class="tab" data-view="subscribers">Subscribers <span class="badge" id="subsBadge" style="display:none;">0</span></button>
       <button class="tab" data-view="reviews">Reviews <span class="badge" id="revBadge" style="display:none;">0</span></button>
       <button class="tab" data-view="email_log">Email Log</button>
@@ -305,6 +306,29 @@
       <div class="submission-list" id="submissionList"><div class="loading"><div class="spinner"></div></div></div>
       <div class="kanban" id="kanbanBoard" style="display:none;"></div>
       <div class="pager" id="leadPager"></div>
+    </section>
+
+    <!-- CONTACTS (CRM) VIEW -->
+    <section class="view" id="view-contacts">
+      <div class="status-filter" id="ctKinds"></div>
+      <div class="leads-toolbar">
+        <input type="text" class="search-box" id="ctSearch" placeholder="Search name, email, company, phone...">
+        <select class="search-box" id="ctCountry" style="max-width:190px;"><option value="">All countries</option></select>
+        <select class="search-box" id="ctIndustry" style="max-width:190px;"><option value="">All industries</option></select>
+        <select class="search-box" id="ctSort" style="max-width:160px;">
+          <option value="recent">Recent activity</option><option value="newest">Newest</option><option value="name">Name A-Z</option><option value="value">Highest value</option>
+        </select>
+        <div class="toolbar-right">
+          <button class="btn-sm primary" id="ctAdd">+ Add contact</button>
+          <button class="btn-sm" id="ctImport">Import CSV</button>
+          <button class="btn-sm" id="ctExport">Export CSV</button>
+          <input type="file" id="ctFile" accept=".csv,text/csv" style="display:none;">
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="table"><thead><tr><th>Name</th><th>Email</th><th>Country</th><th>Type</th><th>Tags</th><th>Last activity</th></tr></thead><tbody id="ctTable"></tbody></table>
+      </div>
+      <div class="pager" id="ctPager"></div>
     </section>
 
     <!-- SUBSCRIBERS VIEW -->
@@ -422,6 +446,43 @@
   </div>
 </div>
 
+<!-- CONTACT MODAL (add + edit) -->
+<div class="modal-overlay" id="contactModal">
+  <div class="modal modal-lead">
+    <div class="modal-head">
+      <div><h3 id="ctTitle" style="margin:0;">Contact</h3><div class="modal-sub" id="ctSub"></div></div>
+      <button class="modal-x" onclick="window.closeModal('contactModal')">x</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;">
+      <div><label>Name *</label><input type="text" id="cfName"></div>
+      <div><label>Email *</label><input type="email" id="cfEmail"></div>
+      <div><label>Phone</label><input type="text" id="cfPhone"></div>
+      <div><label>Company</label><input type="text" id="cfCompany"></div>
+      <div><label>Country</label><input type="text" id="cfCountry"></div>
+      <div><label>Industry</label><input type="text" id="cfIndustry"></div>
+      <div><label>Type</label><select id="cfKind"><option value="lead">Lead</option><option value="prospect">Prospect</option><option value="client">Client</option><option value="past_client">Past client</option><option value="partner">Partner</option></select></div>
+      <div><label>Lifetime value (USD)</label><input type="number" min="0" id="cfValue"></div>
+      <div><label>Tags (comma separated)</label><input type="text" id="cfTags" placeholder="fiverr, vip"></div>
+      <div><label>Owner</label><input type="text" id="cfOwner" placeholder="Who looks after them"></div>
+    </div>
+    <div id="cfHistory" style="margin-top:18px;display:none;">
+      <strong style="font-size:.9rem;">Timeline</strong>
+      <div style="display:flex;gap:8px;margin:10px 0;">
+        <input type="text" id="cfNote" placeholder="Add a note (call, meeting, follow-up...)" style="flex:1;">
+        <button class="btn-sm" id="cfNoteBtn">Add note</button>
+      </div>
+      <div id="cfTimeline" style="max-height:220px;overflow:auto;font-size:.84rem;"></div>
+      <div id="cfInviteBox" style="margin-top:10px;font-size:.84rem;display:none;"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-sm danger" id="cfArchive" style="display:none;margin-right:auto;">Archive</button>
+      <button class="btn-sm" id="cfReview" style="display:none;">Request review</button>
+      <button class="btn-sm ghost" onclick="window.closeModal('contactModal')">Close</button>
+      <button class="btn-sm primary" id="cfSave">Save</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <script>
 (function(){
@@ -514,6 +575,7 @@
       if (name === 'subscribers') loadSubscribers();
       if (name === 'email_log') loadEmailLog();
       if (name === 'reviews') loadReviews();
+      if (name === 'contacts') loadContacts(true);
     });
   });
 
@@ -995,6 +1057,195 @@
     $('broadcastSendBtn').textContent = 'Send Broadcast';
   });
 
+  // ---------------- CONTACTS (CRM) ----------------
+  var KIND_LABEL = { lead:'Lead', prospect:'Prospect', client:'Client', past_client:'Past client', partner:'Partner' };
+  var KIND_PILL = { lead:'new', prospect:'proposal', client:'won', past_client:'contacted', partner:'followup' };
+  var ctState = { kind:'', offset:0, limit:50, total:0, filtersLoaded:false };
+  var ctTimer = null;
+  var ctEditing = null;
+
+  function ctQuery(extra){
+    var p = 'view=contacts&limit=' + ctState.limit + '&offset=' + ctState.offset + '&sort=' + encodeURIComponent($('ctSort').value);
+    if (ctState.kind) p += '&kind=' + ctState.kind;
+    var q = $('ctSearch').value.trim(); if (q) p += '&q=' + encodeURIComponent(q);
+    if ($('ctCountry').value) p += '&country=' + encodeURIComponent($('ctCountry').value);
+    if ($('ctIndustry').value) p += '&industry=' + encodeURIComponent($('ctIndustry').value);
+    return p + (extra || '');
+  }
+
+  async function loadContactStats(){
+    var st = await apiCall('GET', '?view=contact_stats');
+    var chips = '<button class="chip' + (ctState.kind === '' ? ' active' : '') + '" data-kind="">All (' + st.total + ')</button>';
+    Object.keys(KIND_LABEL).forEach(function(k){
+      chips += '<button class="chip' + (ctState.kind === k ? ' active' : '') + '" data-kind="' + k + '">' + KIND_LABEL[k] + 's (' + (st.byKind[k] || 0) + ')</button>';
+    });
+    $('ctKinds').innerHTML = chips;
+    $('ctKinds').querySelectorAll('.chip').forEach(function(c){
+      c.addEventListener('click', function(){ ctState.kind = c.getAttribute('data-kind'); ctState.offset = 0; loadContacts(true); });
+    });
+    if (!ctState.filtersLoaded){
+      var fill = function(sel, arr){ var cur = sel.value; sel.innerHTML = sel.options[0].outerHTML + arr.map(function(x){ return '<option value="' + escapeHtml(x.label) + '">' + escapeHtml(x.label) + ' (' + x.count + ')</option>'; }).join(''); sel.value = cur; };
+      fill($('ctCountry'), st.countries); fill($('ctIndustry'), st.industries);
+      ctState.filtersLoaded = true;
+    }
+  }
+
+  async function loadContacts(refreshStats){
+    try {
+      if (refreshStats) await loadContactStats();
+      var d = await apiCall('GET', '?' + ctQuery());
+      ctState.total = d.total;
+      var rows = d.rows || [];
+      if (!rows.length){
+        $('ctTable').innerHTML = '<tr><td colspan="6" class="empty-state">No contacts match. Add one, import a CSV, or clear the filters.</td></tr>';
+      } else {
+        $('ctTable').innerHTML = rows.map(function(c){
+          var tags = (c.tags || '').split(',').filter(Boolean).map(function(t){ return '<span class="pill new" style="margin-right:4px;">' + escapeHtml(t) + '</span>'; }).join('');
+          return '<tr style="cursor:pointer;" onclick="window.__ctOpen(' + c.id + ')"><td><strong>' + escapeHtml(c.name) + '</strong><div style="color:var(--crm-muted);font-size:.78rem;">' + escapeHtml(c.company || '') + '</div></td><td>' + escapeHtml(c.email) + '</td><td>' + escapeHtml(c.country || '-') + '</td><td><span class="pill ' + (KIND_PILL[c.kind] || 'new') + '">' + escapeHtml(KIND_LABEL[c.kind] || c.kind) + '</span></td><td>' + (tags || '-') + '</td><td>' + formatDate(c.last_activity_at || c.created_at) + '</td></tr>';
+        }).join('');
+      }
+      var from = ctState.total ? ctState.offset + 1 : 0, to = Math.min(ctState.offset + ctState.limit, ctState.total);
+      $('ctPager').innerHTML = '<span>' + from + '-' + to + ' of ' + ctState.total + '</span><button id="ctPrev"' + (ctState.offset <= 0 ? ' disabled' : '') + '>Prev</button><button id="ctNext"' + (to >= ctState.total ? ' disabled' : '') + '>Next</button>';
+      $('ctPrev').addEventListener('click', function(){ ctState.offset = Math.max(0, ctState.offset - ctState.limit); loadContacts(); });
+      $('ctNext').addEventListener('click', function(){ ctState.offset += ctState.limit; loadContacts(); });
+    } catch(e){
+      $('ctTable').innerHTML = '<tr><td colspan="6" class="empty-state">' + escapeHtml(e.message) + '</td></tr>';
+    }
+  }
+
+  function ctFill(c){
+    $('cfName').value = c.name || ''; $('cfEmail').value = c.email || ''; $('cfPhone').value = c.phone || '';
+    $('cfCompany').value = c.company || ''; $('cfCountry').value = c.country || ''; $('cfIndustry').value = c.industry || '';
+    $('cfKind').value = c.kind || 'lead'; $('cfValue').value = c.lifetime_value || 0; $('cfTags').value = c.tags || ''; $('cfOwner').value = c.owner || '';
+  }
+
+  window.__ctOpen = async function(id){
+    try {
+      var d = await apiCall('GET', '?view=contact&id=' + id);
+      ctEditing = d.contact;
+      ctFill(d.contact);
+      $('ctTitle').textContent = d.contact.name;
+      $('ctSub').textContent = 'Added ' + fmtDate(d.contact.created_at) + (d.contact.source ? ' \u00b7 via ' + d.contact.source : '');
+      $('cfEmail').readOnly = true;
+      $('cfHistory').style.display = 'block'; $('cfArchive').style.display = ''; $('cfReview').style.display = '';
+      $('cfInviteBox').style.display = 'none';
+      var items = d.activities.map(function(a){ return '<div style="padding:8px 0;border-bottom:1px solid var(--crm-line-soft);"><span class="pill ' + (a.type === 'form' ? 'new' : (a.type === 'status' ? 'proposal' : 'contacted')) + '">' + escapeHtml(a.type) + '</span> <span style="color:var(--crm-muted);font-size:.76rem;">' + formatDate(a.created_at) + '</span><div style="margin-top:4px;white-space:pre-wrap;">' + escapeHtml(a.body) + '</div></div>'; });
+      $('cfTimeline').innerHTML = items.length ? items.join('') : '<div style="color:var(--crm-muted);">No activity yet.</div>';
+      openModal('contactModal');
+    } catch(e){ showToast('Error: ' + e.message); }
+  };
+
+  $('ctAdd').addEventListener('click', function(){
+    ctEditing = null; ctFill({ kind:'lead' });
+    $('ctTitle').textContent = 'Add contact'; $('ctSub').textContent = '';
+    $('cfEmail').readOnly = false;
+    $('cfHistory').style.display = 'none'; $('cfArchive').style.display = 'none'; $('cfReview').style.display = 'none';
+    openModal('contactModal'); $('cfName').focus();
+  });
+
+  $('cfSave').addEventListener('click', async function(){
+    var body = { name:$('cfName').value.trim(), email:$('cfEmail').value.trim(), phone:$('cfPhone').value, company:$('cfCompany').value, country:$('cfCountry').value, industry:$('cfIndustry').value, kind:$('cfKind').value, lifetime_value:$('cfValue').value, tags:$('cfTags').value, owner:$('cfOwner').value };
+    $('cfSave').disabled = true;
+    try {
+      if (ctEditing){ body.action = 'contact_update'; body.id = ctEditing.id; }
+      else { body.action = 'contact_create'; }
+      await apiCall('POST', '', body);
+      showToast('Saved');
+      closeModal('contactModal');
+      ctState.filtersLoaded = false;
+      loadContacts(true);
+    } catch(e){ showToast('Error: ' + e.message); }
+    $('cfSave').disabled = false;
+  });
+
+  $('cfNoteBtn').addEventListener('click', async function(){
+    var note = $('cfNote').value.trim();
+    if (!note || !ctEditing) return;
+    try {
+      await apiCall('POST', '', { action:'contact_note', id:ctEditing.id, note:note });
+      $('cfNote').value = '';
+      window.__ctOpen(ctEditing.id);
+    } catch(e){ showToast('Error: ' + e.message); }
+  });
+
+  $('cfArchive').addEventListener('click', async function(){
+    if (!ctEditing || !confirm('Archive this contact? They disappear from lists but nothing is deleted.')) return;
+    try {
+      await apiCall('POST', '', { action:'contact_update', id:ctEditing.id, archived:true });
+      showToast('Archived'); closeModal('contactModal'); loadContacts(true);
+    } catch(e){ showToast('Error: ' + e.message); }
+  });
+
+  $('cfReview').addEventListener('click', async function(){
+    if (!ctEditing) return;
+    try {
+      var r = await apiCall('POST', '', { action:'create_invite', client_name:ctEditing.name, client_email:ctEditing.email, project:'', send_email:true });
+      var box = $('cfInviteBox'); box.style.display = 'block';
+      box.innerHTML = (r.emailed ? 'Review request emailed to ' + escapeHtml(ctEditing.email) + '. ' : 'Email not sent (check Resend setup). ') + 'Link:<br><input type="text" readonly style="width:100%;margin-top:6px;" value="' + escapeHtml(r.link) + '" onclick="this.select()">';
+      await apiCall('POST', '', { action:'contact_note', id:ctEditing.id, note:'Review request ' + (r.emailed ? 'emailed' : 'link created') });
+    } catch(e){ showToast('Error: ' + e.message); }
+  });
+
+  ['ctSearch'].forEach(function(id){ $(id).addEventListener('input', function(){ clearTimeout(ctTimer); ctTimer = setTimeout(function(){ ctState.offset = 0; loadContacts(); }, 300); }); });
+  ['ctCountry','ctIndustry','ctSort'].forEach(function(id){ $(id).addEventListener('change', function(){ ctState.offset = 0; loadContacts(); }); });
+
+  $('ctExport').addEventListener('click', async function(){
+    try {
+      var p = '?export=contacts';
+      if (ctState.kind) p += '&kind=' + ctState.kind;
+      if ($('ctSearch').value.trim()) p += '&q=' + encodeURIComponent($('ctSearch').value.trim());
+      if ($('ctCountry').value) p += '&country=' + encodeURIComponent($('ctCountry').value);
+      if ($('ctIndustry').value) p += '&industry=' + encodeURIComponent($('ctIndustry').value);
+      var res = await fetch(API_BASE + p, { headers:{ 'Authorization':'Bearer ' + token } });
+      if (!res.ok) throw new Error('Export failed');
+      var blob = await res.blob(); var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = 'cleverstack-contacts.csv'; a.click(); URL.revokeObjectURL(a.href);
+    } catch(e){ showToast('Error: ' + e.message); }
+  });
+
+  // Minimal CSV parser (quoted fields, escaped quotes, CRLF)
+  function parseCsv(text){
+    var rows = [], row = [], cur = '', inQ = false;
+    text = text.replace(/^\uFEFF/, '');
+    for (var i = 0; i < text.length; i++){
+      var ch = text[i];
+      if (inQ){
+        if (ch === '"'){ if (text[i+1] === '"'){ cur += '"'; i++; } else inQ = false; } else cur += ch;
+      } else if (ch === '"') inQ = true;
+      else if (ch === ','){ row.push(cur); cur = ''; }
+      else if (ch === '\n' || ch === '\r'){ if (ch === '\r' && text[i+1] === '\n') i++; row.push(cur); cur = ''; if (row.length > 1 || row[0] !== '') rows.push(row); row = []; }
+      else cur += ch;
+    }
+    if (cur !== '' || row.length){ row.push(cur); rows.push(row); }
+    return rows;
+  }
+
+  $('ctImport').addEventListener('click', function(){ $('ctFile').click(); });
+  $('ctFile').addEventListener('change', async function(){
+    var file = $('ctFile').files[0]; $('ctFile').value = '';
+    if (!file) return;
+    try {
+      var rows = parseCsv(await file.text());
+      if (rows.length < 2) throw new Error('CSV needs a header row and at least one contact');
+      var head = rows[0].map(function(h){ return h.trim().toLowerCase().replace(/\s+/g, '_'); });
+      var alias = { full_name:'name', client_name:'name', username:'name', e_mail:'email', email_address:'email', mobile:'phone', organisation:'company', organization:'company', type:'kind', value:'lifetime_value', total_spent:'lifetime_value' };
+      head = head.map(function(h){ return alias[h] || h; });
+      if (head.indexOf('email') === -1) throw new Error('No "email" column found. Columns seen: ' + head.join(', '));
+      var objs = rows.slice(1).map(function(r){ var o = {}; head.forEach(function(h, i){ o[h] = (r[i] || '').trim(); }); return o; });
+      var kind = prompt('Import ' + objs.length + ' rows. Set type for contacts without a "kind" column (lead, prospect, client, past_client, partner):', 'client');
+      if (kind === null) return;
+      var tags = prompt('Optional tag for this batch (e.g. fiverr-2025):', '') || '';
+      var created = 0, updated = 0, skipped = 0;
+      for (var i = 0; i < objs.length; i += 1000){
+        showToast('Importing ' + Math.min(i + 1000, objs.length) + ' / ' + objs.length + '...');
+        var r = await apiCall('POST', '', { action:'contact_import', rows:objs.slice(i, i + 1000), kind:kind.trim(), source:'import:' + file.name.slice(0, 40), tags:tags });
+        created += r.created; updated += r.updated; skipped += r.skipped;
+      }
+      showToast('Imported: ' + created + ' new, ' + updated + ' updated, ' + skipped + ' skipped');
+      ctState.filtersLoaded = false; loadContacts(true);
+    } catch(e){ showToast('Error: ' + e.message); }
+  });
+
   // ---------------- REVIEWS ----------------
   function stars(n){ n = Number(n) || 0; return '<span style="color:#F5A524;letter-spacing:1px;">' + '\u2605'.repeat(n) + '</span><span style="color:rgba(255,255,255,.2);letter-spacing:1px;">' + '\u2605'.repeat(5 - n) + '</span>'; }
 
@@ -1215,6 +1466,7 @@
     if (name === 'subscribers') loadSubscribers();
     if (name === 'email_log') loadEmailLog();
     if (name === 'reviews') loadReviews();
+    if (name === 'contacts') loadContacts(true);
     showToast('Refreshed');
   });
 

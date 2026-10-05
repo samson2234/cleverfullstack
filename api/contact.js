@@ -26,6 +26,7 @@ export const config = { runtime: 'nodejs' };
 //   3. Database auto-initializes on first request (creates tables)
 
 import { saveSubmission, addSubscriber, logEmail } from '../lib/db.js';
+import { linkSubmissionToContact } from '../lib/contacts.js';
 import {
   sendResendEmail,
   contactNotificationTemplate,
@@ -109,6 +110,9 @@ export default async function handler(req, res) {
     try {
       submissionId = await saveSubmission(submission);
       dbSaved = true;
+      // Attach to the person's CRM record (creates it for new enquirers). Never blocks the submission.
+      try { await linkSubmissionToContact(submissionId, submission); }
+      catch (err) { console.error('CRM link failed:', err.message); }
       console.log('Submission saved to DB. ID:', submissionId);
     } catch (err) {
       console.error('Database save failed:', err.message);
