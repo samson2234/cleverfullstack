@@ -18,7 +18,8 @@ const root = path.resolve(__dirname, '..');
 const ASSETS = ['style.css', 'script.js', 'i18n.js', 'analytics.js', 'roi.js'];
 const check = process.argv.includes('--check');
 
-const hash = (file) => crypto.createHash('sha1').update(fs.readFileSync(path.join(root, file))).digest('hex').slice(0, 8);
+// CRLF is normalised so a Windows checkout (core.autocrlf) hashes the same as Linux/Vercel/CI.
+const hash = (file) => crypto.createHash('sha1').update(fs.readFileSync(path.join(root, file), 'utf8').replace(/\r\n/g, '\n')).digest('hex').slice(0, 8);
 const versions = Object.fromEntries(ASSETS.map((a) => [a, hash(a)]));
 
 function walk(dir, out) {
