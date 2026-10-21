@@ -11,8 +11,24 @@ export const config = { runtime: 'nodejs' };
 import { getPublicReviews, getValidInvite, submitVerifiedReview, submitPendingReview } from '../lib/db.js';
 import { rateLimit } from '../lib/rate-limit.js';
 import { isBotPayload } from '../lib/honeypot.js';
+import { sendResendEmail, ownerEmail, reviewNotificationTemplate } from '../lib/email.js';
 
 const clip = (v, n) => String(v == null ? '' : v).trim().slice(0, n);
+
+// Email the owner about a new review. Best effort: a mail failure never fails the submission.
+async function notifyOwner(data, published) {
+  if (!process.env.RESEND_API_KEY) return;
+  try {
+    const r = await sendResendEmail({
+      to: ownerEmail(),
+      subject: (published ? 'New verified review' : 'Review waiting for approval') + ': ' + data.rating + '★ from ' + data.author_name,
+      html: reviewNotificationTemplate(data, published)
+    });
+    if (!r.ok) console.error('Review notification failed:', r.error);
+  } catch (err) {
+    console.error('Review notification failed:', err.message);
+  }
+}
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -69,10 +85,12 @@ export default async function handler(req, res) {
       if (!invite) return res.status(410).json({ error: 'This review link is invalid, expired or already used.' });
       const id = await submitVerifiedReview(invite, data);
       if (!id) return res.status(410).json({ error: 'This review link has already been used.' });
+      await notifyOwner(data, true);
       return res.status(200).json({ success: true, published: true });
     }
 
     await submitPendingReview(data);
+    await notifyOwner(data, false);
     return res.status(200).json({ success: true, published: false });
   } catch (err) {
     console.error('Reviews API error:', err);

@@ -16,8 +16,8 @@ const END = '<!--testimonials:end-->';
 const read = (f) => fs.readFileSync(path.join(root, f), 'utf8');
 
 const index = read('index.html');
-const re = /<div class="testimonial-card"[^>]*><div class="stars">([^<]*)<\/div><blockquote>([\s\S]*?)<\/blockquote><div class="person"><div class="who"><b>([^<]*)<\/b><span>([^<]*)<\/span>/g;
-const cards = [...index.matchAll(re)].map((m) => ({ stars: m[1], quote: m[2].trim().replace(/^"|"$/g, ''), name: m[3], label: m[4] }));
+const re = /<div class="testimonial-card"[^>]*><div class="stars">([^<]*)<\/div><blockquote>([\s\S]*?)<\/blockquote><div class="person"><div class="who"><b>([^<]*)<\/b><span>([^<]*)<\/span>(?:<a class="who-link" href="([^"]+)"[^>]*>([^<]*)<\/a>)?/g;
+const cards = [...index.matchAll(re)].map((m) => ({ stars: m[1], quote: m[2].trim().replace(/^"|"$/g, ''), name: m[3], label: m[4], link: m[5], linkText: m[6] }));
 const total = (index.match(/class="testimonial-card"/g) || []).length;
 if (!cards.length) throw new Error('no testimonial cards found in index.html');
 if (cards.length !== total) throw new Error(`${total} testimonial cards in index.html but only ${cards.length} match the expected markup`);
@@ -32,7 +32,7 @@ const nextIndex = index.replace(reDots, dots);
 
 // 2. Reviews page wall
 const block = START + '\n<div class="rv-wall">' + cards.map((c) =>
-  `<article class="rv-card"><div class="rv-stars" aria-label="${c.stars.length} out of 5 stars">${c.stars}</div><p>${c.quote}</p><div class="rv-meta">${c.name}<span>${c.label}</span></div></article>`
+  `<article class="rv-card"><div class="rv-stars" aria-label="${c.stars.length} out of 5 stars">${c.stars}</div><p>${c.quote}</p><div class="rv-meta">${c.name}<span>${c.label}</span>${c.link ? `<a class="rv-link" href="${c.link}" target="_blank" rel="noopener">${c.linkText}</a>` : ''}</div></article>`
 ).join('') + '</div>\n' + END;
 const reviews = read('reviews.html');
 const nl = reviews.includes('\r\n') ? '\r\n' : '\n';
