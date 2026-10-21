@@ -43,6 +43,12 @@ test('SEO head tags: one canonical per page, no duplicate hreflang, country page
   assert.equal(new Set(Object.values(sets)).size, 1, 'the USA/UK/Europe pages must carry the same hreflang set');
 });
 
+test('no mojibake: no UTF-8 text saved through the wrong encoding (e.g. a checkmark showing as "âœ“")', () => {
+  const files = htmlFiles(root).concat(['style.css', 'script.js', 'i18n.js', 'roi.js', 'analytics.js'].map((f) => path.join(root, f)));
+  const bad = files.filter((f) => /â€|âœ|â†|Ã[ -¿]/.test(fs.readFileSync(f, 'utf8'))).map((f) => path.relative(root, f));
+  assert.deepEqual(bad, []);
+});
+
 test('no hard-coded Google Fonts file preloads (their versioned URLs go stale and 404)', () => {
   for (const file of htmlFiles(root)) {
     assert.ok(!/<link rel="preload" as="font"[^>]*fonts\.gstatic\.com/.test(fs.readFileSync(file, 'utf8')), path.relative(root, file) + ': stale font preload');

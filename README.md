@@ -106,7 +106,7 @@ Connect the repo to [Vercel](https://vercel.com) for automatic deployments on ev
 - [x] **#1 Fake US phone in contact page schema** — `contact.html` line 62 has `"telephone": "+1 000 111 2222"` in JSON-LD. Everywhere else is `+2349165400534`. Google can surface this in rich results / local packs. **FIXED → `+2349165400534`.**
 - [x] **#2 Landing page sends leads to the wrong mailbox** — `index.html` (3×): `cleverdigitals70@gmail.com` in JSON-LD + footer `mailto:` + footer text. Every other page and `lib/email.js` uses `henryygeorge25@gmail.com`. (README previously claimed "standardized" — that was false.) **FIXED → `henryygeorge25@gmail.com` (3×).**
 - [x] **#3 Contradictory NAP data (local SEO)** — `index.html` says **Lagos**; everything else says **University of Ibadan, Oyo State**. Conflicting name/address/phone breaks local search signals. **FIXED → `addressLocality` "Ibadan" + footer "University of Ibadan (Premier University), Oyo State, Nigeria".**
-- [ ] **#4 CSS mojibake — visible garbage on live pages** — `style.css` `content:"â†’"`, `content:"âœ“"`, `content:"â†”"` (double-encoded `→`/`✔`/`⇔`). Process-step arrows (about.html), pricing checklist ticks (services.html), comparison handle render as garbage glyphs.
+- [ ] **#4 CSS mojibake — visible garbage on live pages** — `style.css` `content:"→"`, `content:"✓"`, `content:"↔"` (double-encoded `→`/`✔`/`⇔`). Process-step arrows (about.html), pricing checklist ticks (services.html), comparison handle render as garbage glyphs.
 
 ## 🟠 High
 
