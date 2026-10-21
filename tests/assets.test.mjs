@@ -7,6 +7,11 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
+test('the Reviews page shows every homepage testimonial', () => {
+  const r = spawnSync(process.execPath, ['scripts/sync-testimonials.js', '--check'], { cwd: root, encoding: 'utf8' });
+  assert.equal(r.status, 0, (r.stderr || '') + (r.stdout || '') + '\n→ run `npm run testimonials` and commit the result');
+});
+
 test('all html references to style.css / script.js / i18n.js / analytics.js carry the current content hash', () => {
   const r = spawnSync(process.execPath, ['scripts/version-assets.js', '--check'], { cwd: root, encoding: 'utf8' });
   assert.equal(r.status, 0, (r.stderr || '') + (r.stdout || '') + '\n→ run `npm run assets` and commit the result');

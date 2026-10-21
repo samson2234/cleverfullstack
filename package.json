@@ -9,7 +9,9 @@
     "test:scale": "node --test tests/scale.test.mjs",
     "assets": "node scripts/version-assets.js",
     "assets:check": "node scripts/version-assets.js --check",
-    "blog": "node scripts/build-blog.js"
+    "blog": "node scripts/build-blog.js",
+    "testimonials": "node scripts/sync-testimonials.js",
+    "testimonials:check": "node scripts/sync-testimonials.js --check"
   },
   "dependencies": {
     "@libsql/client": "^0.17.4",
