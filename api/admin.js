@@ -61,6 +61,8 @@ import {
   recordCampaignSent
 } from '../lib/contacts.js';
 import { rateLimit, clientIp } from '../lib/rate-limit.js';
+import { getAnalytics, getRecentJourneys } from '../lib/analytics.js';
+import { sendWeeklyReport } from '../lib/analytics-report.js';
 import crypto from 'node:crypto';
 
 // Failed-login lockout: after MAX_FAILS wrong passwords from an IP, the IP is
@@ -272,6 +274,14 @@ export default async function handler(req, res) {
         return res.status(200).json({ reviews: rows, total, pending, invites });
       }
 
+      // Website analytics (first-party): range = day | week | month | quarter
+      if (view === 'analytics') {
+        return res.status(200).json(await getAnalytics(params.get('range') || 'week'));
+      }
+      if (view === 'journeys') {
+        return res.status(200).json({ journeys: await getRecentJourneys(parseInt(params.get('limit')) || 15) });
+      }
+
       // Email log
       if (view === 'email_log') {
         const limit = parseInt(params.get('limit')) || 100;
@@ -306,6 +316,13 @@ export default async function handler(req, res) {
 
       if (!action) {
         return res.status(400).json({ error: 'action is required' });
+      }
+
+      // ---- Analytics: email the weekly report now (same email the Monday cron sends) ----
+      if (action === 'send_analytics_report') {
+        if (!process.env.RESEND_API_KEY) return res.status(503).json({ error: 'RESEND_API_KEY is not set, so emails cannot be sent' });
+        const r = await sendWeeklyReport();
+        return res.status(r.ok ? 200 : 502).json(r.ok ? { success: true, message: 'Report sent to your inbox', subject: r.subject } : { error: r.error || 'Email failed' });
       }
 
       // ---- Lead actions ----

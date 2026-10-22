@@ -15,7 +15,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 const root = path.resolve(__dirname, '..');
-const ASSETS = ['style.css', 'script.js', 'i18n.js', 'analytics.js', 'roi.js'];
+const ASSETS = ['style.css', 'script.js', 'i18n.js', 'analytics.js', 'roi.js', 'admin-analytics.js', 'admin-analytics.css'];
 const check = process.argv.includes('--check');
 
 // CRLF is normalised so a Windows checkout (core.autocrlf) hashes the same as Linux/Vercel/CI.

@@ -4,6 +4,15 @@
   "outputDirectory": ".",
   "cleanUrls": true,
   "trailingSlash": false,
+  "functions": {
+    "api/admin.js": { "maxDuration": 60 },
+    "api/cron-weekly.js": { "maxDuration": 60 },
+    "api/cron-daily.js": { "maxDuration": 60 }
+  },
+  "crons": [
+    { "path": "/api/cron-weekly", "schedule": "0 7 * * 1" },
+    { "path": "/api/cron-daily", "schedule": "15 0 * * *" }
+  ],
   "redirects": [
     { "source": "/web-development", "destination": "/blog/web-development", "permanent": true },
     { "source": "/shopify-vs-woocommerce", "destination": "/blog/shopify-vs-woocommerce", "permanent": true },
