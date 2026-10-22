@@ -93,12 +93,12 @@
   function money(n, cur, lang) {
     var big = Math.abs(n) >= 1e7;
     try {
-      return new Intl.NumberFormat(lang === 'fr' ? 'fr-FR' : 'en-US', {
+      return new Intl.NumberFormat(({ fr: 'fr-FR', de: 'de-DE' })[lang] || 'en-US', {
         style: 'currency', currency: cur, maximumFractionDigits: big ? 1 : 0, notation: big ? 'compact' : 'standard'
       }).format(n);
     } catch (e) { return (cur === 'USD' ? '$' : cur + ' ') + Math.round(n).toLocaleString(); }
   }
-  function plain(n, lang) { return Math.round(n).toLocaleString(lang === 'fr' ? 'fr-FR' : 'en-US'); }
+  function plain(n, lang) { return Math.round(n).toLocaleString(({ fr: 'fr-FR', de: 'de-DE' })[lang] || 'en-US'); }
 
   var T = {
     en: {
@@ -142,6 +142,27 @@
       fName: 'Votre nom', fEmail: 'E-mail', fSend: "Envoyez-moi l'audit", sending: 'Envoi...',
       doneT: 'Merci. Nous avons vos chiffres.', doneB: 'Nous étudions votre situation et répondons sous un jour ouvré.', doneBook: 'Envie d’en parler ? Réserver un appel',
       err: 'Une erreur est survenue. Veuillez réessayer.', errField: 'Veuillez saisir votre nom et un e-mail valide.', note: "Pas de spam. Utilisé uniquement pour vous envoyer l'audit."
+    },
+    de: {
+      tabStart: 'Ich starte gerade', tabGrow: 'Ich habe bereits Kunden', currency: 'Währung', invest: 'Investition in die Website',
+      pk_starter: 'Starter-Website', pk_business: 'Unternehmenswebsite', pk_store: 'Onlineshop', pk_app: 'Individuelle Web-App', pk_custom: 'Mein eigenes Budget',
+      approx: 'Richtpreise. Unsere Angebote erfolgen in USD.', presets: 'Starten Sie mit einem Beispiel und passen Sie die Zahlen an:',
+      pr_local: 'Lokale Dienstleistungen', pr_store: 'Onlineshop', pr_b2b: 'B2B mit hohem Auftragswert',
+      value: 'Durchschnittlicher Wert eines Kunden', customersNew: 'Zusätzliche Kunden pro Monat, die Ihre Website bringen soll', margin: 'Gewinnmarge',
+      visitors: 'Website-Besucher pro Monat', conv: 'Besucher, die anfragen oder kaufen', close: 'Anfragen, die zu Kunden werden',
+      direct: 'Besucher kaufen direkt online (Shop)', uplift: 'Angenommene Verbesserung', up_low: 'Klein +15 %', up_mid: 'Mittel +30 %', up_high: 'Groß +50 %',
+      hGrow: 'Eine bessere Website könnte rund {x} Gewinn pro Monat bringen', hStart: 'Wenn Ihre Website {n} zusätzliche {c} pro Monat bringt, sind das rund {x} Gewinn',
+      customer: 'Kunden', customers: 'Kunden', rToday: 'Umsatz heute (geschätzt)', rAfter: 'Mit einer besseren Website', rExtraRev: 'Zusätzlicher Umsatz / Monat',
+      rExtraProfit: 'Zusätzlicher Gewinn / Monat', rBreak: 'Kunden zur Deckung der Kosten', rPayback: 'Amortisiert in', rNet: 'Nettogewinn in 12 Monaten',
+      under1w: 'weniger als einer Woche', weeks: 'etwa {n} Wochen', months: '{n} Monaten', years: 'mehr als 2 Jahren', none: '-',
+      empty: 'Geben Sie Werte über null ein, um Ihr Ergebnis zu sehen.', how: 'So wird gerechnet',
+      howGrow: 'Kunden = Besucher x Anfragequote x Abschlussquote. Umsatz = Kunden x Kundenwert. Eine bessere Website erhöht die Anfragequote um die gewählte Verbesserung, also zusätzlicher Umsatz = Umsatz x Verbesserung. Gewinn = zusätzlicher Umsatz x Marge. Amortisation = Website-Kosten / zusätzlicher Monatsgewinn.',
+      howStart: 'Zusätzlicher Gewinn = zusätzliche Kunden x Kundenwert x Marge. Amortisation = Website-Kosten / zusätzlicher Monatsgewinn. Kunden zur Kostendeckung = Kosten / Gewinn pro Kunde.',
+      disclaimer: 'Schätzungen ausschließlich auf Basis Ihrer Angaben. Keine Garantie für Ergebnisse.',
+      cta: 'Kostenlosen Audit mit diesen Zahlen erhalten', or: 'oder', book: 'Gespräch buchen',
+      fName: 'Ihr Name', fEmail: 'E-Mail', fSend: 'Audit anfordern', sending: 'Wird gesendet...',
+      doneT: 'Danke. Wir haben Ihre Zahlen.', doneB: 'Wir prüfen Ihre Situation und antworten innerhalb eines Werktags.', doneBook: 'Lieber jetzt sprechen? Gespräch buchen',
+      err: 'Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut.', errField: 'Bitte geben Sie Ihren Namen und eine gültige E-Mail-Adresse an.', note: 'Kein Spam. Wir nutzen dies nur, um Ihnen den Audit zu senden.'
     }
   };
 
@@ -351,7 +372,7 @@
       .catch(function () { err.textContent = L.err; btn.disabled = false; btn.textContent = L.fSend; });
   }
 
-  function currentLang() { return (document.documentElement.getAttribute('lang') || 'en').slice(0, 2) === 'fr' ? 'fr' : 'en'; }
+  function currentLang() { var l = (document.documentElement.getAttribute('lang') || 'en').slice(0, 2); return T[l] ? l : 'en'; }
 
   function init() {
     lang = currentLang(); build();

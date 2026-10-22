@@ -104,9 +104,29 @@ test('payback wording is human and bilingual', () => {
   assert.match(roi.paybackText(0.5, fr), /semaines/);
 });
 
-test('every translation key exists in both languages', () => {
-  assert.deepEqual(Object.keys(roi.T.en).sort(), Object.keys(roi.T.fr).sort());
-  for (const k of Object.keys(roi.T.en)) assert.ok(roi.T.fr[k] !== undefined && roi.T.fr[k] !== '', 'missing fr: ' + k);
+test('every translation key exists in every language (en, fr, de)', () => {
+  for (const lang of ['fr', 'de']) {
+    assert.deepEqual(Object.keys(roi.T.en).sort(), Object.keys(roi.T[lang]).sort(), lang);
+    for (const k of Object.keys(roi.T.en)) assert.ok(roi.T[lang][k] !== undefined && roi.T[lang][k] !== '', `missing ${lang}: ${k}`);
+  }
+});
+
+test('site dictionaries (i18n.js): en, fr and de have exactly the same keys, none empty', async () => {
+  const fs = await import('node:fs');
+  const src = fs.readFileSync(new URL('../i18n.js', import.meta.url), 'utf8');
+  const i = src.indexOf('{', src.indexOf('s={en:'));
+  let depth = 0, end = -1;
+  for (let j = i; j < src.length; j++) {
+    const c = src[j];
+    if (c === '"' || c === "'") { const q = c; j++; while (j < src.length && src[j] !== q) { if (src[j] === '\\') j++; j++; } continue; }
+    if (c === '{') depth++; else if (c === '}') { depth--; if (!depth) { end = j; break; } }
+  }
+  const d = new Function('return ' + src.slice(i, end + 1))();
+  assert.deepEqual(Object.keys(d).sort(), ['de', 'en', 'fr']);
+  for (const lang of ['fr', 'de']) {
+    assert.deepEqual(Object.keys(d[lang]).sort(), Object.keys(d.en).sort(), lang + ' keys differ from en');
+    for (const [k, v] of Object.entries(d[lang])) assert.ok(String(v).trim(), `${lang}.${k} is empty`);
+  }
 });
 
 test('presets produce sensible, finite examples', () => {
