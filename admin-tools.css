@@ -1,0 +1,63 @@
+/* admin-tools.css — Team, My account, Campaign links, A/B tests, signed-in user, role-based hiding. */
+.login-hint{ font-size:.78rem; color:var(--crm-muted); margin:-4px 0 14px; }
+#loginEmail{ margin-bottom:10px; }
+
+/* role-based visibility (the server enforces every permission; this only tidies the UI) */
+body:not([data-role="owner"]) .owner-only{ display:none !important; }
+body[data-role="sales"] #exportLeadsBtn, body[data-role="sales"] #ctExport, body[data-role="sales"] #exportSubsBtn,
+body[data-role="sales"] #broadcastBtn, body[data-role="sales"] #ctCampaign, body[data-role="sales"] #ctImport, body[data-role="sales"] #leadDeleteBtn,
+body[data-role="sales"] [onclick*="__deleteLead"], body[data-role="sales"] [onclick*="__deleteSubscriber"], body[data-role="sales"] [onclick*="__revDelete"],
+body[data-role="viewer"] #exportLeadsBtn, body[data-role="viewer"] #ctExport, body[data-role="viewer"] #exportSubsBtn,
+body[data-role="viewer"] #broadcastBtn, body[data-role="viewer"] #ctCampaign, body[data-role="viewer"] #ctImport, body[data-role="viewer"] #leadDeleteBtn,
+body[data-role="viewer"] [onclick*="__delete"], body[data-role="viewer"] [onclick*="__revDelete"], body[data-role="viewer"] .notes-input,
+body[data-role="viewer"] #anEmail{ display:none !important; }
+
+.side-user{ display:flex; align-items:center; gap:10px; padding:8px 10px 10px; margin-bottom:4px; border-bottom:1px solid var(--crm-line-soft); min-height:44px; }
+.side-user:empty{ display:none; }
+.su-avatar{ width:30px; height:30px; flex:0 0 30px; border-radius:50%; background:linear-gradient(135deg,#334155,#475569); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:.8rem; color:#fff; }
+.su-text{ display:flex; flex-direction:column; min-width:0; line-height:1.2; }
+.su-text b{ font-size:.84rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.su-text small{ font-size:.7rem; color:var(--crm-muted); }
+.crm-shell.collapsed .side-user{ justify-content:center; padding:8px 0 10px; }
+
+.must-change{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:12px 16px; margin-bottom:18px; border-radius:12px; background:rgba(245,165,36,.12); border:1px solid rgba(245,165,36,.3); color:#fcd34d; font-size:.88rem; }
+
+.tl-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; margin-bottom:18px; }
+@media(max-width:900px){ .tl-grid{ grid-template-columns:minmax(0,1fr); } }
+.tl-card{ background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.02)); border:1px solid var(--crm-line); border-radius:16px; padding:20px; min-width:0; box-shadow:inset 0 1px 0 rgba(255,255,255,.06); margin-bottom:18px; }
+.tl-grid .tl-card{ margin-bottom:0; }
+.tl-card h3{ margin:0 0 6px; font-size:1rem; font-family:var(--font-body); }
+.muted{ color:var(--crm-muted); } .small{ font-size:.8rem; }
+.tl-card p{ font-size:.86rem; line-height:1.55; }
+.tl-form{ display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; align-items:center; }
+.tl-form.col{ flex-direction:column; align-items:stretch; }
+.tl-form label{ display:flex; flex-direction:column; gap:6px; font-size:.8rem; font-weight:600; color:var(--crm-muted); }
+.tl-form input, .tl-form select, .tl-form textarea{ background:rgba(0,0,0,.25); border:1px solid var(--crm-line); color:var(--crm-text); border-radius:10px; padding:10px 12px; font:500 .88rem var(--font-body); min-width:0; }
+.tl-form input:focus, .tl-form select:focus, .tl-form textarea:focus{ outline:none; border-color:#818cf8; box-shadow:0 0 0 3px rgba(99,102,241,.2); }
+.tl-form:not(.col) input, .tl-form:not(.col) select{ flex:1 1 160px; }
+.tl-row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.tl-chips{ display:flex; flex-wrap:wrap; gap:6px; }
+.tl-chip{ border:1px solid var(--crm-line); background:transparent; color:var(--crm-muted); padding:7px 12px; border-radius:100px; font:600 .78rem var(--font-body); cursor:pointer; }
+.tl-chip.on{ background:rgba(99,102,241,.22); color:#fff; border-color:rgba(129,140,248,.45); }
+.tl-out{ font-family:var(--font-mono); font-size:.82rem; line-height:1.5; word-break:break-all; padding:14px; border-radius:12px; background:rgba(0,0,0,.3); border:1px dashed rgba(129,140,248,.35); margin:10px 0 12px; color:#c7d2fe; }
+.tl-actions{ display:flex; flex-wrap:wrap; gap:6px; }
+.tl-saved{ display:flex; align-items:center; gap:6px; padding:6px 0; border-bottom:1px solid var(--crm-line-soft); }
+.tl-saved code{ flex:1; min-width:0; font-size:.74rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--crm-muted); }
+.tl-roles{ margin:6px 0 0; padding-left:18px; font-size:.86rem; line-height:1.8; color:var(--crm-muted); }
+.tl-roles b{ color:var(--crm-text); }
+.tl-secret{ display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-top:14px; padding:14px; border-radius:12px; background:rgba(16,185,129,.1); border:1px solid rgba(16,185,129,.3); }
+.tl-secret div{ display:flex; flex-direction:column; flex:1 1 220px; } .tl-secret small{ color:var(--crm-muted); font-size:.76rem; }
+.tl-secret code{ font-family:var(--font-mono); font-size:1rem; padding:6px 10px; border-radius:8px; background:rgba(0,0,0,.35); color:#6ee7b7; letter-spacing:.04em; }
+.tl-pill{ display:inline-block; padding:2px 9px; border-radius:100px; font-size:.7rem; font-weight:700; background:rgba(255,255,255,.08); color:var(--crm-muted); }
+.tl-pill.ok{ background:rgba(16,185,129,.15); color:#6ee7b7; } .tl-pill.off{ background:rgba(148,163,184,.12); color:#94a3b8; } .tl-pill.warn{ background:rgba(245,165,36,.15); color:#fcd34d; }
+.tm-role{ background:rgba(0,0,0,.25); border:1px solid var(--crm-line); color:var(--crm-text); border-radius:8px; padding:6px 8px; }
+
+.ab-test{ padding:16px 0; border-bottom:1px solid var(--crm-line-soft); }
+.ab-test:last-child{ border-bottom:0; }
+.ab-head{ display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:10px; }
+.ab-head .small{ margin-top:4px; }
+.ab-row{ display:grid; grid-template-columns:22px minmax(0,1fr) 56px 90px; align-items:center; gap:10px; font-size:.84rem; margin:6px 0; }
+.ab-row small{ color:var(--crm-muted); text-align:right; }
+.ab-bar{ height:10px; border-radius:100px; background:rgba(255,255,255,.06); overflow:hidden; }
+.ab-bar i{ display:block; height:100%; border-radius:100px; background:linear-gradient(90deg,#6366f1,#2dd4bf); }
+.tl-card a{ color:#a5b4fc; } .tl-card a:hover{ color:#c7d2fe; }

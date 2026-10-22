@@ -61,7 +61,10 @@ import {
   recordCampaignSent
 } from '../lib/contacts.js';
 import { rateLimit, clientIp } from '../lib/rate-limit.js';
-import { getAnalytics, getRecentJourneys } from '../lib/analytics.js';
+import { getAnalytics, getRecentJourneys, getJourneySummaries } from '../lib/analytics.js';
+import { scoreLead } from '../lib/lead-score.js';
+import { createTest, setTestStatus, deleteTest, listTestsWithResults } from '../lib/ab.js';
+import { can, login as staffLogin, userForToken, logout as staffLogout, listStaff, createStaff, updateStaff, resetStaffPassword, deleteStaff, changeOwnPassword } from '../lib/staff.js';
 import { sendWeeklyReport } from '../lib/analytics-report.js';
 import crypto from 'node:crypto';
 
@@ -112,9 +115,24 @@ function clearFailures(ip) {
   }
 }
 
+function bearerOf(req) {
+  return String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+}
+
+// Owner (ADMIN_PASSWORD) or a staff session token ("st_..."). Returns { ok, user } or { ok:false, error }.
+async function resolveUser(req) {
+  const token = bearerOf(req);
+  if (token.startsWith('st_')) {
+    if (!process.env.TURSO_DATABASE_URL) return { ok: false, error: 'Database not configured' };
+    const user = await userForToken(token);
+    return user ? { ok: true, user, staff: true } : { ok: false, error: 'Session expired, please log in again' };
+  }
+  const v = verifyAuth(req);
+  return v.ok ? { ok: true, user: { id: 0, name: 'Owner', email: '', role: 'owner' } } : v;
+}
+
 function verifyAuth(req) {
-  const auth = req.headers.authorization || '';
-  const token = auth.replace(/^Bearer\s+/i, '');
+  const token = bearerOf(req);
   const password = process.env.ADMIN_PASSWORD;
 
   if (!password) {
@@ -130,6 +148,13 @@ function verifyAuth(req) {
   }
 
   return { ok: true };
+}
+
+// Attach an explainable lead score (incl. the visitor's website journey when known) to CRM rows.
+async function withScores(rows) {
+  let journeys = new Map();
+  try { journeys = await getJourneySummaries(rows.map((r) => r.analytics_session)); } catch (e) { /* analytics not set up yet */ }
+  return rows.map((r) => { const s = scoreLead(r, journeys.get(r.analytics_session) || null); return { ...r, score: s.score, tier: s.tier, score_reasons: s.reasons, journey: journeys.get(r.analytics_session) || null }; });
 }
 
 function readParams(req) {
@@ -167,12 +192,30 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many failed attempts — please wait a few minutes and try again.' });
   }
 
-  const auth = verifyAuth(req);
+  // Staff login (email + password) happens before authentication
+  if (req.method === 'POST' && req.body && req.body.action === 'login') {
+    if (!process.env.TURSO_DATABASE_URL) return res.status(503).json({ error: 'Database not configured' });
+    const s = await staffLogin(req.body.email, req.body.password);
+    if (!s) { recordFailure(ip); return res.status(401).json({ error: 'Wrong email or password' }); }
+    clearFailures(ip);
+    return res.status(200).json(s);
+  }
+
+  const auth = await resolveUser(req);
   if (!auth.ok) {
     recordFailure(ip);
     return res.status(401).json({ error: auth.error });
   }
   clearFailures(ip);
+  const me = auth.user;
+
+  // Role check on every request (server-side; the UI only hides what a role cannot use)
+  {
+    const ps = readParams(req);
+    const op = req.method === 'GET' ? { kind: ps.get('export') ? 'export' : 'read' } : { kind: 'action', action: (req.body || {}).action };
+    if (req.method === 'POST' && (req.body || {}).action === 'send_analytics_report') op.action = 'send_analytics_report';
+    if (!can(me.role, op)) return res.status(403).json({ error: 'Your role (' + me.role + ') cannot do this' });
+  }
 
   if (!process.env.TURSO_DATABASE_URL) {
     return res.status(503).json({
@@ -274,6 +317,15 @@ export default async function handler(req, res) {
         return res.status(200).json({ reviews: rows, total, pending, invites });
       }
 
+      if (view === 'ab_tests') {
+        return res.status(200).json({ tests: await listTestsWithResults() });
+      }
+
+      // Who is logged in (role drives what the CRM shows)
+      if (view === 'me') {
+        return res.status(200).json({ user: me });
+      }
+
       // Website analytics (first-party): range = day | week | month | quarter
       if (view === 'analytics') {
         return res.status(200).json(await getAnalytics(params.get('range') || 'week'));
@@ -298,8 +350,17 @@ export default async function handler(req, res) {
       const industry = params.get('industry') || '';
       const country = params.get('country') || '';
 
-      const submissions = await getSubmissions({ limit, offset, unread: unreadOnly, status, search, industry, country });
       const total = await getSubmissionCount({ unread: unreadOnly, status, search, industry, country });
+      const tierFilter = params.get('tier') || '';
+      let submissions;
+      if (params.get('sort') === 'score' || tierFilter) {
+        // rank the whole filtered set by score (newest 3000), then page
+        let all = await withScores(await getSubmissions({ limit: 3000, offset: 0, unread: unreadOnly, status, search, industry, country }));
+        if (tierFilter) all = all.filter((r) => r.tier === tierFilter);
+        if (params.get('sort') === 'score') all.sort((a, b) => b.score - a.score || String(b.created_at).localeCompare(String(a.created_at)));
+        return res.status(200).json({ submissions: all.slice(offset, offset + limit), total: tierFilter ? all.length : total, limit, offset });
+      }
+      submissions = await withScores(await getSubmissions({ limit, offset, unread: unreadOnly, status, search, industry, country }));
 
       return res.status(200).json({
         submissions,
@@ -318,6 +379,28 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'action is required' });
       }
 
+      // ---- Account / team ----
+      if (action === 'logout') { if (auth.staff) await staffLogout(bearerOf(req)); return res.status(200).json({ success: true }); }
+      if (action === 'change_password') {
+        if (!auth.staff) return res.status(400).json({ error: 'The owner password is set in Vercel (ADMIN_PASSWORD)' });
+        try { await changeOwnPassword(me.id, body.current, body.next); }
+        catch (e) { if (e.status) return res.status(e.status).json({ error: e.message }); throw e; }
+        return res.status(200).json({ success: true, message: 'Password changed' });
+      }
+      try {
+        if (action === 'team_list') return res.status(200).json({ team: await listStaff() });
+        if (action === 'team_create') { const r = await createStaff({ email: body.email, name: body.name, role: body.role }); return res.status(200).json({ success: true, password: r.password }); }
+        if (action === 'team_update') { await updateStaff(parseInt(body.id), { role: body.role, active: body.active, name: body.name }); return res.status(200).json({ success: true }); }
+        if (action === 'team_reset_password') { const r = await resetStaffPassword(parseInt(body.id)); return res.status(200).json({ success: true, password: r.password }); }
+        if (action === 'team_delete') { await deleteStaff(parseInt(body.id)); return res.status(200).json({ success: true }); }
+        if (action === 'ab_create') { const id = await createTest(body); return res.status(200).json({ success: true, id }); }
+        if (action === 'ab_status') { await setTestStatus(parseInt(body.id), body.status); return res.status(200).json({ success: true }); }
+        if (action === 'ab_delete') { await deleteTest(parseInt(body.id)); return res.status(200).json({ success: true }); }
+      } catch (e) {
+        if (e.status) return res.status(e.status).json({ error: e.message });
+        throw e;
+      }
+
       // ---- Analytics: email the weekly report now (same email the Monday cron sends) ----
       if (action === 'send_analytics_report') {
         if (!process.env.RESEND_API_KEY) return res.status(503).json({ error: 'RESEND_API_KEY is not set, so emails cannot be sent' });
@@ -334,9 +417,10 @@ export default async function handler(req, res) {
 
       if (action === 'get') {
         if (!body.id) return res.status(400).json({ error: 'id required' });
-        const submission = await getSubmission(body.id);
-        if (!submission) return res.status(404).json({ error: 'Submission not found' });
+        const found = await getSubmission(body.id);
+        if (!found) return res.status(404).json({ error: 'Submission not found' });
         await markAsRead(body.id);
+        const [submission] = await withScores([found]);
         return res.status(200).json({ submission });
       }
 

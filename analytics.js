@@ -217,6 +217,8 @@
     } catch (e) {}
   }
 
+  window.__csPulse = function (events) { send(events); };   // used by the A/B block below
+
   // 1. page view
   var utm = {};
   try {
@@ -289,6 +291,14 @@
   var f = window.fetch;
   if (f) {
     window.fetch = function (input, init) {
+      // link a form submission to this visit (anonymous session id) so the CRM can score the lead by its journey
+      try {
+        var u0 = typeof input === 'string' ? input : (input && input.url) || '';
+        if (u0.indexOf('/api/contact') !== -1 && init && typeof init.body === 'string' && init.body.charAt(0) === '{') {
+          var b0 = JSON.parse(init.body);
+          if (b0 && !b0._asid) { b0._asid = session(); init = Object.assign({}, init, { body: JSON.stringify(b0) }); arguments[1] = init; }
+        }
+      } catch (x) {}
       var p = f.apply(this, arguments);
       try {
         var url = typeof input === 'string' ? input : (input && input.url) || '';
@@ -303,4 +313,43 @@
       return p;
     };
   }
+})();
+
+// ---- A/B tests (configured in the CRM: Tools > A/B tests) ----------------------------------------
+// Version B replaces the text of one element. Visitors are split 50/50 and keep their group (only the
+// letter "a"/"b" is stored). English pages only, so translations never fight a variant.
+// Preview a variant without counting it: add ?ab_preview=<test id> to the page address.
+(function () {
+  'use strict';
+  try {
+    var html = document.documentElement;
+    if ((html.getAttribute('lang') || 'en').slice(0, 2) !== 'en') return;
+    var KEY = 'cs_ab_cfg', now = Date.now();
+    function norm(p) { p = (p || '/').split('#')[0].split('?')[0].replace(/\/index\.html$/i, '/').replace(/\.html$/i, '').replace(/\/+$/, ''); return p || '/'; }
+    var here = norm(location.pathname);
+    var preview = (location.search.match(/[?&]ab_preview=(\d+)/) || [])[1];
+    function apply(tests, record) {
+      (tests || []).forEach(function (t) {
+        if (norm(t.page) !== here) return;
+        var el; try { el = document.querySelector(t.sel); } catch (e) { return; }
+        if (!el) return;
+        var v;
+        if (preview) v = String(t.id) === preview ? 'b' : 'a';
+        else {
+          try { v = localStorage.getItem('cs_ab_' + t.id); } catch (e) {}
+          if (v !== 'a' && v !== 'b') { v = Math.random() < 0.5 ? 'a' : 'b'; try { localStorage.setItem('cs_ab_' + t.id, v); } catch (e) {} }
+        }
+        if (v === 'b' && el.getAttribute('data-ab') !== String(t.id)) { el.textContent = t.b; el.setAttribute('data-ab', String(t.id)); }
+        if (record && !preview && window.__csPulse) window.__csPulse([{ t: 'exp', p: location.pathname, tg: String(t.id), k: v }]);
+      });
+    }
+    var cached = null;
+    try { cached = JSON.parse(sessionStorage.getItem(KEY) || 'null'); } catch (e) {}
+    if (cached && now - cached.t < 5 * 60 * 1000) { apply(cached.tests, true); return; }
+    fetch('/api/pulse?ab=1', { credentials: 'omit' }).then(function (r) { return r.ok ? r.json() : { tests: [] }; }).then(function (d) {
+      var tests = (d && d.tests) || [];
+      try { sessionStorage.setItem(KEY, JSON.stringify({ t: Date.now(), tests: tests })); } catch (e) {}
+      apply(tests, true);
+    }).catch(function () {});
+  } catch (e) {}
 })();

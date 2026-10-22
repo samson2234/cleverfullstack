@@ -35,6 +35,9 @@ import {
 } from '../lib/email.js';
 import { rateLimit } from '../lib/rate-limit.js';
 import { isBotPayload } from '../lib/honeypot.js';
+import { scoreLead } from '../lib/lead-score.js';
+import { getJourneySummaries } from '../lib/analytics.js';
+import { notifyHotLead } from '../lib/hot-lead.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -99,8 +102,17 @@ export default async function handler(req, res) {
     source: body.source || 'cleverstack.dev contact form',
     utm_source: (body.utm_source || '').trim(),
     utm_medium: (body.utm_medium || '').trim(),
-    utm_campaign: (body.utm_campaign || '').trim()
+    utm_campaign: (body.utm_campaign || '').trim(),
+    analytics_session: String(body._asid || '').replace(/[^a-z0-9]/gi, '').slice(0, 40)
   };
+
+  // Lead score (budget, ROI numbers, completeness, market, and the visitor's journey on the site)
+  let lead = scoreLead(submission, null);
+  if (submission.analytics_session && process.env.TURSO_DATABASE_URL) {
+    try { const j = (await getJourneySummaries([submission.analytics_session])).get(submission.analytics_session); if (j) lead = scoreLead(submission, j); }
+    catch (err) { console.error('Journey lookup failed:', err.message); }
+  }
+  submission.lead = lead;
 
   let dbSaved = false;
   let submissionId = null;
@@ -127,7 +139,7 @@ export default async function handler(req, res) {
     try {
       const result = await sendResendEmail({
         to: ownerEmail(),
-        subject: 'New Contact: ' + submission.name + ' — CleverStack',
+        subject: (lead.tier === 'hot' ? '🔥 HOT lead (' + lead.score + '/100): ' : 'New Contact: ') + submission.name + ' — CleverStack',
         html: contactNotificationTemplate(submission),
         replyTo: submission.email
       });
@@ -144,6 +156,9 @@ export default async function handler(req, res) {
       console.error('Resend request failed:', err.message);
     }
   }
+
+  // Hot lead: optional instant WhatsApp ping (best effort, never blocks)
+  if (lead.tier === 'hot') { try { await notifyHotLead(submission, lead); } catch (err) { console.error('Hot lead ping failed:', err.message); } }
 
   // LAYER 3: Auto-responder — send confirmation to the submitter
   let autoResponded = false;

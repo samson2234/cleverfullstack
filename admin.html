@@ -226,7 +226,69 @@
     .lead-grid{ grid-template-columns:1fr; }
     .toolbar-right{ margin-left:0; width:100%; }
   }
+
+  /* ---- sidebar layout (Mailchimp-style) ---- */
+  .crm-shell{ display:grid; grid-template-columns:248px minmax(0,1fr); min-height:100vh; transition:grid-template-columns .22s ease; }
+  .crm-shell.collapsed{ grid-template-columns:76px minmax(0,1fr); }
+  .crm-side{ position:sticky; top:0; height:100vh; display:flex; flex-direction:column; gap:6px; padding:16px 12px; overflow-y:auto; overflow-x:hidden;
+    background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015)); border-right:1px solid var(--crm-line); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); z-index:120; }
+  .side-brand{ display:flex; align-items:center; gap:10px; padding:4px 6px 14px; margin-bottom:4px; border-bottom:1px solid var(--crm-line-soft); }
+  .side-brand .brand-mark{ width:34px; height:34px; flex:0 0 34px; border-radius:10px; background:var(--crm-grad); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; color:#fff; font-size:.95rem; }
+  .side-name{ font-family:var(--font-display); font-weight:700; font-size:1.02rem; white-space:nowrap; }
+  .side-name em{ font-style:normal; font-family:var(--font-body); background:var(--crm-grad); color:#fff; padding:2px 8px; border-radius:100px; font-size:.64rem; font-weight:700; letter-spacing:.05em; margin-left:4px; vertical-align:2px; }
+  .side-collapse{ margin-left:auto; width:28px; height:28px; flex:0 0 28px; border-radius:8px; border:1px solid var(--crm-line); background:transparent; color:var(--crm-muted); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .side-collapse:hover{ color:#fff; background:rgba(255,255,255,.06); }
+  .side-collapse svg{ width:15px; height:15px; transition:transform .22s; }
+  .crm-side .tabs{ display:flex; flex-direction:column; gap:2px; margin:0; flex-wrap:nowrap; }
+  .nav-group{ font-size:.66rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:rgba(154,160,180,.7); padding:14px 12px 6px; white-space:nowrap; }
+  .crm-side .tab{ width:100%; justify-content:flex-start; gap:12px; padding:10px 12px; border-radius:10px; border:1px solid transparent; font-size:.88rem; color:var(--crm-muted); background:transparent; box-shadow:none; white-space:nowrap; position:relative; }
+  .crm-side .tab svg, .side-link svg{ width:18px; height:18px; flex:0 0 18px; }
+  .crm-side .tab:hover{ color:var(--crm-text); background:rgba(255,255,255,.05); }
+  .crm-side .tab.active{ color:#fff; background:linear-gradient(90deg,rgba(99,102,241,.28),rgba(45,212,191,.10)); border-color:rgba(129,140,248,.28); box-shadow:inset 0 1px 0 rgba(255,255,255,.06); }
+  .crm-side .tab.active::before{ content:""; position:absolute; left:-12px; top:8px; bottom:8px; width:3px; border-radius:0 3px 3px 0; background:var(--crm-grad); }
+  .crm-side .tab .badge{ margin-left:auto; background:rgba(251,113,133,.9); }
+  .side-foot{ margin-top:auto; display:flex; flex-direction:column; gap:2px; padding-top:12px; border-top:1px solid var(--crm-line-soft); }
+  .side-link{ display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px; color:var(--crm-muted); background:transparent; border:0; font:600 .86rem var(--font-body); cursor:pointer; text-decoration:none; white-space:nowrap; text-align:left; }
+  .side-link:hover{ color:var(--crm-text); background:rgba(255,255,255,.05); }
+  .crm-shell.collapsed .tab-label, .crm-shell.collapsed .side-name, .crm-shell.collapsed .nav-group, .crm-shell.collapsed .tab .badge{ display:none; }
+  .crm-shell.collapsed .crm-side .tab, .crm-shell.collapsed .side-link{ justify-content:center; padding:11px 0; }
+  .crm-shell.collapsed .side-brand{ flex-direction:column; gap:10px; }
+  .crm-shell.collapsed .side-collapse{ margin-left:0; }
+  .crm-shell.collapsed .side-collapse svg{ transform:rotate(180deg); }
+  .crm-shell.collapsed .nav-group + .tab{ margin-top:14px; }
+  .crm-main{ min-width:0; display:flex; flex-direction:column; }
+  .crm-main .admin-header{ flex-direction:row; gap:14px; justify-content:flex-start; padding:14px 28px; }
+  .crm-title{ margin:0; font-family:var(--font-display); font-size:1.3rem; letter-spacing:-.01em; }
+  .crm-main .header-actions{ margin-left:auto; display:flex; gap:8px; }
+  .side-open{ display:none; width:38px; height:38px; border-radius:10px; border:1px solid var(--crm-line); background:transparent; color:var(--crm-text); cursor:pointer; align-items:center; justify-content:center; }
+  .side-open svg{ width:20px; height:20px; }
+  .crm-main .admin-body{ max-width:1320px; width:100%; margin:0 auto; padding:26px 28px 60px; }
+  .crm-scrim{ display:none; }
+  @media(max-width:900px){
+    .crm-shell, .crm-shell.collapsed{ grid-template-columns:minmax(0,1fr); }
+    .crm-side{ position:fixed; left:0; top:0; bottom:0; width:270px; transform:translateX(-102%); transition:transform .25s ease; background:#101019; box-shadow:20px 0 50px -20px rgba(0,0,0,.8); }
+    .crm-shell.drawer-open .crm-side{ transform:none; }
+    .crm-shell.drawer-open .crm-scrim{ display:block; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:110; }
+    .crm-shell.collapsed .tab-label, .crm-shell.collapsed .side-name, .crm-shell.collapsed .nav-group{ display:revert; }
+    .side-collapse{ display:none; }
+    .side-open{ display:flex; }
+    .crm-main .admin-header{ padding:12px 16px; }
+    .crm-main .admin-body{ padding:20px 14px 50px; }
+    .crm-title{ font-size:1.12rem; }
+  }
+
+  /* ---- lead score ---- */
+  .score-pill{ display:inline-flex; align-items:center; justify-content:center; min-width:34px; padding:2px 8px; border-radius:100px; font-size:.72rem; font-weight:800; font-variant-numeric:tabular-nums; margin-right:8px; border:1px solid transparent; }
+  .score-pill.hot{ background:rgba(244,63,94,.16); color:#fda4af; border-color:rgba(244,63,94,.35); }
+  .score-pill.warm{ background:rgba(245,165,36,.15); color:#fcd34d; border-color:rgba(245,165,36,.3); }
+  .score-pill.cold{ background:rgba(148,163,184,.12); color:#94a3b8; }
+  .kc-top .score-pill{ margin:0 0 0 auto; }
+  .score-head{ display:flex; align-items:center; gap:4px; margin-bottom:8px; }
+  .score-head .muted{ color:var(--crm-muted); font-size:.82rem; margin-left:6px; }
+  .score-why{ list-style:none; margin:0; padding:0; display:grid; gap:4px; font-size:.84rem; }
+  .score-why li{ display:flex; gap:10px; } .score-why li span{ color:#6ee7b7; font-weight:700; min-width:30px; font-variant-numeric:tabular-nums; }
 </style>
+<link rel="stylesheet" href="admin-tools.css?v=0b0ed417">
 <link rel="stylesheet" href="admin-analytics.css?v=bd46682f">
 </head><body>
 <!-- LOGIN -->
@@ -236,34 +298,59 @@
     <h1>CleverStack CRM</h1>
     <p>Leads, Subscribers &amp; Outreach</p>
     <div class="login-error" id="loginError"></div>
-    <input type="password" id="loginPassword" placeholder="Enter admin password" autofocus>
+    <input type="email" id="loginEmail" placeholder="Email (team members only)" autocomplete="username">
+    <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" autofocus>
+    <p class="login-hint">Owner: leave the email empty and use the admin password.</p>
     <button class="btn" id="loginBtn">Sign In</button>
   </div>
 </div>
 
 <!-- DASHBOARD -->
 <div class="admin-dashboard" id="dashboard">
-  <header class="admin-header">
-    <div class="brand">
-      <span class="brand-mark">CS</span>
-      <h2>CleverStack <span>CRM</span></h2>
+  <div class="crm-shell" id="crmShell">
+  <aside class="crm-side" id="crmSide" aria-label="CRM navigation">
+    <div class="side-brand"><span class="brand-mark">CS</span><span class="side-name">CleverStack <em>CRM</em></span>
+      <button class="side-collapse" id="sideCollapse" type="button" aria-label="Collapse sidebar" title="Collapse sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg></button></div>
+    <nav class="tabs">
+      <div class="nav-group">Overview</div>
+      <button class="tab active" data-view="dashboard" title="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span class="tab-label">Dashboard</span></button>
+      <button class="tab" data-view="analytics" title="Analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg><span class="tab-label">Analytics</span></button>
+      <div class="nav-group">Audience</div>
+      <button class="tab" data-view="leads" title="Leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg><span class="tab-label">Leads</span><span class="badge" id="unreadBadge" style="display:none;">0</span></button>
+      <button class="tab" data-view="contacts" title="Clients & Contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="tab-label">Clients &amp; Contacts</span></button>
+      <button class="tab" data-view="subscribers" title="Subscribers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span class="tab-label">Subscribers</span><span class="badge" id="subsBadge" style="display:none;">0</span></button>
+      <div class="nav-group">Engagement</div>
+      <button class="tab" data-view="reviews" title="Reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="tab-label">Reviews</span><span class="badge" id="revBadge" style="display:none;">0</span></button>
+      <button class="tab" data-view="email_log" title="Email Log"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg><span class="tab-label">Email Log</span></button>
+      <div class="nav-group">Tools</div>
+      <button class="tab" data-view="utm" title="Campaign links"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="tab-label">Campaign links</span></button>
+      <button class="tab" data-view="abtests" title="A/B tests"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg><span class="tab-label">A/B tests</span></button>
+      <div class="nav-group">Settings</div>
+      <button class="tab owner-only" data-view="team" title="Team"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg><span class="tab-label">Team</span></button>
+      <button class="tab" data-view="account" title="My account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg><span class="tab-label">My account</span></button>
+    </nav>
+    <div class="side-foot">
+      <div class="side-user" id="sideUser"></div>
+      <a class="side-link" href="/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg><span class="tab-label">View website</span></a>
+      <button class="side-link" id="logoutBtn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span class="tab-label">Log out</span></button>
     </div>
+  </aside>
+  <div class="crm-scrim" id="crmScrim"></div>
+  <div class="crm-main">
+  <header class="admin-header">
+    <button class="side-open" id="sideOpen" type="button" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    <h1 class="crm-title" id="crmTitle">Dashboard</h1>
     <div class="header-actions">
       <button class="btn-sm" id="refreshBtn"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Refresh</button>
-      <button class="btn-sm ghost" id="logoutBtn">Logout</button>
     </div>
   </header>
 
   <main class="admin-body">
-    <nav class="tabs">
-      <button class="tab active" data-view="dashboard">Dashboard</button>
-      <button class="tab" data-view="analytics">Analytics</button>
-      <button class="tab" data-view="leads">Leads <span class="badge" id="unreadBadge" style="display:none;">0</span></button>
-      <button class="tab" data-view="contacts">Clients &amp; Contacts</button>
-      <button class="tab" data-view="subscribers">Subscribers <span class="badge" id="subsBadge" style="display:none;">0</span></button>
-      <button class="tab" data-view="reviews">Reviews <span class="badge" id="revBadge" style="display:none;">0</span></button>
-      <button class="tab" data-view="email_log">Email Log</button>
-    </nav>
+    <div class="must-change" id="mustChange" style="display:none;">You are using a temporary password. <button class="btn-sm primary" type="button" onclick="document.querySelector('.tab[data-view=account]').click()">Choose your own</button></div>
+    <section class="view" id="view-utm"></section>
+    <section class="view" id="view-abtests"></section>
+    <section class="view" id="view-team"></section>
+    <section class="view" id="view-account"></section>
 
     <!-- ANALYTICS VIEW (rendered by admin-analytics.js) -->
     <section class="view" id="view-analytics"></section>
@@ -298,6 +385,8 @@
         <input type="text" class="search-box" id="leadSearch" placeholder="Search leads by name, email, company, country, industry...">
         <select class="filter-select" id="filterCountry"><option value="all">All countries</option></select>
         <select class="filter-select" id="filterIndustry"><option value="all">All industries</option></select>
+        <select class="filter-select" id="leadSort" aria-label="Sort leads"><option value="">Newest first</option><option value="score">Hottest first</option></select>
+        <select class="filter-select" id="leadTier" aria-label="Lead score"><option value="">All scores</option><option value="hot">🔥 Hot</option><option value="warm">Warm</option><option value="cold">Cold</option></select>
         <div class="status-filter" id="statusFilter">
           <button class="chip active" data-status="">All</button>
           <button class="chip" data-status="new">New</button>
@@ -394,6 +483,8 @@
       </div>
     </section>
   </main>
+  </div>
+</div>
 </div>
 
 <!-- LEAD DETAIL MODAL -->
@@ -415,6 +506,7 @@
       <div class="lead-field"><label>Received</label><div class="lf-val" id="leadCreated">-</div></div>
       <div class="lead-field"><label>Follow-up</label><input type="date" id="leadFollow" onchange="window.__leadFollowChanged()"></div>
       <div class="lead-field"><label>Status</label><select id="leadStatus" onchange="window.__leadStatusChanged()"></select></div>
+      <div class="lead-field full"><label>Lead score</label><div class="lf-val" id="leadScore">-</div></div>
       <div class="lead-field full"><label>Message</label><div class="lf-val" id="leadMessage">-</div></div>
       <div class="lead-field full"><label>Notes</label><div class="lf-val" id="leadNotes">-</div></div>
     </div>
@@ -546,6 +638,7 @@
 
   function $(id){ return document.getElementById(id); }
   var toast = $('toast');
+  window.showToast = function(m){ showToast(m); };
   function showToast(msg){
     toast.textContent = msg;
     toast.classList.add('show');
@@ -593,6 +686,20 @@
     return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
   }
 
+
+  // ---------------- SIDEBAR ----------------
+  (function(){
+    var shell = $('crmShell'), title = $('crmTitle');
+    function setTitle(){ var t = document.querySelector('.tab.active .tab-label'); if (t && title) title.textContent = t.textContent; }
+    document.querySelectorAll('.tab').forEach(function(t){ t.addEventListener('click', function(){ var l = t.querySelector('.tab-label'); if (l && title) title.textContent = l.textContent; shell.classList.remove('drawer-open'); }); });
+    try { if (localStorage.getItem('crm_side_collapsed') === '1') shell.classList.add('collapsed'); } catch(e){}
+    $('sideCollapse').addEventListener('click', function(){ shell.classList.toggle('collapsed'); try { localStorage.setItem('crm_side_collapsed', shell.classList.contains('collapsed') ? '1' : '0'); } catch(e){} });
+    $('sideOpen').addEventListener('click', function(){ shell.classList.add('drawer-open'); });
+    $('crmScrim').addEventListener('click', function(){ shell.classList.remove('drawer-open'); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') shell.classList.remove('drawer-open'); });
+    setTitle();
+  })();
+
   // ---------------- TABS ----------------
   var tabs = document.querySelectorAll('.tab');
   tabs.forEach(function(tab){
@@ -604,6 +711,7 @@
       $('view-' + name).classList.add('active');
       if (name === 'dashboard') loadDashboard();
       if (name === 'analytics' && window.CSAnalytics) window.CSAnalytics.load();
+      if (window.CSTools) window.CSTools.load(name);
       if (name === 'leads') loadLeads();
       if (name === 'subscribers') loadSubscribers();
       if (name === 'email_log') loadEmailLog();
@@ -717,6 +825,8 @@
       if (currentIndustry && currentIndustry !== 'all') path += '&industry=' + encodeURIComponent(currentIndustry);
       if (currentCountry && currentCountry !== 'all') path += '&country=' + encodeURIComponent(currentCountry);
       if ($('leadSearch').value.trim()) path += '&q=' + encodeURIComponent($('leadSearch').value.trim());
+      if ($('leadSort').value) path += '&sort=' + encodeURIComponent($('leadSort').value);
+      if ($('leadTier').value) path += '&tier=' + encodeURIComponent($('leadTier').value);
       var data = await apiCall('GET', path);
       leads = data.submissions || [];
       leadTotal = data.total;
@@ -742,6 +852,12 @@
     loadLeads();
   };
 
+  function scorePill(s){
+    if (s.score == null) return '';
+    var lbl = s.tier === 'hot' ? '🔥 ' + s.score : s.score;
+    return '<span class="score-pill ' + s.tier + '" title="Lead score ' + s.score + '/100 (' + s.tier + ')">' + lbl + '</span>';
+  }
+
   function renderLeads(){
     if (!leads.length){
       $('submissionList').innerHTML = '<div class="empty-state"><h4>No leads found</h4><p>Try a different filter or search.</p></div>';
@@ -757,7 +873,7 @@
       html += '<div class="card-main" onclick="window.__openLead(' + s.id + ')">';
       html += '<span class="avatar" style="background:' + avatarColor(s.id) + '">' + initials(s.name) + '</span>';
       html += '<div class="card-body">';
-      html += '<div class="card-top"><span class="card-name">' + escapeHtml(s.name) + '</span><span class="pill ' + meta.cls + '">' + meta.label + '</span>' + (hasFollow ? '<span class="pill followup">Due ' + fmtDate(s.follow_up_date) + '</span>' : '') + '<span class="card-date">' + formatDate(s.created_at) + '</span></div>';
+      html += '<div class="card-top">' + scorePill(s) + '<span class="card-name">' + escapeHtml(s.name) + '</span><span class="pill ' + meta.cls + '">' + meta.label + '</span>' + (hasFollow ? '<span class="pill followup">Due ' + fmtDate(s.follow_up_date) + '</span>' : '') + '<span class="card-date">' + formatDate(s.created_at) + '</span></div>';
       html += '<div class="card-email">' + escapeHtml(s.email) + (s.phone && s.phone !== 'Not provided' ? ' · ' + escapeHtml(s.phone) : '') + '</div>';
       html += '<div class="card-tags">' +
         (s.company ? '<span class="tag tag-co">' + escapeHtml(s.company) + '</span>' : '') +
@@ -788,7 +904,7 @@
   function kanbanCard(s){
     var meta = STATUS_META[s.status || 'new'] || { label:'', cls:'new' };
     return '<div class="kanban-card" draggable="true" data-id="' + s.id + '" onclick="window.__openLead(' + s.id + ')" ondragstart="window.__dragStart(event)">' +
-      '<div class="kc-top"><span class="avatar sm" style="background:' + avatarColor(s.id) + '">' + initials(s.name) + '</span><span class="kc-name">' + escapeHtml(s.name) + '</span></div>' +
+      '<div class="kc-top"><span class="avatar sm" style="background:' + avatarColor(s.id) + '">' + initials(s.name) + '</span><span class="kc-name">' + escapeHtml(s.name) + '</span>' + scorePill(s) + '</div>' +
       (s.industry ? '<div class="tag tag-ind" style="margin-bottom:8px;">' + escapeHtml(s.industry) + '</div>' : '') +
       '<div class="kc-line">' + escapeHtml(s.company || (s.country || '')) + '</div>' +
       '<div class="kc-snip">' + escapeHtml(s.message) + '</div>' +
@@ -958,6 +1074,10 @@
       $('leadSource').textContent = currentLead.source || '-';
       $('leadCreated').textContent = formatDate(currentLead.created_at);
       $('leadMessage').textContent = currentLead.message || '-';
+      $('leadScore').innerHTML = currentLead.score == null ? '-' :
+        '<div class="score-head">' + scorePill(currentLead) + '<b>' + currentLead.score + '/100</b> <span class="muted">' + ({ hot: 'Hot: contact first', warm: 'Warm', cold: 'Cold' })[currentLead.tier] + '</span></div>' +
+        '<ul class="score-why">' + (currentLead.score_reasons || []).map(function(r){ return '<li><span>+' + r.pts + '</span>' + escapeHtml(r.why) + '</li>'; }).join('') + '</ul>' +
+        (currentLead.journey ? '' : '<div class="muted" style="font-size:.78rem;margin-top:6px;">No website journey linked (sent before tracking, or from another device).</div>');
       $('leadNotes').textContent = currentLead.notes || 'No notes yet.';
       var opts = '';
       STATUS_ORDER.forEach(function(st){
@@ -1456,6 +1576,8 @@
     leadOffset = 0;
     loadLeads();
   });
+  $('leadSort').addEventListener('change', function(){ leadOffset = 0; loadLeads(); });
+  $('leadTier').addEventListener('change', function(){ leadOffset = 0; loadLeads(); });
 
   $('toggleViewBtn').addEventListener('click', function(){
     boardMode = !boardMode;
@@ -1508,13 +1630,22 @@
 
   // ---------------- LOGIN / LOGOUT ----------------
   $('loginBtn').addEventListener('click', doLogin);
+  $('loginEmail').addEventListener('keydown', function(e){ if (e.key === 'Enter') $('loginPassword').focus(); });
   $('loginPassword').addEventListener('keydown', function(e){ if (e.key === 'Enter') doLogin(); });
 
   async function doLogin(){
     var pw = $('loginPassword').value.trim();
+    var email = $('loginEmail').value.trim();
     if (!pw){ $('loginError').textContent = 'Enter a password'; $('loginError').style.display = 'block'; return; }
-    token = pw;
     try {
+      if (email) {
+        var r = await fetch(API_BASE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'login', email: email, password: pw }) });
+        var d = await r.json();
+        if (!r.ok) throw new Error(d.error || 'Wrong email or password');
+        token = d.token;
+      } else {
+        token = pw;
+      }
       await apiCall('GET', '?stats=true');
       sessionStorage.setItem('admin_token', token);
       showDashboard();
@@ -1529,10 +1660,13 @@
     $('loginScreen').style.display = 'none';
     $('dashboard').style.display = 'block';
     try { localStorage.setItem('cs_notrack', '1'); } catch (e) {}
+    if (window.CSTools) window.CSTools.loadMe();
     loadDashboard();
   }
 
   $('logoutBtn').addEventListener('click', function(){
+    if (token && token.indexOf('st_') === 0) { try { fetch(API_BASE, { method: 'POST', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'logout' }), keepalive: true }); } catch (e) {} }
+    document.body.removeAttribute('data-role');
     token = '';
     sessionStorage.removeItem('admin_token');
     $('dashboard').style.display = 'none';
@@ -1546,6 +1680,7 @@
     var name = active ? active.getAttribute('data-view') : 'dashboard';
     if (name === 'dashboard') loadDashboard();
       if (name === 'analytics' && window.CSAnalytics) window.CSAnalytics.load();
+      if (window.CSTools) window.CSTools.load(name);
     if (name === 'leads') loadLeads();
     if (name === 'subscribers') loadSubscribers();
     if (name === 'email_log') loadEmailLog();
@@ -1563,4 +1698,5 @@
   }
 })();
 </script>
+<script src="admin-tools.js?v=3195652c" defer></script>
 <script src="admin-analytics.js?v=d8d4c7cf" defer></script></body></html>

@@ -49,6 +49,19 @@ test('no mojibake: no UTF-8 text saved through the wrong encoding (e.g. a checkm
   assert.deepEqual(bad, []);
 });
 
+test('header: every page highlights exactly the section it belongs to', () => {
+  const MAP = { 'index.html': 'index', 'about.html': 'about', 'services.html': 'services', 'portfolio.html': 'portfolio', 'portfolio-detail.html': 'portfolio', 'case-studies.html': 'portfolio', 'reviews.html': 'reviews', 'review.html': 'reviews', 'contact.html': 'contact', 'welcome-back.html': 'contact' };
+  const norm = (href, rel) => (rel.startsWith('blog/') && href === 'index.html') ? 'blog' : (href.replace(/^\.\.\//, '').replace(/\/index\.html$/, '').replace(/\.html$/, '') || 'index');
+  for (const file of htmlFiles(root)) {
+    const rel = path.relative(root, file).replace(/\\/g, '/');
+    const nav = (fs.readFileSync(file, 'utf8').match(/<nav class="main-nav"[^>]*>([\s\S]*?)<\/nav>/) || [])[1];
+    if (!nav) continue;
+    const active = [...nav.matchAll(/<a href="([^"]+)" class="active"/g)].map((m) => norm(m[1], rel));
+    const want = rel.startsWith('blog/') ? 'blog' : MAP[rel];
+    assert.deepEqual(active, want ? [want] : [], `${rel}: active nav ${JSON.stringify(active)}`);
+  }
+});
+
 test('no hard-coded Google Fonts file preloads (their versioned URLs go stale and 404)', () => {
   for (const file of htmlFiles(root)) {
     assert.ok(!/<link rel="preload" as="font"[^>]*fonts\.gstatic\.com/.test(fs.readFileSync(file, 'utf8')), path.relative(root, file) + ': stale font preload');
