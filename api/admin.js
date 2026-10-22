@@ -64,6 +64,8 @@ import { rateLimit, clientIp } from '../lib/rate-limit.js';
 import { getAnalytics, getRecentJourneys, getJourneySummaries } from '../lib/analytics.js';
 import { scoreLead } from '../lib/lead-score.js';
 import { createTest, setTestStatus, deleteTest, listTestsWithResults } from '../lib/ab.js';
+import { listConversations, getConversation, getMessages, addMessage, createConversation, setStatus as setConvStatus, rotateToken, markRead as markConvRead, linkFor, conversationsForSubmission } from '../lib/messages.js';
+import { clientMessageTemplate } from '../lib/email.js';
 import { can, login as staffLogin, userForToken, logout as staffLogout, listStaff, createStaff, updateStaff, resetStaffPassword, deleteStaff, changeOwnPassword } from '../lib/staff.js';
 import { sendWeeklyReport } from '../lib/analytics-report.js';
 import crypto from 'node:crypto';
@@ -148,6 +150,16 @@ function verifyAuth(req) {
   }
 
   return { ok: true };
+}
+
+// Email the client that the team replied (with their private conversation link). Best effort.
+async function notifyClient(conv, staffName, body) {
+  if (!process.env.RESEND_API_KEY || !conv) return { sent: false };
+  try {
+    const link = await linkFor(conv.id, siteUrl());
+    const r = await sendResendEmail({ to: conv.client_email, subject: 'New message about ' + conv.subject + ' — CleverStack', html: clientMessageTemplate(conv.client_name, staffName, body, link) });
+    return { sent: !!r.ok, error: r.ok ? undefined : r.error };
+  } catch (e) { return { sent: false, error: e.message }; }
 }
 
 // Attach an explainable lead score (incl. the visitor's website journey when known) to CRM rows.
@@ -317,6 +329,21 @@ export default async function handler(req, res) {
         return res.status(200).json({ reviews: rows, total, pending, invites });
       }
 
+      if (view === 'inbox') {
+        return res.status(200).json(await listConversations({ status: params.get('status') || '', q: params.get('q') || '', limit: parseInt(params.get('limit')) || 50, offset: parseInt(params.get('offset')) || 0 }));
+      }
+      if (view === 'thread') {
+        const id = parseInt(params.get('id'));
+        const conversation = await getConversation(id);
+        if (!conversation) return res.status(404).json({ error: 'Conversation not found' });
+        const messages = await getMessages(id, parseInt(params.get('after')) || 0);
+        if (conversation.unread_staff && me.role !== 'viewer') { await markConvRead(id, 'staff'); conversation.unread_staff = 0; }
+        return res.status(200).json({ conversation, messages, link: await linkFor(id, siteUrl()) });
+      }
+      if (view === 'lead_conversations') {
+        return res.status(200).json({ conversations: await conversationsForSubmission(parseInt(params.get('id'))) });
+      }
+
       if (view === 'ab_tests') {
         return res.status(200).json({ tests: await listTestsWithResults() });
       }
@@ -393,6 +420,21 @@ export default async function handler(req, res) {
         if (action === 'team_update') { await updateStaff(parseInt(body.id), { role: body.role, active: body.active, name: body.name }); return res.status(200).json({ success: true }); }
         if (action === 'team_reset_password') { const r = await resetStaffPassword(parseInt(body.id)); return res.status(200).json({ success: true, password: r.password }); }
         if (action === 'team_delete') { await deleteStaff(parseInt(body.id)); return res.status(200).json({ success: true }); }
+        if (action === 'msg_send') {
+          const id = parseInt(body.id);
+          await addMessage(id, { sender: 'staff', body: body.body, staffName: me.name || 'CleverStack' });
+          const conv = await getConversation(id);
+          const mail = body.email === false ? { sent: false } : await notifyClient(conv, me.name || 'The CleverStack team', String(body.body));
+          return res.status(200).json({ success: true, emailed: mail.sent, emailError: mail.error });
+        }
+        if (action === 'conv_create') {
+          const { conversation } = await createConversation({ name: body.name, email: body.email, subject: body.subject, submissionId: parseInt(body.submission_id) || null,
+            firstMessage: body.body, firstSender: 'staff', staffName: me.name || 'CleverStack' });
+          const mail = await notifyClient(conversation, me.name || 'The CleverStack team', String(body.body || ''));
+          return res.status(200).json({ success: true, id: conversation.id, emailed: mail.sent, emailError: mail.error });
+        }
+        if (action === 'conv_status') { await setConvStatus(parseInt(body.id), body.status); return res.status(200).json({ success: true }); }
+        if (action === 'conv_rotate') { await rotateToken(parseInt(body.id)); return res.status(200).json({ success: true, link: await linkFor(parseInt(body.id), siteUrl()) }); }
         if (action === 'ab_create') { const id = await createTest(body); return res.status(200).json({ success: true, id }); }
         if (action === 'ab_status') { await setTestStatus(parseInt(body.id), body.status); return res.status(200).json({ success: true }); }
         if (action === 'ab_delete') { await deleteTest(parseInt(body.id)); return res.status(200).json({ success: true }); }

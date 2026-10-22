@@ -38,6 +38,8 @@ import { isBotPayload } from '../lib/honeypot.js';
 import { scoreLead } from '../lib/lead-score.js';
 import { getJourneySummaries } from '../lib/analytics.js';
 import { notifyHotLead } from '../lib/hot-lead.js';
+import { createConversation, linkFor } from '../lib/messages.js';
+import { siteUrl } from '../lib/email.js';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -126,6 +128,12 @@ export default async function handler(req, res) {
       try { await linkSubmissionToContact(submissionId, submission); }
       catch (err) { console.error('CRM link failed:', err.message); }
       console.log('Submission saved to DB. ID:', submissionId);
+      // Every enquiry starts a project conversation the client can continue on the website
+      try {
+        const subject = submission.source === 'budget-planner' ? 'Your project plan' : submission.source === 'roi-calculator' ? 'Your website audit' : 'Your enquiry';
+        const { conversation } = await createConversation({ name: submission.name, email: submission.email, subject, submissionId, firstMessage: submission.message, firstSender: 'client' });
+        submission.conversationLink = await linkFor(conversation.id, siteUrl());
+      } catch (err) { console.error('Conversation create failed:', err.message); }
     } catch (err) {
       console.error('Database save failed:', err.message);
     }
@@ -182,6 +190,7 @@ export default async function handler(req, res) {
             '<p style="margin:0 0 4px;"><strong>Message:</strong></p>' +
             '<p style="margin:0;color:#5B6079;">' + submission.message.replace(/\n/g, '<br>') + '</p>' +
             '</blockquote>' +
+            (submission.conversationLink ? '<p style="font-size:15px;">You can add details, files links or questions any time in your private project conversation:</p><p style="margin:16px 0 22px;"><a href="' + submission.conversationLink + '" style="display:inline-block;background:#4F46E5;color:#fff;padding:12px 24px;border-radius:100px;text-decoration:none;font-weight:600;">Open your conversation</a></p>' : '') +
             '<p style="color:#5B6079;font-size:14px;">In the meantime, you can book a free strategy call:</p>' +
             '<a href="https://calendly.com/henryygeorge25/30min" style="display:inline-block;background:#00C2A8;color:#fff;padding:12px 24px;border-radius:100px;text-decoration:none;font-weight:600;">Book a Free Call</a>' +
             '<p style="color:#aaa;font-size:12px;margin-top:24px;">CleverStack — Remote, worldwide</p>' +

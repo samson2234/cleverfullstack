@@ -288,6 +288,7 @@
   .score-why{ list-style:none; margin:0; padding:0; display:grid; gap:4px; font-size:.84rem; }
   .score-why li{ display:flex; gap:10px; } .score-why li span{ color:#6ee7b7; font-weight:700; min-width:30px; font-variant-numeric:tabular-nums; }
 </style>
+<link rel="stylesheet" href="admin-inbox.css?v=f6f9f6c1">
 <link rel="stylesheet" href="admin-tools.css?v=0b0ed417">
 <link rel="stylesheet" href="admin-analytics.css?v=bd46682f">
 </head><body>
@@ -316,6 +317,7 @@
       <button class="tab active" data-view="dashboard" title="Dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span class="tab-label">Dashboard</span></button>
       <button class="tab" data-view="analytics" title="Analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg><span class="tab-label">Analytics</span></button>
       <div class="nav-group">Audience</div>
+      <button class="tab" data-view="inbox" title="Inbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="tab-label">Inbox</span><span class="badge" id="inboxBadge" style="display:none;">0</span></button>
       <button class="tab" data-view="leads" title="Leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg><span class="tab-label">Leads</span><span class="badge" id="unreadBadge" style="display:none;">0</span></button>
       <button class="tab" data-view="contacts" title="Clients & Contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="tab-label">Clients &amp; Contacts</span></button>
       <button class="tab" data-view="subscribers" title="Subscribers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><span class="tab-label">Subscribers</span><span class="badge" id="subsBadge" style="display:none;">0</span></button>
@@ -347,6 +349,7 @@
 
   <main class="admin-body">
     <div class="must-change" id="mustChange" style="display:none;">You are using a temporary password. <button class="btn-sm primary" type="button" onclick="document.querySelector('.tab[data-view=account]').click()">Choose your own</button></div>
+    <section class="view" id="view-inbox"></section>
     <section class="view" id="view-utm"></section>
     <section class="view" id="view-abtests"></section>
     <section class="view" id="view-team"></section>
@@ -511,6 +514,7 @@
       <div class="lead-field full"><label>Notes</label><div class="lf-val" id="leadNotes">-</div></div>
     </div>
     <div class="modal-actions">
+      <button class="btn-tiny reply" id="leadMsgBtn" type="button" onclick="window.closeModal('leadModal'); window.CSInbox && window.CSInbox.fromLead(window.__getCurrentLead && window.__getCurrentLead())">Message on platform</button>
       <button class="btn-tiny reply" id="leadReplyBtn">Reply</button>
       <button class="btn-tiny danger" id="leadDeleteBtn">Delete</button>
       <button class="btn-sm primary" onclick="window.closeModal('leadModal')">Close</button>
@@ -615,6 +619,7 @@
   var token = sessionStorage.getItem('admin_token') || '';
   var leads = [];
   var currentLead = null;
+  window.__getCurrentLead = function(){ return currentLead; };
   var currentStatus = '';
   var currentIndustry = '';
   var currentCountry = '';
@@ -712,6 +717,7 @@
       if (name === 'dashboard') loadDashboard();
       if (name === 'analytics' && window.CSAnalytics) window.CSAnalytics.load();
       if (window.CSTools) window.CSTools.load(name);
+      if (name === 'inbox' && window.CSInbox) window.CSInbox.load();
       if (name === 'leads') loadLeads();
       if (name === 'subscribers') loadSubscribers();
       if (name === 'email_log') loadEmailLog();
@@ -1661,6 +1667,7 @@
     $('dashboard').style.display = 'block';
     try { localStorage.setItem('cs_notrack', '1'); } catch (e) {}
     if (window.CSTools) window.CSTools.loadMe();
+    if (window.CSInbox) { window.CSInbox.pollBadge(); if (/^#inbox-\d+$/.test(location.hash)) { var it = document.querySelector('.tab[data-view="inbox"]'); if (it) it.click(); } }
     loadDashboard();
   }
 
@@ -1681,6 +1688,7 @@
     if (name === 'dashboard') loadDashboard();
       if (name === 'analytics' && window.CSAnalytics) window.CSAnalytics.load();
       if (window.CSTools) window.CSTools.load(name);
+      if (name === 'inbox' && window.CSInbox) window.CSInbox.load();
     if (name === 'leads') loadLeads();
     if (name === 'subscribers') loadSubscribers();
     if (name === 'email_log') loadEmailLog();
@@ -1698,5 +1706,6 @@
   }
 })();
 </script>
+<script src="admin-inbox.js?v=2c30c278" defer></script>
 <script src="admin-tools.js?v=3195652c" defer></script>
 <script src="admin-analytics.js?v=d8d4c7cf" defer></script></body></html>
