@@ -24,13 +24,12 @@
 .ib-actions{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
 .ib-actions select{ background:rgba(0,0,0,.25); border:1px solid var(--crm-line); color:var(--crm-text); border-radius:8px; padding:7px 9px; font:600 .8rem var(--font-body); }
 .ib-back{ display:none; width:32px; height:32px; border-radius:8px; border:1px solid var(--crm-line); background:transparent; color:var(--crm-text); font-size:20px; cursor:pointer; }
-.ib-thread{ flex:1; overflow-y:auto; padding:18px; display:flex; flex-direction:column; gap:10px; }
-.ib-msg{ max-width:76%; display:flex; flex-direction:column; gap:4px; }
-.ib-msg.us{ align-self:flex-end; align-items:flex-end; }
-.ib-bubble{ padding:10px 14px; border-radius:16px; font-size:.9rem; line-height:1.55; white-space:pre-wrap; overflow-wrap:anywhere; }
-.ib-msg.us .ib-bubble{ background:linear-gradient(135deg,#4F46E5,#6366F1); color:#fff; border-bottom-right-radius:5px; }
-.ib-msg.them .ib-bubble{ background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.08); border-bottom-left-radius:5px; }
-.ib-meta{ font-size:.7rem; color:var(--crm-muted); padding:0 4px; }
+.ib-main{ position:relative; }
+.ib-thread{ flex:1; padding:18px; }
+.ib-send-l{ display:flex; align-items:center; gap:2px; color:var(--crm-text); }
+.ib-send-l .ib-check{ margin-left:8px; }
+.ib-typing{ color:#2DD4BF; font-style:normal; font-weight:600; }
+.ib-hint{ margin:0; font-size:.78rem; color:var(--crm-muted); }
 .ib-quick{ display:flex; gap:6px; flex-wrap:wrap; padding:8px 14px 0; }
 .ib-quick button{ border:1px solid var(--crm-line); background:transparent; color:var(--crm-muted); border-radius:100px; padding:5px 11px; font:600 .74rem var(--font-body); cursor:pointer; }
 .ib-quick button:hover{ color:#fff; border-color:rgba(129,140,248,.5); }
@@ -46,5 +45,5 @@
   .ib{ grid-template-columns:minmax(0,1fr); height:calc(100vh - 120px); }
   .ib .ib-main{ display:none; } .ib.reading .ib-main{ display:flex; } .ib.reading .ib-list{ display:none; }
   .ib-back{ display:inline-flex; align-items:center; justify-content:center; }
-  .ib-msg{ max-width:90%; } .ib-row{ grid-template-columns:minmax(0,1fr); }
+  .ib-row{ grid-template-columns:minmax(0,1fr); }
 }

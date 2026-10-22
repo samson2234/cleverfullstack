@@ -64,7 +64,8 @@ import { rateLimit, clientIp } from '../lib/rate-limit.js';
 import { getAnalytics, getRecentJourneys, getJourneySummaries } from '../lib/analytics.js';
 import { scoreLead } from '../lib/lead-score.js';
 import { createTest, setTestStatus, deleteTest, listTestsWithResults } from '../lib/ab.js';
-import { listConversations, getConversation, getMessages, addMessage, createConversation, setStatus as setConvStatus, rotateToken, markRead as markConvRead, linkFor, conversationsForSubmission } from '../lib/messages.js';
+import { listConversations, getConversation, getMessages, addMessage, createConversation, setStatus as setConvStatus, rotateToken, markRead as markConvRead, linkFor, conversationsForSubmission,
+  changedSince, serverNow, needsRead, editMessage, deleteMessage, setTyping, saveFile, getFile, sendFile } from '../lib/messages.js';
 import { clientMessageTemplate } from '../lib/email.js';
 import { can, login as staffLogin, userForToken, logout as staffLogout, listStaff, createStaff, updateStaff, resetStaffPassword, deleteStaff, changeOwnPassword } from '../lib/staff.js';
 import { sendWeeklyReport } from '../lib/analytics-report.js';
@@ -192,7 +193,7 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const rl = await rateLimit(req, { limit: 30, windowMs: 60000, key: 'admin' });
+  const rl = await rateLimit(req, { limit: 120, windowMs: 60000, key: 'admin' }); // inbox polling + typing; failed logins have their own lockout
   if (!rl.allowed) {
     res.setHeader('Retry-After', String(rl.retryAfter));
     return res.status(429).json({ error: 'Too many requests — please wait a moment and try again.' });
@@ -224,7 +225,8 @@ export default async function handler(req, res) {
   // Role check on every request (server-side; the UI only hides what a role cannot use)
   {
     const ps = readParams(req);
-    const op = req.method === 'GET' ? { kind: ps.get('export') ? 'export' : 'read' } : { kind: 'action', action: (req.body || {}).action };
+    // file uploads are raw bytes, so their action is in the query string
+    const op = req.method === 'GET' ? { kind: ps.get('export') ? 'export' : 'read' } : { kind: 'action', action: Buffer.isBuffer(req.body) ? ps.get('action') : (req.body || {}).action };
     if (req.method === 'POST' && (req.body || {}).action === 'send_analytics_report') op.action = 'send_analytics_report';
     if (!can(me.role, op)) return res.status(403).json({ error: 'Your role (' + me.role + ') cannot do this' });
   }
@@ -336,9 +338,18 @@ export default async function handler(req, res) {
         const id = parseInt(params.get('id'));
         const conversation = await getConversation(id);
         if (!conversation) return res.status(404).json({ error: 'Conversation not found' });
-        const messages = await getMessages(id, parseInt(params.get('after')) || 0);
-        if (conversation.unread_staff && me.role !== 'viewer') { await markConvRead(id, 'staff'); conversation.unread_staff = 0; }
-        return res.status(200).json({ conversation, messages, link: await linkFor(id, siteUrl()) });
+        const after = parseInt(params.get('after')) || 0;
+        const now = await serverNow();
+        const messages = await getMessages(id, after);
+        const changed = after ? await changedSince(id, params.get('since'), after) : [];
+        const newest = messages.length ? messages[messages.length - 1].id : after;
+        if (me.role !== 'viewer' && await needsRead(conversation, 'staff', newest)) { await markConvRead(id, 'staff'); conversation.unread_staff = 0; }
+        return res.status(200).json({ conversation, messages, changed, now, seen: conversation.client_seen_id, typing: conversation.client_typing, link: after ? undefined : await linkFor(id, siteUrl()) });
+      }
+      if (view === 'file') {
+        const file = await getFile(parseInt(params.get('conv')), parseInt(params.get('id')));
+        if (!file) return res.status(404).json({ error: 'File not found' });
+        return sendFile(res, file, { download: params.get('dl') === '1' });
       }
       if (view === 'lead_conversations') {
         return res.status(200).json({ conversations: await conversationsForSubmission(parseInt(params.get('id'))) });
@@ -399,8 +410,8 @@ export default async function handler(req, res) {
 
     // ===================== POST =====================
     if (req.method === 'POST') {
-      const body = req.body || {};
-      const action = body.action;
+      const body = Buffer.isBuffer(req.body) ? {} : (req.body || {});
+      const action = Buffer.isBuffer(req.body) ? readParams(req).get('action') : body.action;
 
       if (!action) {
         return res.status(400).json({ error: 'action is required' });
@@ -433,6 +444,19 @@ export default async function handler(req, res) {
           const mail = await notifyClient(conversation, me.name || 'The CleverStack team', String(body.body || ''));
           return res.status(200).json({ success: true, id: conversation.id, emailed: mail.sent, emailError: mail.error });
         }
+        if (action === 'msg_upload') {
+          if (!Buffer.isBuffer(req.body)) return res.status(400).json({ error: 'Send the file as raw bytes' });
+          const ps = readParams(req), id = parseInt(ps.get('id'));
+          const conv = await getConversation(id);
+          if (!conv) return res.status(404).json({ error: 'Conversation not found' });
+          const file = await saveFile(id, { name: ps.get('name'), data: req.body });
+          const msgId = await addMessage(id, { sender: 'staff', body: '', fileId: file.id, staffName: me.name || 'CleverStack' });
+          const mail = ps.get('email') === '1' ? await notifyClient(conv, me.name || 'The CleverStack team', '📎 Sent you a file: ' + file.name + '\n\nOpen the conversation to view or download it.') : { sent: false };
+          return res.status(200).json({ success: true, id: msgId, file, emailed: mail.sent, emailError: mail.error });
+        }
+        if (action === 'msg_edit') { await editMessage(parseInt(body.id), parseInt(body.message_id), 'staff', body.body); return res.status(200).json({ success: true }); }
+        if (action === 'msg_delete') { await deleteMessage(parseInt(body.id), parseInt(body.message_id), 'staff'); return res.status(200).json({ success: true }); }
+        if (action === 'msg_typing') { await setTyping(parseInt(body.id), 'staff'); return res.status(200).json({ success: true }); }
         if (action === 'conv_status') { await setConvStatus(parseInt(body.id), body.status); return res.status(200).json({ success: true }); }
         if (action === 'conv_rotate') { await rotateToken(parseInt(body.id)); return res.status(200).json({ success: true, link: await linkFor(parseInt(body.id), siteUrl()) }); }
         if (action === 'ab_create') { const id = await createTest(body); return res.status(200).json({ success: true, id }); }
