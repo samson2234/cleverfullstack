@@ -16,7 +16,7 @@ jobs:
       - name: Check site health
         id: health
         run: |
-          code=$(curl -s -o /tmp/health.json -w '%{http_code}' --max-time 25 https://cleverfullstack.vercel.app/api/health)
+          code=$(curl -s -o /tmp/health.json -w '%{http_code}' --max-time 25 https://cleverstack.dev/api/health)
           echo "HTTP $code"
           cat /tmp/health.json
           echo "code=$code" >> "$GITHUB_OUTPUT"
@@ -44,7 +44,7 @@ jobs:
               owner,
               repo,
               title: 'Uptime: site health check failing',
-              body: 'The health check at https://cleverfullstack.vercel.app/api/health ' +
+              body: 'The health check at https://cleverstack.dev/api/health ' +
                     'returned HTTP ' + process.env.CODE + ' at ' + new Date().toISOString() +
                     ' (UTC). The workflow retries every 15 minutes; close this issue once ' +
                     'the check is green again.'

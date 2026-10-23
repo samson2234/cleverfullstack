@@ -50,7 +50,7 @@ test('exact numbers from a known set of visits (visitors, sessions, bounce, sour
   await recordEvents({ s: 'sessA1', w: 1440, e: [{ t: 'pageview', p: '/index.html', pid: 'p1', r: 'https://www.google.com/', ti: 'Home' }] }, { ...A, now: T(50) });
   await recordEvents({ s: 'sessA1', w: 1440, e: [{ t: 'click', p: '/index.html', pid: 'p1', tg: 'Book a Call', k: 'booking', d: 'calendly.com' }] }, { ...A, now: T(49) });
   await recordEvents({ s: 'sessA1', w: 1440, e: [{ t: 'engage', p: '/index.html', pid: 'p1', v: 40000, dp: 80 }] }, { ...A, now: T(48) });
-  await recordEvents({ s: 'sessA1', w: 1440, e: [{ t: 'pageview', p: '/services.html', pid: 'p2', r: 'https://cleverfullstack.vercel.app/' }] }, { ...A, now: T(47) });
+  await recordEvents({ s: 'sessA1', w: 1440, e: [{ t: 'pageview', p: '/services.html', pid: 'p2', r: 'https://cleverstack.dev/' }] }, { ...A, now: T(47) });
   await recordEvents({ s: 'sessA1', w: 1440, e: [{ t: 'engage', p: '/services.html', pid: 'p2', v: 20000, dp: 50 }, { t: 'lead', p: '/services.html', pid: 'p2', tg: 'budget-planner' }] }, { ...A, now: T(45) });
   // Visitor B: Facebook -> blog (bounce)
   await recordEvents({ s: 'sessB1', w: 390, e: [{ t: 'pageview', p: '/blog/index.html', pid: 'p3', r: 'https://l.facebook.com/x' }] }, { ...B, now: T(30) });
@@ -121,7 +121,7 @@ test('journeys list each recent session with its pages and clicks in order', asy
 
 test('pulse endpoint: stores real visits, ignores bots, other websites and junk, always answers 204', async () => {
   const before = Number((await getClient().execute('SELECT COUNT(*) AS n FROM analytics_events')).rows[0].n);
-  const send = (body, headers = {}) => call(pulse, { method: 'POST', body, ip: '9.9.9.9', headers: { 'user-agent': CHROME, origin: 'https://cleverfullstack.vercel.app', 'x-vercel-ip-country': 'GB', 'x-vercel-ip-city': 'London', ...headers } });
+  const send = (body, headers = {}) => call(pulse, { method: 'POST', body, ip: '9.9.9.9', headers: { 'user-agent': CHROME, origin: 'https://cleverstack.dev', 'x-vercel-ip-country': 'GB', 'x-vercel-ip-city': 'London', ...headers } });
   const ok = await send(JSON.stringify({ s: 'pulse1', w: 1280, e: [{ t: 'pageview', p: '/contact.html', pid: 'x1' }] }));
   assert.equal(ok.code, 204);
   assert.equal((await send({ s: 'pulse2', e: [{ t: 'pageview', p: '/' }] }, { 'user-agent': 'Googlebot/2.1' })).code, 204);

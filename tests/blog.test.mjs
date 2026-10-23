@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (f) => fs.readFileSync(path.join(root, f), 'utf8');
-const BASE = 'https://cleverfullstack.vercel.app';
+const BASE = 'https://cleverstack.dev';
 const posts = JSON.parse(read('blog/posts.json'));
 const cfg = JSON.parse(read('vercel.json'));
 const csp = cfg.headers.flatMap((h) => h.headers).find((h) => h.key === 'Content-Security-Policy').value;

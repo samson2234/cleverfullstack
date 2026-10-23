@@ -14,6 +14,7 @@
     { "path": "/api/cron-daily", "schedule": "15 0 * * *" }
   ],
   "redirects": [
+    { "source": "/:path*", "has": [{ "type": "host", "value": "cleverfullstack.vercel.app" }], "destination": "https://cleverstack.dev/:path*", "permanent": true },
     { "source": "/web-development", "destination": "/blog/web-development", "permanent": true },
     { "source": "/shopify-vs-woocommerce", "destination": "/blog/shopify-vs-woocommerce", "permanent": true },
     { "source": "/seo-tips-2026", "destination": "/blog/seo-tips-2026", "permanent": true },

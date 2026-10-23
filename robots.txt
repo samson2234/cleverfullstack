@@ -4,4 +4,4 @@ Disallow: /api/
 Disallow: /admin.html
 Disallow: /review.html
 
-Sitemap: https://cleverfullstack.vercel.app/sitemap.xml
+Sitemap: https://cleverstack.dev/sitemap.xml

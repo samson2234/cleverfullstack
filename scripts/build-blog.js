@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const BASE = 'https://cleverfullstack.vercel.app';
+const BASE = 'https://cleverstack.dev';
 const AUTHOR = 'Henry George';
 const TEMPLATE = path.join(root, 'blog', 'website-mistakes-conversions.html'); // layout donor (head styles, footer, scripts)
 const ORDER = [ // tie-break for posts published the same day (first = shown first)

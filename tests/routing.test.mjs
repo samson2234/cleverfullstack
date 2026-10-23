@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const cfg = JSON.parse(fs.readFileSync(path.join(root, 'vercel.json'), 'utf8'));
-const SITE = 'https://cleverfullstack.vercel.app';
+const SITE = 'https://cleverstack.dev';
 const SKIP = ['node_modules', 'vendor', 'scripts', 'tests', 'docs', 'api', 'lib', 'blog-src', 'images'];
 
 function htmlFiles(dir, out = []) {

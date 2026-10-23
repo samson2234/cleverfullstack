@@ -9,7 +9,7 @@ const path = require('path');
 const sharp = require('sharp');
 
 const root = path.resolve(__dirname, '..');
-const BASE = 'https://cleverfullstack.vercel.app';
+const BASE = 'https://cleverstack.dev';
 const UA = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/130', Accept: 'image/*,*/*' };
 const SKIP = ['node_modules', 'vendor', 'scripts', 'tests', 'docs', 'api', 'lib', 'blog-src', 'images'];
 

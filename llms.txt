@@ -11,17 +11,17 @@
 - Fix & Redesign ($799): Site audit, redesign, speed optimization
 
 ## Key Pages
-- Home: https://cleverfullstack.vercel.app/
-- Services: https://cleverfullstack.vercel.app/services
-- Portfolio: https://cleverfullstack.vercel.app/portfolio
-- Blog: https://cleverfullstack.vercel.app/blog
-- Contact: https://cleverfullstack.vercel.app/contact
-- About: https://cleverfullstack.vercel.app/about
+- Home: https://cleverstack.dev/
+- Services: https://cleverstack.dev/services
+- Portfolio: https://cleverstack.dev/portfolio
+- Blog: https://cleverstack.dev/blog
+- Contact: https://cleverstack.dev/contact
+- About: https://cleverstack.dev/about
 
 ## Location Pages
-- Web Development USA: https://cleverfullstack.vercel.app/web-development-usa
-- Web Development UK: https://cleverfullstack.vercel.app/web-development-uk
-- Web Development Europe: https://cleverfullstack.vercel.app/web-development-europe
+- Web Development USA: https://cleverstack.dev/web-development-usa
+- Web Development UK: https://cleverstack.dev/web-development-uk
+- Web Development Europe: https://cleverstack.dev/web-development-europe
 
 ## Contact
 - Email: henryygeorge25@gmail.com

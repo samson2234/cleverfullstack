@@ -13,7 +13,7 @@ import { siteUrl } from '../lib/email.js';
 import { activeTests } from '../lib/ab.js';
 
 function ownHosts() {
-  const hosts = ['cleverfullstack.vercel.app'];
+  const hosts = ['cleverstack.dev', 'cleverfullstack.vercel.app'];
   try { hosts.push(new URL(siteUrl()).hostname.replace(/^www\./, '')); } catch (e) {}
   for (const h of String(process.env.ANALYTICS_HOSTS || '').split(',')) if (h.trim()) hosts.push(h.trim().toLowerCase().replace(/^www\./, ''));
   return [...new Set(hosts)];

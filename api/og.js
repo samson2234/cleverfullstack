@@ -15,7 +15,7 @@ function el(type, props, ...children) {
 
 export default async function handler(req) {
   try {
-    const url = new URL(req.url, 'https://cleverfullstack.vercel.app');
+    const url = new URL(req.url, 'https://cleverstack.dev');
     const title = url.searchParams.get('title') || 'Full-Stack Development Studio';
     const type = url.searchParams.get('type') || 'website';
 
@@ -72,7 +72,7 @@ export default async function handler(req) {
         'Full-Stack Development Studio',
       ),
       type === 'article' &&
-        el('div', { style: { fontSize: 14, color: muted, marginTop: 16, opacity: 0.7 } }, 'cleverfullstack.vercel.app'),
+        el('div', { style: { fontSize: 14, color: muted, marginTop: 16, opacity: 0.7 } }, 'cleverstack.dev'),
     );
 
     return new ImageResponse(node, { width: 1200, height: 630 });

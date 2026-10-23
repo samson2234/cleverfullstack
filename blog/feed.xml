@@ -4,15 +4,15 @@
   xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>CleverStack Blog</title>
-    <link>https://cleverfullstack.vercel.app/blog/</link>
+    <link>https://cleverstack.dev/blog/</link>
     <description>Articles on web development, e-commerce, SEO, and growing your business online — from the CleverStack team.</description>
     <language>en</language>
     <lastBuildDate>Mon, 05 Oct 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://cleverfullstack.vercel.app/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="https://cleverstack.dev/blog/feed.xml" rel="self" type="application/rss+xml"/>
     <item>
       <title>My Website Gets Visitors but Nobody Contacts Me: 9 Fixes You Can Make This Week</title>
-      <link>https://cleverfullstack.vercel.app/blog/website-no-enquiries-fix</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/website-no-enquiries-fix</guid>
+      <link>https://cleverstack.dev/blog/website-no-enquiries-fix</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/website-no-enquiries-fix</guid>
       <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
       <category>Conversion</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -20,8 +20,8 @@
     </item>
     <item>
       <title>Why Is My Website Slow? How to Find the Cause and Fix It Without Being Technical</title>
-      <link>https://cleverfullstack.vercel.app/blog/why-is-my-website-slow</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/why-is-my-website-slow</guid>
+      <link>https://cleverstack.dev/blog/why-is-my-website-slow</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/why-is-my-website-slow</guid>
       <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
       <category>Performance</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -29,8 +29,8 @@
     </item>
     <item>
       <title>How to Show Up on Google Maps and "Near Me" Searches: A Local Business Checklist</title>
-      <link>https://cleverfullstack.vercel.app/blog/google-maps-local-seo-checklist</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/google-maps-local-seo-checklist</guid>
+      <link>https://cleverstack.dev/blog/google-maps-local-seo-checklist</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/google-maps-local-seo-checklist</guid>
       <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
       <category>SEO</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -38,8 +38,8 @@
     </item>
     <item>
       <title>How to Get More Client Reviews (and Use Them to Win New Customers)</title>
-      <link>https://cleverfullstack.vercel.app/blog/how-to-get-more-client-reviews</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/how-to-get-more-client-reviews</guid>
+      <link>https://cleverstack.dev/blog/how-to-get-more-client-reviews</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/how-to-get-more-client-reviews</guid>
       <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
       <category>Trust</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -47,8 +47,8 @@
     </item>
     <item>
       <title>Should I Fix My Website or Rebuild It? A Simple Decision Guide</title>
-      <link>https://cleverfullstack.vercel.app/blog/should-i-fix-or-rebuild-my-website</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/should-i-fix-or-rebuild-my-website</guid>
+      <link>https://cleverstack.dev/blog/should-i-fix-or-rebuild-my-website</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/should-i-fix-or-rebuild-my-website</guid>
       <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
       <category>Web Development</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -56,8 +56,8 @@
     </item>
     <item>
       <title>Website Security for Small Businesses: 10 Basics That Prevent Most Hacks</title>
-      <link>https://cleverfullstack.vercel.app/blog/website-security-basics-small-business</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/website-security-basics-small-business</guid>
+      <link>https://cleverstack.dev/blog/website-security-basics-small-business</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/website-security-basics-small-business</guid>
       <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
       <category>Security</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -65,8 +65,8 @@
     </item>
     <item>
       <title>How a Poor Website Is Killing Your New Business</title>
-      <link>https://cleverfullstack.vercel.app/blog/poor-website-killing-business</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/poor-website-killing-business</guid>
+      <link>https://cleverstack.dev/blog/poor-website-killing-business</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/poor-website-killing-business</guid>
       <pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
       <category>Web Development</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -74,8 +74,8 @@
     </item>
     <item>
       <title>Why Some Businesses Refuse to Scale (And What It Costs Them)</title>
-      <link>https://cleverfullstack.vercel.app/blog/businesses-refuse-to-scale</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/businesses-refuse-to-scale</guid>
+      <link>https://cleverstack.dev/blog/businesses-refuse-to-scale</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/businesses-refuse-to-scale</guid>
       <pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
       <category>Business Growth</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -83,8 +83,8 @@
     </item>
     <item>
       <title>The Real Advantages of Having an Optimized Website and Online Presence</title>
-      <link>https://cleverfullstack.vercel.app/blog/optimized-website-advantages</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/optimized-website-advantages</guid>
+      <link>https://cleverstack.dev/blog/optimized-website-advantages</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/optimized-website-advantages</guid>
       <pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
       <category>Web Development</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -92,8 +92,8 @@
     </item>
     <item>
       <title>How Much Does a Business Website Cost in 2026? (USA &amp; UK Pricing Guide)</title>
-      <link>https://cleverfullstack.vercel.app/blog/how-much-does-business-website-cost</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/how-much-does-business-website-cost</guid>
+      <link>https://cleverstack.dev/blog/how-much-does-business-website-cost</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/how-much-does-business-website-cost</guid>
       <pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
       <category>Web Development</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -101,8 +101,8 @@
     </item>
     <item>
       <title>How to Choose the Best Web Development Company for Your Business</title>
-      <link>https://cleverfullstack.vercel.app/blog/best-web-development-company-usa</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/best-web-development-company-usa</guid>
+      <link>https://cleverstack.dev/blog/best-web-development-company-usa</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/best-web-development-company-usa</guid>
       <pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
       <category>Web Development</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -110,8 +110,8 @@
     </item>
     <item>
       <title>Why Every Small Business Needs a Professional Website in 2026</title>
-      <link>https://cleverfullstack.vercel.app/blog/why-small-business-needs-website</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/why-small-business-needs-website</guid>
+      <link>https://cleverstack.dev/blog/why-small-business-needs-website</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/why-small-business-needs-website</guid>
       <pubDate>Mon, 17 Aug 2026 00:00:00 +0000</pubDate>
       <category>Web Development</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -119,8 +119,8 @@
     </item>
     <item>
       <title>Custom Web Development vs No-Code Tools: What Growing Businesses Should Pick</title>
-      <link>https://cleverfullstack.vercel.app/blog/custom-vs-nocode</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/custom-vs-nocode</guid>
+      <link>https://cleverstack.dev/blog/custom-vs-nocode</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/custom-vs-nocode</guid>
       <pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
       <category>Web Development</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -128,8 +128,8 @@
     </item>
     <item>
       <title>5 Website Mistakes That Are Killing Your Conversions (And How to Fix Them)</title>
-      <link>https://cleverfullstack.vercel.app/blog/website-mistakes-conversions</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/website-mistakes-conversions</guid>
+      <link>https://cleverstack.dev/blog/website-mistakes-conversions</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/website-mistakes-conversions</guid>
       <pubDate>Wed, 29 Jul 2026 00:00:00 +0000</pubDate>
       <category>Web Development</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -137,8 +137,8 @@
     </item>
     <item>
       <title>How Much Should a Website Cost in 2026? (A Transparent Breakdown)</title>
-      <link>https://cleverfullstack.vercel.app/blog/website-cost-2026</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/website-cost-2026</guid>
+      <link>https://cleverstack.dev/blog/website-cost-2026</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/website-cost-2026</guid>
       <pubDate>Wed, 22 Jul 2026 00:00:00 +0000</pubDate>
       <category>Web Development</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -146,8 +146,8 @@
     </item>
     <item>
       <title>Why Custom Web Development Beats Templates (Every Time)</title>
-      <link>https://cleverfullstack.vercel.app/blog/web-development</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/web-development</guid>
+      <link>https://cleverstack.dev/blog/web-development</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/web-development</guid>
       <pubDate>Wed, 15 Jul 2026 00:00:00 +0000</pubDate>
       <category>Web Development</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -155,8 +155,8 @@
     </item>
     <item>
       <title>Shopify vs WooCommerce: Which Platform Makes You More Money?</title>
-      <link>https://cleverfullstack.vercel.app/blog/shopify-vs-woocommerce</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/shopify-vs-woocommerce</guid>
+      <link>https://cleverstack.dev/blog/shopify-vs-woocommerce</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/shopify-vs-woocommerce</guid>
       <pubDate>Wed, 08 Jul 2026 00:00:00 +0000</pubDate>
       <category>E-Commerce</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>
@@ -164,8 +164,8 @@
     </item>
     <item>
       <title>7 SEO Tips That Actually Work in 2026 (From a Developer Who Builds for Google)</title>
-      <link>https://cleverfullstack.vercel.app/blog/seo-tips-2026</link>
-      <guid isPermaLink="true">https://cleverfullstack.vercel.app/blog/seo-tips-2026</guid>
+      <link>https://cleverstack.dev/blog/seo-tips-2026</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/seo-tips-2026</guid>
       <pubDate>Sun, 28 Jun 2026 00:00:00 +0000</pubDate>
       <category>SEO</category>
       <author>henryygeorge25@gmail.com (Henry George)</author>

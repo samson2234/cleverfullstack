@@ -99,7 +99,7 @@ Connect the repo to [Vercel](https://vercel.com) for automatic deployments on ev
 
 # DEEP AUDIT & FIX TRACKER (Aug 13, 2026)
 
-> **Source:** Byte-level audit of local source + live `cleverfullstack.vercel.app` (live site is currently serving this code — git tree clean). Live health ✓ (health 200, OG image 200, npm audit: 0 vulnerabilities). Every item is a checkbox so we can fix them one by one.
+> **Source:** Byte-level audit of local source + live `cleverstack.dev` (live site is currently serving this code — git tree clean). Live health ✓ (health 200, OG image 200, npm audit: 0 vulnerabilities). Every item is a checkbox so we can fix them one by one.
 
 ## 🔴 Critical (fix before running ads)
 
@@ -116,7 +116,7 @@ Connect the repo to [Vercel](https://vercel.com) for automatic deployments on ev
 - [ ] **#8 `prefers-reduced-motion` kill-switch broken** — `style.css` `animation-duration:NaNs!important; transition-duration:NaNs!important` — `NaN` is invalid CSS, dropped by browsers → infinite animations (mesh orbs, logo scroll, glow pulse, skeleton shimmer) keep running for reduced-motion users. Should be `.01ms`.
 - [ ] **#9 Dark-mode contrast fails WCAG AA** — `style.css`. `--text-light-muted:#6b7099` = 3.4–4.1:1 on dark surfaces (needs 4.5); `.section-light .section-head p` override drops it from 6.27 to 3.92. `--indigo #4F46E5` as text-on-dark = 2.9:1.
 - [ ] **#10 French mode is mostly untranslated** — 9/17 pages show hard-coded English after switching (index portfolio/testimonials/stats, services pricing + calculator, portfolio cards, privacy/terms bodies, all blog bodies, blog cards). Undercuts "international ad campaigns" goal. `<title>` tags also never translate despite `page.title.*` keys existing.
-- [ ] **#11 Domain inconsistency across every layer** — canonical/OG/sitemap/robots use `cleverfullstack.vercel.app`; privacy/terms body, `lib/db.js`, `lib/email.js`, `api/contact.js` reference `cleverstack.dev`. If `cleverstack.dev` is the real domain, all canonical/sitemap/OG URLs are wrong for production SEO.
+- [ ] **#11 Domain inconsistency across every layer** — canonical/OG/sitemap/robots use `cleverstack.dev`; privacy/terms body, `lib/db.js`, `lib/email.js`, `api/contact.js` reference `cleverstack.dev`. If `cleverstack.dev` is the real domain, all canonical/sitemap/OG URLs are wrong for production SEO.
 
 ## 🟡 Medium
 
@@ -697,13 +697,13 @@ cleverstack/
 
 # THINGS TO FIX
 
-> **Source:** Live-site audit of `cleverfullstack.vercel.app` (all 20 URLs verified, contact API tested, every HTML/CSS/JS file scanned). Prioritized — fix before running ads.
+> **Source:** Live-site audit of `cleverstack.dev` (all 20 URLs verified, contact API tested, every HTML/CSS/JS file scanned). Prioritized — fix before running ads.
 
 ---
 
 ## 🔴 Critical (Breaking — Fix Before Running Ads)
 
-- [x] **OG images were dead on every page** — `api/og.jsx` imported `@vercel/og` but it was **not in `package.json`**. Fix applied: added `@vercel/og` + `react` to `dependencies` and ran `npm install`. Re-verify `https://cleverfullstack.vercel.app/api/og?title=test` returns `200 image/png` after redeploy.
+- [x] **OG images were dead on every page** — `api/og.jsx` imported `@vercel/og` but it was **not in `package.json`**. Fix applied: added `@vercel/og` + `react` to `dependencies` and ran `npm install`. Re-verify `https://cleverstack.dev/api/og?title=test` returns `200 image/png` after redeploy.
 - [x] **`ersurajverma.in` portfolio images restored** — 16 image URLs (6 homepage + portfolio + portfolio-detail) pointed at `ersurajverma.in`, which appeared dead during the audit. Per client instruction they have been **restored to the original `http://ersurajverma.in` URLs** so real project screenshots show. Note: the host now resolves (185.151.30.200, TCP 80 open) but HTTP responses were unresponsive from the audit environment — confirm they load from the deployment region.
   - `fiverr-res.cloudinary.com` (6 images) — **verified working** (full-length URLs return 200; earlier 404s were truncated test URLs). No action needed.
   - `justinch.dev` (2 images) — working.
@@ -717,7 +717,7 @@ cleverstack/
 - [x] **Remove unused `image.png` (898 KB)** — deleted from the repo. The LocalBusiness schema referenced `og-image.png` (404); updated the schema `image` to use the `/api/og` URL instead.
 - [x] **Conflicting trust stats** — hero now reads "200+ websites delivered" (EN/FR) and the stats section reads "50+ Projects shipped as a team" (per client clarification).
 - [x] **Google Fonts CSS loaded 3× on every page** — investigated: the 3 `css2` references are the **correct async font pattern** (`<link rel="preload">` + `media="print" onload` swap + `<noscript>` fallback), not a duplicate stylesheet. No change needed.
-- [x] **Sitemap listed the `/404` page** — removed `https://cleverfullstack.vercel.app/404` from `sitemap.xml`.
+- [x] **Sitemap listed the `/404` page** — removed `https://cleverstack.dev/404` from `sitemap.xml`.
 - [x] **Blog post dated Aug 5, 2026** (`blog/custom-vs-nocode.html` + `posts.json` + `feed.xml`) — re-dated to Aug 1, 2026 in all three files (HTML, posts.json, feed.xml `pubDate` + `lastBuildDate`).
 
 ---
@@ -735,7 +735,7 @@ cleverstack/
 
 ## 📋 Ad-Readiness Checklist (Section 7) — Validated Aug 2026
 
-> **Source:** Audit of `cleverfullstack.vercel.app` against the README Section 7 ad-readiness checklist. Items below still need work before running Meta/Google/LinkedIn ads. Item states reflect the **local** codebase — the live site is currently **stale** and must be redeployed to pick up any fixes.
+> **Source:** Audit of `cleverstack.dev` against the README Section 7 ad-readiness checklist. Items below still need work before running Meta/Google/LinkedIn ads. Item states reflect the **local** codebase — the live site is currently **stale** and must be redeployed to pick up any fixes.
 
 ### 🔴 Critical (Blocks Running Ads)
 
@@ -755,7 +755,7 @@ cleverstack/
 ### 🟡 Minor
 
 - [ ] **`apple-touch-icon` not linked in HTML** — `apple-touch-icon.png` (180px) exists at repo root but no `<link rel="apple-touch-icon" href="/apple-touch-icon.png">` on pages, so iOS Safari still uses the SVG data-URI favicon. Fix: add the link tag to the `<head>` of all pages (and reference `favicon.ico` as the default).
-- [ ] **Live deployment is stale** — `cleverfullstack.vercel.app/api/og` returns 404, `apple-touch-icon.png` 404, homepage still shows old "30+ Projects" stat and old avatar set. All recent local fixes (OG images, stats, avatars, favicon) are **not live yet**. Fix: redeploy to Vercel, then re-verify `/api/og`, icons, stats.
+- [ ] **Live deployment is stale** — `cleverstack.dev/api/og` returns 404, `apple-touch-icon.png` 404, homepage still shows old "30+ Projects" stat and old avatar set. All recent local fixes (OG images, stats, avatars, favicon) are **not live yet**. Fix: redeploy to Vercel, then re-verify `/api/og`, icons, stats.
 - [ ] **PageSpeed score unverified** — site is minified + lazy-loaded so it should pass, but no PageSpeed Insights run has been done. Fix: run PSI on mobile after redeploy; target > 80.
 
 ### ✅ Already Passing (Verified)
@@ -818,7 +818,7 @@ cleverstack/
 
 - [x] **Canonical tags** — present on all 11 public pages + 7 blog posts (only `admin.html` intentionally omits it). Verified.
 - [x] **Schema.org** — `LocalBusiness` + `AggregateRating` (home), `Service` + `Offer` + `FAQPage` (services), `Article` w/ author+publisher (blog), `BreadcrumbList` + `Organization` everywhere, `Blog`/`AboutPage`/`CollectionPage`/`ErrorPage`. Verified.
-- [x] **`sitemap.xml` + `robots.txt`** — correct, domain `cleverfullstack.vercel.app`. Verified.
+- [x] **`sitemap.xml` + `robots.txt`** — correct, domain `cleverstack.dev`. Verified.
 - [x] **Clean URLs + redirects** — `cleanUrls` + blog 301 redirects in `vercel.json`. Verified.
 
 ## Conversion
