@@ -83,7 +83,7 @@ Connect the repo to [Vercel](https://vercel.com) for automatic deployments on ev
 | `ADMIN_PASSWORD` | Yes | Admin login password (sent as Bearer token) |
 | `RESEND_API_KEY` | Yes (for email) | Resend API key |
 | `RESEND_FROM` | Recommended | Sender, e.g. `CleverStack <hello@cleverstack.dev>` — must be a **verified domain** in Resend |
-| `CONTACT_EMAIL` | Recommended | Owner inbox for notifications (defaults to `henryygeorge25@gmail.com`) |
+| `CONTACT_EMAIL` | Recommended | Owner inbox for notifications (defaults to `hello@cleverstack.dev`) |
 
 > **IMPORTANT — verify your Resend domain:** welcome emails to subscribers and broadcasts will fail from the sandbox `onboarding@resend.dev`. Set up a domain in [Resend → Domains](https://resend.com/domains) (add their DNS records to your domain), then set `RESEND_FROM` to an address on it. Only then do real subscribers receive the welcome email.
 
@@ -104,7 +104,7 @@ Connect the repo to [Vercel](https://vercel.com) for automatic deployments on ev
 ## 🔴 Critical (fix before running ads)
 
 - [x] **#1 Fake US phone in contact page schema** — `contact.html` line 62 has `"telephone": "+1 000 111 2222"` in JSON-LD. Everywhere else is `+2349165400534`. Google can surface this in rich results / local packs. **FIXED → `+2349165400534`.**
-- [x] **#2 Landing page sends leads to the wrong mailbox** — `index.html` (3×): `cleverdigitals70@gmail.com` in JSON-LD + footer `mailto:` + footer text. Every other page and `lib/email.js` uses `henryygeorge25@gmail.com`. (README previously claimed "standardized" — that was false.) **FIXED → `henryygeorge25@gmail.com` (3×).**
+- [x] **#2 Landing page sends leads to the wrong mailbox** — `index.html` (3×): `cleverdigitals70@gmail.com` in JSON-LD + footer `mailto:` + footer text. Every other page and `lib/email.js` uses `hello@cleverstack.dev`. (README previously claimed "standardized" — that was false.) **FIXED → `hello@cleverstack.dev` (3×).**
 - [x] **#3 Contradictory NAP data (local SEO)** — `index.html` says **Lagos**; everything else says **University of Ibadan, Oyo State**. Conflicting name/address/phone breaks local search signals. **FIXED → `addressLocality` "Ibadan" + footer "University of Ibadan (Premier University), Oyo State, Nigeria".**
 - [ ] **#4 CSS mojibake — visible garbage on live pages** — `style.css` `content:"→"`, `content:"✓"`, `content:"↔"` (double-encoded `→`/`✔`/`⇔`). Process-step arrows (about.html), pricing checklist ticks (services.html), comparison handle render as garbage glyphs.
 
@@ -739,7 +739,7 @@ cleverstack/
 
 ### 🔴 Critical (Blocks Running Ads)
 
-- [x] **Calendly links point to the wrong account** — FIXED. Every booking link (all pages + mobile CTA bar + the auto-responder email in `api/contact.js`) now points to the owner's calendar `https://calendly.com/henryygeorge25/30min`. Contact email standardized to `henryygeorge25@gmail.com` across all pages, JSON-LD, `api/` and `lib/`.
+- [x] **Calendly links point to the wrong account** — FIXED. Every booking link (all pages + mobile CTA bar + the auto-responder email in `api/contact.js`) now points to the owner's calendar `https://calendly.com/henryygeorge25/30min`. Contact email standardized to `hello@cleverstack.dev` across all pages, JSON-LD, `api/` and `lib/`.
 - [ ] **Meta Pixel ID is a placeholder** — `analytics.js` has `META_PIXEL_ID = '000000000000000'` so `initMeta()` exits early and the Pixel never loads on any page. Fix: insert the real Pixel ID (then the existing consent-gated `fbq` code + `csEvent` custom-event sync starts working automatically).
 - [ ] **Fake client logos still live** — homepage "Trusted By" strip shows 6 invented SVG logos (ORBITAL, NORTHLOOM, MARLOW & REID, FIELDWORK OPS, HAVENPOINT, BARE BOTANICALS). Fix: replace with real client logos, or remove the strip until real ones exist.
 - [x] **Fake testimonials still live** — FIXED. Homepage now shows 12 real Fiverr client reviews (no stock avatars, interleaved so repeated clients don't sit adjacent). `portfolio-detail.html` fabricated client names still pending (see below).

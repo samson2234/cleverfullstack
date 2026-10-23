@@ -113,7 +113,7 @@ function main() {
   // 4) RSS feed (newest first)
   const rfc = (d) => new Date(d + ' 00:00:00 UTC').toUTCString().replace('GMT', '+0000');
   const sorted = posts.slice().sort((a, b) => new Date(b.date + ' 00:00:00 UTC') - new Date(a.date + ' 00:00:00 UTC'));
-  const items = sorted.map((p) => '    <item>\n      <title>' + esc(p.title).replace(/&quot;/g, '"') + '</title>\n      <link>' + url(p.id) + '</link>\n      <guid isPermaLink="true">' + url(p.id) + '</guid>\n      <pubDate>' + rfc(p.date) + '</pubDate>\n      <category>' + esc(p.category) + '</category>\n      <author>henryygeorge25@gmail.com (' + AUTHOR + ')</author>\n      <description><![CDATA[' + p.excerpt + ']]></description>\n    </item>').join('\n');
+  const items = sorted.map((p) => '    <item>\n      <title>' + esc(p.title).replace(/&quot;/g, '"') + '</title>\n      <link>' + url(p.id) + '</link>\n      <guid isPermaLink="true">' + url(p.id) + '</guid>\n      <pubDate>' + rfc(p.date) + '</pubDate>\n      <category>' + esc(p.category) + '</category>\n      <author>hello@cleverstack.dev (' + AUTHOR + ')</author>\n      <description><![CDATA[' + p.excerpt + ']]></description>\n    </item>').join('\n');
   let feed = read('blog/feed.xml');
   feed = feed.replace(/<lastBuildDate>[^<]*<\/lastBuildDate>/, () => '<lastBuildDate>' + rfc(sorted[0].date) + '</lastBuildDate>');
   feed = feed.replace(/(<atom:link[^>]*\/>\r?\n)[\s\S]*<\/channel>/, (m, head) => head + items + '\n  </channel>');

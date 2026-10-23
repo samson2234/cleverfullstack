@@ -528,7 +528,7 @@ export default async function handler(req, res) {
           to: submission.email,
           subject,
           html: replyEmailTemplate(submission, String(body.body).slice(0, 10000)),
-          replyTo: process.env.CONTACT_EMAIL || 'henryygeorge25@gmail.com'
+          replyTo: 'hello@cleverstack.dev'
         });
         await logEmail({
           to_email: submission.email,
@@ -615,7 +615,7 @@ export default async function handler(req, res) {
               to: c.email,
               subject,
               html: campaignEmailTemplate(c.name, text, c.email),
-              replyTo: process.env.CONTACT_EMAIL || 'henryygeorge25@gmail.com'
+              replyTo: 'hello@cleverstack.dev'
             });
             await logEmail({ to_email: c.email, type: 'campaign', subject, status: result.ok ? 'sent' : 'failed', error: result.ok ? '' : result.error });
             // Only mark as received when it actually went out, so failures are retried next call.
@@ -644,7 +644,7 @@ export default async function handler(req, res) {
             to: email,
             subject,
             html: reviewInviteTemplate(name, link, project),
-            replyTo: process.env.CONTACT_EMAIL || 'henryygeorge25@gmail.com'
+            replyTo: 'hello@cleverstack.dev'
           });
           await logEmail({ to_email: email, type: 'review_invite', subject, status: result.ok ? 'sent' : 'failed', error: result.ok ? '' : result.error });
           emailed = result.ok;
