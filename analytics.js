@@ -1,13 +1,13 @@
 // Analytics & Tracking — CleverStack
 // GA4: G-W368FVBPYM (stream: Cleverstack)
-// Meta Pixel: placeholder — add your Pixel ID when ready
+// Meta Pixel: 1411355187832320 (dataset "CleverStack Pixel")
 // Third-party scripts load only after cookie consent (GDPR).
 
 (function () {
   'use strict';
 
   var GA_MEASUREMENT_ID = 'G-W368FVBPYM';
-  var META_PIXEL_ID = '000000000000000';
+  var META_PIXEL_ID = '1411355187832320';
   var CONSENT_KEY = 'cleverstack_cookie_consent';
 
   window.dataLayer = window.dataLayer || [];
