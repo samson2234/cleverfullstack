@@ -84,15 +84,21 @@ test('rate limiter fails OPEN to memory if Redis is down (visitors are never loc
 
 test('a hung email provider is cut off with a timeout instead of pinning the function', async () => {
   process.env.RESEND_API_KEY = 're_test';
+  // AbortSignal.timeout() uses an unref'd timer, and a bare pending Promise holds no handle, so
+  // without this the event loop drains and node:test (Node 22) cancels the test. The ref'd timer
+  // stands in for the open socket a real hung fetch would hold; it also fails the test if no abort comes.
   const restore = mockFetch((url, init) => new Promise((_, reject) => {
-    init.signal.addEventListener('abort', () => { const e = new Error('timed out'); e.name = 'TimeoutError'; reject(e); });
+    const socket = setTimeout(() => reject(new Error('fetch was never aborted')), 15000);
+    init.signal.addEventListener('abort', () => { clearTimeout(socket); const e = new Error('timed out'); e.name = 'TimeoutError'; reject(e); });
   }));
   try {
     const t = Date.now();
     const r = await sendResendEmail({ to: 'a@b.co', subject: 's', html: 'h' });
+    const elapsed = Date.now() - t;
     assert.equal(r.ok, false);
     assert.match(r.error, /timed out/i);
-    assert.ok(Date.now() - t < 12000, 'returned within the timeout budget');
+    assert.ok(elapsed >= 7500, 'waited for the 8 s timeout, not cut off early (' + elapsed + ' ms)');
+    assert.ok(elapsed < 12000, 'returned within the timeout budget (' + elapsed + ' ms)');
   } finally { restore(); delete process.env.RESEND_API_KEY; }
 });
 
