@@ -7,7 +7,7 @@
   'use strict';
 
   var GA_MEASUREMENT_ID = 'G-W368FVBPYM';
-  var META_PIXEL_ID = '1411355187832320';
+  var META_PIXEL_ID = '2081700449139098';
   var CONSENT_KEY = 'cleverstack_cookie_consent';
 
   window.dataLayer = window.dataLayer || [];
