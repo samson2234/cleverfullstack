@@ -66,7 +66,7 @@ import { scoreLead } from '../lib/lead-score.js';
 import { createTest, setTestStatus, deleteTest, listTestsWithResults } from '../lib/ab.js';
 import { listConversations, getConversation, getMessages, addMessage, createConversation, setStatus as setConvStatus, rotateToken, markRead as markConvRead, linkFor, conversationsForSubmission,
   changedSince, serverNow, needsRead, editMessage, deleteMessage, setTyping, saveFile, getFile, sendFile } from '../lib/messages.js';
-import { clientMessageTemplate } from '../lib/email.js';
+import { clientMessageTemplate, teamInviteTemplate } from '../lib/email.js';
 import { can, login as staffLogin, userForToken, logout as staffLogout, listStaff, createStaff, updateStaff, resetStaffPassword, deleteStaff, changeOwnPassword } from '../lib/staff.js';
 import { sendWeeklyReport } from '../lib/analytics-report.js';
 import crypto from 'node:crypto';
@@ -159,6 +159,15 @@ async function notifyClient(conv, staffName, body) {
   try {
     const link = await linkFor(conv.id, siteUrl());
     const r = await sendResendEmail({ to: conv.client_email, subject: 'New message about ' + conv.subject + ' — CleverStack', html: clientMessageTemplate(conv.client_name, staffName, body, link) });
+    return { sent: !!r.ok, error: r.ok ? undefined : r.error };
+  } catch (e) { return { sent: false, error: e.message }; }
+}
+
+// Email a team member their role, temporary password and sign-in steps. Best effort: the owner still sees the password.
+async function emailTeamMember(m) {
+  if (!process.env.RESEND_API_KEY) return { sent: false, error: 'RESEND_API_KEY not set' };
+  try {
+    const r = await sendResendEmail({ to: m.email, subject: m.reset ? 'Your new CleverStack CRM password' : 'You have been added to the CleverStack CRM', html: teamInviteTemplate(m), replyTo: 'hello@cleverstack.dev' });
     return { sent: !!r.ok, error: r.ok ? undefined : r.error };
   } catch (e) { return { sent: false, error: e.message }; }
 }
@@ -427,9 +436,9 @@ export default async function handler(req, res) {
       }
       try {
         if (action === 'team_list') return res.status(200).json({ team: await listStaff() });
-        if (action === 'team_create') { const r = await createStaff({ email: body.email, name: body.name, role: body.role }); return res.status(200).json({ success: true, password: r.password }); }
+        if (action === 'team_create') { const r = await createStaff({ email: body.email, name: body.name, role: body.role }); const mail = await emailTeamMember({ email: String(body.email).trim().toLowerCase(), name: body.name, role: body.role, password: r.password }); return res.status(200).json({ success: true, password: r.password, emailed: mail.sent, emailError: mail.error }); }
         if (action === 'team_update') { await updateStaff(parseInt(body.id), { role: body.role, active: body.active, name: body.name }); return res.status(200).json({ success: true }); }
-        if (action === 'team_reset_password') { const r = await resetStaffPassword(parseInt(body.id)); return res.status(200).json({ success: true, password: r.password }); }
+        if (action === 'team_reset_password') { const r = await resetStaffPassword(parseInt(body.id)); const mail = r.user ? await emailTeamMember({ ...r.user, password: r.password, reset: true }) : { sent: false }; return res.status(200).json({ success: true, password: r.password, emailed: mail.sent, emailError: mail.error }); }
         if (action === 'team_delete') { await deleteStaff(parseInt(body.id)); return res.status(200).json({ success: true }); }
         if (action === 'msg_send') {
           const id = parseInt(body.id);

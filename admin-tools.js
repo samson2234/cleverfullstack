@@ -19,6 +19,34 @@
   var ROLE_HELP = { admin: 'Everything except managing the team', sales: 'Works leads, contacts and reviews. Cannot delete, export or send campaigns', viewer: 'Read-only' };
   var me = null;
 
+  // ---------------- show / hide password (every password field, incl. ones added later) ----------------
+  var EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var EYE_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  function addToggle(input) {
+    if (input.dataset.pwToggle) return;
+    input.dataset.pwToggle = '1';
+    var wrap = document.createElement('span'); wrap.className = 'pw-wrap';
+    input.parentNode.insertBefore(wrap, input); wrap.appendChild(input);
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'pw-eye'; b.innerHTML = EYE;
+    b.setAttribute('aria-label', 'Show password'); b.setAttribute('aria-pressed', 'false'); b.title = 'Show password';
+    b.addEventListener('mousedown', function (e) { e.preventDefault(); }); // keep focus and the caret in the field
+    b.addEventListener('click', function () {
+      var show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      b.innerHTML = show ? EYE_OFF : EYE;
+      b.setAttribute('aria-label', show ? 'Hide password' : 'Show password'); b.title = b.getAttribute('aria-label');
+      b.setAttribute('aria-pressed', show ? 'true' : 'false');
+    });
+    wrap.appendChild(b);
+    // mask again on submit so the browser saves it as a password
+    if (input.form) input.form.addEventListener('submit', function () { if (input.type === 'text') b.click(); });
+  }
+  function scanPasswords(root) { [].forEach.call(root.querySelectorAll('input[type=password]'), addToggle); }
+  scanPasswords(document);
+  if (window.MutationObserver) new MutationObserver(function (list) {
+    list.forEach(function (m) { [].forEach.call(m.addedNodes, function (n) { if (n.nodeType !== 1) return; if (n.matches('input[type=password]')) addToggle(n); else scanPasswords(n); }); });
+  }).observe(document.body, { childList: true, subtree: true });
+
   // ---------------- signed-in user ----------------
   function loadMe() {
     return api('GET', '?view=me').then(function (d) {
@@ -36,7 +64,7 @@
   function team() {
     var v = $('view-team');
     v.innerHTML = '<div class="tl-grid">' +
-      '<section class="tl-card"><h3>Add a team member</h3><p class="muted">They get their own login. You will see a temporary password once; share it with them privately. They will be asked to change it.</p>' +
+      '<section class="tl-card"><h3>Add a team member</h3><p class="muted">They get their own login. We email them their role, a temporary password and how to sign in; they will be asked to choose their own password.</p>' +
       '<form id="tmForm" class="tl-form"><input id="tmName" placeholder="Full name" maxlength="120" required><input id="tmEmail" type="email" placeholder="Email address" required>' +
       '<select id="tmRole"><option value="sales">Sales</option><option value="admin">Admin</option><option value="viewer">Viewer</option></select><button class="btn-sm primary" type="submit">Add member</button></form>' +
       '<div id="tmRoleHelp" class="muted small"></div><div id="tmNew"></div></section>' +
@@ -47,13 +75,17 @@
     $('tmForm').addEventListener('submit', function (e) {
       e.preventDefault();
       api('POST', '', { action: 'team_create', name: $('tmName').value, email: $('tmEmail').value, role: $('tmRole').value }).then(function (r) {
-        showPassword($('tmNew'), $('tmEmail').value, r.password); $('tmForm').reset(); help(); listTeam();
+        showPassword($('tmNew'), $('tmEmail').value, r); $('tmForm').reset(); help(); listTeam();
       }).catch(function (er) { alert(er.message); });
     });
     listTeam();
   }
-  function showPassword(box, email, pw) {
-    box.innerHTML = '<div class="tl-secret"><div><b>Temporary password for ' + esc(email) + '</b><small>Shown only now. Send it privately (not by email together with the address).</small></div><code>' + esc(pw) + '</code><button class="btn-sm" type="button">Copy</button></div>';
+  function showPassword(box, email, r) {
+    var pw = r.password;
+    var note = r.emailed ? 'Emailed to ' + esc(email) + ' with their role and sign-in steps. Shown only now, in case they need it.'
+      : 'The email could not be sent' + (r.emailError ? ' (' + esc(r.emailError) + ')' : '') + '. Shown only now: share it with them privately.';
+    box.innerHTML = '<div class="tl-secret"><div><b>' + (r.emailed ? '✓ ' : '') + 'Temporary password for ' + esc(email) + '</b><small>' + note + '</small></div><code>' + esc(pw) + '</code><button class="btn-sm" type="button">Copy</button></div>';
+    toast(r.emailed ? 'Invite emailed to ' + email : 'Saved, but the email was not sent');
     box.querySelector('button').addEventListener('click', function () { copy(pw, this); });
   }
   function listTeam() {
@@ -72,7 +104,7 @@
         var id = tr.getAttribute('data-id'), u = t.find(function (x) { return String(x.id) === id; });
         tr.querySelector('.tm-role').addEventListener('change', function () { api('POST', '', { action: 'team_update', id: id, role: this.value }).then(function () { toast('Role updated'); listTeam(); }).catch(function (e) { alert(e.message); }); });
         tr.querySelector('.tm-toggle').addEventListener('click', function () { api('POST', '', { action: 'team_update', id: id, active: !u.active }).then(listTeam).catch(function (e) { alert(e.message); }); });
-        tr.querySelector('.tm-reset').addEventListener('click', function () { if (!confirm('Reset the password for ' + u.email + '? They will be signed out.')) return; api('POST', '', { action: 'team_reset_password', id: id }).then(function (r) { showPassword($('tmReset'), u.email, r.password); listTeam(); }).catch(function (e) { alert(e.message); }); });
+        tr.querySelector('.tm-reset').addEventListener('click', function () { if (!confirm('Reset the password for ' + u.email + '? They will be signed out and emailed a new temporary password.')) return; api('POST', '', { action: 'team_reset_password', id: id }).then(function (r) { showPassword($('tmReset'), u.email, r); listTeam(); }).catch(function (e) { alert(e.message); }); });
         tr.querySelector('.tm-del').addEventListener('click', function () { if (!confirm('Remove ' + u.email + ' from the team? This cannot be undone.')) return; api('POST', '', { action: 'team_delete', id: id }).then(listTeam).catch(function (e) { alert(e.message); }); });
       });
     }).catch(function (e) { $('tmList').innerHTML = '<div class="muted">' + esc(e.message) + '</div>'; });

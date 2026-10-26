@@ -18,6 +18,7 @@ test('owner creates team members; passwords are generated, shown once and never 
   assert.equal(s.code, 200);
   salesPw = s.body.password;
   assert.ok(salesPw.length >= 10);
+  assert.equal(typeof s.body.emailed, 'boolean', 'reports whether the invite email went out');
   viewerPw = (await asOwner({ action: 'team_create', email: 'vee@cleverstack.test', name: 'Vee', role: 'viewer' })).body.password;
   assert.equal((await asOwner({ action: 'team_create', email: 'sam@cleverstack.test', name: 'Dup', role: 'sales' })).code, 409);
   assert.equal((await asOwner({ action: 'team_create', email: 'x@cleverstack.test', role: 'owner' })).code, 400, 'nobody can be made owner');
@@ -67,6 +68,7 @@ test('sessions end on logout, password reset and deactivation; staff can change 
   t = (await login('sam@cleverstack.test', 'NewPassword123')).body.token;
   const reset = await asOwner({ action: 'team_reset_password', id: salesId });
   assert.equal((await as(t, { url: '/api/admin?view=me' })).code, 401, 'reset revokes sessions');
+  assert.equal(typeof reset.body.emailed, 'boolean');
   t = (await login('sam@cleverstack.test', reset.body.password)).body.token;
   await asOwner({ action: 'team_update', id: salesId, active: false });
   assert.equal((await as(t, { url: '/api/admin?view=me' })).code, 401, 'deactivation revokes sessions');

@@ -61,3 +61,14 @@ body[data-role="viewer"] #anEmail{ display:none !important; }
 .ab-bar{ height:10px; border-radius:100px; background:rgba(255,255,255,.06); overflow:hidden; }
 .ab-bar i{ display:block; height:100%; border-radius:100px; background:linear-gradient(90deg,#6366f1,#2dd4bf); }
 .tl-card a{ color:#a5b4fc; } .tl-card a:hover{ color:#c7d2fe; }
+
+/* show / hide password */
+.pw-wrap{ position:relative; display:block; width:100%; }
+.pw-wrap input{ width:100%; box-sizing:border-box; padding-right:44px !important; }
+.pw-eye{ position:absolute; top:50%; right:6px; transform:translateY(-50%); width:34px; height:34px; display:grid; place-items:center; border:0; border-radius:8px; background:transparent; color:var(--crm-muted); cursor:pointer; padding:0; }
+.pw-eye:hover, .pw-eye[aria-pressed="true"]{ color:var(--crm-text); background:rgba(255,255,255,.06); }
+.pw-eye:focus-visible{ outline:2px solid #818cf8; outline-offset:1px; }
+.pw-eye svg{ width:18px; height:18px; }
+.login-card .pw-wrap{ margin-bottom:14px; }
+.login-card .pw-wrap input{ margin-bottom:0; }
+input[type=password]::-ms-reveal, input[type=password]::-ms-clear{ display:none; }
