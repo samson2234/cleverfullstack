@@ -26,8 +26,7 @@ test('every source is a keyword, scheme or a single valid host', () => {
 });
 
 test('the third parties the site actually uses are allowed', () => {
-  assert.ok(directives['script-src'].includes('https://embed.tawk.to'), 'chat widget script');
-  assert.ok(directives['frame-src'].includes('https://*.tawk.to'), 'chat widget frame');
+  assert.ok(!/tawk/.test(JSON.stringify(directives)), 'the old Tawk.to widget is gone (the site has its own chat)');
   assert.ok(directives['img-src'].includes('https:') || directives['img-src'].includes('https://images.unsplash.com'), 'blog thumbnails');
   assert.ok(directives['script-src'].includes('https://www.googletagmanager.com'), 'analytics');
   assert.ok(directives['script-src'].includes('https://www.googleadservices.com'), 'google ads');
