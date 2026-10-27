@@ -21,7 +21,7 @@
     ['Proposal sent', 'I have sent your proposal by email. Have a look and reply here with any questions.'],
     ['Follow up', 'Just checking in on this. Are you still planning to move ahead? Happy to answer any questions.']
   ];
-  var state = { filter: '', q: '', current: null, conv: null, since: '', thread: null, busy: false, timer: null, ticks: 0, files: {} };
+  var state = { filter: '', q: '', current: null, conv: null, since: '', thread: null, busy: false, timer: null, ticks: 0, files: {}, items: {} };
 
   function ago(s) { var d = new Date(String(s).replace(' ', 'T') + 'Z'), m = Math.round((Date.now() - d) / 60000); return isNaN(m) ? '' : m < 1 ? 'now' : m < 60 ? m + 'm' : m < 1440 ? Math.round(m / 60) + 'h' : Math.round(m / 1440) + 'd'; }
 
@@ -31,7 +31,7 @@
     v.setAttribute('data-ready', '1');
     v.innerHTML = '<div class="ib">' +
       '<aside class="ib-list"><div class="ib-tools"><input id="ibSearch" type="search" placeholder="Search name, email, subject"><button class="btn-sm primary ib-new" id="ibNew" type="button">New</button></div>' +
-      '<div class="ib-filters" id="ibFilters">' + [['', 'All'], ['unread', 'Unread'], ['open', 'Open'], ['waiting', 'Waiting'], ['won', 'Won'], ['closed', 'Closed']].map(function (f) { return '<button type="button" data-f="' + f[0] + '" class="' + (f[0] === '' ? 'on' : '') + '">' + f[1] + '</button>'; }).join('') + '</div>' +
+      '<div class="ib-filters" id="ibFilters">' + [['', 'All'], ['unread', 'Unread'], ['open', 'Open'], ['waiting', 'Waiting'], ['won', 'Won'], ['closed', 'Closed'], ['archived', 'Archived']].map(function (f) { return '<button type="button" data-f="' + f[0] + '" class="' + (f[0] === '' ? 'on' : '') + '">' + f[1] + '</button>'; }).join('') + '</div>' +
       '<div id="ibItems" class="ib-items"></div></aside>' +
       '<section class="ib-main" id="ibMain"><div class="ib-empty">Select a conversation, or start a new one.</div></section></div>';
     $('ibFilters').querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { $('ibFilters').querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); }); state.filter = b.getAttribute('data-f'); list(); }); });
@@ -42,14 +42,97 @@
   function list() {
     return api('GET', '?view=inbox&limit=100&status=' + encodeURIComponent(state.filter) + '&q=' + encodeURIComponent(state.q)).then(function (d) {
       badge(d.unread);
-      $('ibItems').innerHTML = !d.conversations.length ? '<div class="ib-none">No conversations here yet.</div>' : d.conversations.map(function (c) {
-        return '<button type="button" class="ib-item' + (state.current === c.id ? ' on' : '') + (c.unread_staff ? ' unread' : '') + '" data-id="' + c.id + '">' +
-          '<span class="ib-top"><b>' + esc(c.client_name || c.client_email) + '</b><time>' + ago(c.last_message_at) + '</time></span>' +
+      state.items = {};
+      var canMenu = role() !== 'viewer';
+      $('ibItems').innerHTML = !d.conversations.length ? '<div class="ib-none">' + (state.filter === 'archived' ? 'No archived conversations.' : 'No conversations here yet.') + '</div>' : d.conversations.map(function (c) {
+        state.items[c.id] = c;
+        return '<div role="button" tabindex="0" class="ib-item' + (state.current === c.id ? ' on' : '') + (c.unread_staff ? ' unread' : '') + (c.pinned ? ' pinned' : '') + '" data-id="' + c.id + '">' +
+          '<span class="ib-top"><b>' + (c.pinned ? '<i class="ib-pin" title="Pinned">' + ICON.pin + '</i>' : '') + esc(c.client_name || c.client_email) + '</b><time>' + ago(c.last_message_at) + '</time></span>' +
+          (canMenu ? '<button type="button" class="ib-more" aria-label="Conversation options" title="More options">' + ICON.dots + '</button>' : '') +
           '<span class="ib-subj">' + esc(c.subject) + ' <em class="ib-st ' + c.status + '">' + STATUS[c.status] + '</em></span>' +
-          '<span class="ib-prev">' + (c.client_typing ? '<i class="ib-typing">typing…</i>' : (c.last_sender === 'staff' ? 'You: ' : '') + esc(c.preview)) + '</span>' + (c.unread_staff ? '<i class="ib-dot">' + c.unread_staff + '</i>' : '') + '</button>';
+          '<span class="ib-prev">' + (c.client_typing ? '<i class="ib-typing">typing…</i>' : (c.last_sender === 'staff' ? 'You: ' : '') + esc(c.preview)) + '</span>' + (c.unread_staff ? '<i class="ib-dot">' + c.unread_staff + '</i>' : '') + '</div>';
       }).join('');
-      $('ibItems').querySelectorAll('.ib-item').forEach(function (b) { b.addEventListener('click', function () { open(+b.getAttribute('data-id')); }); });
+      $('ibItems').querySelectorAll('.ib-item').forEach(function (b) {
+        var cid = +b.getAttribute('data-id');
+        b.addEventListener('click', function (e) { if (!e.target.closest('.ib-more')) open(cid); });
+        b.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target === b) { e.preventDefault(); open(cid); } });
+        if (!canMenu) return;
+        b.querySelector('.ib-more').addEventListener('click', function (e) { e.stopPropagation(); menu(state.items[cid], this); });
+        b.addEventListener('contextmenu', function (e) { e.preventDefault(); menu(state.items[cid], { x: e.clientX, y: e.clientY }); });
+      });
     }).catch(function (e) { $('ibItems').innerHTML = '<div class="ib-none">' + esc(e.message) + '</div>'; });
+  }
+
+  var ICON = {
+    dots: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>',
+    pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5M9 10.76V6h6v4.76l2 2.24v2H7v-2z"/><path d="M8 6h8V3H8z"/></svg>',
+    unread: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="6" r="3"/><path d="M13 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/></svg>',
+    read: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>',
+    archive: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8M10 12h4"/></svg>',
+    copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+    lead: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>'
+  };
+
+  // ⋯ menu for a conversation (list rows, right-click, and the open thread's header)
+  function closeMenu() { var m = document.querySelector('.ib-menu'); if (m) { m.remove(); document.removeEventListener('mousedown', outside, true); document.removeEventListener('keydown', escKey, true); window.removeEventListener('resize', closeMenu); } }
+  function outside(e) { if (!e.target.closest('.ib-menu')) closeMenu(); }
+  function escKey(e) { if (e.key === 'Escape') closeMenu(); }
+  function act(c, action, extra, msg) {
+    return api('POST', '', Object.assign({ action: action, id: c.id }, extra || {})).then(function () { if (msg) toast(msg); list(); pollBadge(); });
+  }
+  function menu(c, anchor) {
+    closeMenu();
+    if (!c) return;
+    var canDelete = role() === 'owner' || role() === 'admin';
+    var items = [
+      [ICON.pin, c.pinned ? 'Unpin' : 'Pin to top', function () { return act(c, 'conv_pin', { pinned: !c.pinned }, c.pinned ? 'Unpinned' : 'Pinned to top'); }],
+      c.unread_staff ? [ICON.read, 'Mark as read', function () { return act(c, 'conv_read', null, 'Marked as read'); }]
+        : [ICON.unread, 'Mark as unread', function () { return act(c, 'conv_unread', null, 'Marked as unread').then(function () { if (state.current === c.id) closeThread(); }); }],
+      [ICON.archive, c.archived ? 'Unarchive' : 'Archive', function () {
+        return act(c, 'conv_archive', { archived: !c.archived }, c.archived ? 'Moved back to the inbox' : 'Archived. Find it under "Archived"; it comes back if the client replies.')
+          .then(function () { if (state.current === c.id && !c.archived) closeThread(); });
+      }],
+      [ICON.copy, 'Copy email address', function () { return (navigator.clipboard ? navigator.clipboard.writeText(c.client_email) : Promise.reject()).then(function () { toast('Email copied'); }).catch(function () { window.prompt('Email:', c.client_email); }); }],
+      c.submission_id && window.__openLead ? [ICON.lead, 'Open the lead', function () { window.__openLead(c.submission_id); }] : null,
+      'status',
+      canDelete ? '-' : null,
+      canDelete ? [ICON.trash, 'Delete conversation', function () {
+        if (!confirm('Delete the conversation with ' + (c.client_name || c.client_email) + '?\n\nAll messages and files are removed for good, and the client\'s link stops working. The lead itself is kept.')) return;
+        return act(c, 'conv_delete', null, 'Conversation deleted').then(function () { if (state.current === c.id) closeThread(); });
+      }, 'danger'] : null
+    ].filter(Boolean);
+    var m = document.createElement('div');
+    m.className = 'ib-menu'; m.setAttribute('role', 'menu');
+    m.innerHTML = items.map(function (it, i) {
+      if (it === '-') return '<hr>';
+      if (it === 'status') return '<div class="ib-menu-st"><small>Status</small><div>' + Object.keys(STATUS).map(function (s) { return '<button type="button" role="menuitemradio" aria-checked="' + (s === c.status) + '" data-st="' + s + '" class="ib-st ' + s + (s === c.status ? ' cur' : '') + '">' + (s === 'waiting' ? 'Waiting' : STATUS[s]) + '</button>'; }).join('') + '</div></div>';
+      return '<button type="button" role="menuitem" data-i="' + i + '"' + (it[3] ? ' class="' + it[3] + '"' : '') + '>' + it[0] + '<span>' + it[1] + '</span></button>';
+    }).join('');
+    document.body.appendChild(m);
+    m.querySelectorAll('[data-i]').forEach(function (b) {
+      b.addEventListener('click', function () { var f = items[+b.getAttribute('data-i')][2]; closeMenu(); var p = f(); if (p && p.catch) p.catch(function (e) { alert(e.message); }); });
+    });
+    m.querySelectorAll('[data-st]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var s = b.getAttribute('data-st'); closeMenu();
+        act(c, 'conv_status', { status: s }, 'Status: ' + STATUS[s]).then(function () { var sel = $('ibStatus'); if (sel && state.current === c.id) sel.value = s; }).catch(function (e) { alert(e.message); });
+      });
+    });
+    // position next to the ⋯ button (or the mouse), kept on screen
+    var r = anchor.getBoundingClientRect ? anchor.getBoundingClientRect() : { left: anchor.x, right: anchor.x, top: anchor.y, bottom: anchor.y };
+    var w = m.offsetWidth, h = m.offsetHeight;
+    var x = Math.min(Math.max(8, (anchor.getBoundingClientRect ? r.right - w : r.left)), innerWidth - w - 8);
+    var y = r.bottom + 4; if (y + h > innerHeight - 8) y = Math.max(8, r.top - h - 4);
+    m.style.left = x + 'px'; m.style.top = y + 'px';
+    var first = m.querySelector('button'); if (first) first.focus();
+    setTimeout(function () { document.addEventListener('mousedown', outside, true); document.addEventListener('keydown', escKey, true); window.addEventListener('resize', closeMenu); });
+  }
+  function closeThread() {
+    state.current = null; state.thread = null;
+    $('ibMain').innerHTML = '<div class="ib-empty">Select a conversation, or start a new one.</div>';
+    document.querySelector('.ib').classList.remove('reading');
+    try { history.replaceState(null, '', '#inbox'); } catch (e) {}
   }
 
   function badge(n) {
@@ -133,7 +216,9 @@
       '<div class="ib-who"><b>' + esc(c.client_name || c.client_email) + '</b><span>' + esc(c.client_email) + ' · ' + esc(c.subject) + '</span></div>' +
       '<div class="ib-actions">' + (canWrite ? '<select id="ibStatus">' + Object.keys(STATUS).map(function (s) { return '<option value="' + s + '"' + (s === c.status ? ' selected' : '') + '>' + STATUS[s] + '</option>'; }).join('') + '</select>' : '<em class="ib-st ' + c.status + '">' + STATUS[c.status] + '</em>') +
       (link ? '<button class="btn-sm ghost" id="ibCopy" type="button" title="Copy the client\'s private link">Copy client link</button>' : '') +
-      (canWrite ? '<button class="btn-sm ghost" id="ibRotate" type="button" title="Make a new link; the old one stops working">New link</button>' : '') + '</div>';
+      (canWrite ? '<button class="btn-sm ghost" id="ibRotate" type="button" title="Make a new link; the old one stops working">New link</button>' : '') +
+      (canWrite ? '<button class="ib-more ib-more-head" id="ibMore" type="button" aria-label="Conversation options" title="More options">' + ICON.dots + '</button>' : '') + '</div>';
+    if ($('ibMore')) $('ibMore').addEventListener('click', function (e) { e.stopPropagation(); menu(Object.assign({}, c, state.items[c.id] || {}, { status: ($('ibStatus') || {}).value || c.status }), this); });
     $('ibBack').addEventListener('click', function () { document.querySelector('.ib').classList.remove('reading'); });
     if ($('ibStatus')) $('ibStatus').addEventListener('change', function () { api('POST', '', { action: 'conv_status', id: c.id, status: this.value }).then(function () { toast('Status updated'); list(); }).catch(function (e) { alert(e.message); }); });
     if ($('ibCopy')) $('ibCopy').addEventListener('click', function () { var b = this; (navigator.clipboard ? navigator.clipboard.writeText(link) : Promise.reject()).then(function () { b.textContent = 'Copied ✓'; setTimeout(function () { b.textContent = 'Copy client link'; }, 1500); }).catch(function () { window.prompt('Client link:', link); }); });

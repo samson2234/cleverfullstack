@@ -141,3 +141,36 @@ test('Seen receipts and the typing indicator', async () => {
   const clientNewest = clientView.body.messages[clientView.body.messages.length - 1].id;
   assert.equal(clientView.body.seen, clientNewest, 'the team has seen the client\'s reply');
 });
+
+test('conversation menu: pin, mark unread/read, archive (back on a client reply), delete; sales cannot delete', async () => {
+  const C = await newConversation('menu@client.test');
+  const post = (body, headers = ADMIN) => call(admin, { method: 'POST', headers, ip: ip(), body: { id: C.id, ...body } });
+  const inbox = async (status = '') => (await call(admin, { url: '/api/admin?view=inbox&limit=200&status=' + status, headers: ADMIN, ip: ip() })).body;
+  const row = async (status) => (await inbox(status)).conversations.find((c) => c.id === C.id);
+
+  assert.equal((await post({ action: 'conv_pin', pinned: true })).code, 200);
+  assert.equal((await inbox()).conversations[0].id, C.id, 'pinned conversations come first');
+  assert.equal((await row()).pinned, true);
+
+  await post({ action: 'conv_unread' });
+  assert.ok((await row()).unread_staff >= 1, 'marked unread');
+  await post({ action: 'conv_read' });
+  assert.equal((await row()).unread_staff, 0, 'marked read');
+
+  await post({ action: 'conv_archive', archived: true });
+  assert.equal(await row(), undefined, 'archived conversations leave the inbox');
+  assert.equal((await row('archived')).archived, true, 'and show under Archived');
+  await call(portal, { method: 'POST', url: '/api/portal', body: { t: C.token, body: 'Any update?' }, ip: ip() });
+  assert.ok(await row(), 'a client reply brings it back');
+
+  const s = await call(admin, { method: 'POST', headers: ADMIN, ip: ip(), body: { action: 'team_create', email: 'sales-menu@cleverstack.test', name: 'S', role: 'sales' } });
+  const sl = await call(admin, { method: 'POST', ip: ip(), body: { action: 'login', email: 'sales-menu@cleverstack.test', password: s.body.password } });
+  const sh = { authorization: 'Bearer ' + sl.body.token };
+  assert.equal((await post({ action: 'conv_archive', archived: true }, sh)).code, 200, 'sales can archive');
+  assert.equal((await post({ action: 'conv_delete' }, sh)).code, 403, 'sales cannot delete');
+
+  assert.equal((await post({ action: 'conv_delete' })).code, 200);
+  assert.equal(await row('archived'), undefined);
+  assert.equal((await call(portal, { url: '/api/portal?t=' + C.token, ip: ip() })).code, 404, 'the client link stops working');
+  assert.equal((await post({ action: 'conv_delete' })).code, 404);
+});

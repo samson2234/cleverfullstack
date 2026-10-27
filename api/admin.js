@@ -64,7 +64,7 @@ import { rateLimit, clientIp } from '../lib/rate-limit.js';
 import { getAnalytics, getRecentJourneys, getJourneySummaries } from '../lib/analytics.js';
 import { scoreLead } from '../lib/lead-score.js';
 import { createTest, setTestStatus, deleteTest, listTestsWithResults } from '../lib/ab.js';
-import { listConversations, getConversation, getMessages, addMessage, createConversation, setStatus as setConvStatus, rotateToken, markRead as markConvRead, linkFor, conversationsForSubmission,
+import { listConversations, getConversation, getMessages, addMessage, createConversation, setStatus as setConvStatus, rotateToken, setFlags as setConvFlags, markUnread as markConvUnread, deleteConversation, markRead as markConvRead, linkFor, conversationsForSubmission,
   changedSince, serverNow, needsRead, editMessage, deleteMessage, setTyping, saveFile, getFile, sendFile } from '../lib/messages.js';
 import { clientMessageTemplate, teamInviteTemplate } from '../lib/email.js';
 import { can, login as staffLogin, userForToken, logout as staffLogout, listStaff, createStaff, updateStaff, resetStaffPassword, deleteStaff, changeOwnPassword } from '../lib/staff.js';
@@ -467,6 +467,11 @@ export default async function handler(req, res) {
         if (action === 'msg_delete') { await deleteMessage(parseInt(body.id), parseInt(body.message_id), 'staff'); return res.status(200).json({ success: true }); }
         if (action === 'msg_typing') { await setTyping(parseInt(body.id), 'staff'); return res.status(200).json({ success: true }); }
         if (action === 'conv_status') { await setConvStatus(parseInt(body.id), body.status); return res.status(200).json({ success: true }); }
+        if (action === 'conv_archive') { await setConvFlags(parseInt(body.id), { archived: !!body.archived }); return res.status(200).json({ success: true }); }
+        if (action === 'conv_pin') { await setConvFlags(parseInt(body.id), { pinned: !!body.pinned }); return res.status(200).json({ success: true }); }
+        if (action === 'conv_unread') { await markConvUnread(parseInt(body.id)); return res.status(200).json({ success: true }); }
+        if (action === 'conv_read') { await markConvRead(parseInt(body.id), 'staff'); return res.status(200).json({ success: true }); }
+        if (action === 'conv_delete') { await deleteConversation(parseInt(body.id)); return res.status(200).json({ success: true }); }
         if (action === 'conv_rotate') { await rotateToken(parseInt(body.id)); return res.status(200).json({ success: true, link: await linkFor(parseInt(body.id), siteUrl()) }); }
         if (action === 'ab_create') { const id = await createTest(body); return res.status(200).json({ success: true, id }); }
         if (action === 'ab_status') { await setTestStatus(parseInt(body.id), body.status); return res.status(200).json({ success: true }); }
