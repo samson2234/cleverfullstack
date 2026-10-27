@@ -1070,7 +1070,7 @@
   // ---------------- LEAD DETAIL MODAL ----------------
   // Plain-English first touch for a lead: channel, landing page, location, device and the pages they read.
   function leadOrigin(j){
-    if (!j || !j.landing) return '<span class="muted">Not recorded. They sent the form before accepting cookies, or tracking was not on yet.</span>';
+    if (!j || !j.landing) return '<span class="muted">Not recorded: the enquiry came in before visit tracking was added, the visitor blocks tracking (ad blocker or privacy browser), or it was not sent from the website form.</span>';
     var ref = String(j.referrer || '').toLowerCase(), src = String(j.utmSource || '').toLowerCase(), med = String(j.utmMedium || '').toLowerCase(), how;
     if (src) how = (/cpc|ppc|paid|display/.test(med) ? 'Paid ad' : 'Campaign link') + ': ' + j.utmSource + (j.utmCampaign ? ' / ' + j.utmCampaign : '');
     else if (/(^|\.)google\./.test(ref)) how = 'Google search';
