@@ -26,7 +26,9 @@ const read = (f) => fs.readFileSync(path.join(root, f), 'utf8');
 const write = (f, s) => fs.writeFileSync(path.join(root, f), s);
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const url = (id) => BASE + '/blog/' + id;
-const cover = (id) => '/images/blog/' + id + '.webp';
+// cover: a stock photo (scripts/blog-photos.js) when there is one, otherwise the generated illustration
+const hasPhoto = (id) => fs.existsSync(path.join(root, 'images', 'blog', id + '-photo-1400.webp'));
+const cover = (id, w = 1200) => '/images/blog/' + (hasPhoto(id) ? id + '-photo-' + w : id) + '.webp';
 
 function loadSources() {
   const dir = path.join(root, 'blog-src');
@@ -39,7 +41,7 @@ function loadSources() {
     p.readingTime = Math.max(3, Math.round(words / 200)) + ' min read';
     if (seen.has(p.id)) throw new Error('duplicate id ' + p.id);
     seen.add(p.id);
-    if (!fs.existsSync(path.join(root, 'images', 'blog', p.id + '.webp'))) throw new Error(p.id + ': cover missing (run node scripts/make-blog-covers.js)');
+    if (!hasPhoto(p.id) && !fs.existsSync(path.join(root, 'images', 'blog', p.id + '.webp'))) throw new Error(p.id + ': cover missing (run node scripts/make-blog-covers.js)');
   }
   const ord = (id) => { const i = ORDER.indexOf(id); return i < 0 ? 999 : i; };
   return list.sort((a, b) => (b.iso > a.iso ? 1 : b.iso < a.iso ? -1 : ord(a.id) - ord(b.id) || a.id.localeCompare(b.id)));
@@ -96,18 +98,24 @@ function main() {
   for (const p of sources) { write('blog/' + p.id + '.html', renderPost(p, tpl)); log.push('wrote blog/' + p.id + '.html'); }
 
   // 2) posts.json (new posts first; existing ones keep their order)
-  const entry = (p) => ({ id: p.id, title: p.title, excerpt: p.excerpt, author: AUTHOR, date: p.date, category: p.category, image: cover(p.id), readingTime: p.readingTime });
+  const altOf = Object.fromEntries(JSON.parse(read('blog/posts.json')).map((p) => [p.id, p.imageAlt])); // keeps photo descriptions
+  const entry = (p) => ({ id: p.id, title: p.title, excerpt: p.excerpt, author: AUTHOR, date: p.date, category: p.category, image: cover(p.id, 800), imageAlt: p.imageAlt || altOf[p.id] || p.title, readingTime: p.readingTime });
   const ids = new Set(sources.map((p) => p.id));
   const existing = JSON.parse(read('blog/posts.json')).filter((p) => !ids.has(p.id));
   const posts = sources.map(entry).concat(existing);
   write('blog/posts.json', JSON.stringify(posts, null, 2) + '\n');
   log.push('posts.json: ' + posts.length + ' posts');
 
-  // 3) blog index list
+  // 3) blog index cards: real HTML, so search engines and no-JS visitors see every post. Links are root-relative
+  // (/blog/<id>): the index is served at /blog, where a relative "<id>.html" would resolve to /<id>.html (404).
   let idx = read('blog/index.html');
-  const list = '[\n' + posts.map((p) => '  ' + JSON.stringify(p)).join(',\n') + '\n];';
-  if (!/var posts = \[[\s\S]*?\r?\n\];/.test(idx)) throw new Error('posts array not found in blog/index.html');
-  idx = idx.replace(/var posts = \[[\s\S]*?\r?\n\];/, () => 'var posts = ' + list);
+  const card = (p) => '<article class="blog-card reveal" data-id="' + p.id + '"><div class="thumb"><a href="/blog/' + p.id + '"><img src="' + p.image + '" alt="' + esc(p.imageAlt || p.title) + '" loading="lazy" width="800" height="533"></a></div>' +
+    '<div class="body"><div class="meta"><span class="cat">' + esc(p.category) + '</span><span>' + esc(p.date) + '</span></div><h3><a href="/blog/' + p.id + '">' + esc(p.title) + '</a></h3><p>' + esc(p.excerpt) + '</p>' +
+    '<div class="foot"><span>' + esc(p.author) + '</span><span>' + esc(p.readingTime) + '</span></div></div></article>';
+  const grid = /(<div class="blog-grid" id="blog-list">)[\s\S]*?(<\/div><\/div><\/section><\/main>)/;
+  if (!grid.test(idx)) throw new Error('blog-list grid not found in blog/index.html');
+  idx = idx.replace(grid, (m, open, close) => open + posts.map(card).join('') + close);
+  idx = idx.replace(/<script>var posts = \[[\s\S]*?\n\}\);<\/script>/, ''); // the old in-browser list builder
   write('blog/index.html', idx);
 
   // 4) RSS feed (newest first)

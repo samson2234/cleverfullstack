@@ -6,7 +6,8 @@
     "author": "Henry George",
     "date": "October 5, 2026",
     "category": "Conversion",
-    "image": "/images/blog/website-no-enquiries-fix.webp",
+    "image": "/images/blog/website-no-enquiries-fix-photo-800.webp",
+    "imageAlt": "Website analytics on a screen showing visitors who never get in touch",
     "readingTime": "6 min read"
   },
   {
@@ -16,7 +17,8 @@
     "author": "Henry George",
     "date": "October 5, 2026",
     "category": "Performance",
-    "image": "/images/blog/why-is-my-website-slow.webp",
+    "image": "/images/blog/why-is-my-website-slow-photo-800.webp",
+    "imageAlt": "A loading bar, the wait visitors have on a slow website",
     "readingTime": "5 min read"
   },
   {
@@ -26,7 +28,8 @@
     "author": "Henry George",
     "date": "October 5, 2026",
     "category": "SEO",
-    "image": "/images/blog/google-maps-local-seo-checklist.webp",
+    "image": "/images/blog/google-maps-local-seo-checklist-photo-800.webp",
+    "imageAlt": "A customer searching for a local business on her phone in the city",
     "readingTime": "5 min read"
   },
   {
@@ -36,7 +39,8 @@
     "author": "Henry George",
     "date": "October 5, 2026",
     "category": "Trust",
-    "image": "/images/blog/how-to-get-more-client-reviews.webp",
+    "image": "/images/blog/how-to-get-more-client-reviews-photo-800.webp",
+    "imageAlt": "A row of five gold stars, like a five-star client review",
     "readingTime": "5 min read"
   },
   {
@@ -46,7 +50,8 @@
     "author": "Henry George",
     "date": "October 5, 2026",
     "category": "Web Development",
-    "image": "/images/blog/should-i-fix-or-rebuild-my-website.webp",
+    "image": "/images/blog/should-i-fix-or-rebuild-my-website-photo-800.webp",
+    "imageAlt": "A hand-drawn website wireframe for planning a redesign",
     "readingTime": "5 min read"
   },
   {
@@ -56,7 +61,8 @@
     "author": "Henry George",
     "date": "October 5, 2026",
     "category": "Security",
-    "image": "/images/blog/website-security-basics-small-business.webp",
+    "image": "/images/blog/website-security-basics-small-business-photo-800.webp",
+    "imageAlt": "A red padlock on a laptop keyboard, website security",
     "readingTime": "6 min read"
   },
   {
@@ -126,8 +132,9 @@
     "author": "Henry George",
     "date": "2026-08-17",
     "category": "Web Development",
-    "image": "/images/blog/u-1460925895917-afdab827c52f-800.webp",
-    "readingTime": "6 min read"
+    "image": "/images/blog/poor-website-killing-business-photo-800.webp",
+    "readingTime": "6 min read",
+    "imageAlt": "A business owner reviewing his website on a laptop"
   },
   {
     "id": "businesses-refuse-to-scale",
@@ -146,8 +153,9 @@
     "author": "Henry George",
     "date": "2026-08-17",
     "category": "Web Development",
-    "image": "/images/blog/u-1551288049-bebda4e38f71-800.webp",
-    "readingTime": "6 min read"
+    "image": "/images/blog/optimized-website-advantages-photo-800.webp",
+    "readingTime": "6 min read",
+    "imageAlt": "A website shown on a laptop, tablet and phone"
   },
   {
     "id": "how-much-does-business-website-cost",
@@ -156,8 +164,9 @@
     "author": "Henry George",
     "date": "2026-08-17",
     "category": "Web Development",
-    "image": "/images/blog/u-1554224155-6726b3ff858f-800.webp",
-    "readingTime": "7 min read"
+    "image": "/images/blog/how-much-does-business-website-cost-photo-800.webp",
+    "readingTime": "7 min read",
+    "imageAlt": "Working out a website budget with a calculator"
   },
   {
     "id": "best-web-development-company-usa",
@@ -176,7 +185,8 @@
     "author": "Henry George",
     "date": "2026-08-17",
     "category": "Web Development",
-    "image": "/images/blog/u-1556742049-0cfed4f6a45d-800.webp",
-    "readingTime": "6 min read"
+    "image": "/images/blog/why-small-business-needs-website-photo-800.webp",
+    "readingTime": "6 min read",
+    "imageAlt": "A small business owner in her coffee shop"
   }
 ]

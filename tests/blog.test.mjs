@@ -29,11 +29,16 @@ test('every post image loads: local file exists, or the host is allowed by the C
   }
 });
 
-test('the blog index lists exactly the posts in posts.json, in the same order', () => {
-  const m = read('blog/index.html').match(/var posts = (\[[\s\S]*?\r?\n\]);/);
-  assert.ok(m, 'posts array not found in blog/index.html');
-  const inline = JSON.parse(m[1]);
-  assert.deepEqual(inline.map((p) => p.id), posts.map((p) => p.id));
+test('the blog index lists exactly the posts in posts.json, in the same order, as crawlable links that resolve', () => {
+  const idx = read('blog/index.html');
+  const ids = [...idx.matchAll(/<article class="blog-card reveal" data-id="([^"]+)">/g)].map((m) => m[1]);
+  assert.deepEqual(ids, posts.map((p) => p.id));
+  for (const p of posts) {
+    assert.ok(idx.includes('<a href="/blog/' + p.id + '">'), p.id + ': card link');
+    assert.ok(idx.includes('<img src="' + p.image + '" alt="'), p.id + ': card image');
+  }
+  assert.ok(!/href="[^"\/:]+\.html"[^>]*><img/.test(idx), 'a relative card link would 404 from /blog');
+  assert.ok(!idx.includes('var posts = ['), 'old in-browser list builder removed');
 });
 
 test('feed and sitemap contain every post', () => {
