@@ -242,7 +242,7 @@
       th.seen(d.seen);
       th.typing(d.typing, String(d.conversation.client_name || 'The client').split(' ')[0]);
       state.since = d.now || state.since;
-      if (!first) CSChat.alert(fresh);
+      if (!first) { CSChat.alert(fresh); if (fresh) list(); } // a new message moves the chat to the top
     }).catch(function (e) { if (first) $('ibMain').innerHTML = '<div class="ib-empty">' + esc(e.message) + '</div>'; })
       .then(function () { state.busy = false; });
   }
@@ -275,13 +275,13 @@
       if (m && !state.current) open(+m[1]);
     });
     clearInterval(state.timer);
-    // open thread every 4s (new messages, Seen, typing); the list every 16s
+    // open thread every 4s (new messages, Seen, typing); the list every 8s
     state.timer = setInterval(function () {
       var v = $('view-inbox'); if (!v || !v.classList.contains('active')) return;
       var visible = document.visibilityState === 'visible';
       state.ticks++;
       if (state.current && (visible || state.ticks % 4 === 0)) refresh(false);
-      if (visible && state.ticks % 4 === 0) list();
+      if (visible && state.ticks % 2 === 0) list();
     }, 4000);
   }
 

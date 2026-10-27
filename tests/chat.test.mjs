@@ -174,3 +174,13 @@ test('conversation menu: pin, mark unread/read, archive (back on a client reply)
   assert.equal((await call(portal, { url: '/api/portal?t=' + C.token, ip: ip() })).code, 404, 'the client link stops working');
   assert.equal((await post({ action: 'conv_delete' })).code, 404);
 });
+
+test('inbox order: newest message first (like WhatsApp), pinned chats above', async () => {
+  const X = await newConversation('order-x@client.test');
+  const Y = await newConversation('order-y@client.test');
+  const ids = async () => (await call(admin, { url: '/api/admin?view=inbox&limit=200', headers: ADMIN, ip: ip() })).body.conversations.filter((c) => !c.pinned).map((c) => c.id);
+  assert.ok((await ids()).indexOf(Y.id) < (await ids()).indexOf(X.id), 'newer conversation first');
+  await new Promise((r) => setTimeout(r, 1100)); // datetime('now') has 1 s resolution
+  await call(portal, { method: 'POST', url: '/api/portal', body: { t: X.token, body: 'New reply' }, ip: ip() });
+  assert.equal((await ids())[0], X.id, 'a new message moves the chat to the top');
+});
