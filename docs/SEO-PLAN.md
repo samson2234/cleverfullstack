@@ -59,7 +59,34 @@ For every target we record: the search phrase, the page that owns it (one page p
 
 ## 3. Phases
 
-### Phase 1: Technical SEO (week 1–2) · effort: me · risk: low
+### Phase 1: Technical SEO (week 1–2) · effort: me · risk: low · ✅ DONE 27 Oct 2026
+
+> **Result (live, verified; all 117 tests pass, CI green):**
+> - **T1 French:** Option A, `fr` hreflang removed from all 28 pages.
+> - **T2 Portfolio:** 18 real pages at `/work/<project>`, each with its own title, description, canonical, CreativeWork and breadcrumb schema, and related projects. Old `?id=` links 301 there; 40 internal links re-pointed. (There were 18 projects, not ~30.)
+> - **Bugs found and fixed on the way:**
+>   - `reviews`, `review` and `welcome-back` had their canonical set to **/404**, and their schema called them "404 Page Not Found".
+>   - 5 pages had `og:url` on the `.html` address.
+>   - The UK page claimed a **London office address** in its schema.
+>   - The Organization `sameAs` listed a GoodFirms profile that doesn't exist and a mistyped Clutch link.
+>   - The blog description targeted "Nigerian businesses".
+>   - `docs/`, `tests/`, `scripts/` and `lib/` were publicly readable.
+> - **T4 Core Web Vitals** (throttled mobile lab test, same connection before and after):
+>   - Home LCP **5.6 s → 1.6 s**, CLS **0.28 → 0.03**
+>   - Services LCP **3.4 s → 1.3 s**
+>   - Blog LCP **3.4 s → 2.1 s**
+>   - Every page measured has CLS < 0.05
+>   - How: the full-screen preloader is gone, the theme is set before first paint, the hero is no longer hidden behind animations, the header layout is in the critical CSS, and LCP images get priority.
+> - **T5 Sitemap:** generated from the pages (`scripts/build-sitemap.js`), 34 → **50 URLs**, real `lastmod`, 91 image entries. It regenerates whenever the blog or portfolio builders run.
+> - **T6 Schema:** Organization + ProfessionalService with the real address and the target markets (US, GB, DE, CA, IE, NL, FR, Nordics, AU, NZ, Europe). Location pages are Services provided by it.
+> - **T7:** `welcome-back` is now noindex. robots.txt fixed.
+> - **IndexNow:** a GitHub Action pings changed pages after each deploy. The first run sent 50 pages, answer 202 (accepted).
+> - **Internal linking:** every post links to a matching case study and the services page; reviews got breadcrumbs.
+> - **Monitoring:** `tests/seo.test.mjs` (9 tests) now guards canonicals, H1, titles and descriptions, schema truthfulness, sitemap freshness, redirects, IndexNow, deploy exclusions and the CWV fixes.
+>
+> **Carried forward:**
+> - Service schema per service page arrives with the service pages (Phase 2), as do team Person entities (they need your team details) and the title/description rewrites (several are still over 60/160 characters).
+> - The weekly Search Console check is manual until Phase 5's monthly report.
 
 1. **Fix the French problem (T1).**
    - Option A (recommended now): remove the `fr` hreflang and keep French as an on-page convenience only.
