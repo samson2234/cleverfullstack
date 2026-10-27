@@ -54,10 +54,12 @@ test('header: every page highlights exactly the section it belongs to', () => {
   const norm = (href, rel) => (rel.startsWith('blog/') && href === 'index.html') ? 'blog' : (href.replace(/^\.\.\//, '').replace(/\/index\.html$/, '').replace(/\.html$/, '') || 'index');
   for (const file of htmlFiles(root)) {
     const rel = path.relative(root, file).replace(/\\/g, '/');
-    const nav = (fs.readFileSync(file, 'utf8').match(/<nav class="main-nav"[^>]*>([\s\S]*?)<\/nav>/) || [])[1];
+    const html = fs.readFileSync(file, 'utf8');
+    const nav = (html.match(/<nav class="main-nav"[^>]*>([\s\S]*?)<\/nav>/) || [])[1];
     if (!nav) continue;
     const active = [...nav.matchAll(/<a href="([^"]+)" class="active"/g)].map((m) => norm(m[1], rel));
-    const want = rel.startsWith('blog/') ? 'blog' : rel.startsWith('work/') ? 'portfolio' : MAP[rel];
+    // service and industry pages (scripts/build-landing.js) belong to Services
+    const want = rel.startsWith('blog/') ? 'blog' : rel.startsWith('work/') ? 'portfolio' : html.includes('<main id="main" data-landing="') ? 'services' : MAP[rel];
     assert.deepEqual(active, want ? [want] : [], `${rel}: active nav ${JSON.stringify(active)}`);
   }
 });

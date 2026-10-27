@@ -11,7 +11,8 @@
     "assets:check": "node scripts/version-assets.js --check",
     "blog": "node scripts/build-blog.js",
     "testimonials": "node scripts/sync-testimonials.js",
-    "testimonials:check": "node scripts/sync-testimonials.js --check"
+    "testimonials:check": "node scripts/sync-testimonials.js --check",
+    "landing": "node scripts/build-landing.js"
   },
   "dependencies": {
     "@libsql/client": "^0.17.4",

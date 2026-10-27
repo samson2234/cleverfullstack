@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://cleverstack.dev';
 const read = (f) => fs.readFileSync(path.join(root, f), 'utf8');
-const SKIP = ['node_modules', 'vendor', 'scripts', 'tests', 'docs', 'api', 'lib', 'images', 'blog-src', 'work-src'];
+const SKIP = ['node_modules', 'vendor', 'scripts', 'tests', 'docs', 'api', 'lib', 'images', 'blog-src', 'work-src', 'landing-src'];
 const files = [];
 (function walk(d) {
   for (const e of fs.readdirSync(d, { withFileTypes: true })) {
@@ -139,4 +139,39 @@ test('Core Web Vitals guards: no full-screen preloader, theme set before first p
     assert.ok(!/class="[^"]*\breveal(-left|-right|-scale)?\b/.test(hero), p.rel + ': hero hidden behind a reveal animation');
   }
   assert.ok(!read('script.js').includes('gsap.fromTo(t,{autoAlpha:0,y:26}'), 'script.js re-hides the hero');
+});
+
+test('service and industry pages: substantial, honest prices, real case studies, linked from /services', async () => {
+  const { createRequire } = await import('node:module');
+  const req = createRequire(import.meta.url);
+  const src = [...req('../landing-src/services.js'), ...req('../landing-src/industries.js')];
+  assert.ok(src.filter((p) => p.kind === 'service').length >= 8 && src.filter((p) => p.kind === 'industry').length >= 6);
+  // only the package prices published on /services
+  const published = new Set([...read('services.html').matchAll(/"@type": "Offer", "price": "(\d+)"/g)].map((m) => Number(m[1])));
+  const projects = new Set(JSON.parse(read('work-src/projects.json')).map((p) => p.slug));
+  const hub = read('services.html');
+  for (const p of src) {
+    const html = read(p.slug + '.html');
+    const main = html.match(/<main[\s\S]*<\/main>/)[0];
+    const words = main.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+    assert.ok(words >= 1000, p.slug + ': only ' + words + ' words');
+    if (p.price.from) assert.ok(published.has(p.price.from), p.slug + ': price $' + p.price.from + ' is not a published package price');
+    for (const c of p.cases || []) assert.ok(projects.has(c) && main.includes('href="/work/' + c + '"'), p.slug + ': case study ' + c);
+    const j = ld(html);
+    const svc = j.find((x) => x['@type'] === 'Service');
+    assert.equal(svc.provider['@id'], SITE + '/#organization', p.slug + ': provider');
+    assert.equal(svc.url, SITE + '/' + p.slug);
+    if (p.price.from) assert.equal(svc.offers.price, String(p.price.from));
+    const faq = j.find((x) => x['@type'] === 'FAQPage');
+    assert.equal(faq.mainEntity.length, p.faqs.length, p.slug + ': FAQ schema matches the visible FAQ');
+    assert.ok(hub.includes('href="/' + p.slug + '"'), p.slug + ': not linked from /services');
+    assert.doesNotMatch(main.replace(/<[^>]+>/g, ' '), /\d+(\.\d+)?%/, p.slug + ': percentage claims need a source; keep them off these pages');
+  }
+});
+
+test('landing pages are up to date with their source (npm run landing)', () => {
+  const before = src2html();
+  execFileSync(process.execPath, [path.join(root, 'scripts/build-landing.js')], { cwd: root, stdio: 'pipe' });
+  assert.deepEqual(src2html(), before, 'generated pages changed: run npm run landing and npm run assets, then commit');
+  function src2html() { return Object.fromEntries(files.filter((f) => /^[a-z0-9-]+\.html$/.test(f)).map((f) => [f, read(f).replace(/\?v=[a-f0-9]+/g, '')])); }
 });
