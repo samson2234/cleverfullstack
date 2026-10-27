@@ -73,7 +73,13 @@ test('structured data is valid JSON, truthful and has breadcrumbs', () => {
   const org = ld(read('index.html')).find((b) => b['@id'] === SITE + '/#organization');
   assert.ok(org && types(org).includes('ProfessionalService') && types(org).includes('Organization'), 'homepage organization');
   for (const c of ['United States', 'United Kingdom', 'Germany', 'Canada']) assert.ok(org.areaServed.some((a) => a.name === c), 'areaServed ' + c);
-  assert.ok(!JSON.stringify(org.sameAs).includes('wwwclutch') && !JSON.stringify(org.sameAs).includes('goodfirms'), 'sameAs only lists profiles that exist');
+  assert.ok(!JSON.stringify(org.sameAs || []).includes('wwwclutch') && !JSON.stringify(org.sameAs || []).includes('goodfirms'), 'sameAs only lists profiles that exist');
+});
+
+test('no links or schema claim social profiles that are not ours', () => {
+  // these handles belong to someone else or do not exist (confirmed by the owner, 27 Oct 2026)
+  const notOurs = /linkedin\.com\/company\/cleverstack|(?:twitter|x)\.com\/cleverstack|goodfirms\.co\/company\/cleverstack|clutch\.co\/profile\/cleverstack/i;
+  for (const p of pages) assert.ok(!notOurs.test(p.html), p.rel + ': ' + (p.html.match(notOurs) || [])[0]);
 });
 
 test('sitemap.xml lists exactly the indexable pages and is up to date', () => {
