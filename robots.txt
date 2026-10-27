@@ -1,7 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /admin.html
-Disallow: /review.html
+Disallow: /admin
 
 Sitemap: https://cleverstack.dev/sitemap.xml

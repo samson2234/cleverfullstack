@@ -1,0 +1,493 @@
+[
+  {
+    "id": "alexfit",
+    "slug": "alexfit-coaching-fitness-website",
+    "title": "AlexFit Coaching",
+    "subtitle": "Fitness • Business Site",
+    "img": "/images/portfolio/demo-fitness-800.webp",
+    "imgAlt": "AlexFit Coaching website screenshot",
+    "liveUrl": "https://alexfitness.netlify.app/",
+    "client": {
+      "name": "Drake Walker",
+      "title": "Founder, SaaS Company",
+      "country": "United States"
+    },
+    "goal": "AlexFit needed a modern, brand-focused website that could showcase their coaching services, display trainer profiles, and allow clients to book sessions online. The existing site was outdated, slow, and not converting visitors into leads.",
+    "challenges": "Balancing a clean, motivational aesthetic with functional scheduling and payment features. The client wanted the site to feel premium without overwhelming visitors with too many options on the first screen.",
+    "solutions": "I built a responsive site using HTML/CSS and JavaScript with a bold, fitness-focused design. The booking flow was simplified to three clicks, and I added a dynamic trainer spotlight section that rotates featured coaches on the homepage.",
+    "outcome": "The new site loads 2x faster than the previous version. Online booking requests increased by 60% within the first two months, and the trainer spotlight feature became a top engagement driver.",
+    "skills": [
+      "Web Development",
+      "UI/UX Design",
+      "JavaScript",
+      "HTML/CSS"
+    ],
+    "price": "$400 – $600",
+    "duration": "7–14 days",
+    "industry": "Fitness & Health"
+  },
+  {
+    "id": "spicesavor",
+    "slug": "spice-and-savor-restaurant-web-app",
+    "title": "Spice & Savor",
+    "subtitle": "Restaurant • Web App",
+    "img": "/images/portfolio/demo-restaurant-800.webp",
+    "imgAlt": "Spice & Savor restaurant web app screenshot",
+    "liveUrl": "https://spicesavorresaturant.netlify.app/",
+    "client": {
+      "name": "Sarah Mitchell",
+      "title": "Founder, Wellness Brand",
+      "country": "United Kingdom"
+    },
+    "goal": "Create an interactive restaurant web app with an engaging digital menu, online reservation system, and location discovery features to help the restaurant attract more diners.",
+    "challenges": "Building a visually rich menu that works beautifully on mobile while integrating a real-time reservation system without third-party dependency overload.",
+    "solutions": "Developed a React-based single-page application with a dynamic menu component that supports dietary filters and dish categories. The reservation system sends instant confirmations and integrates with the restaurant's existing calendar.",
+    "outcome": "Online reservations grew by 45% in the first quarter. The digital menu reduced printing costs and allows the restaurant to update offerings in real time.",
+    "skills": [
+      "Web App Development",
+      "React",
+      "API Integration",
+      "Responsive Design"
+    ],
+    "price": "$500 – $800",
+    "duration": "10–18 days",
+    "industry": "Food & Beverage"
+  },
+  {
+    "id": "pureenergy",
+    "slug": "pure-energy-smoothie-landing-page",
+    "title": "Pure Energy",
+    "subtitle": "Food & Beverage • Landing Page",
+    "img": "/images/portfolio/demo-smoothie-800.webp",
+    "imgAlt": "Pure Energy smoothie brand landing page screenshot",
+    "liveUrl": "https://smoothiewebsite1.netlify.app/",
+    "client": {
+      "name": "Brooklyn Foster",
+      "title": "Marketing Director",
+      "country": "United States"
+    },
+    "goal": "Design a high-converting landing page for a new smoothie brand launch that clearly communicates product benefits, drives pre-orders, and captures email subscribers for the launch list.",
+    "challenges": "Condensing a brand story, product line, and call-to-action into a single-page experience that holds attention without overwhelming the visitor.",
+    "solutions": "Built a scroll-triggered storytelling landing page using HTML/CSS and JavaScript with product animations, a sticky CTA bar, and an email capture flow integrated with Mailchimp.",
+    "outcome": "The landing page achieved a 12% conversion rate on pre-orders and grew the email list by 850 subscribers during the launch week.",
+    "skills": [
+      "Landing Page Design",
+      "HTML/CSS",
+      "JavaScript",
+      "Email Integration"
+    ],
+    "price": "$300 – $500",
+    "duration": "5–10 days",
+    "industry": "Food & Beverage"
+  },
+  {
+    "id": "sparkleclean",
+    "slug": "sparkle-clean-cleaning-business-website",
+    "title": "Sparkle Clean",
+    "subtitle": "Cleaning Services • Business Site",
+    "img": "/images/portfolio/demo-cleaning-800.webp",
+    "imgAlt": "Sparkle Clean cleaning services website screenshot",
+    "liveUrl": "https://cleaningwebsitedemo.netlify.app/",
+    "client": {
+      "name": "Emma Wilson",
+      "title": "Non-Profit Director",
+      "country": "Canada"
+    },
+    "goal": "Build a trust-driven service website for a cleaning business that helps visitors feel confident booking services online. The site needed instant quote functionality and clear service tier comparisons.",
+    "challenges": "Establishing credibility and trust through design alone — cleaning services face skepticism, so the site needed reviews, guarantees, and transparency front and center.",
+    "solutions": "Developed a clean, professional site with a live quote calculator, service comparison table, and a testimonials section with real client photos. Integrated Formspree for contact submissions.",
+    "outcome": "Online quote requests tripled in the first month. The service comparison table reduced inbound calls by 25% as visitors could self-educate before reaching out.",
+    "skills": [
+      "Web Development",
+      "Form Integration",
+      "UI/UX",
+      "HTML/CSS"
+    ],
+    "price": "$350 – $550",
+    "duration": "7–12 days",
+    "industry": "Home Services"
+  },
+  {
+    "id": "affiliateblog",
+    "slug": "affiliate-marketing-wordpress-blog",
+    "title": "Affiliate Marketing Blog",
+    "subtitle": "WordPress • Blog",
+    "img": "/images/portfolio/demo-affiliate-800.webp",
+    "imgAlt": "Affiliate marketing blog screenshot",
+    "liveUrl": null,
+    "client": {
+      "name": "Anna Schmidt",
+      "title": "Business Owner",
+      "country": "Germany"
+    },
+    "goal": "Create an SEO-optimized WordPress blog designed to generate affiliate income through product reviews, comparison articles, and tutorial content with ad integration.",
+    "challenges": "Balancing SEO requirements with reader experience — the site needed to rank on Google while keeping readers engaged and clicking through to affiliate offers.",
+    "solutions": "Built a custom WordPress theme with schema markup, optimized Core Web Vitals, and a strategic internal linking structure. Integrated Ezoic ads and Amazon Associates with custom placement controls.",
+    "outcome": "The blog reached 15,000 monthly visitors within 4 months. Affiliate commission income grew steadily month-over-month, with top articles ranking on the first page of Google.",
+    "skills": [
+      "WordPress",
+      "SEO",
+      "Content Strategy",
+      "Affiliate Marketing"
+    ],
+    "price": "$400 – $700",
+    "duration": "10–20 days",
+    "industry": "Digital Media & Blogging"
+  },
+  {
+    "id": "sonicaudio",
+    "slug": "sonic-audio-shopify-store",
+    "title": "Sonic Audio",
+    "subtitle": "E-Commerce • Shopify",
+    "img": "/images/portfolio/demo-ecom-800.webp",
+    "imgAlt": "Sonic Audio e-commerce store screenshot",
+    "liveUrl": null,
+    "client": {
+      "name": "James Whitfield",
+      "title": "CEO, Retail Brand",
+      "country": "United Kingdom"
+    },
+    "goal": "Design and develop a custom Shopify store for an audio equipment brand that needed advanced product filtering, quick checkout, and a mobile-first shopping experience.",
+    "challenges": "Creating a fast, filterable product catalog with hundreds of SKUs without slowing down page load times, and integrating a seamless one-page checkout.",
+    "solutions": "Built a custom Shopify theme with Liquid templates, implemented AJAX-powered collection filtering, and optimized the checkout flow to reduce friction. Added product video embeds and spec comparison tables.",
+    "outcome": "Cart abandonment rate dropped by 18%. Average session duration increased by 40% thanks to the improved product browsing experience.",
+    "skills": [
+      "Shopify",
+      "Liquid",
+      "E-Commerce",
+      "UX Optimization"
+    ],
+    "price": "$600 – $1,000",
+    "duration": "14–25 days",
+    "industry": "Consumer Electronics"
+  },
+  {
+    "id": "helenmay",
+    "slug": "helen-may-coaching-platform",
+    "title": "Helen May Coaching",
+    "subtitle": "Business • Premium Growth Platform",
+    "img": "/images/portfolio/fv-8fa46884-1200.webp",
+    "imgAlt": "Helen May Coaching premium platform screenshot",
+    "liveUrl": null,
+    "client": {
+      "name": "Alex Rodriguez",
+      "title": "eCommerce Owner",
+      "country": "United States"
+    },
+    "goal": "Build a premium coaching platform that positions Helen May as a multi-industry growth expert. The platform needed to showcase services across different niches and integrate a smooth booking workflow.",
+    "challenges": "Designing a cohesive brand experience across multiple service categories (career, business, personal growth) while keeping navigation simple and the visual identity consistent.",
+    "solutions": "Developed a Next.js application with a modular component system. Each service category has its own landing section with tailored content, while unified booking and contact flows tie everything together.",
+    "outcome": "The platform increased coaching inquiry submissions by 55%. Visitors spend an average of 4 minutes exploring different service categories before booking.",
+    "skills": [
+      "Next.js",
+      "React",
+      "Tailwind CSS",
+      "UI/UX Design"
+    ],
+    "price": "$500 – $800",
+    "duration": "12–20 days",
+    "industry": "Coaching & Personal Development"
+  },
+  {
+    "id": "dreamvoyage",
+    "slug": "dream-voyage-travel-blog",
+    "title": "Dream Voyage",
+    "subtitle": "Travel • Premium Blog & Discovery Platform",
+    "img": "/images/portfolio/fv-371dbeb4-1200.webp",
+    "imgAlt": "Dream Voyage travel website screenshot",
+    "liveUrl": null,
+    "client": {
+      "name": "David Thompson",
+      "title": "Restaurant Owner",
+      "country": "Australia"
+    },
+    "goal": "Create an immersive travel blog and destination discovery platform with rich visual storytelling, destination guides, and a CMS that allows the author to publish content independently.",
+    "challenges": "Balancing high-quality imagery and media with fast load times, and building a CMS workflow that a non-technical travel blogger could use effortlessly.",
+    "solutions": "Built with Next.js and Sanity CMS for headless content management. Implemented lazy-loaded image galleries, interactive destination maps, and an easy-to-use rich text editor for blog posts.",
+    "outcome": "The site loads in under 2 seconds despite rich media content. The client publishes 3–4 articles weekly without any developer assistance, and traffic has grown steadily through SEO.",
+    "skills": [
+      "Next.js",
+      "Sanity CMS",
+      "Tailwind CSS",
+      "Headless CMS"
+    ],
+    "price": "$500 – $900",
+    "duration": "14–22 days",
+    "industry": "Travel & Hospitality"
+  },
+  {
+    "id": "akkira",
+    "slug": "akkira-creative-portfolio",
+    "title": "AKKIRA",
+    "subtitle": "Portfolio • Creative UX/UI & Web Design",
+    "img": "/images/portfolio/fv-86c5ffd3-1200.webp",
+    "imgAlt": "AKKIRA creative portfolio website screenshot",
+    "liveUrl": null,
+    "client": {
+      "name": "Michael Chen",
+      "title": "Startup Founder",
+      "country": "Canada"
+    },
+    "goal": "Design and develop a standout creative portfolio for a UX/UI designer that showcases their work through interactive case studies, smooth animations, and a unique visual identity.",
+    "challenges": "Creating a portfolio that feels more like an interactive experience than a standard grid-of-work. Every animation and transition needed to feel intentional without hurting performance.",
+    "solutions": "Used React with GSAP for scroll-triggered animations and page transitions. Each case study is a rich, immersive page with before/after sliders, process timelines, and live prototype embeds.",
+    "outcome": "The client reported a 3x increase in inbound job inquiries after launching. The interactive case studies were specifically mentioned by multiple hiring managers as a deciding factor.",
+    "skills": [
+      "React",
+      "GSAP",
+      "Framer Motion",
+      "UI/UX Design",
+      "Creative Development"
+    ],
+    "price": "$600 – $1,000",
+    "duration": "15–25 days",
+    "industry": "Creative & Design"
+  },
+  {
+    "id": "aiskincare",
+    "slug": "ai-skincare-mobile-app",
+    "title": "AI Skincare App",
+    "subtitle": "Mobile • AI-Powered Application",
+    "img": "/images/portfolio/fv-4fbc79f2-1200.webp",
+    "imgAlt": "AI Skincare mobile app screenshot",
+    "liveUrl": null,
+    "client": {
+      "name": "Lukas Weber",
+      "title": "CTO, FinTech Startup",
+      "country": "Germany"
+    },
+    "goal": "Build an AI-powered skincare analysis mobile app that uses computer vision to analyze skin conditions, provide personalized product recommendations, and track ingredient compatibility.",
+    "challenges": "Integrating a computer vision AI model for skin analysis while keeping the app performant on mobile devices. Also managing a complex ingredient database with allergy and sensitivity filters.",
+    "solutions": "Developed the app with React Native for cross-platform compatibility. Integrated a TensorFlow Lite model for on-device skin analysis and built a Firebase backend for user profiles and ingredient data.",
+    "outcome": "The app achieved 4.6-star rating on both app stores. Users report high satisfaction with the personalized recommendations, and the ingredient checker has been praised for its accuracy.",
+    "skills": [
+      "React Native",
+      "AI/ML Integration",
+      "Firebase",
+      "Mobile Development"
+    ],
+    "price": "$800 – $1,500",
+    "duration": "20–35 days",
+    "industry": "Health & Beauty Technology"
+  },
+  {
+    "id": "fittrack",
+    "slug": "fittrack-fitness-tracking-app",
+    "title": "FitTrack Mobile",
+    "subtitle": "Mobile • Fitness Tracking Application",
+    "img": "/images/portfolio/fv-80184ef0-1200.webp",
+    "imgAlt": "FitTrack Mobile fitness app screenshot",
+    "liveUrl": null,
+    "client": {
+      "name": "Brooklyn Foster",
+      "title": "Marketing Director",
+      "country": "United States"
+    },
+    "goal": "Create a modern fitness tracking app that allows users to log workouts, track progress over time with visual charts, set goals, and stay motivated through streaks and achievements.",
+    "challenges": "Designing an intuitive workout logging experience that works for both beginners and advanced athletes, while keeping the UI clean and uncluttered.",
+    "solutions": "Built with React Native and Node.js backend. The workout logger uses a template system for quick logging, and the progress dashboard visualizes data with interactive charts using Victory Native.",
+    "outcome": "Users log an average of 4.2 workouts per week. The streak feature increased 30-day retention by 35% compared to earlier versions.",
+    "skills": [
+      "React Native",
+      "Node.js",
+      "MongoDB",
+      "Mobile UI/UX"
+    ],
+    "price": "$700 – $1,200",
+    "duration": "18–30 days",
+    "industry": "Fitness & Health"
+  },
+  {
+    "id": "enterprisedash",
+    "slug": "enterprise-analytics-dashboard",
+    "title": "Enterprise Dashboard",
+    "subtitle": "Web App • High-Performance Analytics",
+    "img": "/images/portfolio/fv-15fd9a83-1200.webp",
+    "imgAlt": "Enterprise dashboard analytics screenshot",
+    "liveUrl": null,
+    "client": {
+      "name": "Drake Walker",
+      "title": "Founder, SaaS Company",
+      "country": "United States"
+    },
+    "goal": "Build a high-performance full-stack analytics dashboard with real-time data visualization, role-based access control, and comprehensive admin management tools for a SaaS company.",
+    "challenges": "Handling large datasets without sacrificing render performance. The dashboard needed to display real-time metrics across multiple data sources without lag.",
+    "solutions": "Architected a Next.js frontend with a Node.js/PostgreSQL backend. Used WebSocket connections for real-time data updates and Recharts for interactive, customizable data visualizations.",
+    "outcome": "The dashboard processes and visualizes over 100,000 data points in under 200ms. Client teams reported a 40% reduction in time spent on manual reporting.",
+    "skills": [
+      "Next.js",
+      "Node.js",
+      "PostgreSQL",
+      "WebSockets",
+      "Data Visualization"
+    ],
+    "price": "$1,000 – $2,000",
+    "duration": "21–40 days",
+    "industry": "SaaS & Enterprise Technology"
+  },
+  {
+    "id": "meloforge",
+    "slug": "meloforge-ai-music-web3-app",
+    "title": "MeloForge",
+    "subtitle": "Music • AI / Web3 App",
+    "img": "/images/portfolio-meloforge.webp",
+    "imgAlt": "MeloForge AI music platform screenshot",
+    "liveUrl": "https://meloforge.vercel.app/",
+    "client": {
+      "name": "MeloForge",
+      "title": "Music Tech Startup",
+      "country": "Global"
+    },
+    "goal": "Build an AI-powered music platform where listeners can track every listen, battle genre rivals, get AI song suggestions, and mint their sonic legacy as NFTs on Solana.",
+    "challenges": "Bringing together AI-driven personalization, real-time listening analytics, and blockchain minting in one cohesive experience that feels effortless for everyday music fans.",
+    "solutions": "Architected a Next.js application powered by Google Gemini for song suggestions and genre-rivalry matchmaking. Integrated Solana Web3 minting so users can tokenize their listening history and achievements as on-chain collectibles.",
+    "outcome": "The platform ships a fully on-chain \"sonic legacy\" — users mint listening milestones as NFTs — while the Gemini-powered recommendation engine keeps listeners engaged session after session.",
+    "skills": [
+      "Next.js",
+      "Solana",
+      "Gemini AI",
+      "Web3",
+      "AI Integration"
+    ],
+    "price": "$1,500 – $3,000",
+    "duration": "4–8 weeks",
+    "industry": "Music Technology / Web3"
+  },
+  {
+    "id": "researchhub",
+    "slug": "researchhub-academic-web-app",
+    "title": "ResearchHUB",
+    "subtitle": "Academic • Collaborative Web App",
+    "img": "/images/portfolio-researchhub.webp",
+    "imgAlt": "ResearchHUB collaborative research platform screenshot",
+    "liveUrl": "https://res-crmp.justinch.dev/",
+    "client": {
+      "name": "ResearchHUB",
+      "title": "Academic Research Team",
+      "country": "Global"
+    },
+    "goal": "Create a real-time collaborative research management platform that lets academic teams organize projects, share findings, and work together seamlessly from anywhere.",
+    "challenges": "Designing real-time collaboration that handles concurrent edits, versioning, and role-based access without losing speed or overwhelming researchers used to simpler tools.",
+    "solutions": "Built a Next.js frontend with an Express and Node.js backend. Implemented live document sync and activity feeds so every collaborator sees updates instantly, with granular permissions per project.",
+    "outcome": "Research teams can manage the full lifecycle of a project — from proposal to publication — in one place, keeping every draft, note, and citation in sync while cutting coordination overhead.",
+    "skills": [
+      "Express",
+      "Next.js",
+      "Node.js",
+      "WebSockets",
+      "Real-Time Collaboration"
+    ],
+    "price": "$1,200 – $2,500",
+    "duration": "3–6 weeks",
+    "industry": "Education & Research"
+  },
+  {
+    "id": "abclean",
+    "slug": "ab-cleaning-solution-website",
+    "title": "A&B Cleaning Solution",
+    "subtitle": "Commercial Cleaning • Business Site",
+    "img": "/images/portfolio/ab-clean-1200.webp",
+    "imgAlt": "A&B Cleaning Solution commercial cleaning website screenshot",
+    "liveUrl": "https://abcleansolution.com/",
+    "client": {
+      "name": "Brandon A",
+      "title": "Founder, A&B Cleaning Solution",
+      "country": "United States"
+    },
+    "goal": "A&B Cleaning Solution needed a professional web presence to win commercial janitorial contracts across the Portland metro and SW Washington. The site had to showcase services like floor care, carpet cleaning, office janitorial, and pressure washing while making it effortless for facility managers to request a free estimate.",
+    "challenges": "The commercial cleaning market in Oregon and Washington is crowded, so the site had to build instant credibility and rank locally across nine service cities. Mobile visitors - often managers calling between sites - needed one-tap access to the phone number and quote form without digging through pages.",
+    "solutions": "Built a fast React single-page application with dedicated sections for every service, prominent click-to-call buttons, and free-estimate CTAs throughout. Added JanitorialService structured data with geo coordinates, opening hours, and full areaServed coverage so search engines understand exactly where A&B operates.",
+    "outcome": "A&B now has a credible, modern storefront that ranks for local commercial cleaning searches from Portland to Gresham. Facility managers can call or request an estimate in seconds, turning organic search traffic directly into booked walk-throughs.",
+    "skills": [
+      "React",
+      "Vite",
+      "Local SEO",
+      "Schema Markup",
+      "Responsive Design"
+    ],
+    "price": "$500 - $800",
+    "duration": "7-14 days",
+    "industry": "Commercial Cleaning & Janitorial"
+  },
+  {
+    "id": "lumeaglow",
+    "slug": "lumea-glow-skin-clinic-website",
+    "title": "Lumea Glow",
+    "subtitle": "Skin Clinic • Business Site",
+    "img": "/images/portfolio/lumea-glow-1200.webp",
+    "imgAlt": "Lumea Glow skin clinic website screenshot",
+    "liveUrl": "https://lumeaglow.com.au/",
+    "client": {
+      "name": "Jess, Lumea Glow",
+      "title": "Founder & Registered Nurse",
+      "country": "Australia"
+    },
+    "goal": "Lumea Glow is a Registered Nurse-led skin clinic in Gladesville, Sydney. Jess needed a website that feels as calm and personal as her clinic, explains each treatment clearly, and makes it easy for new clients to book a consultation.",
+    "challenges": "People need to trust an aesthetics clinic before they book. The site had to show that care is nurse-led, explain four areas of treatment without jargon, and help visitors who are not sure which treatment is right for them, all without feeling pushy.",
+    "solutions": "A soft, editorial design with generous imagery and clear typography; treatment pages grouped into four areas of care; a Find My Treatment path for undecided visitors; membership information; and Book Now and call buttons always within reach. Built on WordPress.",
+    "outcome": "In Jess's words: \"Couldn't be happier with the final product!!\" She has since come back for more work, which is the outcome we care about most.",
+    "skills": [
+      "Web Design",
+      "WordPress",
+      "Online Booking",
+      "Responsive Design"
+    ],
+    "price": "CA$400 - CA$600",
+    "duration": "5 days",
+    "industry": "Skin Clinic & Aesthetics"
+  },
+  {
+    "id": "bouhan",
+    "slug": "bouhan-falligant-law-firm-website",
+    "title": "Bouhan Falligant",
+    "subtitle": "Legal • Law Firm Website",
+    "img": "/images/portfolio/bouhan-800.webp",
+    "imgAlt": "Bouhan Falligant law firm website screenshot",
+    "liveUrl": "https://www.bouhan.com/",
+    "client": {
+      "name": "Bouhan Falligant",
+      "title": "Full-Service Law Firm",
+      "country": "United States"
+    },
+    "goal": "Bouhan Falligant is one of Georgia's oldest full-service law firms, serving clients throughout the Southeast for over 130 years. The firm needed a digital presence that conveys that heritage and authority while making more than 20 practice areas - from maritime and admiralty to estate planning and commercial litigation - easy for prospective clients to navigate.",
+    "challenges": "Organizing an unusually broad range of practice areas without overwhelming visitors, presenting dozens of attorney profiles consistently and professionally, and competing for visibility in one of the most competitive local search markets - legal services in Georgia.",
+    "solutions": "Built on WordPress with a clear practice-area architecture, a filterable attorney directory with individual profile pages, and prominent click-to-call contact paths. A heritage timeline tells the firm's 130-year story, while structured SEO foundations help the firm rank for competitive Georgia legal searches.",
+    "outcome": "A polished, authoritative web presence that reflects the firm's standing in the Southeast. Potential clients can identify the right practice area and attorney within seconds and reach the firm directly by phone, strengthening the pipeline of new matters.",
+    "skills": [
+      "WordPress",
+      "Local SEO",
+      "Content Architecture",
+      "Responsive Design"
+    ],
+    "price": "$1,200 - $2,500",
+    "duration": "3-6 weeks",
+    "industry": "Legal Services"
+  },
+  {
+    "id": "dccarpet",
+    "slug": "dc-carpet-cleaning-website",
+    "title": "DC Carpet Cleaning",
+    "subtitle": "Carpet Cleaning • Business Site",
+    "img": "/images/portfolio/dc-carpet-1200.webp",
+    "imgAlt": "DC Carpet Cleaning Australia website screenshot",
+    "liveUrl": "https://dccarpetcleaning.com.au/",
+    "client": {
+      "name": "DC Carpet Cleaning",
+      "title": "Owner, DC Carpet Cleaning",
+      "country": "Australia"
+    },
+    "goal": "DC Carpet Cleaning needed a website that could turn local search traffic into booked jobs. The site had to clearly present carpet, upholstery, and stain removal services for residential and commercial clients across their Australian service area, and make requesting a quote effortless.",
+    "challenges": "The cleaning industry is fiercely competitive online, so the site had to build trust quickly and stand out against national franchises. Customers typically visit on mobile while comparing quotes, so every page needed a clear next step and fast load times.",
+    "solutions": "Designed a clean, conversion-focused site with dedicated service pages, before-and-after proof points, transparent pricing signals, and click-to-call plus quote request forms on every page. Local SEO foundations were laid out so each service suburb can rank individually.",
+    "outcome": "A professional storefront that matches the quality of the service itself. Visitors can identify the right service, see the pricing approach, and book a clean in minutes - converting more of the traffic the brand already earns through word of mouth.",
+    "skills": [
+      "Web Design",
+      "Local SEO",
+      "Quote Booking",
+      "Responsive Design"
+    ],
+    "price": "$400 - $600",
+    "duration": "7-14 days",
+    "industry": "Carpet & Upholstery Cleaning"
+  }
+]

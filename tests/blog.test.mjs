@@ -31,7 +31,7 @@ test('every post image loads: local file exists, or the host is allowed by the C
 
 test('the blog index lists exactly the posts in posts.json, in the same order, as crawlable links that resolve', () => {
   const idx = read('blog/index.html');
-  const ids = [...idx.matchAll(/<article class="blog-card reveal" data-id="([^"]+)">/g)].map((m) => m[1]);
+  const ids = [...idx.matchAll(/<article class="blog-card(?: reveal)?" data-id="([^"]+)">/g)].map((m) => m[1]);
   assert.deepEqual(ids, posts.map((p) => p.id));
   for (const p of posts) {
     assert.ok(idx.includes('<a href="/blog/' + p.id + '">'), p.id + ': card link');

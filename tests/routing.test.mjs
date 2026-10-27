@@ -57,7 +57,7 @@ test('header: every page highlights exactly the section it belongs to', () => {
     const nav = (fs.readFileSync(file, 'utf8').match(/<nav class="main-nav"[^>]*>([\s\S]*?)<\/nav>/) || [])[1];
     if (!nav) continue;
     const active = [...nav.matchAll(/<a href="([^"]+)" class="active"/g)].map((m) => norm(m[1], rel));
-    const want = rel.startsWith('blog/') ? 'blog' : MAP[rel];
+    const want = rel.startsWith('blog/') ? 'blog' : rel.startsWith('work/') ? 'portfolio' : MAP[rel];
     assert.deepEqual(active, want ? [want] : [], `${rel}: active nav ${JSON.stringify(active)}`);
   }
 });

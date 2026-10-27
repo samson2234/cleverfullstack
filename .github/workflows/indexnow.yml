@@ -1,0 +1,25 @@
+name: IndexNow
+
+# After a push that changes sitemap.xml, wait until Vercel has deployed it, then tell IndexNow search engines
+# (Bing, Yandex, Seznam, Naver) which pages are new or changed. See scripts/indexnow.js.
+on:
+  push:
+    branches: [main]
+    paths: [sitemap.xml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/indexnow.js --since HEAD~1

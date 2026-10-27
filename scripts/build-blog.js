@@ -109,7 +109,8 @@ function main() {
   // 3) blog index cards: real HTML, so search engines and no-JS visitors see every post. Links are root-relative
   // (/blog/<id>): the index is served at /blog, where a relative "<id>.html" would resolve to /<id>.html (404).
   let idx = read('blog/index.html');
-  const card = (p) => '<article class="blog-card reveal" data-id="' + p.id + '"><div class="thumb"><a href="/blog/' + p.id + '"><img src="' + p.image + '" alt="' + esc(p.imageAlt || p.title) + '" loading="lazy" width="800" height="533"></a></div>' +
+  // the first row is on screen at load: no reveal animation, and the first photo (the LCP image) loads first
+  const card = (p, i) => '<article class="blog-card' + (i < 3 ? '' : ' reveal') + '" data-id="' + p.id + '"><div class="thumb"><a href="/blog/' + p.id + '"><img src="' + p.image + '" alt="' + esc(p.imageAlt || p.title) + '" ' + (i === 0 ? 'fetchpriority="high"' : i < 3 ? 'loading="eager"' : 'loading="lazy"') + ' width="800" height="533"></a></div>' +
     '<div class="body"><div class="meta"><span class="cat">' + esc(p.category) + '</span><span>' + esc(p.date) + '</span></div><h3><a href="/blog/' + p.id + '">' + esc(p.title) + '</a></h3><p>' + esc(p.excerpt) + '</p>' +
     '<div class="foot"><span>' + esc(p.author) + '</span><span>' + esc(p.readingTime) + '</span></div></div></article>';
   const grid = /(<div class="blog-grid" id="blog-list">)[\s\S]*?(<\/div><\/div><\/section><\/main>)/;
@@ -127,14 +128,7 @@ function main() {
   feed = feed.replace(/(<atom:link[^>]*\/>\r?\n)[\s\S]*<\/channel>/, (m, head) => head + items + '\n  </channel>');
   write('blog/feed.xml', feed);
 
-  // 5) sitemap
-  let sm = read('sitemap.xml');
-  for (const p of posts) { // every post, so older posts that were never listed get added too
-    if (sm.includes('<loc>' + url(p.id) + '</loc>')) continue;
-    const iso = new Date(p.date + ' 00:00:00 UTC').toISOString().slice(0, 10);
-    sm = sm.replace('</urlset>', '  <url>\n    <loc>' + url(p.id) + '</loc>\n    <lastmod>' + iso + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n</urlset>');
-  }
-  write('sitemap.xml', sm);
+  // 5) sitemap: regenerated from the pages once everything below is written (scripts/build-sitemap.js)
 
   // 6) previous/next navigation inside every post page
   const nav = '[' + posts.map((p) => '{id:' + JSON.stringify(p.id) + ',title:' + JSON.stringify(p.title) + ',cat:' + JSON.stringify(p.category) + '}').join(',') + ']';
@@ -149,6 +143,32 @@ function main() {
   }
   log.push('prev/next updated in ' + navPages + ' pages');
 
+  // 6b) internal links from every post to proof and to what we sell: one matching case study + the services page
+  // (rewritten on every build, so the mapping below is the single place to change them)
+  const WORK = {
+    'shopify-vs-woocommerce': 'sonic-audio-shopify-store',
+    'custom-vs-nocode': 'enterprise-analytics-dashboard', 'businesses-refuse-to-scale': 'enterprise-analytics-dashboard',
+    'why-is-my-website-slow': 'lumea-glow-skin-clinic-website', 'optimized-website-advantages': 'lumea-glow-skin-clinic-website', 'should-i-fix-or-rebuild-my-website': 'lumea-glow-skin-clinic-website',
+    'google-maps-local-seo-checklist': 'dc-carpet-cleaning-website', 'seo-tips-2026': 'dc-carpet-cleaning-website', 'how-to-get-more-client-reviews': 'dc-carpet-cleaning-website',
+    'website-no-enquiries-fix': 'ab-cleaning-solution-website', 'website-mistakes-conversions': 'ab-cleaning-solution-website', 'why-small-business-needs-website': 'ab-cleaning-solution-website', 'poor-website-killing-business': 'ab-cleaning-solution-website'
+  }; // anything else: the law-firm site (cost, security, choosing a developer, web development)
+  const projects = JSON.parse(read('work-src/projects.json'));
+  let linked = 0;
+  for (const p of posts) {
+    const f = 'blog/' + p.id + '.html';
+    let s = read(f);
+    const w = projects.find((q) => q.slug === (WORK[p.id] || 'bouhan-falligant-law-firm-website'));
+    if (!w) throw new Error(p.id + ': mapped case study not found');
+    const box = '<div class="work-links" style="display:flex;flex-wrap:wrap;gap:8px 20px;margin:14px 0 0;font-size:14px;color:var(--text-muted)"><span style="font-weight:600;color:var(--text-dark)">See it in practice:</span>' +
+      '<a href="/work/' + w.slug + '" style="color:var(--indigo);font-weight:600">Case study: ' + esc(w.title) + ' (' + esc(w.subtitle.split('•').pop().trim()) + ')</a>' +
+      '<a href="../services.html" style="color:var(--indigo);font-weight:600">Our web development services</a></div>';
+    s = s.replace(/<div class="work-links"[\s\S]*?<\/div>/, '');
+    if (!s.includes('<div class="cta-section">')) throw new Error(f + ': no CTA section to place the links before');
+    s = s.replace('<div class="cta-section">', () => box + '<div class="cta-section">');
+    write(f, s); linked++;
+  }
+  log.push('case-study + services links in ' + linked + ' posts');
+
   // 7) homepage "Latest Insights" (3 newest)
   let sc = read('script.js');
   const prev = sorted.slice(0, 3).map((p) => ({ id: p.id, title: p.title, excerpt: p.excerpt, category: p.category, date: p.date, image: p.image }));
@@ -158,6 +178,7 @@ function main() {
   log.push('homepage preview: ' + prev.map((p) => p.id).join(', '));
 
   console.log(log.join('\n'));
+  require('./build-sitemap')();
   console.log('Next: npm run assets && npm test');
 }
 

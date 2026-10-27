@@ -1,0 +1,9 @@
+# Not part of the website: build scripts, tests, plans and page sources stay out of the deployment.
+# (lib/ must deploy: the API functions import it. vercel.json stops it being served as files.)
+docs/
+tests/
+scripts/
+blog-src/
+work-src/
+.github/
+README.md
