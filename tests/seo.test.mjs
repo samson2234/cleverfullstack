@@ -144,10 +144,12 @@ test('Core Web Vitals guards: no full-screen preloader, theme set before first p
 test('service and industry pages: substantial, honest prices, real case studies, linked from /services', async () => {
   const { createRequire } = await import('node:module');
   const req = createRequire(import.meta.url);
-  const src = [...req('../landing-src/services.js'), ...req('../landing-src/industries.js')];
+  const src = [...req('../landing-src/services.js'), ...req('../landing-src/industries.js'), ...req('../landing-src/locations.js')];
   assert.ok(src.filter((p) => p.kind === 'service').length >= 8 && src.filter((p) => p.kind === 'industry').length >= 6);
-  // only the package prices published on /services
-  const published = new Set([...read('services.html').matchAll(/"@type": "Offer", "price": "(\d+)"/g)].map((m) => Number(m[1])));
+  assert.ok(src.filter((p) => p.kind === 'location').length >= 2, 'Germany and Canada pages');
+  // only the package prices published on /services (USD) and /web-development-europe (EUR)
+  const published = { USD: new Set([...read('services.html').matchAll(/"@type": "Offer", "price": "(\d+)"/g)].map((m) => Number(m[1]))),
+    EUR: new Set([...read('web-development-europe.html').matchAll(/€([\d,]+)/g)].map((m) => Number(m[1].replace(/,/g, '')))) };
   const projects = new Set(JSON.parse(read('work-src/projects.json')).map((p) => p.slug));
   const hub = read('services.html');
   for (const p of src) {
@@ -155,13 +157,15 @@ test('service and industry pages: substantial, honest prices, real case studies,
     const main = html.match(/<main[\s\S]*<\/main>/)[0];
     const words = main.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
     assert.ok(words >= 1000, p.slug + ': only ' + words + ' words');
-    if (p.price.from) assert.ok(published.has(p.price.from), p.slug + ': price $' + p.price.from + ' is not a published package price');
+    const cur = p.price.currency || 'USD';
+    for (const from of [p.price.from, ...(p.packages || []).map((x) => x[1])].filter(Boolean)) assert.ok(published[cur].has(from), p.slug + ': ' + cur + ' ' + from + ' is not a published package price');
     for (const c of p.cases || []) assert.ok(projects.has(c) && main.includes('href="/work/' + c + '"'), p.slug + ': case study ' + c);
     const j = ld(html);
     const svc = j.find((x) => x['@type'] === 'Service');
     assert.equal(svc.provider['@id'], SITE + '/#organization', p.slug + ': provider');
     assert.equal(svc.url, SITE + '/' + p.slug);
-    if (p.price.from) assert.equal(svc.offers.price, String(p.price.from));
+    if (p.packages) assert.equal(svc.offers.lowPrice, p.price.from);
+    else if (p.price.from) assert.equal(svc.offers.price, String(p.price.from));
     const faq = j.find((x) => x['@type'] === 'FAQPage');
     assert.equal(faq.mainEntity.length, p.faqs.length, p.slug + ': FAQ schema matches the visible FAQ');
     assert.ok(hub.includes('href="/' + p.slug + '"'), p.slug + ': not linked from /services');
@@ -174,4 +178,8 @@ test('landing pages are up to date with their source (npm run landing)', () => {
   execFileSync(process.execPath, [path.join(root, 'scripts/build-landing.js')], { cwd: root, stdio: 'pipe' });
   assert.deepEqual(src2html(), before, 'generated pages changed: run npm run landing and npm run assets, then commit');
   function src2html() { return Object.fromEntries(files.filter((f) => /^[a-z0-9-]+\.html$/.test(f)).map((f) => [f, read(f).replace(/\?v=[a-f0-9]+/g, '')])); }
+});
+
+test('conversion: every indexable page has the phone sticky bar (WhatsApp + Book a Free Call) exactly once', () => {
+  for (const p of indexable) assert.equal((p.html.match(/class="mobile-cta-bar"/g) || []).length, 1, p.rel);
 });

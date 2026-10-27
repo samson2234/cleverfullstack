@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 // scripts/build-landing.js — builds the service and industry pages (SEO plan Phase 2) as static HTML.
 //
-//   landing-src/services.js + landing-src/industries.js  ->  /<slug>.html at the site root
+//   landing-src/services.js + industries.js + locations.js  ->  /<slug>.html at the site root
 //
 // The layout (head, header, footer, critical CSS, scripts) comes from web-development-usa.html, so the pages always
 // match the live design. Each page gets its own title, description, canonical, self hreflang, Service + FAQ +
 // breadcrumb schema, and links to real case studies (work-src/projects.json) and related pages. It also refreshes
-// the "Specialist services" and "Industries" links on services.html and regenerates the sitemap.
+// the "Specialist services" and "Industries" links on services.html, keeps one hreflang set across all country pages
+// (including the hand-built USA, UK and Europe pages), adds work and service links to those pages, lists the country
+// pages in every footer, and regenerates the sitemap.
 // Run: npm run landing   (then npm run assets)
 
 const fs = require('fs');
@@ -15,12 +17,18 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const SITE = 'https://cleverstack.dev';
 const BOOK = 'https://calendly.com/henryygeorge25/30min';
-const PAGES = [...require('../landing-src/services.js'), ...require('../landing-src/industries.js')];
+const PAGES = [...require('../landing-src/services.js'), ...require('../landing-src/industries.js'), ...require('../landing-src/locations.js')];
 const PROJECTS = Object.fromEntries(JSON.parse(fs.readFileSync(path.join(ROOT, 'work-src/projects.json'), 'utf8')).map((p) => [p.slug, p]));
 const BY_SLUG = Object.fromEntries(PAGES.map((p) => [p.slug, p]));
 
 const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const money = (n) => '$' + Number(n).toLocaleString('en-US');
+const money = (n, cur) => (cur === 'EUR' ? '€' : '$') + Number(n).toLocaleString('en-US');
+
+// One hreflang set shared by every country page, so Google shows each market its own page.
+const COUNTRY_PAGES = ['web-development-usa', 'web-development-uk', 'web-development-europe', 'web-development-germany', 'web-development-canada'];
+const HREFLANG = [['en', 'usa'], ['en-us', 'usa'], ['en-gb', 'uk'], ['en-ca', 'canada'], ['en-de', 'germany'], ['en-ie', 'europe'], ['en-fr', 'europe'], ['en-nl', 'europe'],
+  ['en-be', 'europe'], ['en-es', 'europe'], ['en-it', 'europe'], ['en-at', 'europe'], ['en-ch', 'europe'], ['x-default', 'usa']]
+  .map(([lang, page]) => `<link rel="alternate" hreflang="${lang}" href="${SITE}/web-development-${page}">`).join('');
 
 // Honest one-line descriptions of the projects we link to (what was built; no unverified results)
 const CASE_BLURB = {
@@ -69,7 +77,7 @@ const prose = (paras) => paras.map((t) => `<p style="margin-bottom:16px;line-hei
 
 function hero(p, wa) {
   const chips = p.price.from
-    ? `<div><div style="font-size:2rem; font-weight:700; color:var(--indigo);">From ${money(p.price.from)}</div><div style="font-size:0.9rem; color:var(--text-muted);">${esc(p.price.label)}</div></div><div><div style="font-size:2rem; font-weight:700; color:var(--teal);">${esc(p.price.delivery)}</div><div style="font-size:0.9rem; color:var(--text-muted);">Typical delivery</div></div>`
+    ? `<div><div style="font-size:2rem; font-weight:700; color:var(--indigo);">From ${money(p.price.from, p.price.currency)}</div><div style="font-size:0.9rem; color:var(--text-muted);">${esc(p.price.label)}</div></div><div><div style="font-size:2rem; font-weight:700; color:var(--teal);">${esc(p.price.delivery)}</div><div style="font-size:0.9rem; color:var(--text-muted);">Typical delivery</div></div>`
     : `<div><div style="font-size:2rem; font-weight:700; color:var(--indigo);">Fixed quote</div><div style="font-size:0.9rem; color:var(--text-muted);">Agreed before work starts</div></div>`;
   return `<section class="hero"><div class="mesh-bg"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div><div class="container hero-grid" style="position:relative; z-index:1;"><div>` +
     `<nav aria-label="Breadcrumb" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;"><a href="/" style="color:inherit;">Home</a> / <a href="/services" style="color:inherit;">Services</a> / <span aria-current="page">${esc(p.name)}</span></nav>` +
@@ -92,6 +100,12 @@ function caseCards(p) {
 }
 
 function priceBlock(p) {
+  if (p.packages) {
+    const cur = p.price.currency || 'USD';
+    return `<section class="section-pad section-light" id="pricing"><div class="container">${head2('Pricing', 'Fixed prices in ' + (cur === 'EUR' ? 'euros' : 'US dollars'), 'Every project gets a fixed quote in writing before any work starts. No hourly billing, no hidden fees.')}` +
+      `<div class="grid grid-2" style="gap:24px;">${p.packages.map(([h, from, b]) => `<div class="card reveal" style="padding:28px;"><h3 style="margin-bottom:6px;">${esc(h)}</h3><div style="font-size:1.5rem; font-weight:700; color:var(--indigo); margin-bottom:8px;">From ${money(from, cur)}</div><p style="color:var(--text-muted);">${esc(b)}</p></div>`).join('')}</div>` +
+      `<div class="hero-ctas reveal" style="margin-top:24px;"><a href="${BOOK}" class="btn btn-primary" target="_blank" rel="noopener">Get a fixed quote <span class="btn-arrow">&#8594;</span></a> <a href="/services#budget" class="btn btn-ghost">Plan around your budget</a></div></div></section>`;
+  }
   const big = p.price.from ? `From ${money(p.price.from)} USD` : esc(p.price.label);
   return `<section class="section-pad section-light" id="pricing"><div class="container">${head2('Pricing', p.price.from ? 'What it costs' : 'How pricing works', 'Every project gets a fixed quote in writing before any work starts. We quote in USD, GBP or EUR.')}` +
     `<div class="card reveal" style="padding:32px; max-width:760px;"><div style="font-size:1.8rem; font-weight:700; color:var(--indigo); margin-bottom:4px;">${big}</div>` +
@@ -127,11 +141,13 @@ function main(p, wa) {
 
 function schema(p) {
   const url = SITE + '/' + p.slug;
+  const area = p.kind === 'location' ? [p.name.replace('Web Development ', '')] : AREAS;
   const service = {
-    '@context': 'https://schema.org', '@type': 'Service', '@id': url + '#service', name: p.name, serviceType: p.name, description: p.description, url,
-    provider: { '@id': SITE + '/#organization' }, areaServed: AREAS.map((n) => (n === 'Europe' ? { '@type': 'Place', name: n } : { '@type': 'Country', name: n }))
+    '@context': 'https://schema.org', '@type': 'Service', '@id': url + '#service', name: p.name, serviceType: p.kind === 'location' ? 'Web development' : p.name, description: p.description, url,
+    provider: { '@id': SITE + '/#organization' }, areaServed: area.map((n) => (n === 'Europe' ? { '@type': 'Place', name: n } : { '@type': 'Country', name: n }))
   };
-  if (p.price.from) service.offers = { '@type': 'Offer', price: String(p.price.from), priceCurrency: 'USD', description: p.price.label + ' (from)', url: url + '#pricing' };
+  if (p.packages) service.offers = { '@type': 'AggregateOffer', priceCurrency: p.price.currency || 'USD', lowPrice: Math.min(...p.packages.map((x) => x[1])), highPrice: Math.max(...p.packages.map((x) => x[1])), url: url + '#pricing' };
+  else if (p.price.from) service.offers = { '@type': 'Offer', price: String(p.price.from), priceCurrency: 'USD', description: p.price.label + ' (from)', url: url + '#pricing' };
   const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: SITE + '/' },
     { '@type': 'ListItem', position: 2, name: 'Services', item: SITE + '/services' },
@@ -147,7 +163,7 @@ function render(tpl, p) {
   set(/<title>[\s\S]*?<\/title>/, `<title>${t}</title>`, 'title');
   set(/<meta name="description" content="[^"]*">/, `<meta name="description" content="${d}">`, 'description');
   h = h.replace(/<link rel="alternate" hreflang="[^"]*" href="[^"]*">/g, '');
-  set(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}"><link rel="alternate" hreflang="en" href="${url}"><link rel="alternate" hreflang="x-default" href="${url}">`, 'canonical');
+  set(/<link rel="canonical" href="[^"]*">/, `<link rel="canonical" href="${url}">` + (p.kind === 'location' ? HREFLANG : `<link rel="alternate" hreflang="en" href="${url}"><link rel="alternate" hreflang="x-default" href="${url}">`), 'canonical');
   set(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${t}">`, 'og:title');
   set(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${d}">`, 'og:description');
   set(/<meta property="og:url" content="[^"]*">/, `<meta property="og:url" content="${url}">`, 'og:url');
@@ -170,12 +186,53 @@ function linkHub() {
   const at = s.lastIndexOf('<section', s.indexOf('data-i18n="services.process.heading"'));
   if (at < 0) throw new Error('services.html: process section not found');
   const group = (kind) => PAGES.filter((p) => p.kind === kind).map((p) => `<a href="/${p.slug}" class="card" style="display:block; padding:22px; color:inherit; text-decoration:none;"><h3 style="font-size:1.05rem; margin-bottom:6px;">${esc(p.name)}</h3><span class="card-link">${p.price.from ? 'From ' + money(p.price.from) : 'Fixed quote'} &#8594;</span></a>`).join('');
+  const where = PAGES.filter((p) => p.kind === 'location').map((p) => `<a href="/${p.slug}" class="card-link">${esc(p.name.replace('Web Development ', ''))}</a>`)
+    .concat([['usa', 'USA'], ['uk', 'UK'], ['europe', 'Europe']].map(([s, n]) => `<a href="/web-development-${s}" class="card-link">${n}</a>`)).join(' &#183; ');
   const block = '<!--landing-links--><section class="section-pad section-light" style="background:var(--paper-3)"><div class="container">' +
     head2('Specialist services', 'Find the right service for your project', 'Detailed pages with what is included, pricing, timelines and related projects.') +
     `<div class="grid grid-2" style="gap:16px;">${group('service')}</div>` +
     `<div class="section-head reveal" style="margin-top:56px;"><div class="eyebrow">Industries</div><h2>Websites built for your industry</h2></div><div class="grid grid-2" style="gap:16px;">${group('industry')}</div>` +
+    `<p class="reveal" style="margin-top:32px;">Where we work: ${where}</p>` +
     '</div></section><!--/landing-links-->';
   fs.writeFileSync(f, s.slice(0, at) + block + s.slice(at));
+}
+
+// The hand-built USA, UK and Europe pages: shared hreflang set, plus a block with real projects and service links
+const COUNTRY_EXTRA = {
+  'web-development-usa': { h: 'Work for US clients', cases: ['bouhan-falligant-law-firm-website', 'ab-cleaning-solution-website'], note: 'Our team works in UTC+1. Calls are arranged in your morning, and written updates arrive before your day starts.' },
+  'web-development-uk': { h: 'Work you can check', cases: ['bouhan-falligant-law-firm-website', 'lumea-glow-skin-clinic-website'], note: 'Our team works in UTC+1: the same time as the UK in summer and one hour ahead in winter, so we work your hours.' },
+  'web-development-europe': { h: 'Work you can check', cases: ['bouhan-falligant-law-firm-website', 'researchhub-academic-web-app'], note: 'Our team works in UTC+1, the same as Central European Time for most of the year. Running a business in Germany? See our page for German businesses.', link: ['/web-development-germany', 'Web development for German businesses'] }
+};
+function handCountryPages() {
+  for (const [slug, x] of Object.entries(COUNTRY_EXTRA)) {
+    const f = path.join(ROOT, slug + '.html');
+    let s = fs.readFileSync(f, 'utf8');
+    s = s.replace(/<link rel="alternate" hreflang="[^"]*" href="[^"]*">/g, '');
+    if (!s.includes('<link rel="canonical"')) throw new Error(slug + ': no canonical');
+    s = s.replace(/(<link rel="canonical" href="[^"]*">)/, (m) => m + HREFLANG);
+    s = s.replace(/<!--country-extra-->[\s\S]*?<!--\/country-extra-->/, '');
+    const cards = x.cases.map((c) => { const pr = PROJECTS[c]; return `<a href="/work/${c}" class="card reveal" style="display:block; padding:28px; color:inherit; text-decoration:none;"><div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:6px;">${esc(pr.subtitle)}</div><h3 style="margin-bottom:8px;">${esc(pr.title)}</h3><p style="color:var(--text-muted); margin-bottom:10px;">${esc(CASE_BLURB[c])}</p><span class="card-link">Read the case study &#8594;</span></a>`; }).join('');
+    const svc = PAGES.filter((p) => p.kind === 'service').map((p) => `<a href="/${p.slug}" class="card-link">${esc(p.name)}</a>`).join(' &#183; ');
+    const block = `<!--country-extra--><section class="section-pad section-light" style="background:var(--paper-3)"><div class="container">${head2('Our work', x.h, x.note)}` +
+      (x.link ? `<p class="reveal" style="margin:-12px 0 24px;"><a href="${x.link[0]}" class="card-link">${esc(x.link[1])} &#8594;</a></p>` : '') +
+      `<div class="grid grid-2" style="gap:24px;">${cards}</div><p class="reveal" style="margin-top:28px; line-height:1.9;">Specialist services: ${svc}</p></div></section><!--/country-extra-->`;
+    const at = s.lastIndexOf('<section', s.indexOf('<div class="final-cta'));
+    if (at < 0) throw new Error(slug + ': final CTA not found');
+    fs.writeFileSync(f, s.slice(0, at) + block + s.slice(at));
+  }
+}
+
+// Footer: list the Germany and Canada pages after Europe on every page (relative links, like the rest of the footer)
+function footerLinks() {
+  let n = 0;
+  for (const d of ['', 'blog', 'work']) for (const name of fs.readdirSync(path.join(ROOT, d))) {
+    if (!name.endsWith('.html')) continue;
+    const f = path.join(ROOT, d, name);
+    const s = fs.readFileSync(f, 'utf8');
+    const out = s.replace(/<li><a href="((?:\.\.\/)?)web-development-europe\.html">Web Development Europe<\/a><\/li>(?!<li><a href="(?:\.\.\/)?web-development-germany)/, (m, up) => m + `<li><a href="${up}web-development-germany.html">Web Development Germany</a></li><li><a href="${up}web-development-canada.html">Web Development Canada</a></li>`);
+    if (out !== s) { fs.writeFileSync(f, out); n++; }
+  }
+  if (n) console.log('footer: country links added on', n, 'pages');
 }
 
 function words(html) { return html.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length; }
@@ -196,5 +253,7 @@ for (const f of fs.readdirSync(ROOT)) {
 }
 linkHub();
 console.log('services.html: links to', PAGES.length, 'pages');
+handCountryPages();
+footerLinks();
 require('./build-sitemap')();
 console.log('Next: npm run assets');

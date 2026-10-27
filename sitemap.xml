@@ -130,8 +130,20 @@
     <lastmod>2026-10-27</lastmod>
   </url>
   <url>
+    <loc>https://cleverstack.dev/web-development-canada</loc>
+    <lastmod>2026-10-27</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/portfolio/bouhan-800.webp</image:loc></image:image>
+    <image:image><image:loc>https://cleverstack.dev/images/portfolio/ab-clean-1200.webp</image:loc></image:image>
+  </url>
+  <url>
     <loc>https://cleverstack.dev/web-development-europe</loc>
     <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
+    <loc>https://cleverstack.dev/web-development-germany</loc>
+    <lastmod>2026-10-27</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/portfolio/bouhan-800.webp</image:loc></image:image>
+    <image:image><image:loc>https://cleverstack.dev/images/portfolio-researchhub.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://cleverstack.dev/web-development-uk</loc>

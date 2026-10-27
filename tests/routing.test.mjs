@@ -35,12 +35,12 @@ test('SEO head tags: one canonical per page, no duplicate hreflang, country page
     assert.ok((html.match(/<link rel="canonical"/g) || []).length <= 1, `${rel}: more than one canonical`);
     const langs = [...html.matchAll(/<link rel="alternate" hreflang="([^"]*)" href="([^"]*)"/g)];
     assert.equal(new Set(langs.map((m) => m[1])).size, langs.length, `${rel}: duplicate hreflang`);
-    if (/^web-development-(usa|uk|europe)\.html$/.test(rel)) {
+    if (/^web-development-(usa|uk|europe|germany|canada)\.html$/.test(rel)) {
       sets[rel] = langs.map((m) => m[1] + '=' + m[2]).sort().join(' ');
       assert.ok(langs.some((m) => m[2] === SITE + '/' + rel.replace('.html', '')), `${rel}: hreflang set does not include itself`);
     }
   }
-  assert.equal(new Set(Object.values(sets)).size, 1, 'the USA/UK/Europe pages must carry the same hreflang set');
+  assert.equal(new Set(Object.values(sets)).size, 1, 'the USA/UK/Europe/Germany/Canada pages must carry the same hreflang set');
 });
 
 test('no mojibake: no UTF-8 text saved through the wrong encoding (e.g. a checkmark showing as "âœ“")', () => {
