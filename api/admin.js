@@ -67,7 +67,7 @@ import { createTest, setTestStatus, deleteTest, listTestsWithResults } from '../
 import { listConversations, getConversation, getMessages, addMessage, createConversation, setStatus as setConvStatus, rotateToken, setFlags as setConvFlags, markUnread as markConvUnread, deleteConversation, markRead as markConvRead, linkFor, conversationsForSubmission,
   changedSince, serverNow, needsRead, editMessage, deleteMessage, setTyping, saveFile, getFile, sendFile } from '../lib/messages.js';
 import { clientMessageTemplate, teamInviteTemplate } from '../lib/email.js';
-import { can, login as staffLogin, userForToken, logout as staffLogout, listStaff, createStaff, updateStaff, resetStaffPassword, deleteStaff, changeOwnPassword } from '../lib/staff.js';
+import { can, login as staffLogin, ownerLogin, userForToken, logout as staffLogout, listStaff, createStaff, updateStaff, resetStaffPassword, deleteStaff, changeOwnPassword } from '../lib/staff.js';
 import { sendWeeklyReport } from '../lib/analytics-report.js';
 import crypto from 'node:crypto';
 
@@ -119,16 +119,46 @@ function clearFailures(ip) {
 }
 
 function bearerOf(req) {
-  return String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+  return String(req.headers.authorization || '').replace(/^Bearer\s*/i, '').trim();
 }
 
-// Owner (ADMIN_PASSWORD) or a staff session token ("st_..."). Returns { ok, user } or { ok:false, error }.
+// Browser sessions live in an HttpOnly cookie: page scripts (and anything injected into the page) cannot read it,
+// SameSite=Strict keeps other sites from using it, and it is only sent to this API.
+const COOKIE = 'cs_admin';
+function cookieOf(req) {
+  const m = String(req.headers.cookie || '').match(/(?:^|;\s*)cs_admin=([^;]+)/);
+  return m ? decodeURIComponent(m[1]) : '';
+}
+function setSession(res, token, expiresAt) {
+  const age = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
+  res.setHeader('Set-Cookie', COOKIE + '=' + encodeURIComponent(token) + '; Path=/api/admin; Max-Age=' + age + '; HttpOnly; Secure; SameSite=Strict');
+}
+function clearSession(res) {
+  res.setHeader('Set-Cookie', COOKIE + '=; Path=/api/admin; Max-Age=0; HttpOnly; Secure; SameSite=Strict');
+}
+// Cookie-authenticated writes must come from our own pages (defence in depth on top of SameSite).
+function crossSite(req) {
+  if (String(req.headers['sec-fetch-site'] || '') === 'cross-site') return true;
+  const origin = req.headers.origin;
+  if (!origin) return false;
+  try { return new URL(origin).host !== String(req.headers['x-forwarded-host'] || req.headers.host || ''); } catch (e) { return true; }
+}
+
+// Session token ("st_...", from the cookie or a Bearer header) or the owner password as a Bearer (API scripts).
+// Returns { ok, user, staff, cookie } or { ok:false, error, none? }.
 async function resolveUser(req) {
-  const token = bearerOf(req);
+  const bearer = bearerOf(req);
+  const token = bearer || cookieOf(req);
+  if (!token) return { ok: false, error: 'Please sign in', none: true };
+  if (!bearer) {
+    if (!/^st_/.test(token) || !process.env.TURSO_DATABASE_URL) return { ok: false, error: 'Session expired, please sign in again', cookie: true };
+    const user = await userForToken(token);
+    return user ? { ok: true, user, staff: user.role !== 'owner', cookie: true } : { ok: false, error: 'Session expired, please sign in again', cookie: true };
+  }
   if (token.startsWith('st_')) {
     if (!process.env.TURSO_DATABASE_URL) return { ok: false, error: 'Database not configured' };
     const user = await userForToken(token);
-    return user ? { ok: true, user, staff: true } : { ok: false, error: 'Session expired, please log in again' };
+    return user ? { ok: true, user, staff: user.role !== 'owner' } : { ok: false, error: 'Session expired, please log in again' };
   }
   const v = verifyAuth(req);
   return v.ok ? { ok: true, user: { id: 0, name: 'Owner', email: '', role: 'owner' } } : v;
@@ -194,13 +224,9 @@ function jsonToCsv(headers, rows) {
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  // Same-origin only: no CORS headers, so other websites cannot read this API from a visitor's browser.
+  res.setHeader('Cache-Control', 'no-store');
+  if (req.method === 'OPTIONS') return res.status(204).end();
 
   const rl = await rateLimit(req, { limit: 120, windowMs: 60000, key: 'admin' }); // inbox polling + typing; failed logins have their own lockout
   if (!rl.allowed) {
@@ -214,21 +240,29 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many failed attempts — please wait a few minutes and try again.' });
   }
 
-  // Staff login (email + password) happens before authentication
-  if (req.method === 'POST' && req.body && req.body.action === 'login') {
+  // Sign in (staff: email + password; owner: password only). Sets the session cookie; the token is never given to page scripts.
+  if (req.method === 'POST' && req.body && !Buffer.isBuffer(req.body) && req.body.action === 'login') {
+    if (crossSite(req)) return res.status(403).json({ error: 'Forbidden' });
     if (!process.env.TURSO_DATABASE_URL) return res.status(503).json({ error: 'Database not configured' });
-    const s = await staffLogin(req.body.email, req.body.password);
-    if (!s) { recordFailure(ip); return res.status(401).json({ error: 'Wrong email or password' }); }
+    const lim = await rateLimit(req, { limit: 10, windowMs: 15 * 60000, key: 'login' }); // shared across instances when Redis is set
+    if (!lim.allowed) { res.setHeader('Retry-After', String(lim.retryAfter)); return res.status(429).json({ error: 'Too many sign-in attempts — please wait a few minutes.' }); }
+    const email = String(req.body.email || '').trim();
+    const s = email ? await staffLogin(email, req.body.password) : await ownerLogin(req.body.password);
+    if (!s) { recordFailure(ip); return res.status(401).json({ error: email ? 'Wrong email or password' : 'Wrong password' }); }
     clearFailures(ip);
-    return res.status(200).json(s);
+    setSession(res, s.token, s.expiresAt);
+    return res.status(200).json({ user: s.user, expiresAt: s.expiresAt });
   }
 
   const auth = await resolveUser(req);
   if (!auth.ok) {
-    recordFailure(ip);
+    // only guessed credentials count towards the lockout (not "not signed in" or an expired cookie)
+    if (!auth.none && !auth.cookie) recordFailure(ip);
+    if (auth.cookie) clearSession(res);
     return res.status(401).json({ error: auth.error });
   }
-  clearFailures(ip);
+  if (auth.cookie && req.method !== 'GET' && crossSite(req)) return res.status(403).json({ error: 'Forbidden' });
+  if (!auth.cookie) clearFailures(ip);
   const me = auth.user;
 
   // Role check on every request (server-side; the UI only hides what a role cannot use)
@@ -427,7 +461,7 @@ export default async function handler(req, res) {
       }
 
       // ---- Account / team ----
-      if (action === 'logout') { if (auth.staff) await staffLogout(bearerOf(req)); return res.status(200).json({ success: true }); }
+      if (action === 'logout') { await staffLogout(bearerOf(req) || cookieOf(req)); clearSession(res); return res.status(200).json({ success: true }); }
       if (action === 'change_password') {
         if (!auth.staff) return res.status(400).json({ error: 'The owner password is set in Vercel (ADMIN_PASSWORD)' });
         try { await changeOwnPassword(me.id, body.current, body.next); }

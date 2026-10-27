@@ -42,9 +42,6 @@ import { createConversation, linkFor } from '../lib/messages.js';
 import { siteUrl } from '../lib/email.js';
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -67,14 +64,16 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many requests — please wait a moment and try again.' });
   }
 
-  const body = req.body || {};
-  const name = (body.name || '').trim();
-  const email = (body.email || '').trim();
-  const phone = (body.phone || '').trim();
-  const country = (body.country || '').trim();
-  const company = (body.company || '').trim();
-  const industry = (body.industry || '').trim();
-  const message = (body.message || '').trim();
+  const body = req.body && typeof req.body === 'object' && !Buffer.isBuffer(req.body) ? req.body : {};
+  // text fields only: anything else (numbers, objects, arrays) is treated as empty
+  const str = (v) => (typeof v === 'string' ? v.trim() : '');
+  const name = str(body.name);
+  const email = str(body.email);
+  const phone = str(body.phone);
+  const country = str(body.country);
+  const company = str(body.company);
+  const industry = str(body.industry);
+  const message = str(body.message);
   const subscribeOptIn = body.subscribe === true || body.subscribe === 'true';
 
   if (!name || !email || !message) {
@@ -89,7 +88,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid email address' });
   }
 
-  if (name.length > 200 || email.length > 200 || country.length > 100 || company.length > 200 || industry.length > 100 || message.length > 5000) {
+  if (name.length > 200 || email.length > 200 || phone.length > 50 || country.length > 100 || company.length > 200 || industry.length > 100 || message.length > 5000) {
     return res.status(400).json({ error: 'Input too long' });
   }
 
@@ -101,10 +100,10 @@ export default async function handler(req, res) {
     company: company,
     industry: industry,
     message: message,
-    source: body.source || 'cleverstack.dev contact form',
-    utm_source: (body.utm_source || '').trim(),
-    utm_medium: (body.utm_medium || '').trim(),
-    utm_campaign: (body.utm_campaign || '').trim(),
+    source: str(body.source).slice(0, 120) || 'cleverstack.dev contact form',
+    utm_source: str(body.utm_source).slice(0, 120),
+    utm_medium: str(body.utm_medium).slice(0, 120),
+    utm_campaign: str(body.utm_campaign).slice(0, 120),
     analytics_session: String(body._asid || '').replace(/[^a-z0-9]/gi, '').slice(0, 40)
   };
 
@@ -199,7 +198,7 @@ export default async function handler(req, res) {
       });
       if (autoRes.ok) {
         autoResponded = true;
-        console.log('Auto-response sent to', submission.email);
+        console.log('Auto-response sent');
       }
     } catch (err) {
       console.error('Auto-responder failed:', err.message);
@@ -279,10 +278,8 @@ export default async function handler(req, res) {
     });
   }
 
-  // Last resort: log to console
-  console.log('=== NEW CONTACT FORM SUBMISSION (no DB or email configured) ===');
-  console.log(JSON.stringify(submission, null, 2));
-  console.log('================================================================');
+  // Nothing is configured to store or deliver it. Personal data is never written to the logs.
+  console.error('Contact form: no database or email configured; submission was not stored');
 
   return res.status(200).json({
     success: true,

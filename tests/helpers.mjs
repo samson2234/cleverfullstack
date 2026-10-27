@@ -35,6 +35,12 @@ export function call(handler, { method = 'GET', url = '/', body, headers = {}, i
   });
 }
 
+// The CRM session token from a login response's HttpOnly cookie (usable as a Bearer in tests).
+export function sessionToken(r) {
+  const m = String((r && r.headers && r.headers['set-cookie']) || '').match(/cs_admin=([^;]*)/);
+  return m ? decodeURIComponent(m[1]) : undefined;
+}
+
 // Replace global fetch for the duration of a test (e.g. to fake Resend / Upstash).
 export function mockFetch(fn) {
   const real = globalThis.fetch;

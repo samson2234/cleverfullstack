@@ -2,7 +2,7 @@
 // sync to the other side, Seen receipts, typing indicator, roles.
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { call, cleanup, ADMIN } from './helpers.mjs';
+import { call, cleanup, ADMIN, sessionToken } from './helpers.mjs';
 import portal from '../api/portal.js';
 import admin from '../api/admin.js';
 
@@ -81,7 +81,7 @@ test('the team sends a file; viewers cannot', async () => {
 
   const v = await call(admin, { method: 'POST', headers: ADMIN, ip: ip(), body: { action: 'team_create', email: 'viewer2@cleverstack.test', name: 'V', role: 'viewer' } });
   const login = await call(admin, { method: 'POST', ip: ip(), body: { action: 'login', email: 'viewer2@cleverstack.test', password: v.body.password } });
-  const vh = { authorization: 'Bearer ' + login.body.token };
+  const vh = { authorization: 'Bearer ' + sessionToken(login) };
   assert.equal((await call(admin, { method: 'POST', url: '/api/admin?action=msg_upload&id=' + A.id + '&name=x.pdf', headers: vh, body: PDF, ip: ip() })).code, 403);
   assert.equal((await call(admin, { method: 'POST', headers: vh, ip: ip(), body: { action: 'msg_delete', id: A.id, message_id: last.id } })).code, 403);
 });
@@ -165,7 +165,7 @@ test('conversation menu: pin, mark unread/read, archive (back on a client reply)
 
   const s = await call(admin, { method: 'POST', headers: ADMIN, ip: ip(), body: { action: 'team_create', email: 'sales-menu@cleverstack.test', name: 'S', role: 'sales' } });
   const sl = await call(admin, { method: 'POST', ip: ip(), body: { action: 'login', email: 'sales-menu@cleverstack.test', password: s.body.password } });
-  const sh = { authorization: 'Bearer ' + sl.body.token };
+  const sh = { authorization: 'Bearer ' + sessionToken(sl) };
   assert.equal((await post({ action: 'conv_archive', archived: true }, sh)).code, 200, 'sales can archive');
   assert.equal((await post({ action: 'conv_delete' }, sh)).code, 403, 'sales cannot delete');
 

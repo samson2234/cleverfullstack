@@ -507,6 +507,7 @@
       <div class="lead-field"><label>Country</label><div class="lf-val" id="leadCountry">-</div></div>
       <div class="lead-field"><label>Industry / Niche</label><div class="lf-val" id="leadIndustry">-</div></div>
       <div class="lead-field"><label>Source</label><div class="lf-val" id="leadSource">-</div></div>
+      <div class="lead-field full"><label>How they found you</label><div class="lf-val" id="leadOrigin">-</div></div>
       <div class="lead-field"><label>Received</label><div class="lf-val" id="leadCreated">-</div></div>
       <div class="lead-field"><label>Follow-up</label><input type="date" id="leadFollow" onchange="window.__leadFollowChanged()"></div>
       <div class="lead-field"><label>Status</label><select id="leadStatus" onchange="window.__leadStatusChanged()"></select></div>
@@ -617,7 +618,9 @@
 (function(){
   'use strict';
   var API_BASE = '/api/admin';
-  var token = sessionStorage.getItem('admin_token') || '';
+  // The session lives in an HttpOnly cookie set by /api/admin; nothing secret is kept in page storage.
+  var token = '';
+  try { sessionStorage.removeItem('admin_token'); } catch (e) {}
   var leads = [];
   var currentLead = null;
   window.__getCurrentLead = function(){ return currentLead; };
@@ -652,7 +655,7 @@
   }
 
   async function apiCall(method, path, body){
-    var opts = { method: method, headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' } };
+    var opts = { method: method, headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin' };
     if (body) opts.body = JSON.stringify(body);
     var res = await fetch(API_BASE + path, opts);
     var data = await res.json();
@@ -1065,6 +1068,23 @@
   };
 
   // ---------------- LEAD DETAIL MODAL ----------------
+  // Plain-English first touch for a lead: channel, landing page, location, device and the pages they read.
+  function leadOrigin(j){
+    if (!j || !j.landing) return '<span class="muted">Not recorded. They sent the form before accepting cookies, or tracking was not on yet.</span>';
+    var ref = String(j.referrer || '').toLowerCase(), src = String(j.utmSource || '').toLowerCase(), med = String(j.utmMedium || '').toLowerCase(), how;
+    if (src) how = (/cpc|ppc|paid|display/.test(med) ? 'Paid ad' : 'Campaign link') + ': ' + j.utmSource + (j.utmCampaign ? ' / ' + j.utmCampaign : '');
+    else if (/(^|\.)google\./.test(ref)) how = 'Google search';
+    else if (/bing\.|duckduckgo\.|yahoo\.|yandex\.|ecosia\.|brave\./.test(ref)) how = 'Search engine (' + ref + ')';
+    else if (/chatgpt|openai|perplexity|claude\.ai|gemini|copilot/.test(ref)) how = 'AI assistant (' + ref + ')';
+    else if (/facebook|fb\.|instagram|linkedin|lnkd|t\.co$|twitter|x\.com|tiktok|youtube|reddit|whatsapp|pinterest/.test(ref)) how = 'Social media (' + ref + ')';
+    else if (ref) how = 'Link on another website (' + ref + ')';
+    else how = 'Direct: typed the address, a bookmark, or an app that hides the source (email, WhatsApp, Slack)';
+    var where = [j.city, j.country].filter(Boolean).join(', ');
+    return '<b>' + escapeHtml(how) + '</b><div class="muted" style="font-size:.8rem;margin-top:4px;line-height:1.55;">First page: ' + escapeHtml(j.landing) +
+      (where ? ' · ' + escapeHtml(where) : '') + (j.device ? ' · ' + escapeHtml(j.device) : '') +
+      (j.path && j.path.length ? '<br>Pages read: ' + j.path.map(escapeHtml).join(' → ') : '') + '</div>';
+  }
+
   window.__openLead = async function(id){
     try {
       var d = await apiCall('POST', '', { action:'get', id:id });
@@ -1079,6 +1099,7 @@
       $('leadCountry').textContent = currentLead.country || '-';
       $('leadIndustry').textContent = currentLead.industry || '-';
       $('leadSource').textContent = currentLead.source || '-';
+      $('leadOrigin').innerHTML = leadOrigin(currentLead.journey);
       $('leadCreated').textContent = formatDate(currentLead.created_at);
       $('leadMessage').textContent = currentLead.message || '-';
       $('leadScore').innerHTML = currentLead.score == null ? '-' :
@@ -1358,7 +1379,7 @@
       if ($('ctCountry').value) p += '&country=' + encodeURIComponent($('ctCountry').value);
       if ($('ctIndustry').value) p += '&industry=' + encodeURIComponent($('ctIndustry').value);
       if ($('ctInactive').value) p += '&inactive_days=' + $('ctInactive').value;
-      var res = await fetch(API_BASE + p, { headers:{ 'Authorization':'Bearer ' + token } });
+      var res = await fetch(API_BASE + p, { credentials: 'same-origin' });
       if (!res.ok) throw new Error('Export failed');
       var blob = await res.blob(); var a = document.createElement('a');
       a.href = URL.createObjectURL(blob); a.download = 'cleverstack-contacts.csv'; a.click(); URL.revokeObjectURL(a.href);
@@ -1613,7 +1634,7 @@
 
   // ---------------- EXPORT ----------------
   function downloadCsv(url){
-    fetch(url, { headers: { 'Authorization': 'Bearer ' + token } }).then(function(r){
+    fetch(url, { credentials: 'same-origin' }).then(function(r){
       if (!r.ok) throw new Error('Export failed');
       return r.text();
     }).then(function(text){
@@ -1645,21 +1666,15 @@
     var email = $('loginEmail').value.trim();
     if (!pw){ $('loginError').textContent = 'Enter a password'; $('loginError').style.display = 'block'; return; }
     try {
-      if (email) {
-        var r = await fetch(API_BASE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'login', email: email, password: pw }) });
-        var d = await r.json();
-        if (!r.ok) throw new Error(d.error || 'Wrong email or password');
-        token = d.token;
-      } else {
-        token = pw;
-      }
-      await apiCall('GET', '?stats=true');
-      sessionStorage.setItem('admin_token', token);
+      var r = await fetch(API_BASE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ action: 'login', email: email, password: pw }) });
+      var d = await r.json().catch(function(){ return {}; });
+      if (!r.ok) throw new Error(d.error || 'Wrong email or password');
+      $('loginPassword').value = '';
+      $('loginError').style.display = 'none';
       showDashboard();
     } catch(e){
       $('loginError').textContent = e.message || 'Invalid password';
       $('loginError').style.display = 'block';
-      token = '';
     }
   }
 
@@ -1673,10 +1688,8 @@
   }
 
   $('logoutBtn').addEventListener('click', function(){
-    if (token && token.indexOf('st_') === 0) { try { fetch(API_BASE, { method: 'POST', headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'logout' }), keepalive: true }); } catch (e) {} }
+    try { fetch(API_BASE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ action: 'logout' }), keepalive: true }); } catch (e) {}
     document.body.removeAttribute('data-role');
-    token = '';
-    sessionStorage.removeItem('admin_token');
     $('dashboard').style.display = 'none';
     $('loginScreen').style.display = 'flex';
     $('loginPassword').value = '';
@@ -1698,13 +1711,8 @@
     showToast('Refreshed');
   });
 
-  // Auto-login if token saved
-  if (token){
-    apiCall('GET', '?stats=true').then(showDashboard).catch(function(){
-      sessionStorage.removeItem('admin_token');
-      token = '';
-    });
-  }
+  // Still signed in (session cookie)? Go straight to the dashboard.
+  apiCall('GET', '?view=me').then(showDashboard).catch(function(){});
 })();
 </script>
 <script src="chat-ui.js?v=79ac6803" defer></script>

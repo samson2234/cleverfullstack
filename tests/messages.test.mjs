@@ -2,7 +2,7 @@
 // private links are required, rotated links stop working, roles and limits apply.
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { call, cleanup, ADMIN, mockFetch } from './helpers.mjs';
+import { call, cleanup, ADMIN, mockFetch, sessionToken } from './helpers.mjs';
 import contact from '../api/contact.js';
 import portal from '../api/portal.js';
 import admin from '../api/admin.js';
@@ -93,6 +93,6 @@ test('team can start a conversation with anyone; viewers cannot send', async () 
   assert.deepEqual(won.body.conversations.map((x) => x.client_email), ['past@client.test']);
   const v = await call(admin, { method: 'POST', headers: ADMIN, ip: ip(), body: { action: 'team_create', email: 'viewer@cleverstack.test', name: 'V', role: 'viewer' } });
   const login = await call(admin, { method: 'POST', ip: ip(), body: { action: 'login', email: 'viewer@cleverstack.test', password: v.body.password } });
-  const blocked = await call(admin, { method: 'POST', ip: ip(), headers: { authorization: 'Bearer ' + login.body.token }, body: { action: 'msg_send', id: convId, body: 'hi' } });
+  const blocked = await call(admin, { method: 'POST', ip: ip(), headers: { authorization: 'Bearer ' + sessionToken(login) }, body: { action: 'msg_send', id: convId, body: 'hi' } });
   assert.equal(blocked.code, 403);
 });

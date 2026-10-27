@@ -1,7 +1,7 @@
 // NFR security: staff accounts — roles enforced on the server, sessions revocable, owner password still works.
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { call, cleanup, ADMIN } from './helpers.mjs';
+import { call, cleanup, ADMIN, sessionToken } from './helpers.mjs';
 import admin from '../api/admin.js';
 import { getClient } from '../lib/db.js';
 
@@ -10,7 +10,7 @@ let ipN = 0;
 const ip = () => '40.0.' + Math.floor(++ipN / 200) + '.' + (ipN % 200);
 const asOwner = (body) => call(admin, { method: 'POST', body, headers: ADMIN, ip: ip() });
 const as = (token, opts) => call(admin, { ...opts, headers: { authorization: 'Bearer ' + token }, ip: ip() });
-const login = (email, password) => call(admin, { method: 'POST', body: { action: 'login', email, password }, ip: ip() });
+const login = async (email, password) => { const r = await call(admin, { method: 'POST', body: { action: 'login', email, password }, ip: ip() }); r.token = sessionToken(r); return r; };
 
 let salesPw, viewerPw, salesId;
 test('owner creates team members; passwords are generated, shown once and never stored in plain text', async () => {
@@ -32,12 +32,12 @@ test('login: right password works (email is case-insensitive), wrong one does no
   assert.equal((await login('nobody@cleverstack.test', salesPw)).code, 401);
   const ok = await login('SAM@cleverstack.test', salesPw);
   assert.equal(ok.code, 200);
-  assert.match(ok.body.token, /^st_/);
+  assert.match(ok.token, /^st_/);
   assert.equal(ok.body.user.role, 'sales');
 });
 
 test('sales: can work leads but cannot delete, export, mass-send or manage the team', async () => {
-  const t = (await login('sam@cleverstack.test', salesPw)).body.token;
+  const t = (await login('sam@cleverstack.test', salesPw)).token;
   assert.equal((await as(t, { url: '/api/admin?view=me' })).body.user.role, 'sales');
   assert.equal((await as(t, { url: '/api/admin?limit=5' })).code, 200);
   assert.equal((await as(t, { url: '/api/admin?view=analytics&range=week' })).code, 200);
@@ -50,14 +50,14 @@ test('sales: can work leads but cannot delete, export, mass-send or manage the t
 });
 
 test('viewer: read-only', async () => {
-  const t = (await login('vee@cleverstack.test', viewerPw)).body.token;
+  const t = (await login('vee@cleverstack.test', viewerPw)).token;
   assert.equal((await as(t, { url: '/api/admin?limit=5' })).code, 200);
   assert.equal((await as(t, { method: 'POST', body: { action: 'add_note', id: 1, note: 'x' } })).code, 403);
   assert.equal((await as(t, { method: 'POST', body: { action: 'set_status', id: 1, status: 'won' } })).code, 403);
 });
 
 test('sessions end on logout, password reset and deactivation; staff can change their own password', async () => {
-  let t = (await login('sam@cleverstack.test', salesPw)).body.token;
+  let t = (await login('sam@cleverstack.test', salesPw)).token;
   assert.equal((await as(t, { method: 'POST', body: { action: 'change_password', current: salesPw, next: 'short' } })).code, 400);
   assert.equal((await as(t, { method: 'POST', body: { action: 'change_password', current: 'wrong', next: 'NewPassword123' } })).code, 400);
   assert.equal((await as(t, { method: 'POST', body: { action: 'change_password', current: salesPw, next: 'NewPassword123' } })).code, 200);
@@ -65,11 +65,11 @@ test('sessions end on logout, password reset and deactivation; staff can change 
   await as(t, { method: 'POST', body: { action: 'logout' } });
   assert.equal((await as(t, { url: '/api/admin?view=me' })).code, 401, 'logged-out token is dead');
 
-  t = (await login('sam@cleverstack.test', 'NewPassword123')).body.token;
+  t = (await login('sam@cleverstack.test', 'NewPassword123')).token;
   const reset = await asOwner({ action: 'team_reset_password', id: salesId });
   assert.equal((await as(t, { url: '/api/admin?view=me' })).code, 401, 'reset revokes sessions');
   assert.equal(typeof reset.body.emailed, 'boolean');
-  t = (await login('sam@cleverstack.test', reset.body.password)).body.token;
+  t = (await login('sam@cleverstack.test', reset.body.password)).token;
   await asOwner({ action: 'team_update', id: salesId, active: false });
   assert.equal((await as(t, { url: '/api/admin?view=me' })).code, 401, 'deactivation revokes sessions');
   assert.equal((await login('sam@cleverstack.test', reset.body.password)).code, 401, 'deactivated cannot log in');

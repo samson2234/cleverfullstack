@@ -59,6 +59,9 @@ test('a form post is linked to the visit and the CRM shows its score; hot leads 
   assert.equal(first.name, 'Big Buyer');
   assert.equal(first.tier, 'hot');
   assert.equal(first.journey.pages, 4);
+  assert.equal(first.journey.landing, '/', 'first page of the visit');
+  assert.deepEqual(first.journey.path, ['/', '/services', '/portfolio', '/contact'], 'pages read, in order');
+  assert.equal(first.journey.referrer, '', 'no referrer = direct');
   assert.ok(first.score > second.score);
   const hot = await call(admin, { url: '/api/admin?limit=10&tier=hot', headers: ADMIN });
   assert.deepEqual(hot.body.submissions.map((s) => s.name), ['Big Buyer']);
