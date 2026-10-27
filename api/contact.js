@@ -40,6 +40,7 @@ import { getJourneySummaries } from '../lib/analytics.js';
 import { notifyHotLead } from '../lib/hot-lead.js';
 import { createConversation, linkFor } from '../lib/messages.js';
 import { siteUrl } from '../lib/email.js';
+import { detectPitch, intentLabel } from '../lib/pitch.js';
 
 export default async function handler(req, res) {
 
@@ -104,8 +105,14 @@ export default async function handler(req, res) {
     utm_source: str(body.utm_source).slice(0, 120),
     utm_medium: str(body.utm_medium).slice(0, 120),
     utm_campaign: str(body.utm_campaign).slice(0, 120),
-    analytics_session: String(body._asid || '').replace(/[^a-z0-9]/gi, '').slice(0, 40)
+    analytics_session: String(body._asid || '').replace(/[^a-z0-9]/gi, '').slice(0, 40),
+    intent: intentLabel(str(body.intent))
   };
+
+  // People selling to us (SEO offers, agencies, job applications) are kept, but as 'vendor': out of the pipeline,
+  // lead counts, hot-lead alerts and the inbox. One click in the CRM ("Not a pitch") makes them a lead again.
+  const pitch = detectPitch(submission);
+  if (pitch.pitch) { submission.status = 'vendor'; submission.pitch_reason = pitch.reasons.join('; ').slice(0, 300); }
 
   // Lead score (budget, ROI numbers, completeness, market, and the visitor's journey on the site)
   let lead = scoreLead(submission, null);
@@ -127,8 +134,8 @@ export default async function handler(req, res) {
       try { await linkSubmissionToContact(submissionId, submission); }
       catch (err) { console.error('CRM link failed:', err.message); }
       console.log('Submission saved to DB. ID:', submissionId);
-      // Every enquiry starts a project conversation the client can continue on the website
-      try {
+      // Every enquiry starts a project conversation the client can continue on the website (not sales pitches)
+      if (!pitch.pitch) try {
         const subject = submission.source === 'budget-planner' ? 'Your project plan' : submission.source === 'roi-calculator' ? 'Your website audit' : 'Your enquiry';
         const { conversation } = await createConversation({ name: submission.name, email: submission.email, subject, submissionId, firstMessage: submission.message, firstSender: 'client' });
         submission.conversationLink = await linkFor(conversation.id, siteUrl());
@@ -146,7 +153,7 @@ export default async function handler(req, res) {
     try {
       const result = await sendResendEmail({
         to: ownerEmail(),
-        subject: (lead.tier === 'hot' ? '🔥 HOT lead (' + lead.score + '/100): ' : 'New Contact: ') + submission.name + ' — CleverStack',
+        subject: (pitch.pitch ? 'Vendor pitch (filtered): ' : lead.tier === 'hot' ? '🔥 HOT lead (' + lead.score + '/100): ' : 'New Contact: ') + submission.name + ' — CleverStack',
         html: contactNotificationTemplate(submission),
         replyTo: submission.email
       });
@@ -165,7 +172,7 @@ export default async function handler(req, res) {
   }
 
   // Hot lead: optional instant WhatsApp ping (best effort, never blocks)
-  if (lead.tier === 'hot') { try { await notifyHotLead(submission, lead); } catch (err) { console.error('Hot lead ping failed:', err.message); } }
+  if (lead.tier === 'hot' && !pitch.pitch) { try { await notifyHotLead(submission, lead); } catch (err) { console.error('Hot lead ping failed:', err.message); } }
 
   // LAYER 3: Auto-responder — send confirmation to the submitter
   let autoResponded = false;

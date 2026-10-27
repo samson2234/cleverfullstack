@@ -48,7 +48,7 @@ We go after **4 intent clusters**, in this order of money value:
    - "website redesign service", "landing page design service"
 2. **Hire intent, by location:**
    - "web development company USA / UK / Europe" (pages exist; strengthen them)
-   - Later, high-value cities with unique content only: London, Manchester, New York, Austin, Toronto, Dublin, Lagos.
+   - Later, high-value cities with unique content only: London, Manchester, New York, Austin, Toronto, Dublin, Berlin.
    - This is **not** a copy-paste page per city. Google penalises doorway pages.
 3. **Industry intent:** "website for dentists", "law firm website design", "real estate website developer", "restaurant website", "SaaS startup website", "e-commerce for fashion brands". Each page gets a matching case study.
 4. **Problem and cost intent** (blog; converts to leads with the ROI calculator and budget planner):
@@ -86,7 +86,7 @@ For every target we record: the search phrase, the page that owns it (one page p
 >
 > **Carried forward:**
 > - Service schema per service page arrives with the service pages (Phase 2), as do team Person entities (they need your team details) and the title/description rewrites (several are still over 60/160 characters).
-> - The weekly Search Console check is manual until Phase 5's monthly report.
+> - ~~The weekly Search Console check is manual until Phase 5's monthly report.~~ Done in Phase 5 (monthly report, once Search Console is connected).
 
 1. **Fix the French problem (T1).**
    - Option A (recommended now): remove the `fr` hreflang and keep French as an on-page convenience only.
@@ -169,7 +169,21 @@ For every target we record: the search phrase, the page that owns it (one page p
 7. **Partnerships:** referral swaps with marketing agencies, accountants and business coaches who serve the same clients.
 8. **Never:** buy links, use PBNs, comment spam or "1,000 backlinks for $20". These get sites penalised.
 
-### Phase 5: Lead quality and measurement (week 1–2) · effort: me · risk: low
+### Phase 5: Lead quality and measurement (week 1–2) · effort: me · risk: low · ✅ DONE 27 Oct 2026
+
+> **Result (all 129 tests pass; checked in a browser on the contact form and the CRM):**
+> - **Vendor pitches are separated, never deleted.**
+>   - The contact form has a required "What can we help you with?" choice, including "I'm offering services / partnership". It's translated (EN/FR/DE).
+>   - The detector (`lib/pitch.js`) looks for *offer* language (link selling, white-label, "we can rank you", "I noticed errors on your website", outsourcing, job applications). A message that describes a real need needs much stronger evidence. Test samples: 10/10 pitches caught, 0/11 real enquiries flagged (including "I need SEO to rank higher" and "I found your website on Google").
+>   - Pitches get the status **Vendor pitch**, with the reason shown. They're kept out of All, the pipeline, lead counts, the dashboard, follow-ups, hot-lead alerts and the inbox. The sender sees the normal thank-you message. Your email says "Vendor pitch (filtered)" and gives the reason.
+>   - In the CRM there's a **Vendor pitches** filter, a one-click **Not a pitch** button, and "Vendor pitch" in every status menu.
+>   - **Scan older leads** (owner/admin only) checks the untouched New leads and moves pitches over. It's undoable and never touches leads someone has already worked.
+> - **Leads by channel:** each lead is classed as Google Ads, Meta ads, Google search, other search engines, AI assistants, social media, other websites or direct/unknown. It uses the lead's ad tags first, then its first visit.
+> - **Monthly SEO and leads email**, on the 3rd of each month. It's sent by the existing daily job, so there's no new server function, and the CRM can send it on demand too. It contains:
+>   - leads by channel vs the month before, plus won leads and filtered pitches;
+>   - from Search Console: clicks, impressions, CTR, average position, pages showing in Google, the **31 tracked phrases** (position, impressions, clicks, and which aren't showing yet), top searches, top pages and countries.
+> - **One step only you can do:** connect Search Console (about 10 minutes; steps in `lib/search-console.js`). Until then the email shows leads and says Search Console isn't connected.
+> - **Not automated (honest limits):** Core Web Vitals and "pages indexed" stay in Search Console's own reports (the API doesn't give site-wide totals); "pages showing in Google" is the proxy. The "what we'll do next month" notes come from me when I review each report.
 
 1. **Stop vendor pitches polluting leads (Jack and Joel):**
    - Add a required "What can we help you with?" choice, including "I'm offering services / partnership".
@@ -189,7 +203,7 @@ For every target we record: the search phrase, the page that owns it (one page p
 
 | Weeks | Work |
 |---|---|
-| 1–2 | Phase 1 technical fixes · Phase 5 lead filtering · GBP and directory profiles started |
+| 1–2 | ✅ Phase 1 technical fixes · ✅ Phase 5 lead filtering and monthly report · GBP and directory profiles started |
 | 2–4 | Portfolio → `/work/` pages · first 4 service pages · schema upgrade · CWV fixes |
 | 4–6 | Remaining 4 service pages · 3 industry pages · location page upgrades · start 2 posts/week |
 | 6–8 | Last 3 industry pages · comparison pages · first data/PR piece · credit links on client sites |

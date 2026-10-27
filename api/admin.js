@@ -37,8 +37,10 @@ import {
   setReviewStatus,
   setReviewReply,
   deleteReview,
-  getPendingReviewCount
+  getPendingReviewCount,
+  tagPitches
 } from '../lib/db.js';
+import { detectPitch } from '../lib/pitch.js';
 import {
   sendResendEmail,
   replyEmailTemplate,
@@ -68,7 +70,7 @@ import { listConversations, getConversation, getMessages, addMessage, createConv
   changedSince, serverNow, needsRead, editMessage, deleteMessage, setTyping, saveFile, getFile, sendFile } from '../lib/messages.js';
 import { clientMessageTemplate, teamInviteTemplate } from '../lib/email.js';
 import { can, login as staffLogin, ownerLogin, userForToken, logout as staffLogout, listStaff, createStaff, updateStaff, resetStaffPassword, deleteStaff, changeOwnPassword } from '../lib/staff.js';
-import { sendWeeklyReport } from '../lib/analytics-report.js';
+import { sendWeeklyReport, sendMonthlyLeadsReport } from '../lib/analytics-report.js';
 import crypto from 'node:crypto';
 
 // Failed-login lockout: after MAX_FAILS wrong passwords from an IP, the IP is
@@ -522,6 +524,13 @@ export default async function handler(req, res) {
         return res.status(r.ok ? 200 : 502).json(r.ok ? { success: true, message: 'Report sent to your inbox', subject: r.subject } : { error: r.error || 'Email failed' });
       }
 
+      // ---- SEO and leads report for last month (same email the cron sends on the 3rd) ----
+      if (action === 'send_leads_report') {
+        if (!process.env.RESEND_API_KEY) return res.status(503).json({ error: 'RESEND_API_KEY is not set, so emails cannot be sent' });
+        const r = await sendMonthlyLeadsReport();
+        return res.status(r.ok ? 200 : 502).json(r.ok ? { success: true, message: 'Report sent to your inbox', subject: r.subject } : { error: r.error || 'Email failed' });
+      }
+
       // ---- Lead actions ----
       if (action === 'mark_read') {
         if (!body.id) return res.status(400).json({ error: 'id required' });
@@ -548,6 +557,11 @@ export default async function handler(req, res) {
         if (!body.id || !body.status) return res.status(400).json({ error: 'id and status required' });
         await updateSubmissionStatus(body.id, body.status);
         return res.status(200).json({ success: true, message: 'Status updated to ' + body.status });
+      }
+
+      if (action === 'scan_pitches') {
+        const r = await tagPitches(detectPitch);
+        return res.status(200).json({ success: true, ...r, message: r.tagged.length + ' vendor pitch' + (r.tagged.length === 1 ? '' : 'es') + ' found in ' + r.scanned + ' new leads' });
       }
 
       if (action === 'add_note') {

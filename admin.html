@@ -144,6 +144,8 @@
   .pill.won{ background:rgba(16,185,129,.17); color:#34d399; }
   .pill.lost{ background:rgba(251,113,133,.15); color:#fda4af; }
   .pill.followup{ background:rgba(217,70,239,.16); color:#e879f9; }
+  .pill.vendor{ background:rgba(148,163,184,.16); color:#cbd5e1; }
+  .pitch-why{ margin-top:6px; font-size:.78rem; color:var(--crm-muted); }
   .inline-select{ padding:7px 10px; border:1px solid var(--crm-line); border-radius:8px; font-size:.8rem; font-family:var(--font-body); background:var(--crm-card-2); color:var(--crm-text); outline:none; cursor:pointer; }
   .inline-select:focus{ border-color:var(--crm-indigo); }
   .btn-tiny{ padding:7px 13px; border-radius:8px; font-size:.78rem; font-weight:600; cursor:pointer; font-family:var(--font-body); border:1px solid var(--crm-line); background:transparent; color:var(--crm-muted); transition:all .15s; }
@@ -398,8 +400,10 @@
           <button class="chip" data-status="proposal">Proposal</button>
           <button class="chip" data-status="won">Won</button>
           <button class="chip" data-status="lost">Lost</button>
+          <button class="chip" data-status="vendor" title="People selling to you (SEO, agencies, job seekers). Kept out of All, the pipeline and lead counts.">Vendor pitches</button>
         </div>
         <div class="toolbar-right">
+          <button class="btn-sm ghost" id="scanPitchesBtn" title="Check older New leads for sales pitches and move them to Vendor pitches (undo with Not a pitch)">Scan older leads</button>
           <button class="btn-sm ghost" id="toggleViewBtn"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg> Board</button>
           <button class="btn-sm" id="exportLeadsBtn"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</button>
         </div>
@@ -506,6 +510,7 @@
       <div class="lead-field"><label>Company</label><div class="lf-val" id="leadCompany">-</div></div>
       <div class="lead-field"><label>Country</label><div class="lf-val" id="leadCountry">-</div></div>
       <div class="lead-field"><label>Industry / Niche</label><div class="lf-val" id="leadIndustry">-</div></div>
+      <div class="lead-field"><label>Looking for</label><div class="lf-val" id="leadIntent">-</div></div>
       <div class="lead-field"><label>Source</label><div class="lf-val" id="leadSource">-</div></div>
       <div class="lead-field full"><label>How they found you</label><div class="lf-val" id="leadOrigin">-</div></div>
       <div class="lead-field"><label>Received</label><div class="lf-val" id="leadCreated">-</div></div>
@@ -639,9 +644,11 @@
     contacted: { label:'Contacted', cls:'contacted' },
     proposal: { label:'Proposal', cls:'proposal' },
     won: { label:'Won', cls:'won' },
-    lost: { label:'Lost', cls:'lost' }
+    lost: { label:'Lost', cls:'lost' },
+    vendor: { label:'Vendor pitch', cls:'vendor' }
   };
   var STATUS_ORDER = ['new','contacted','proposal','won','lost'];
+  var STATUS_CHOICES = STATUS_ORDER.concat('vendor'); // dropdowns: pipeline stages + vendor pitch
   var STATUS_COLORS = { new:'#6366f1', contacted:'#2dd4bf', proposal:'#f59e0b', won:'#10b981', lost:'#fb7185' };
   var AVATAR_COLORS = ['#6366f1','#2dd4bf','#f59e0b','#10b981','#fb7185','#a855f7','#38bdf8','#f97316'];
 
@@ -889,14 +896,17 @@
         (s.company ? '<span class="tag tag-co">' + escapeHtml(s.company) + '</span>' : '') +
         (s.country ? '<span class="tag tag-country">' + escapeHtml(s.country) + '</span>' : '') +
         (s.industry ? '<span class="tag tag-ind">' + escapeHtml(s.industry) + '</span>' : '') +
+        (s.intent ? '<span class="tag">' + escapeHtml(s.intent) + '</span>' : '') +
         '</div>';
       html += '<div class="card-snippet">' + escapeHtml(s.message) + '</div>';
+      if (status === 'vendor' && s.pitch_reason) html += '<div class="pitch-why">Filtered as a pitch: ' + escapeHtml(s.pitch_reason) + '</div>';
       html += '</div></div>';
       html += '<div class="detail-notes" id="notes-' + s.id + '">' + (s.notes ? escapeHtml(s.notes) : '<em style="color:var(--crm-muted);">No notes yet.</em>') + '</div>';
       html += '<div class="notes-input" id="notesInput-' + s.id + '"><input placeholder="Add a note" id="noteText-' + s.id + '"><button class="btn-tiny reply" onclick="window.__addNote(' + s.id + ')">Add</button></div>';
       html += '<div class="card-actions">';
+      if (status === 'vendor') html += '<button class="btn-tiny reply" onclick="window.__setStatus(' + s.id + ', \'new\')" title="Move back to New leads">Not a pitch</button>';
       html += '<select class="inline-select" onchange="window.__setStatus(' + s.id + ', this.value)">';
-      STATUS_ORDER.forEach(function(st){
+      STATUS_CHOICES.forEach(function(st){
         html += '<option value="' + st + '"' + (status === st ? ' selected' : '') + '>' + STATUS_META[st].label + '</option>';
       });
       html += '</select>';
@@ -1006,13 +1016,19 @@
     if (lead) {
       var oldStatus = lead.status;
       lead.status = status;
+      // vendor pitches live only under their own filter, so crossing that line takes the card off this list
+      var leaves = (status === 'vendor') !== (currentStatus === 'vendor') && (currentStatus === '' || currentStatus === 'vendor');
+      var at = leads.indexOf(lead);
+      if (leaves) { leads.splice(at, 1); leadTotal = Math.max(0, leadTotal - 1); renderPager(); }
       if (boardMode) renderBoard(); else renderLeads();
       try {
         await apiCall('POST', '', { action:'set_status', id:id, status:status });
-        showToast('Status: ' + (STATUS_META[status] || {}).label);
+        if (status === 'vendor') lead.pitch_reason = lead.pitch_reason || 'Marked as a pitch in the CRM'; else lead.pitch_reason = '';
+        showToast(status === 'vendor' ? 'Moved to Vendor pitches' : oldStatus === 'vendor' ? 'Moved back to leads' : 'Status: ' + (STATUS_META[status] || {}).label);
       } catch(e){
         // Revert on failure
         if (lead) lead.status = oldStatus;
+        if (leaves) { leads.splice(at, 0, lead); leadTotal += 1; renderPager(); }
         if (boardMode) renderBoard(); else renderLeads();
         showToast('Error: ' + e.message);
       }
@@ -1098,6 +1114,7 @@
       $('leadCompany').textContent = currentLead.company || '-';
       $('leadCountry').textContent = currentLead.country || '-';
       $('leadIndustry').textContent = currentLead.industry || '-';
+      $('leadIntent').innerHTML = escapeHtml(currentLead.intent || '-') + (currentLead.status === 'vendor' ? '<div class="pitch-why">Filtered as a vendor pitch' + (currentLead.pitch_reason ? ': ' + escapeHtml(currentLead.pitch_reason) : '') + '. Set the status to New if this is a real client.</div>' : '');
       $('leadSource').textContent = currentLead.source || '-';
       $('leadOrigin').innerHTML = leadOrigin(currentLead.journey);
       $('leadCreated').textContent = formatDate(currentLead.created_at);
@@ -1108,7 +1125,7 @@
         (currentLead.journey ? '' : '<div class="muted" style="font-size:.78rem;margin-top:6px;">No website journey linked (sent before tracking, or from another device).</div>');
       $('leadNotes').textContent = currentLead.notes || 'No notes yet.';
       var opts = '';
-      STATUS_ORDER.forEach(function(st){
+      STATUS_CHOICES.forEach(function(st){
         opts += '<option value="' + st + '"' + ((currentLead.status || 'new') === st ? ' selected' : '') + '>' + STATUS_META[st].label + '</option>';
       });
       $('leadStatus').innerHTML = opts;
@@ -1619,6 +1636,17 @@
       $('kanbanBoard').style.display = 'none';
       renderLeads();
     }
+  });
+
+  $('scanPitchesBtn').addEventListener('click', async function(){
+    if (!confirm('Check New leads for sales pitches (SEO offers, agencies, job seekers) and move them to Vendor pitches? Nothing is deleted, and "Not a pitch" undoes it.')) return;
+    var b = this; b.disabled = true;
+    try {
+      var r = await apiCall('POST', '', { action:'scan_pitches' });
+      showToast(r.message || 'Done');
+      loadLeads(); loadDashboard();
+    } catch(e){ showToast('Error: ' + e.message); }
+    b.disabled = false;
   });
 
   var chips = document.querySelectorAll('#statusFilter .chip');
