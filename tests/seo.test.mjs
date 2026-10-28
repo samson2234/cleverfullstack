@@ -146,8 +146,10 @@ test('service and industry pages: substantial, honest prices, real case studies,
   const src = [...req('../landing-src/services.js'), ...req('../landing-src/hire.js'), ...req('../landing-src/apps.js'), ...req('../landing-src/industries.js'), ...req('../landing-src/locations.js')];
   assert.ok(src.filter((p) => p.kind === 'service').length >= 8 && src.filter((p) => p.kind === 'industry').length >= 6);
   assert.ok(src.filter((p) => p.kind === 'location').length >= 2, 'Germany and Canada pages');
-  // only the package prices published on /services (USD) and /web-development-europe (EUR)
-  const published = { USD: new Set([...read('services.html').matchAll(/"@type": "Offer", "price": "(\d+)"/g)].map((m) => Number(m[1]))),
+  // only the package prices published on /services (USD) and /web-development-europe (EUR), plus starting prices the
+  // owner confirmed for app and extension work (27 Oct 2026: plugins/extensions $1,000, desktop apps $5,000)
+  const OWNER_CONFIRMED = [1000, 5000];
+  const published = { USD: new Set([...read('services.html').matchAll(/"@type": "Offer", "price": "(\d+)"/g)].map((m) => Number(m[1])).concat(OWNER_CONFIRMED)),
     EUR: new Set([...read('web-development-europe.html').matchAll(/€([\d,]+)/g)].map((m) => Number(m[1].replace(/,/g, '')))) };
   const projects = new Set(JSON.parse(read('work-src/projects.json')).map((p) => p.slug));
   const hub = read('services.html');
@@ -198,4 +200,13 @@ test('footer Services column links every service page, on every page with the st
   const withFooter = pages.filter((p) => p.html.includes('data-i18n="footer.services"'));
   assert.ok(withFooter.length >= 50, 'only ' + withFooter.length + ' pages have the footer');
   for (const p of withFooter) for (const s of svc) assert.ok(p.html.includes('<li><a href="/' + s.slug + '">'), p.rel + ': footer lacks ' + s.slug);
+});
+
+test('AI search (llms.txt): lists every landing page, the email contact, and no phone number', async () => {
+  const req = (await import('node:module')).createRequire(import.meta.url);
+  const txt = read('llms.txt');
+  const src = [...req('../landing-src/services.js'), ...req('../landing-src/apps.js'), ...req('../landing-src/hire.js'), ...req('../landing-src/industries.js'), ...req('../landing-src/locations.js')];
+  for (const p of src) assert.ok(txt.includes(SITE + '/' + p.slug + ')'), 'llms.txt lacks ' + p.slug);
+  assert.match(txt, /hello@cleverstack\.dev/);
+  assert.doesNotMatch(txt, /\+234|Phone:/);
 });

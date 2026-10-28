@@ -1,32 +1,81 @@
-# CleverStack - Full-Stack Web & App Development Studio
+# CleverStack: Full-Stack Web, App & Software Development
 
-> CleverStack is a full-stack development studio building fast, scalable websites and web applications for founders and growing businesses in the USA, UK, and Europe.
+> CleverStack is a remote team of full-stack developers and software engineers building websites, online stores, web apps, SaaS products, mobile apps, desktop apps and plugins for businesses worldwide, mainly in the USA, UK, Canada, Germany and the rest of Europe. Fixed quotes before work starts; the client owns the code.
+
+## Packages (USD, fixed price)
+- Starter Website ($499): up to 5 pages, mobile-responsive, SEO foundation, 5–7 days
+- Business Website ($999): up to 10 pages with CMS, custom theme, advanced SEO
+- E-Commerce Store ($1,749): Shopify or WooCommerce store, up to 20 products
+- Custom Web App ($3,000): logins and roles, database, one API integration, admin panel, 14–28 days
+- SEO & Growth ($549): technical SEO audit, keyword research, on-page optimisation
+- Fix & Redesign ($799): site audit, redesign, speed optimisation
+- Mobile apps from $3,000 (iOS + Android), desktop apps from $5,000, plugins and browser extensions from $1,000
+- Prices in pounds and euros: https://cleverstack.dev/web-development-uk, https://cleverstack.dev/web-development-europe
 
 ## Services
-- Starter Website ($499): Up to 5 pages, mobile-responsive, SEO foundation
-- Business Website ($999): Up to 10 pages with CMS, custom theme, advanced SEO
-- E-Commerce Store ($1,749): Up to 20 products on Shopify or WooCommerce
-- Custom Web App ($3,000): React/Next.js/Laravel dashboards with auth and APIs
-- SEO & Growth ($549): Full technical SEO audit, keyword research, on-page optimization
-- Fix & Redesign ($799): Site audit, redesign, speed optimization
+- [Shopify Development](https://cleverstack.dev/shopify-development): from $1,749. Hire a Shopify developer for a store that loads fast and converts: theme build, product setup, payments, shipping and tracking. Fixed quote, from $1,749.
+- [WordPress & WooCommerce Development](https://cleverstack.dev/wordpress-woocommerce-development): from $999. WordPress and WooCommerce development for small businesses: custom themes, Elementor builds, online stores, speed and security. Fixed quote, from $999.
+- [React & Next.js Web App Development](https://cleverstack.dev/react-nextjs-development): from $3,000. React and Next.js developers for dashboards, portals and SaaS products: Node.js APIs, databases, logins and roles. Fixed quote, from $3,000.
+- [SaaS MVP Development](https://cleverstack.dev/saas-mvp-development): from $3,000. SaaS MVP development for founders: scope, design, build and launch a product real users can pay for. Next.js, Node.js, Stripe billing. From $3,000.
+- [Zoho CRM Implementation & Automation](https://cleverstack.dev/zoho-crm-automation). Zoho CRM implementation and automation: setup, data migration, workflows, Deluge scripts and integrations with your website, email and payments.
+- [Website Redesign](https://cleverstack.dev/website-redesign): from $799. Website redesign for businesses with an outdated or slow site: audit, redesign, speed fixes and content migration without losing rankings. From $799.
+- [Landing Page Design](https://cleverstack.dev/landing-page-design): from $499. Landing page design and build for ads, launches and lead generation: fast, mobile-first, tracked and ready to A/B test. Delivered in 5–7 days, from $499.
+- [SEO & Site Speed Optimization](https://cleverstack.dev/seo-speed-optimization): from $549. Technical SEO and site speed optimization: Core Web Vitals, audits, schema, on-page fixes and Search Console setup. Results in 3–5 days, from $549.
+- [Mobile App Development](https://cleverstack.dev/mobile-app-development): from $3,000. Mobile app development for iOS and Android with React Native: one codebase, native feel, backend and App Store launch included. Fixed quote after a free call.
+- [Desktop App Development](https://cleverstack.dev/desktop-app-development): from $5,000. Desktop app development for Windows, macOS and Linux with Electron or Tauri: offline-ready tools, auto-updates, installers and secure sync. Fixed quotes.
+- [Plugin & Extension Development](https://cleverstack.dev/plugin-extension-development): from $1,000. Custom plugin and extension development: WordPress and WooCommerce plugins, Shopify apps, and Chrome, Edge and Firefox browser extensions. Fixed quotes.
 
-## Key Pages
-- Home: https://cleverstack.dev/
-- Services: https://cleverstack.dev/services
-- Portfolio: https://cleverstack.dev/portfolio
+## Hire developers
+- [Hire Full-Stack Developers](https://cleverstack.dev/hire-full-stack-developers): from $3,000. Hire full-stack developers and software engineers for your website, SaaS or web app: React, Next.js, Node.js and databases. Fixed quotes or ongoing support.
+- [Hire Frontend Developers](https://cleverstack.dev/hire-frontend-developers): from $499. Hire frontend developers for fast, accessible React and Next.js interfaces: pixel-accurate builds from Figma, Core Web Vitals and design systems.
+- [Hire Backend Developers](https://cleverstack.dev/hire-backend-developers): from $3,000. Hire backend developers for secure Node.js APIs, databases, authentication, payments and integrations. Software engineers who build systems that scale.
+
+## Industries
+- [Websites for Dentists & Clinics](https://cleverstack.dev/dental-clinic-websites): from $999. Dental and clinic website design: treatment pages, online booking, trust signals and local SEO, built for practices in the USA, UK, Canada and Europe.
+- [Law Firm Website Design](https://cleverstack.dev/law-firm-websites): from $999. Law firm website design with practice-area pages, attorney profiles, local SEO and clear contact paths. Built on WordPress for firms in the USA, UK and Europe.
+- [Real Estate Website Development](https://cleverstack.dev/real-estate-websites): from $999. Real estate website development for agents and agencies: property listings, search and filters, IDX or feed integration, valuation forms and local SEO.
+- [Restaurant & Hospitality Websites](https://cleverstack.dev/restaurant-websites): from $499. Restaurant and hospitality website design: mobile menus, table bookings, online ordering, events and local SEO. Built for restaurants, cafés, bars and hotels.
+- [SaaS & Startup Websites](https://cleverstack.dev/saas-startup-websites): from $999. SaaS website design and development for startups: marketing site, pricing, docs, sign-up flow and product analytics, built with Next.js. Also MVP builds.
+- [E-Commerce Websites for Brands](https://cleverstack.dev/ecommerce-websites): from $1,749. E-commerce website development for fashion, beauty and lifestyle brands: Shopify or WooCommerce, product pages that sell, fast checkout. From $1,749.
+
+## Countries
+- [Web development USA](https://cleverstack.dev/web-development-usa)
+- [Web development UK](https://cleverstack.dev/web-development-uk)
+- [Web development Europe](https://cleverstack.dev/web-development-europe)
+- [Web Development Germany](https://cleverstack.dev/web-development-germany)
+- [Web Development Canada](https://cleverstack.dev/web-development-canada)
+- Clients worldwide, remote; team works in UTC+1 and schedules calls in the client's time zone.
+
+## Common questions
+### How much does a Shopify store cost?
+Our E-Commerce Store package starts at $1,749 and covers up to 20 products, cart and checkout, payments, shipping and tax, search and filtering, and order management. Larger catalogues, custom features or a migration from another platform are quoted after a free call. You get a fixed quote before any work starts.
+### How long does it take to build a Shopify store?
+Most stores are delivered in 10 to 18 days once we have your products, images and branding. A migration or a fully custom theme can take longer, and you will get a specific timeline in your proposal.
+### How much does an MVP cost?
+Our Custom Web App package starts at $3,000. Most SaaS MVPs with billing and onboarding cost more, depending on the core workflow. After a free call we give you a fixed quote for an agreed scope, so the price does not creep.
+### How long does it take to build an MVP?
+Most MVPs take 4 to 10 weeks from agreed scope to launch. A tighter scope launches sooner.
+### How much does a mobile app cost?
+Mobile apps start from $3,000 for iOS and Android. The final price depends on the features, so we scope it on a free call and give you a fixed quote with milestones before any work starts.
+### Do you build for both iPhone and Android?
+Yes. We use React Native, so one codebase runs on both, which is faster and cheaper than two separate apps.
+### How much does it cost to hire full-stack developers?
+Fixed-price projects start at $499 for a website and $3,000 for a custom web app. Ongoing development is quoted as a monthly plan after a free call, based on how much work you have each month.
+### Can I hire a full-stack developer for an existing codebase?
+Yes. We start with a short review of the code, infrastructure and open issues, then fix, extend or gradually improve it.
+
+## Key pages
+- Services and pricing: https://cleverstack.dev/services
+- Portfolio and case studies: https://cleverstack.dev/portfolio
+- Client reviews: https://cleverstack.dev/reviews
 - Blog: https://cleverstack.dev/blog
-- Contact: https://cleverstack.dev/contact
 - About: https://cleverstack.dev/about
-
-## Location Pages
-- Web Development USA: https://cleverstack.dev/web-development-usa
-- Web Development UK: https://cleverstack.dev/web-development-uk
-- Web Development Europe: https://cleverstack.dev/web-development-europe
+- Contact: https://cleverstack.dev/contact
 
 ## Contact
 - Email: hello@cleverstack.dev
-- Phone: +2349165400534
-- WhatsApp: https://wa.me/2349165400534
+- Free 30-minute call: https://cleverstack.dev/contact
+- Location: remote, worldwide
 
 ## Founder
-Henry George - Full-stack developer and founder of CleverStack
+Henry George, full-stack developer and founder of CleverStack.

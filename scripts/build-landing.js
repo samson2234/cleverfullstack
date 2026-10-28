@@ -242,6 +242,58 @@ function footerLinks() {
   if (n) console.log('footer: country links added on', n, 'pages');
 }
 
+// llms.txt: the plain-text summary AI assistants read (ChatGPT, Perplexity, Google AI). Rebuilt from the same sources
+// as the pages, so prices and pages never drift.
+function llmsTxt() {
+  const line = (p) => `- [${p.name}](${SITE}/${p.slug})${p.price.from ? ': from ' + money(p.price.from, p.price.currency) : ''}. ${p.description}`;
+  const kind = (k) => PAGES.filter((p) => p.kind === k);
+  const svc = kind('service').filter((p) => !p.slug.startsWith('hire-'));
+  const faqs = PAGES.filter((p) => ['hire-full-stack-developers', 'mobile-app-development', 'saas-mvp-development', 'shopify-development'].includes(p.slug))
+    .flatMap((p) => p.faqs.slice(0, 2)).map(([q, a]) => `### ${q}\n${a}`);
+  const out = [
+    '# CleverStack: Full-Stack Web, App & Software Development',
+    '',
+    '> CleverStack is a remote team of full-stack developers and software engineers building websites, online stores, web apps, SaaS products, mobile apps, desktop apps and plugins for businesses worldwide, mainly in the USA, UK, Canada, Germany and the rest of Europe. Fixed quotes before work starts; the client owns the code.',
+    '',
+    '## Packages (USD, fixed price)',
+    '- Starter Website ($499): up to 5 pages, mobile-responsive, SEO foundation, 5–7 days',
+    '- Business Website ($999): up to 10 pages with CMS, custom theme, advanced SEO',
+    '- E-Commerce Store ($1,749): Shopify or WooCommerce store, up to 20 products',
+    '- Custom Web App ($3,000): logins and roles, database, one API integration, admin panel, 14–28 days',
+    '- SEO & Growth ($549): technical SEO audit, keyword research, on-page optimisation',
+    '- Fix & Redesign ($799): site audit, redesign, speed optimisation',
+    '- Mobile apps from $3,000 (iOS + Android), desktop apps from $5,000, plugins and browser extensions from $1,000',
+    '- Prices in pounds and euros: ' + SITE + '/web-development-uk, ' + SITE + '/web-development-europe',
+    '',
+    '## Services', ...svc.map(line),
+    '',
+    '## Hire developers', ...kind('service').filter((p) => p.slug.startsWith('hire-')).map(line),
+    '',
+    '## Industries', ...kind('industry').map(line),
+    '',
+    '## Countries',
+    `- [Web development USA](${SITE}/web-development-usa)`, `- [Web development UK](${SITE}/web-development-uk)`, `- [Web development Europe](${SITE}/web-development-europe)`,
+    ...kind('location').map((p) => `- [${p.name}](${SITE}/${p.slug})`),
+    '- Clients worldwide, remote; team works in UTC+1 and schedules calls in the client\'s time zone.',
+    '',
+    '## Common questions', ...faqs,
+    '',
+    '## Key pages',
+    `- Services and pricing: ${SITE}/services`, `- Portfolio and case studies: ${SITE}/portfolio`, `- Client reviews: ${SITE}/reviews`,
+    `- Blog: ${SITE}/blog`, `- About: ${SITE}/about`, `- Contact: ${SITE}/contact`,
+    '',
+    '## Contact',
+    '- Email: hello@cleverstack.dev',
+    `- Free 30-minute call: ${SITE}/contact`,
+    '- Location: remote, worldwide',
+    '',
+    '## Founder',
+    'Henry George, full-stack developer and founder of CleverStack.',
+    ''
+  ];
+  fs.writeFileSync(path.join(ROOT, 'llms.txt'), out.join('\n'));
+}
+
 function words(html) { return html.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length; }
 
 validate();
@@ -259,6 +311,7 @@ for (const f of fs.readdirSync(ROOT)) {
   if (/<main id="main" data-landing="/.test(s)) { fs.unlinkSync(path.join(ROOT, f)); console.log('removed stale', f); }
 }
 linkHub();
+llmsTxt();
 console.log('services.html: links to', PAGES.length, 'pages');
 handCountryPages();
 footerLinks();

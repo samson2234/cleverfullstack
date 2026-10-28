@@ -1,5 +1,5 @@
 // App and extension services (added Oct 2026: mobile, desktop, plugins and browser extensions).
-// Same rules as services.js: no invented prices (these are quoted per project), real projects only.
+// Same rules as services.js: real projects only. Starting prices confirmed by the owner on 27 Oct 2026.
 module.exports = [
   {
     slug: 'mobile-app-development',
@@ -10,7 +10,7 @@ module.exports = [
     eyebrow: 'Mobile App Development',
     h1: 'Mobile app development for iOS and Android',
     sub: 'Cross-platform apps built with React Native, with the backend, admin panel and app store launch handled by the same team.',
-    price: { label: 'Quoted per project', delivery: 'Agreed in your proposal', includes: 'Mobile apps vary a lot in size, so we scope yours on a free call and send a fixed quote with milestones. The quote covers design, the app, its backend and the App Store and Google Play submission.' },
+    price: { from: 3000, label: 'Starting price, iOS + Android', delivery: 'Agreed in your proposal', includes: 'Mobile apps start from $3,000 for iOS and Android together. Apps vary a lot in size, so we scope yours on a free call and send a fixed quote with milestones. The quote covers design, the app, its backend and the App Store and Google Play submission.' },
     intro: [
       'A mobile app puts your product in your customer\'s pocket: on their home screen, with notifications that bring them back, and features that use the camera, location and offline storage. Done badly, it is also an expensive way to collect one-star reviews.',
       'We build mobile apps with React Native, so one codebase runs on both iPhone and Android with a native look and feel. You get a single team for the app, the backend it talks to and the admin tools you use to run it, which keeps cost down and stops features falling between separate vendors.'
@@ -45,7 +45,7 @@ module.exports = [
     ],
     cases: ['ai-skincare-mobile-app', 'fittrack-fitness-tracking-app'],
     faqs: [
-      ['How much does a mobile app cost?', 'It depends on the features, so we scope it on a free call and give you a fixed quote with milestones before any work starts.'],
+      ['How much does a mobile app cost?', 'Mobile apps start from $3,000 for iOS and Android. The final price depends on the features, so we scope it on a free call and give you a fixed quote with milestones before any work starts.'],
       ['Do you build for both iPhone and Android?', 'Yes. We use React Native, so one codebase runs on both, which is faster and cheaper than two separate apps.'],
       ['Will you publish the app to the App Store and Google Play?', 'Yes. We prepare the listings and handle submission, under your own developer accounts so the app belongs to you.'],
       ['Can you add AI features?', 'Yes. We have built apps with on-device image analysis and personalised recommendations, and we integrate AI models where they help users.'],
@@ -63,7 +63,7 @@ module.exports = [
     eyebrow: 'Desktop App Development',
     h1: 'Desktop app development for Windows, macOS and Linux',
     sub: 'Cross-platform desktop applications built with Electron or Tauri: installers, auto-updates, offline work and sync with your systems.',
-    price: { label: 'Quoted per project', delivery: 'Agreed in your proposal', includes: 'Desktop apps are scoped on a free call and quoted as a fixed price with milestones. The quote covers design, the app, installers and code signing for each platform, and auto-updates.' },
+    price: { from: 5000, label: 'Starting price, Windows, macOS & Linux', delivery: 'Agreed in your proposal', includes: 'Desktop apps start from $5,000. Each one is scoped on a free call and quoted as a fixed price with milestones. The quote covers design, the app, installers and code signing for each platform, and auto-updates.' },
     intro: [
       'Some software belongs on the desktop: tools people use all day, work that has to continue without an internet connection, apps that read and write local files, talk to hardware or need more power than a browser tab gives them.',
       'We build cross-platform desktop apps that install like any other program, update themselves, and work on Windows, macOS and Linux from one codebase. Because they are built with web technology, they can share code and design with your website or web app.'
@@ -101,7 +101,7 @@ module.exports = [
       ]]
     ],
     faqs: [
-      ['How much does a desktop app cost?', 'We scope it on a free call and send a fixed quote with milestones before work starts.'],
+      ['How much does a desktop app cost?', 'Desktop apps start from $5,000. We scope yours on a free call and send a fixed quote with milestones before work starts.'],
       ['Which operating systems do you support?', 'Windows, macOS and Linux, from one codebase. You choose which ones to release on.'],
       ['Can the app work offline?', 'Yes. Data is stored locally and synced with your server when the connection returns.'],
       ['Can you turn our web app into a desktop app?', 'Usually, yes, and much of the existing interface can often be reused.'],
@@ -119,7 +119,7 @@ module.exports = [
     eyebrow: 'Plugins & Extensions',
     h1: 'Custom plugin and browser extension development',
     sub: 'WordPress and WooCommerce plugins, Shopify apps and Chrome, Edge and Firefox extensions, built cleanly, securely and ready for their marketplaces.',
-    price: { label: 'Quoted per project', delivery: 'Agreed in your proposal', includes: 'Plugins and extensions are scoped on a free call and quoted as a fixed price. Marketplace submission, documentation and a support plan can be included.' },
+    price: { from: 1000, label: 'Starting price', delivery: 'Agreed in your proposal', includes: 'Plugins and browser extensions start from $1,000. Each one is scoped on a free call and quoted as a fixed price. Marketplace submission, documentation and a support plan can be included.' },
     intro: [
       'Sometimes the software you use does almost everything you need. A plugin or extension adds the missing piece, without replacing a system your team already knows. It can also be a product in its own right, sold or offered free on a marketplace to reach users where they already are.',
       'We build plugins and extensions that follow each platform\'s rules and coding standards, so they pass review, stay compatible with updates, and do not slow down the site or browser they run in.'
@@ -155,7 +155,7 @@ module.exports = [
       ]]
     ],
     faqs: [
-      ['How much does a custom plugin or extension cost?', 'It depends on what it needs to do, so we scope it on a free call and send a fixed quote before work starts.'],
+      ['How much does a custom plugin or extension cost?', 'Plugins and extensions start from $1,000. The final price depends on what it needs to do, so we scope it on a free call and send a fixed quote before work starts.'],
       ['Which browsers do you support?', 'Chrome, Edge and Firefox, and other Chromium-based browsers. Extensions are built on Manifest V3.'],
       ['Can you publish it to the marketplace?', 'Yes. We prepare the listing and handle submission to the WordPress directory, Shopify App Store or browser extension stores.'],
       ['Can you fix or replace a plugin we already use?', 'Yes. We can fix an existing plugin, or build a cleaner replacement and migrate its data.'],
