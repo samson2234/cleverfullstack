@@ -134,7 +134,14 @@ For every target we record: the search phrase, the page that owns it (one page p
    - a sticky CTA, the budget planner, the ROI calculator, a WhatsApp click and social proof near the form.
    - Rankings without conversions are worthless.
 
-### Phase 3: Content engine (week 4 onwards, ongoing) · effort: me drafts, you approve · risk: low
+> **Phase 2 status: DONE (27 Oct 2026), except team E-E-A-T, which is waiting on your team details.** Live on cleverstack.dev, all tests passing (46 file + 86 database).
+> - 8 service pages, 6 industry pages and 3 "hire developers" pages (full-stack/software engineers, frontend, backend), each 1,000+ words with published prices, real case studies, Service + FAQ schema, linked from /services. Sources: `landing-src/*.js` → `npm run landing`.
+> - Country pages: USA, UK, Europe upgraded (cases, time-zone notes, service links); new Germany (EUR) and Canada pages; one hreflang set across all five; footer links.
+> - Titles and descriptions rewritten on the core and country pages (keyword + benefit + price, within 60/160 characters). Developer keywords (full-stack, frontend, backend, software engineer, hire developer) added to titles and tracked in the monthly Search Console report, which will show CTR per page for title tests.
+> - Google listing: structured data now says remote/worldwide with email contact (no street address or phone); price range shows "$499 - $3000".
+> - Portfolio client roles clarified; stats (68+ projects, 5.0 rating) kept as confirmed by you.
+> - Mobile sticky CTA on every indexable page.
+> - **Carried forward:** team profiles (names, photos, roles, years, LinkedIn), author bylines linking to them, and client logos with permission. They need your input.: Content engine (week 4 onwards, ongoing) · effort: me drafts, you approve · risk: low
 
 - **2 posts per week**, each targeting one buyer-adjacent question, for example:
   - "Shopify setup cost 2026"
