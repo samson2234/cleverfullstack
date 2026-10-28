@@ -43,6 +43,7 @@
         '</div>' +
         '<div class="an-actions">' +
           '<button type="button" class="btn-sm primary" id="anEmail">Email me this week\'s report</button>' +
+          '<button type="button" class="btn-sm" id="anEmailMonth" title="Leads by channel and Google Search data for last month (sent automatically on the 3rd)">Email me last month\'s SEO report</button>' +
           '<button type="button" class="btn-sm" id="anExclude"></button>' +
           '<a class="btn-sm ghost" href="' + GA_URL + '" target="_blank" rel="noopener">Google Analytics ↗</a>' +
           '<a class="btn-sm ghost" href="' + VERCEL_URL + '" target="_blank" rel="noopener">Vercel ↗</a>' +
@@ -70,6 +71,7 @@
       g.querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { state[key] = b.getAttribute('data-v'); g.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); render(); }); });
     });
     $('anEmail').addEventListener('click', sendReport);
+    $('anEmailMonth').addEventListener('click', function () { sendReport('anEmailMonth', 'send_leads_report'); });
     // the colour glows live on the page background only while this tab is open
     new MutationObserver(function () { document.body.classList.toggle('an-active', v.classList.contains('active')); }).observe(v, { attributes: true, attributeFilter: ['class'] });
     $('anExclude').addEventListener('click', toggleExclude);
@@ -83,9 +85,9 @@
   function paintExclude() { var b = $('anExclude'); if (b) b.textContent = excluded() ? '✓ Your visits are excluded on this browser' : 'Exclude my visits on this browser'; }
   function toggleExclude() { try { if (excluded()) localStorage.removeItem('cs_notrack'); else localStorage.setItem('cs_notrack', '1'); } catch (e) {} paintExclude(); }
 
-  function sendReport() {
-    var b = $('anEmail'); b.disabled = true; var old = b.textContent; b.textContent = 'Sending…';
-    api('POST', '', { action: 'send_analytics_report' }).then(function (r) { b.textContent = '✓ ' + (r.message || 'Sent'); })
+  function sendReport(id, action) {
+    var b = $(typeof id === 'string' ? id : 'anEmail'); b.disabled = true; var old = b.textContent; b.textContent = 'Sending…';
+    api('POST', '', { action: typeof action === 'string' ? action : 'send_analytics_report' }).then(function (r) { b.textContent = '✓ ' + (r.message || 'Sent'); })
       .catch(function (e) { b.textContent = old; alert('Could not send the report: ' + e.message); })
       .then(function () { setTimeout(function () { b.disabled = false; b.textContent = old; }, 4000); });
   }

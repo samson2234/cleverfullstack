@@ -181,7 +181,7 @@ For every target we record: the search phrase, the page that owns it (one page p
 > - **Leads by channel:** each lead is classed as Google Ads, Meta ads, Google search, other search engines, AI assistants, social media, other websites or direct/unknown. It uses the lead's ad tags first, then its first visit.
 > - **Monthly SEO and leads email**, on the 3rd of each month. It's sent by the existing daily job, so there's no new server function, and the CRM can send it on demand too. It contains:
 >   - leads by channel vs the month before, plus won leads and filtered pitches;
->   - from Search Console: clicks, impressions, CTR, average position, pages showing in Google, the **31 tracked phrases** (position, impressions, clicks, and which aren't showing yet), top searches, top pages and countries.
+>   - from Search Console: clicks, impressions, CTR, average position, pages showing in Google, the **41 tracked phrases** (including full-stack, frontend and backend developer and software engineer) (position, impressions, clicks, and which aren't showing yet), top searches, top pages and countries.
 > - **One step only you can do:** connect Search Console (about 10 minutes; steps in `lib/search-console.js`). Until then the email shows leads and says Search Console isn't connected.
 > - **Not automated (honest limits):** Core Web Vitals and "pages indexed" stay in Search Console's own reports (the API doesn't give site-wide totals); "pages showing in Google" is the proxy. The "what we'll do next month" notes come from me when I review each report.
 
