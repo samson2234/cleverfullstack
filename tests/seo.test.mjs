@@ -143,7 +143,7 @@ test('Core Web Vitals guards: no full-screen preloader, theme set before first p
 test('service and industry pages: substantial, honest prices, real case studies, linked from /services', async () => {
   const { createRequire } = await import('node:module');
   const req = createRequire(import.meta.url);
-  const src = [...req('../landing-src/services.js'), ...req('../landing-src/hire.js'), ...req('../landing-src/industries.js'), ...req('../landing-src/locations.js')];
+  const src = [...req('../landing-src/services.js'), ...req('../landing-src/hire.js'), ...req('../landing-src/apps.js'), ...req('../landing-src/industries.js'), ...req('../landing-src/locations.js')];
   assert.ok(src.filter((p) => p.kind === 'service').length >= 8 && src.filter((p) => p.kind === 'industry').length >= 6);
   assert.ok(src.filter((p) => p.kind === 'location').length >= 2, 'Germany and Canada pages');
   // only the package prices published on /services (USD) and /web-development-europe (EUR)
@@ -181,4 +181,21 @@ test('landing pages are up to date with their source (npm run landing)', () => {
 
 test('conversion: every indexable page has the phone sticky bar (WhatsApp + Book a Free Call) exactly once', () => {
   for (const p of indexable) assert.equal((p.html.match(/class="mobile-cta-bar"/g) || []).length, 1, p.rel);
+});
+
+test('no half-styled first paint: stylesheets load normally, never deferred with media="print"', () => {
+  for (const p of pages) assert.doesNotMatch(p.html, /<link[^>]+rel="stylesheet"[^>]+media="print"/, p.rel + ': deferred stylesheet paints the page unstyled on load');
+  assert.doesNotMatch(read('style.css'), /(^|})(main|body){[^}]*animation/, 'style.css: the whole page must not fade in on every load or reload');
+});
+
+test('contact is email only: no phone number shown on any page (WhatsApp buttons are fine)', () => {
+  for (const p of pages) assert.doesNotMatch(p.html, /href="tel:|\+234 \d/, p.rel);
+});
+
+test('footer Services column links every service page, on every page with the standard footer', async () => {
+  const req = (await import('node:module')).createRequire(import.meta.url);
+  const svc = [...req('../landing-src/services.js'), ...req('../landing-src/apps.js'), ...req('../landing-src/hire.js')].filter((p) => p.kind === 'service');
+  const withFooter = pages.filter((p) => p.html.includes('data-i18n="footer.services"'));
+  assert.ok(withFooter.length >= 50, 'only ' + withFooter.length + ' pages have the footer');
+  for (const p of withFooter) for (const s of svc) assert.ok(p.html.includes('<li><a href="/' + s.slug + '">'), p.rel + ': footer lacks ' + s.slug);
 });

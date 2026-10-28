@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // scripts/build-landing.js — builds the service and industry pages (SEO plan Phase 2) as static HTML.
 //
-//   landing-src/services.js + hire.js + industries.js + locations.js  ->  /<slug>.html at the site root
+//   landing-src/services.js + hire.js + apps.js + industries.js + locations.js  ->  /<slug>.html at the site root
 //
 // The layout (head, header, footer, critical CSS, scripts) comes from web-development-usa.html, so the pages always
 // match the live design. Each page gets its own title, description, canonical, self hreflang, Service + FAQ +
@@ -17,7 +17,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const SITE = 'https://cleverstack.dev';
 const BOOK = 'https://calendly.com/henryygeorge25/30min';
-const PAGES = [...require('../landing-src/services.js'), ...require('../landing-src/hire.js'), ...require('../landing-src/industries.js'), ...require('../landing-src/locations.js')];
+const PAGES = [...require('../landing-src/services.js'), ...require('../landing-src/apps.js'), ...require('../landing-src/hire.js'), ...require('../landing-src/industries.js'), ...require('../landing-src/locations.js')];
 const PROJECTS = Object.fromEntries(JSON.parse(fs.readFileSync(path.join(ROOT, 'work-src/projects.json'), 'utf8')).map((p) => [p.slug, p]));
 const BY_SLUG = Object.fromEntries(PAGES.map((p) => [p.slug, p]));
 
@@ -41,7 +41,9 @@ const CASE_BLURB = {
   'dc-carpet-cleaning-website': 'A conversion-focused site for an Australian carpet cleaning business, with service pages, quote requests on every page and local SEO foundations.',
   'pure-energy-smoothie-landing-page': 'A launch landing page for a smoothie brand, with scroll-driven product storytelling, a sticky call to action and Mailchimp sign-up.',
   'spice-and-savor-restaurant-web-app': 'A React restaurant web app with a dynamic menu, dietary filters and online reservations.',
-  'enterprise-analytics-dashboard': 'A Next.js and PostgreSQL analytics dashboard with real-time updates, role-based access and admin tools.'
+  'enterprise-analytics-dashboard': 'A Next.js and PostgreSQL analytics dashboard with real-time updates, role-based access and admin tools.',
+  'ai-skincare-mobile-app': 'A React Native app for iOS and Android with on-device AI skin analysis, personalised product recommendations and an ingredient checker.',
+  'fittrack-fitness-tracking-app': 'A React Native fitness app with quick workout logging, progress charts, goals and streaks, on a Node.js backend.'
 };
 
 const AREAS = ['United States', 'United Kingdom', 'Canada', 'Germany', 'Ireland', 'Netherlands', 'France', 'Europe'];
@@ -192,7 +194,7 @@ function linkHub() {
     head2('Specialist services', 'Find the right service for your project', 'Detailed pages with what is included, pricing, timelines and related projects.') +
     `<div class="grid grid-2" style="gap:16px;">${group('service')}</div>` +
     `<div class="section-head reveal" style="margin-top:56px;"><div class="eyebrow">Industries</div><h2>Websites built for your industry</h2></div><div class="grid grid-2" style="gap:16px;">${group('industry')}</div>` +
-    `<p class="reveal" style="margin-top:32px;">Where we work: ${where}</p>` +
+    `<p class="reveal" style="margin-top:32px;">Where we work: ${where} &#183; and worldwide. Wherever your business is, we work with you remotely, at times that suit your time zone.</p>` +
     '</div></section><!--/landing-links-->';
   fs.writeFileSync(f, s.slice(0, at) + block + s.slice(at));
 }
@@ -222,14 +224,19 @@ function handCountryPages() {
   }
 }
 
-// Footer: list the Germany and Canada pages after Europe on every page (relative links, like the rest of the footer)
+// Footer: list the Germany and Canada pages after Europe on every page (relative links, like the rest of the footer),
+// and every service page under Services (root-relative clean URLs, so they work from /blog and /work too)
+const FOOTER_SERVICES = '<li><a href="/services" data-i18n="footer.svc_web">Web Development</a></li>' +
+  PAGES.filter((p) => p.kind === 'service').map((p) => `<li><a href="/${p.slug}">${esc(p.name)}</a></li>`).join('');
 function footerLinks() {
   let n = 0;
   for (const d of ['', 'blog', 'work']) for (const name of fs.readdirSync(path.join(ROOT, d))) {
     if (!name.endsWith('.html')) continue;
     const f = path.join(ROOT, d, name);
     const s = fs.readFileSync(f, 'utf8');
-    const out = s.replace(/<li><a href="((?:\.\.\/)?)web-development-europe\.html">Web Development Europe<\/a><\/li>(?!<li><a href="(?:\.\.\/)?web-development-germany)/, (m, up) => m + `<li><a href="${up}web-development-germany.html">Web Development Germany</a></li><li><a href="${up}web-development-canada.html">Web Development Canada</a></li>`);
+    let out = s.replace(/<li><a href="((?:\.\.\/)?)web-development-europe\.html">Web Development Europe<\/a><\/li>(?!<li><a href="(?:\.\.\/)?web-development-germany)/, (m, up) => m + `<li><a href="${up}web-development-germany.html">Web Development Germany</a></li><li><a href="${up}web-development-canada.html">Web Development Canada</a></li>`);
+    // Services column: every service page, rebuilt each run
+    out = out.replace(/(<h4 data-i18n="footer\.services">Services<\/h4>)<ul( class="footer-svc")?>[\s\S]*?<\/ul>/, (m, h4) => `${h4}<ul class="footer-svc">${FOOTER_SERVICES}</ul>`);
     if (out !== s) { fs.writeFileSync(f, out); n++; }
   }
   if (n) console.log('footer: country links added on', n, 'pages');
