@@ -9,7 +9,7 @@
     "liveUrl": "https://alexfitness.netlify.app/",
     "client": {
       "name": "Drake Walker",
-      "title": "Founder, SaaS Company",
+      "title": "Founder, AlexFit Coaching",
       "country": "United States"
     },
     "goal": "AlexFit needed a modern, brand-focused website that could showcase their coaching services, display trainer profiles, and allow clients to book sessions online. The existing site was outdated, slow, and not converting visitors into leads.",
@@ -36,7 +36,7 @@
     "liveUrl": "https://spicesavorresaturant.netlify.app/",
     "client": {
       "name": "Sarah Mitchell",
-      "title": "Founder, Wellness Brand",
+      "title": "Owner, Spice & Savor",
       "country": "United Kingdom"
     },
     "goal": "Create an interactive restaurant web app with an engaging digital menu, online reservation system, and location discovery features to help the restaurant attract more diners.",
@@ -63,7 +63,7 @@
     "liveUrl": "https://smoothiewebsite1.netlify.app/",
     "client": {
       "name": "Brooklyn Foster",
-      "title": "Marketing Director",
+      "title": "Marketing Director, Pure Energy",
       "country": "United States"
     },
     "goal": "Design a high-converting landing page for a new smoothie brand launch that clearly communicates product benefits, drives pre-orders, and captures email subscribers for the launch list.",
@@ -90,7 +90,7 @@
     "liveUrl": "https://cleaningwebsitedemo.netlify.app/",
     "client": {
       "name": "Emma Wilson",
-      "title": "Non-Profit Director",
+      "title": "Owner, Sparkle Clean",
       "country": "Canada"
     },
     "goal": "Build a trust-driven service website for a cleaning business that helps visitors feel confident booking services online. The site needed instant quote functionality and clear service tier comparisons.",
@@ -117,7 +117,7 @@
     "liveUrl": null,
     "client": {
       "name": "Anna Schmidt",
-      "title": "Business Owner",
+      "title": "Owner, Affiliate Marketing Blog",
       "country": "Germany"
     },
     "goal": "Create an SEO-optimized WordPress blog designed to generate affiliate income through product reviews, comparison articles, and tutorial content with ad integration.",
@@ -144,7 +144,7 @@
     "liveUrl": null,
     "client": {
       "name": "James Whitfield",
-      "title": "CEO, Retail Brand",
+      "title": "CEO, Sonic Audio",
       "country": "United Kingdom"
     },
     "goal": "Design and develop a custom Shopify store for an audio equipment brand that needed advanced product filtering, quick checkout, and a mobile-first shopping experience.",
@@ -171,7 +171,7 @@
     "liveUrl": null,
     "client": {
       "name": "Alex Rodriguez",
-      "title": "eCommerce Owner",
+      "title": "Founder, Helen May Coaching",
       "country": "United States"
     },
     "goal": "Build a premium coaching platform that positions Helen May as a multi-industry growth expert. The platform needed to showcase services across different niches and integrate a smooth booking workflow.",
@@ -198,7 +198,7 @@
     "liveUrl": null,
     "client": {
       "name": "David Thompson",
-      "title": "Restaurant Owner",
+      "title": "Founder, Dream Voyage",
       "country": "Australia"
     },
     "goal": "Create an immersive travel blog and destination discovery platform with rich visual storytelling, destination guides, and a CMS that allows the author to publish content independently.",
@@ -225,7 +225,7 @@
     "liveUrl": null,
     "client": {
       "name": "Michael Chen",
-      "title": "Startup Founder",
+      "title": "UX/UI Designer, AKKIRA",
       "country": "Canada"
     },
     "goal": "Design and develop a standout creative portfolio for a UX/UI designer that showcases their work through interactive case studies, smooth animations, and a unique visual identity.",
@@ -253,7 +253,7 @@
     "liveUrl": null,
     "client": {
       "name": "Lukas Weber",
-      "title": "CTO, FinTech Startup",
+      "title": "CTO, AI Skincare App",
       "country": "Germany"
     },
     "goal": "Build an AI-powered skincare analysis mobile app that uses computer vision to analyze skin conditions, provide personalized product recommendations, and track ingredient compatibility.",
@@ -280,7 +280,7 @@
     "liveUrl": null,
     "client": {
       "name": "Brooklyn Foster",
-      "title": "Marketing Director",
+      "title": "Product Lead, FitTrack",
       "country": "United States"
     },
     "goal": "Create a modern fitness tracking app that allows users to log workouts, track progress over time with visual charts, set goals, and stay motivated through streaks and achievements.",

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // scripts/build-landing.js — builds the service and industry pages (SEO plan Phase 2) as static HTML.
 //
-//   landing-src/services.js + industries.js + locations.js  ->  /<slug>.html at the site root
+//   landing-src/services.js + hire.js + industries.js + locations.js  ->  /<slug>.html at the site root
 //
 // The layout (head, header, footer, critical CSS, scripts) comes from web-development-usa.html, so the pages always
 // match the live design. Each page gets its own title, description, canonical, self hreflang, Service + FAQ +
@@ -17,7 +17,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const SITE = 'https://cleverstack.dev';
 const BOOK = 'https://calendly.com/henryygeorge25/30min';
-const PAGES = [...require('../landing-src/services.js'), ...require('../landing-src/industries.js'), ...require('../landing-src/locations.js')];
+const PAGES = [...require('../landing-src/services.js'), ...require('../landing-src/hire.js'), ...require('../landing-src/industries.js'), ...require('../landing-src/locations.js')];
 const PROJECTS = Object.fromEntries(JSON.parse(fs.readFileSync(path.join(ROOT, 'work-src/projects.json'), 'utf8')).map((p) => [p.slug, p]));
 const BY_SLUG = Object.fromEntries(PAGES.map((p) => [p.slug, p]));
 

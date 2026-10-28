@@ -64,9 +64,8 @@ test('structured data is valid JSON, truthful and has breadcrumbs', () => {
     if (p.rel !== '404.html') assert.ok(!all.includes('ErrorPage'), p.rel + ': marked as an error page');
     for (const b of blocks) {
       assert.ok(!JSON.stringify(b).includes(SITE + '/404"') || p.rel === '404.html', p.rel + ': structured data points at /404');
-      // the only office address we may state is the real one
-      const addr = JSON.stringify(b.address || '');
-      if (b.address) assert.ok(/"addressCountry":"NG"/.test(addr) && !/London|New York/.test(addr), p.rel + ': address ' + addr);
+      // remote, worldwide team: no office address and no phone in search results; email is the contact
+      assert.ok(!/"address"\s*:|"telephone"\s*:/.test(JSON.stringify(b)), p.rel + ': structured data has an address or phone');
     }
     if (indexable.includes(p) && p.rel !== 'index.html') assert.ok(all.includes('BreadcrumbList'), p.rel + ': no BreadcrumbList');
   }
@@ -144,7 +143,7 @@ test('Core Web Vitals guards: no full-screen preloader, theme set before first p
 test('service and industry pages: substantial, honest prices, real case studies, linked from /services', async () => {
   const { createRequire } = await import('node:module');
   const req = createRequire(import.meta.url);
-  const src = [...req('../landing-src/services.js'), ...req('../landing-src/industries.js'), ...req('../landing-src/locations.js')];
+  const src = [...req('../landing-src/services.js'), ...req('../landing-src/hire.js'), ...req('../landing-src/industries.js'), ...req('../landing-src/locations.js')];
   assert.ok(src.filter((p) => p.kind === 'service').length >= 8 && src.filter((p) => p.kind === 'industry').length >= 6);
   assert.ok(src.filter((p) => p.kind === 'location').length >= 2, 'Germany and Canada pages');
   // only the package prices published on /services (USD) and /web-development-europe (EUR)
