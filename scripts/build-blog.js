@@ -18,7 +18,7 @@ const BASE = 'https://cleverstack.dev';
 const AUTHOR = 'Henry George';
 const TEMPLATE = path.join(root, 'blog', 'website-mistakes-conversions.html'); // layout donor (head styles, footer, scripts)
 const ORDER = [ // tie-break for posts published the same day (first = shown first)
-  'cost-to-hire-full-stack-developer', 'how-long-to-build-a-web-app',
+  'upwork-fiverr-vs-development-team', 'mobile-app-development-cost', 'cost-to-hire-full-stack-developer', 'how-long-to-build-a-web-app',
   'website-no-enquiries-fix', 'why-is-my-website-slow', 'google-maps-local-seo-checklist',
   'how-to-get-more-client-reviews', 'should-i-fix-or-rebuild-my-website', 'website-security-basics-small-business'
 ];
@@ -148,6 +148,7 @@ function main() {
   // (rewritten on every build, so the mapping below is the single place to change them)
   const WORK = {
     'shopify-vs-woocommerce': 'sonic-audio-shopify-store',
+    'upwork-fiverr-vs-development-team': 'researchhub-academic-web-app', 'mobile-app-development-cost': 'ai-skincare-mobile-app',
     'cost-to-hire-full-stack-developer': 'researchhub-academic-web-app', 'how-long-to-build-a-web-app': 'enterprise-analytics-dashboard',
     'custom-vs-nocode': 'enterprise-analytics-dashboard', 'businesses-refuse-to-scale': 'enterprise-analytics-dashboard',
     'why-is-my-website-slow': 'lumea-glow-skin-clinic-website', 'optimized-website-advantages': 'lumea-glow-skin-clinic-website', 'should-i-fix-or-rebuild-my-website': 'lumea-glow-skin-clinic-website',

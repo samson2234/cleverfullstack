@@ -28,7 +28,7 @@
     "lastmod": "2026-10-28"
   },
   "https://cleverstack.dev/blog": {
-    "fp": "67a0e676ec31b130cbc69a63d972ea341f3941c1",
+    "fp": "27098f54fd729059d7dab884034bfe63d8fc974e",
     "lastmod": "2026-10-28"
   },
   "https://cleverstack.dev/blog/optimized-website-advantages": {
@@ -293,6 +293,14 @@
   },
   "https://cleverstack.dev/blog/how-long-to-build-a-web-app": {
     "fp": "8f9293c164dd6925b46761f2d06c5ddc85f6561c",
+    "lastmod": "2026-10-28"
+  },
+  "https://cleverstack.dev/blog/mobile-app-development-cost": {
+    "fp": "163fac8e04ffe61b4076fff90e72645725f78190",
+    "lastmod": "2026-10-28"
+  },
+  "https://cleverstack.dev/blog/upwork-fiverr-vs-development-team": {
+    "fp": "0cdff2184f6e744888471785071385443d5331f0",
     "lastmod": "2026-10-28"
   }
 }

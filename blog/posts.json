@@ -1,5 +1,27 @@
 [
   {
+    "id": "upwork-fiverr-vs-development-team",
+    "title": "Upwork or Fiverr vs a Dedicated Development Team: Which Should You Hire?",
+    "excerpt": "Freelance marketplaces are great for some jobs and risky for others. An honest comparison of cost, risk, quality and ownership, and how to choose.",
+    "author": "Henry George",
+    "date": "October 28, 2026",
+    "category": "Hiring",
+    "image": "/images/blog/upwork-fiverr-vs-development-team.webp",
+    "imageAlt": "Upwork or Fiverr vs a Dedicated Development Team: Which Should You Hire?",
+    "readingTime": "5 min read"
+  },
+  {
+    "id": "mobile-app-development-cost",
+    "title": "How Much Does It Cost to Build a Mobile App? What Drives the Price",
+    "excerpt": "What really decides the price of an iOS and Android app, the running costs most quotes leave out, and how to launch for less without cutting corners.",
+    "author": "Henry George",
+    "date": "October 28, 2026",
+    "category": "Mobile Apps",
+    "image": "/images/blog/mobile-app-development-cost.webp",
+    "imageAlt": "How Much Does It Cost to Build a Mobile App? What Drives the Price",
+    "readingTime": "5 min read"
+  },
+  {
     "id": "cost-to-hire-full-stack-developer",
     "title": "How Much Does It Cost to Hire a Full-Stack Developer? Freelancer vs Agency vs In-House",
     "excerpt": "Salaries, freelance rates and fixed-price projects compared honestly, with the hidden costs most guides leave out, so you can pick the right way to hire.",

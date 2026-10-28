@@ -204,6 +204,8 @@
   <url>
     <loc>https://cleverstack.dev/blog</loc>
     <lastmod>2026-10-28</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/upwork-fiverr-vs-development-team.webp</image:loc></image:image>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/mobile-app-development-cost.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/cost-to-hire-full-stack-developer.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/how-long-to-build-a-web-app.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/website-no-enquiries-fix-photo-800.webp</image:loc></image:image>
@@ -222,8 +224,6 @@
     <image:image><image:loc>https://cleverstack.dev/images/blog/u-1553729459-efe14ef6055d-800.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/optimized-website-advantages-photo-800.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/how-much-does-business-website-cost-photo-800.webp</image:loc></image:image>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/u-1522071820081-009f0129c71c-800.webp</image:loc></image:image>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/why-small-business-needs-website-photo-800.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://cleverstack.dev/blog/best-web-development-company-usa</loc>
@@ -268,6 +268,11 @@
     <image:image><image:loc>https://cleverstack.dev/images/blog/how-to-get-more-client-reviews-photo-1200.webp</image:loc></image:image>
   </url>
   <url>
+    <loc>https://cleverstack.dev/blog/mobile-app-development-cost</loc>
+    <lastmod>2026-10-28</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/mobile-app-development-cost.webp</image:loc></image:image>
+  </url>
+  <url>
     <loc>https://cleverstack.dev/blog/optimized-website-advantages</loc>
     <lastmod>2026-10-28</lastmod>
     <image:image><image:loc>https://cleverstack.dev/images/blog/optimized-website-advantages-photo-1400.webp</image:loc></image:image>
@@ -293,6 +298,11 @@
     <loc>https://cleverstack.dev/blog/should-i-fix-or-rebuild-my-website</loc>
     <lastmod>2026-10-28</lastmod>
     <image:image><image:loc>https://cleverstack.dev/images/blog/should-i-fix-or-rebuild-my-website-photo-1200.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://cleverstack.dev/blog/upwork-fiverr-vs-development-team</loc>
+    <lastmod>2026-10-28</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/upwork-fiverr-vs-development-team.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://cleverstack.dev/blog/web-development</loc>

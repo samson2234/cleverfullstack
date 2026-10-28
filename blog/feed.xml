@@ -7,8 +7,26 @@
     <link>https://cleverstack.dev/blog/</link>
     <description>Articles on web development, e-commerce, SEO, and growing your business online — from the CleverStack team.</description>
     <language>en</language>
-    <lastBuildDate>Tue, 27 Oct 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 28 Oct 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://cleverstack.dev/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Upwork or Fiverr vs a Dedicated Development Team: Which Should You Hire?</title>
+      <link>https://cleverstack.dev/blog/upwork-fiverr-vs-development-team</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/upwork-fiverr-vs-development-team</guid>
+      <pubDate>Wed, 28 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Hiring</category>
+      <author>hello@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[Freelance marketplaces are great for some jobs and risky for others. An honest comparison of cost, risk, quality and ownership, and how to choose.]]></description>
+    </item>
+    <item>
+      <title>How Much Does It Cost to Build a Mobile App? What Drives the Price</title>
+      <link>https://cleverstack.dev/blog/mobile-app-development-cost</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/mobile-app-development-cost</guid>
+      <pubDate>Wed, 28 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Mobile Apps</category>
+      <author>hello@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[What really decides the price of an iOS and Android app, the running costs most quotes leave out, and how to launch for less without cutting corners.]]></description>
+    </item>
     <item>
       <title>How Much Does It Cost to Hire a Full-Stack Developer? Freelancer vs Agency vs In-House</title>
       <link>https://cleverstack.dev/blog/cost-to-hire-full-stack-developer</link>

@@ -162,7 +162,9 @@ For every target we record: the search phrase, the page that owns it (one page p
 > - Week 1 published: "How much does it cost to hire a full-stack developer? Freelancer vs agency vs in-house" (hire keywords, links to the hire pages; sources: BLS, Upwork) and "How long does it take to build a web app?" (timelines from our published packages). Both 900+ words with an "In short" answer, tables, a case study and a service-page CTA.
 > - Post sources: `blog-src/<id>.js` → `node scripts/make-blog-covers.js` (needs `npm i --no-save sharp`) → `npm run blog` → `npm run landing` (footers) → `npm run assets`.
 > - Before Phase 3, also done: service pages for mobile apps, desktop apps, and plugins/extensions; every service page linked in the footer; email-only contact (phone removed); "and worldwide" on the services hub; pages no longer render half-styled or fade in on load/reload (with regression tests).
-> - Next posts (queue): Shopify store setup cost 2026; mobile app development cost; freelancer vs agency vs CleverStack (Upwork/Fiverr comparison); WordPress vs custom website for law firms; Zoho vs HubSpot for small agencies; Wix vs custom website. Monthly: refresh posts that slip in the Search Console report.
+> - Week 1 (28 Oct), posts 3–4: "Upwork or Fiverr vs a dedicated development team" (comparison, links to official fee pages instead of quoting changing fees) and "How much does it cost to build a mobile app?" (links to /mobile-app-development, from $3,000).
+> - Next posts (queue): Shopify store setup cost 2026; WordPress vs custom website for law firms; Zoho vs HubSpot for small agencies; Wix vs custom website; desktop app vs web app; Chrome extension development cost.
+> - Phase 4/6 accounts: step-by-step guide with copy and logos in `docs/PHASE-4-ACCOUNTS.md` (Bing Webmaster Tools, Google Business Profile, LinkedIn page, Clutch, GoodFirms, DesignRush, Crunchbase, socials, client reviews). Waiting on the owner for the profile links. Monthly: refresh posts that slip in the Search Console report.
 
 ### Phase 4: Off-page SEO, authority and trust (week 2 onwards, ongoing) · effort: shared · risk: low (white-hat only)
 
