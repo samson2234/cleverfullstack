@@ -1,5 +1,27 @@
 [
   {
+    "id": "cost-to-hire-full-stack-developer",
+    "title": "How Much Does It Cost to Hire a Full-Stack Developer? Freelancer vs Agency vs In-House",
+    "excerpt": "Salaries, freelance rates and fixed-price projects compared honestly, with the hidden costs most guides leave out, so you can pick the right way to hire.",
+    "author": "Henry George",
+    "date": "October 27, 2026",
+    "category": "Hiring",
+    "image": "/images/blog/cost-to-hire-full-stack-developer.webp",
+    "imageAlt": "How Much Does It Cost to Hire a Full-Stack Developer? Freelancer vs Agency vs In-House",
+    "readingTime": "5 min read"
+  },
+  {
+    "id": "how-long-to-build-a-web-app",
+    "title": "How Long Does It Take to Build a Web App? Realistic Timelines, Stage by Stage",
+    "excerpt": "From a simple internal tool to a full SaaS product: what each stage involves, how long it usually takes, and the decisions that speed it up or slow it down.",
+    "author": "Henry George",
+    "date": "October 27, 2026",
+    "category": "Web Development",
+    "image": "/images/blog/how-long-to-build-a-web-app.webp",
+    "imageAlt": "How Long Does It Take to Build a Web App? Realistic Timelines, Stage by Stage",
+    "readingTime": "5 min read"
+  },
+  {
     "id": "website-no-enquiries-fix",
     "title": "My Website Gets Visitors but Nobody Contacts Me: 9 Fixes You Can Make This Week",
     "excerpt": "Traffic is not the problem most of the time. Here is how to find out why visitors leave without contacting you, and nine practical fixes to make this week.",

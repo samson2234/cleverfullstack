@@ -204,6 +204,8 @@
   <url>
     <loc>https://cleverstack.dev/blog</loc>
     <lastmod>2026-10-28</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/cost-to-hire-full-stack-developer.webp</image:loc></image:image>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/how-long-to-build-a-web-app.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/website-no-enquiries-fix-photo-800.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/why-is-my-website-slow-photo-800.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/google-maps-local-seo-checklist-photo-800.webp</image:loc></image:image>
@@ -234,6 +236,11 @@
     <image:image><image:loc>https://cleverstack.dev/images/blog/u-1553729459-efe14ef6055d-1400.webp</image:loc></image:image>
   </url>
   <url>
+    <loc>https://cleverstack.dev/blog/cost-to-hire-full-stack-developer</loc>
+    <lastmod>2026-10-28</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/cost-to-hire-full-stack-developer.webp</image:loc></image:image>
+  </url>
+  <url>
     <loc>https://cleverstack.dev/blog/custom-vs-nocode</loc>
     <lastmod>2026-10-28</lastmod>
     <image:image><image:loc>https://cleverstack.dev/images/blog/u-1518432031352-d6fc5c10da5a-800.webp</image:loc></image:image>
@@ -243,6 +250,11 @@
     <loc>https://cleverstack.dev/blog/google-maps-local-seo-checklist</loc>
     <lastmod>2026-10-28</lastmod>
     <image:image><image:loc>https://cleverstack.dev/images/blog/google-maps-local-seo-checklist-photo-1200.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://cleverstack.dev/blog/how-long-to-build-a-web-app</loc>
+    <lastmod>2026-10-28</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/how-long-to-build-a-web-app.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://cleverstack.dev/blog/how-much-does-business-website-cost</loc>

@@ -7,8 +7,26 @@
     <link>https://cleverstack.dev/blog/</link>
     <description>Articles on web development, e-commerce, SEO, and growing your business online — from the CleverStack team.</description>
     <language>en</language>
-    <lastBuildDate>Mon, 05 Oct 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 27 Oct 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://cleverstack.dev/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>How Much Does It Cost to Hire a Full-Stack Developer? Freelancer vs Agency vs In-House</title>
+      <link>https://cleverstack.dev/blog/cost-to-hire-full-stack-developer</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/cost-to-hire-full-stack-developer</guid>
+      <pubDate>Tue, 27 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Hiring</category>
+      <author>hello@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[Salaries, freelance rates and fixed-price projects compared honestly, with the hidden costs most guides leave out, so you can pick the right way to hire.]]></description>
+    </item>
+    <item>
+      <title>How Long Does It Take to Build a Web App? Realistic Timelines, Stage by Stage</title>
+      <link>https://cleverstack.dev/blog/how-long-to-build-a-web-app</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/how-long-to-build-a-web-app</guid>
+      <pubDate>Tue, 27 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Web Development</category>
+      <author>hello@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[From a simple internal tool to a full SaaS product: what each stage involves, how long it usually takes, and the decisions that speed it up or slow it down.]]></description>
+    </item>
     <item>
       <title>My Website Gets Visitors but Nobody Contacts Me: 9 Fixes You Can Make This Week</title>
       <link>https://cleverstack.dev/blog/website-no-enquiries-fix</link>

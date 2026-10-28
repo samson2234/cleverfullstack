@@ -141,7 +141,9 @@ For every target we record: the search phrase, the page that owns it (one page p
 > - Google listing: structured data now says remote/worldwide with email contact (no street address or phone); price range shows "$499 - $3000".
 > - Portfolio client roles clarified; stats (68+ projects, 5.0 rating) kept as confirmed by you.
 > - Mobile sticky CTA on every indexable page.
-> - **Carried forward:** team profiles (names, photos, roles, years, LinkedIn), author bylines linking to them, and client logos with permission. They need your input.: Content engine (week 4 onwards, ongoing) · effort: me drafts, you approve · risk: low
+> - **Carried forward:** team profiles (names, photos, roles, years, LinkedIn), author bylines linking to them, and client logos with permission. They need your input.
+
+### Phase 3: Content engine (week 4 onwards, ongoing) · effort: me drafts, you approve · risk: low
 
 - **2 posts per week**, each targeting one buyer-adjacent question, for example:
   - "Shopify setup cost 2026"
@@ -155,6 +157,12 @@ For every target we record: the search phrase, the page that owns it (one page p
   - website cost calculator (exists, so we promote it)
   - website speed and SEO checker
   - downloadable "website launch checklist"
+
+> **Phase 3 status: STARTED 27 Oct 2026 (ongoing, 2 posts a week).**
+> - Week 1 published: "How much does it cost to hire a full-stack developer? Freelancer vs agency vs in-house" (hire keywords, links to the hire pages; sources: BLS, Upwork) and "How long does it take to build a web app?" (timelines from our published packages). Both 900+ words with an "In short" answer, tables, a case study and a service-page CTA.
+> - Post sources: `blog-src/<id>.js` → `node scripts/make-blog-covers.js` (needs `npm i --no-save sharp`) → `npm run blog` → `npm run landing` (footers) → `npm run assets`.
+> - Before Phase 3, also done: service pages for mobile apps, desktop apps, and plugins/extensions; every service page linked in the footer; email-only contact (phone removed); "and worldwide" on the services hub; pages no longer render half-styled or fade in on load/reload (with regression tests).
+> - Next posts (queue): Shopify store setup cost 2026; mobile app development cost; freelancer vs agency vs CleverStack (Upwork/Fiverr comparison); WordPress vs custom website for law firms; Zoho vs HubSpot for small agencies; Wix vs custom website. Monthly: refresh posts that slip in the Search Console report.
 
 ### Phase 4: Off-page SEO, authority and trust (week 2 onwards, ongoing) · effort: shared · risk: low (white-hat only)
 

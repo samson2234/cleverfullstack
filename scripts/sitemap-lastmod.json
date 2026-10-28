@@ -28,7 +28,7 @@
     "lastmod": "2026-10-28"
   },
   "https://cleverstack.dev/blog": {
-    "fp": "2b8df70a5456ecf3bc33f04fa47bc7d18f58a681",
+    "fp": "67a0e676ec31b130cbc69a63d972ea341f3941c1",
     "lastmod": "2026-10-28"
   },
   "https://cleverstack.dev/blog/optimized-website-advantages": {
@@ -285,6 +285,14 @@
   },
   "https://cleverstack.dev/plugin-extension-development": {
     "fp": "47cc19d74f6a0f3bb81bca672bdcf3a01472679d",
+    "lastmod": "2026-10-28"
+  },
+  "https://cleverstack.dev/blog/cost-to-hire-full-stack-developer": {
+    "fp": "fcba428deef3595e4b4f20b28d5e5aa1fe6b6c5f",
+    "lastmod": "2026-10-28"
+  },
+  "https://cleverstack.dev/blog/how-long-to-build-a-web-app": {
+    "fp": "8f9293c164dd6925b46761f2d06c5ddc85f6561c",
     "lastmod": "2026-10-28"
   }
 }
