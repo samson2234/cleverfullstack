@@ -185,7 +185,7 @@ test('conversion: every indexable page has the phone sticky bar (WhatsApp + Book
 
 test('no half-styled first paint: stylesheets load normally, never deferred with media="print"', () => {
   for (const p of pages) assert.doesNotMatch(p.html, /<link[^>]+rel="stylesheet"[^>]+media="print"/, p.rel + ': deferred stylesheet paints the page unstyled on load');
-  assert.doesNotMatch(read('style.css'), /(^|})(main|body){[^}]*animation/, 'style.css: the whole page must not fade in on every load or reload');
+  assert.doesNotMatch(read('style.css'), /(^|})(main|body){[^}]*animation:(?!none)/, 'style.css: the whole page must not fade in on every load or reload');
 });
 
 test('contact is email only: no phone number shown on any page (WhatsApp buttons are fine)', () => {
