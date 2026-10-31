@@ -116,13 +116,17 @@
     if (!me) { v.innerHTML = '<div class="loading"><div class="spinner"></div></div>'; loadMe().then(account); return; }
     var owner = me.role === 'owner';
     v.innerHTML = '<div class="tl-grid"><section class="tl-card"><h3>' + esc(me.name || 'Owner') + '</h3><p class="muted">' + (me.email ? esc(me.email) + ' · ' : '') + ROLE_LABEL[me.role] + '</p>' +
-      (owner ? '<p>You sign in with the owner password, which is set in Vercel as <code>ADMIN_PASSWORD</code>. To change it, update that variable in Vercel and redeploy.</p>' :
       '<form id="pwForm" class="tl-form col"><label>Current password<input type="password" id="pwCur" autocomplete="current-password" required></label>' +
-      '<label>New password<input type="password" id="pwNew" autocomplete="new-password" minlength="10" required></label><small class="muted">At least 10 characters, with letters and numbers.</small>' +
-      '<button class="btn-sm primary" type="submit">Change password</button></form>') + '</section></div>';
-    if (!owner) $('pwForm').addEventListener('submit', function (e) {
+      '<label>New password<input type="password" id="pwNew" autocomplete="new-password" minlength="' + (owner ? 12 : 10) + '" required></label>' +
+      '<label>Repeat new password<input type="password" id="pwNew2" autocomplete="new-password" required></label>' +
+      '<small class="muted">At least ' + (owner ? 12 : 10) + ' characters, with letters and numbers.' + (owner ? ' Other devices signed in as owner will be signed out.' : '') + '</small>' +
+      '<button class="btn-sm primary" type="submit">Change password</button></form>' +
+      (owner ? '<p class="muted" style="margin-top:14px;font-size:.82rem;">Forgot it? Use <b>Forgot the owner password?</b> on the sign-in page to get a reset link by email. As a last resort, changing <code>ADMIN_PASSWORD</code> in Vercel also works: the new Vercel value then replaces the password set here.</p>' : '') +
+      '</section></div>';
+    $('pwForm').addEventListener('submit', function (e) {
       e.preventDefault();
-      api('POST', '', { action: 'change_password', current: $('pwCur').value, next: $('pwNew').value }).then(function () { toast('Password changed'); $('pwForm').reset(); var n = $('mustChange'); if (n) n.style.display = 'none'; })
+      if ($('pwNew').value !== $('pwNew2').value) { alert('The two new passwords do not match'); return; }
+      api('POST', '', { action: 'change_password', current: $('pwCur').value, next: $('pwNew').value }).then(function (r) { toast(r.message || 'Password changed'); $('pwForm').reset(); var n = $('mustChange'); if (n) n.style.display = 'none'; })
         .catch(function (er) { alert(er.message); });
     });
   }

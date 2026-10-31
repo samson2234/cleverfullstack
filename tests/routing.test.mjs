@@ -101,3 +101,10 @@ test('every internal link, image and script on every page resolves to a real fil
   }
   assert.deepEqual([...new Set(broken)], [], 'broken links');
 });
+
+test('the CRM page has no duplicate element ids (a clash silently breaks one of the two modals)', () => {
+  const html = fs.readFileSync(path.join(root, 'admin.html'), 'utf8').replace(/<script[\s\S]*?<\/script>/g, '');
+  const seen = new Set(), dupes = new Set();
+  for (const [, id] of html.matchAll(/\sid="([^"]+)"/g)) (seen.has(id) ? dupes : seen).add(id);
+  assert.deepEqual([...dupes], []);
+});

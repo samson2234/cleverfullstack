@@ -287,6 +287,12 @@
   .kc-top .score-pill{ margin:0 0 0 auto; }
   .score-head{ display:flex; align-items:center; gap:4px; margin-bottom:8px; }
   .score-head .muted{ color:var(--crm-muted); font-size:.82rem; margin-left:6px; }
+  /* Dropdowns: the open list is drawn by the browser, so give it explicit dark colours (some selects use a see-through
+     background, which made the options grey-on-grey) */
+  select{ color-scheme:dark; }
+  select option, select optgroup{ background-color:#1c1c2e; color:#eef0f7; }
+  select option:checked{ background-color:#4F46E5; color:#fff; }
+  select option:disabled{ color:#7c8199; }
   .score-why{ list-style:none; margin:0; padding:0; display:grid; gap:4px; font-size:.84rem; }
   .score-why li{ display:flex; gap:10px; } .score-why li span{ color:#6ee7b7; font-weight:700; min-width:30px; font-variant-numeric:tabular-nums; }
 </style>
@@ -306,6 +312,17 @@
     <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" autofocus>
     <p class="login-hint">Owner: leave the email empty and use the admin password.</p>
     <button class="btn" id="loginBtn">Sign In</button>
+    <p class="login-hint" style="margin-top:14px;"><a href="#" id="forgotLink" style="color:#a5b4fc;">Forgot the owner password?</a></p>
+    <div id="forgotMsg" class="login-hint" style="display:none;margin-top:6px;color:#c7d2fe;"></div>
+  </div>
+  <div class="login-card" id="resetCard" style="display:none;">
+    <div class="login-mark">CS</div>
+    <h1>New owner password</h1>
+    <p>At least 12 characters, with letters and numbers.</p>
+    <div class="login-error" id="resetError"></div>
+    <input type="password" id="resetNew" placeholder="New password" autocomplete="new-password">
+    <input type="password" id="resetConfirm" placeholder="Repeat new password" autocomplete="new-password">
+    <button class="btn" id="resetBtn">Set password and sign in</button>
   </div>
 </div>
 
@@ -562,6 +579,24 @@
 </div>
 
 <!-- CONTACT MODAL (add + edit) -->
+<div class="modal-overlay" id="revReplyModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h3 id="rpTitle" style="margin:0;">Reply to review</h3><div class="modal-sub" id="rpSub"></div></div>
+      <button class="modal-x" onclick="window.closeModal('revReplyModal')">x</button>
+    </div>
+    <div id="rpReview" style="font-size:.85rem;color:var(--crm-muted);line-height:1.6;max-height:140px;overflow:auto;border-left:3px solid var(--crm-line);padding-left:12px;"></div>
+    <label for="rpText">Public reply from CleverStack</label>
+    <textarea id="rpText" maxlength="1500"></textarea>
+    <div class="modal-sub" style="margin-top:6px;"><span id="rpCount">0</span> / 1500. Shown under the review on the website within a few minutes of saving.</div>
+    <div class="modal-actions">
+      <button class="btn-sm danger" id="rpRemove" style="margin-right:auto;">Remove reply</button>
+      <button class="btn-sm ghost" onclick="window.closeModal('revReplyModal')">Cancel</button>
+      <button class="btn-sm primary" id="rpSave">Save reply</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="contactModal">
   <div class="modal modal-lead">
     <div class="modal-head">
@@ -1507,14 +1542,16 @@
         $('revTable').innerHTML = '<tr><td colspan="6" class="empty-state">No reviews here yet.</td></tr>';
       } else {
         var html = '';
+        revRows = {};
         rows.forEach(function(r){
+          revRows[r.id] = r;
           var cls = r.status === 'approved' ? 'won' : (r.status === 'rejected' ? 'lost' : 'new');
           var label = r.status === 'approved' ? 'published' : r.status;
           var acts = '';
           if (r.status !== 'approved') acts += '<button class="btn-sm primary" onclick="window.__revSet(' + r.id + ',\'approved\')">Publish</button> ';
           if (r.status === 'pending') acts += '<button class="btn-sm" onclick="window.__revSet(' + r.id + ',\'approved\',true)" title="Publish and mark as a verified client">Publish + verify</button> ';
           if (r.status !== 'rejected') acts += '<button class="btn-sm ghost" onclick="window.__revSet(' + r.id + ',\'rejected\')">Reject</button> ';
-          acts += '<button class="btn-sm ghost" onclick="window.__revReply(' + r.id + ')">Reply</button> ';
+          acts += '<button class="btn-sm ghost" onclick="window.__revReply(' + r.id + ')">' + (r.reply ? 'Edit reply' : 'Reply') + '</button> ';
           acts += '<button class="btn-sm danger" onclick="window.__revDelete(' + r.id + ')">Delete</button>';
           html += '<tr><td><strong>' + escapeHtml(r.author_name) + '</strong>' + (r.verified ? ' <span class="pill won">verified</span>' : '') +
             '<div style="color:var(--crm-muted);font-size:.78rem;">' + escapeHtml([r.author_role, r.project, r.country].filter(Boolean).join(' \u00b7 ')) + '</div></td>' +
@@ -1545,15 +1582,35 @@
       loadReviews();
     } catch(e){ showToast('Error: ' + e.message); }
   };
-  window.__revReply = async function(id){
-    var text = prompt('Public reply from CleverStack (leave empty to remove):');
-    if (text === null) return;
+  // Reply editor: opens with the current reply filled in, so a typo can be corrected rather than retyped
+  var revRows = {}, rpId = null;
+  window.__revReply = function(id){
+    var r = revRows[id]; if (!r) return;
+    rpId = id;
+    $('rpTitle').textContent = r.reply ? 'Edit your reply' : 'Reply to review';
+    $('rpSub').textContent = r.author_name + ' · ' + r.rating + ' stars';
+    $('rpReview').textContent = (r.title ? r.title + ': ' : '') + r.body;
+    $('rpText').value = r.reply || '';
+    $('rpCount').textContent = $('rpText').value.length;
+    $('rpRemove').style.display = r.reply ? '' : 'none';
+    window.openModal('revReplyModal');
+    setTimeout(function(){ var t = $('rpText'); t.focus(); t.setSelectionRange(t.value.length, t.value.length); }, 50);
+  };
+  async function saveReply(text){
     try {
-      await apiCall('POST', '', { action:'review_reply', id:id, reply:text });
-      showToast('Reply saved');
+      await apiCall('POST', '', { action:'review_reply', id:rpId, reply:text });
+      window.closeModal('revReplyModal');
+      showToast(text ? 'Reply saved' : 'Reply removed');
       loadReviews();
     } catch(e){ showToast('Error: ' + e.message); }
-  };
+  }
+  $('rpText').addEventListener('input', function(){ $('rpCount').textContent = this.value.length; });
+  $('rpSave').addEventListener('click', function(){
+    var text = $('rpText').value.trim();
+    if (!text){ showToast('Write a reply, or use Remove reply'); return; }
+    saveReply(text);
+  });
+  $('rpRemove').addEventListener('click', function(){ if (confirm('Remove this reply from the website?')) saveReply(''); });
   window.__revDelete = async function(id){
     if (!confirm('Delete this review permanently? Prefer Reject if you may want it back.')) return;
     try {
@@ -1739,11 +1796,43 @@
     showToast('Refreshed');
   });
 
+  // Owner forgot password: email a one-time link; the link opens this page with #reset=<token>
+  async function postPublic(body){
+    var r = await fetch(API_BASE, { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify(body) });
+    var d = await r.json().catch(function(){ return {}; });
+    if (!r.ok) throw new Error(d.error || 'Request failed');
+    return d;
+  }
+  $('forgotLink').addEventListener('click', async function(e){
+    e.preventDefault();
+    if (!confirm('Email a password reset link to the owner\'s address?')) return;
+    var m = $('forgotMsg'); m.style.display = 'block'; m.textContent = 'Sending...';
+    try { m.textContent = (await postPublic({ action: 'owner_reset_request' })).message; }
+    catch(er){ m.textContent = er.message; }
+  });
+  var resetToken = (location.hash.match(/^#reset=([A-Za-z0-9_-]{30,})$/) || [])[1];
+  if (resetToken){
+    document.querySelector('#loginScreen .login-card').style.display = 'none';
+    $('resetCard').style.display = '';
+    history.replaceState(null, '', location.pathname); // keep the token out of history and bookmarks
+  }
+  $('resetBtn').addEventListener('click', async function(){
+    var a = $('resetNew').value, b = $('resetConfirm').value, err = $('resetError');
+    err.style.display = 'none';
+    if (a !== b){ err.textContent = 'The two passwords do not match'; err.style.display = 'block'; return; }
+    try {
+      await postPublic({ action: 'owner_reset_confirm', token: resetToken, next: a });
+      $('resetCard').style.display = 'none';
+      document.querySelector('#loginScreen .login-card').style.display = '';
+      showDashboard(); showToast('Password changed. You are signed in.');
+    } catch(er){ err.textContent = er.message; err.style.display = 'block'; }
+  });
+
   // Still signed in (session cookie)? Go straight to the dashboard.
-  apiCall('GET', '?view=me').then(showDashboard).catch(function(){});
+  if (!resetToken) apiCall('GET', '?view=me').then(showDashboard).catch(function(){});
 })();
 </script>
 <script src="chat-ui.js?v=79ac6803" defer></script>
 <script src="admin-inbox.js?v=db4a87ce" defer></script>
-<script src="admin-tools.js?v=9b7332f8" defer></script>
+<script src="admin-tools.js?v=8f9f44d1" defer></script>
 <script src="admin-analytics.js?v=0c42d406" defer></script></body></html>

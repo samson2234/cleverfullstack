@@ -68,8 +68,8 @@ import { scoreLead } from '../lib/lead-score.js';
 import { createTest, setTestStatus, deleteTest, listTestsWithResults } from '../lib/ab.js';
 import { listConversations, getConversation, getMessages, addMessage, createConversation, setStatus as setConvStatus, rotateToken, setFlags as setConvFlags, markUnread as markConvUnread, deleteConversation, markRead as markConvRead, linkFor, conversationsForSubmission,
   changedSince, serverNow, needsRead, editMessage, deleteMessage, setTyping, saveFile, getFile, sendFile } from '../lib/messages.js';
-import { clientMessageTemplate, teamInviteTemplate } from '../lib/email.js';
-import { can, login as staffLogin, ownerLogin, userForToken, logout as staffLogout, listStaff, createStaff, updateStaff, resetStaffPassword, deleteStaff, changeOwnPassword } from '../lib/staff.js';
+import { clientMessageTemplate, teamInviteTemplate, ownerResetTemplate, ownerEmail } from '../lib/email.js';
+import { can, login as staffLogin, ownerLogin, userForToken, logout as staffLogout, listStaff, createStaff, updateStaff, resetStaffPassword, deleteStaff, changeOwnPassword, changeOwnerPassword, createOwnerReset, resetOwnerPassword, ownerPasswordOk } from '../lib/staff.js';
 import { sendWeeklyReport, sendMonthlyLeadsReport } from '../lib/analytics-report.js';
 import crypto from 'node:crypto';
 
@@ -162,12 +162,14 @@ async function resolveUser(req) {
     const user = await userForToken(token);
     return user ? { ok: true, user, staff: user.role !== 'owner' } : { ok: false, error: 'Session expired, please log in again' };
   }
-  const v = verifyAuth(req);
+  const v = await verifyAuth(req);
   return v.ok ? { ok: true, user: { id: 0, name: 'Owner', email: '', role: 'owner' } } : v;
 }
 
-function verifyAuth(req) {
+async function verifyAuth(req) {
   const token = bearerOf(req);
+  // With a database, the owner may have replaced ADMIN_PASSWORD on the Account page (lib/staff.js)
+  if (process.env.TURSO_DATABASE_URL) return (await ownerPasswordOk(token)) ? { ok: true } : { ok: false, error: 'Invalid password' };
   const password = process.env.ADMIN_PASSWORD;
 
   if (!password) {
@@ -254,6 +256,29 @@ export default async function handler(req, res) {
     clearFailures(ip);
     setSession(res, s.token, s.expiresAt);
     return res.status(200).json({ user: s.user, expiresAt: s.expiresAt });
+  }
+
+  // Owner forgot password: email a one-time link / set a new password with it. Same answer whether or not an
+  // email was sent, rate limited, and only from this site.
+  if (req.method === 'POST' && req.body && !Buffer.isBuffer(req.body) && (req.body.action === 'owner_reset_request' || req.body.action === 'owner_reset_confirm')) {
+    if (crossSite(req)) return res.status(403).json({ error: 'Forbidden' });
+    if (!process.env.TURSO_DATABASE_URL) return res.status(503).json({ error: 'Database not configured' });
+    const lim = await rateLimit(req, { limit: 5, windowMs: 60 * 60000, key: req.body.action });
+    if (!lim.allowed) { res.setHeader('Retry-After', String(lim.retryAfter)); return res.status(429).json({ error: 'Too many attempts — please try again later.' }); }
+    if (req.body.action === 'owner_reset_request') {
+      if (!process.env.RESEND_API_KEY) return res.status(503).json({ error: 'Email is not set up (RESEND_API_KEY), so a reset link cannot be sent. Change ADMIN_PASSWORD in Vercel instead.' });
+      const token = await createOwnerReset();
+      const r = await sendResendEmail({ to: ownerEmail(), subject: 'Reset your CleverStack owner password', html: ownerResetTemplate(token) });
+      await logEmail({ to_email: ownerEmail(), type: 'owner_reset', subject: 'Reset your CleverStack owner password', status: r.ok ? 'sent' : 'failed', error: r.ok ? '' : r.error });
+      if (!r.ok) return res.status(502).json({ error: 'The reset email could not be sent. Try again, or change ADMIN_PASSWORD in Vercel.' });
+      const to = ownerEmail().replace(/^(.)[^@]*(@.*)$/, '$1***$2');
+      return res.status(200).json({ success: true, message: 'Reset link sent to ' + to + '. It expires in 30 minutes.' });
+    }
+    try {
+      const s = await resetOwnerPassword(String(req.body.token || ''), req.body.next);
+      setSession(res, s.token, s.expiresAt);
+      return res.status(200).json({ success: true, user: s.user, expiresAt: s.expiresAt });
+    } catch (e) { if (e.status) return res.status(e.status).json({ error: e.message }); throw e; }
   }
 
   const auth = await resolveUser(req);
@@ -464,8 +489,13 @@ export default async function handler(req, res) {
 
       // ---- Account / team ----
       if (action === 'logout') { await staffLogout(bearerOf(req) || cookieOf(req)); clearSession(res); return res.status(200).json({ success: true }); }
+      if (action === 'change_password' && !auth.staff) {
+        // owner: replaces ADMIN_PASSWORD; every other owner session is signed out, this browser gets a fresh one
+        try { const s = await changeOwnerPassword(body.current, body.next); setSession(res, s.token, s.expiresAt); }
+        catch (e) { if (e.status) return res.status(e.status).json({ error: e.message }); throw e; }
+        return res.status(200).json({ success: true, message: 'Password changed. Other devices have been signed out.' });
+      }
       if (action === 'change_password') {
-        if (!auth.staff) return res.status(400).json({ error: 'The owner password is set in Vercel (ADMIN_PASSWORD)' });
         try { await changeOwnPassword(me.id, body.current, body.next); }
         catch (e) { if (e.status) return res.status(e.status).json({ error: e.message }); throw e; }
         return res.status(200).json({ success: true, message: 'Password changed' });
