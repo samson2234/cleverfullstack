@@ -7,8 +7,44 @@
     <link>https://cleverstack.dev/blog/</link>
     <description>Articles on web development, e-commerce, SEO, and growing your business online — from the CleverStack team.</description>
     <language>en</language>
-    <lastBuildDate>Wed, 28 Oct 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 31 Oct 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://cleverstack.dev/blog/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>How Much Does a Shopify Store Cost? Setup, Apps and Monthly Fees</title>
+      <link>https://cleverstack.dev/blog/shopify-store-cost</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/shopify-store-cost</guid>
+      <pubDate>Sat, 31 Oct 2026 00:00:00 +0000</pubDate>
+      <category>E-Commerce</category>
+      <author>hello@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[The full cost of a Shopify store: the plan, payment fees, theme, apps and setup, plus the costs most budgets miss and where to save without hurting sales.]]></description>
+    </item>
+    <item>
+      <title>WordPress vs a Custom Website for a Law Firm: Which Is Right?</title>
+      <link>https://cleverstack.dev/blog/wordpress-vs-custom-website-law-firm</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/wordpress-vs-custom-website-law-firm</guid>
+      <pubDate>Sat, 31 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Web Development</category>
+      <author>hello@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[Most law firms choose between WordPress and a custom-built site. An honest comparison of cost, security, speed, editing and what clients expect to see.]]></description>
+    </item>
+    <item>
+      <title>Zoho CRM vs HubSpot: Which CRM Is Right for a Small Business?</title>
+      <link>https://cleverstack.dev/blog/zoho-crm-vs-hubspot</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/zoho-crm-vs-hubspot</guid>
+      <pubDate>Sat, 31 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Business Growth</category>
+      <author>hello@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[Zoho CRM and HubSpot are the two CRMs small businesses compare most. How they differ on price, ease of use, automation and marketing, and how to choose.]]></description>
+    </item>
+    <item>
+      <title>Wix vs a Custom Website: When to Switch and What It Costs</title>
+      <link>https://cleverstack.dev/blog/wix-vs-custom-website</link>
+      <guid isPermaLink="true">https://cleverstack.dev/blog/wix-vs-custom-website</guid>
+      <pubDate>Sat, 31 Oct 2026 00:00:00 +0000</pubDate>
+      <category>Web Development</category>
+      <author>hello@cleverstack.dev (Henry George)</author>
+      <description><![CDATA[Wix is a fine way to get online. Here is when it starts holding a business back, what a custom website changes, and how to switch without losing rankings.]]></description>
+    </item>
     <item>
       <title>Upwork or Fiverr vs a Dedicated Development Team: Which Should You Hire?</title>
       <link>https://cleverstack.dev/blog/upwork-fiverr-vs-development-team</link>

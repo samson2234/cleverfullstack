@@ -8,6 +8,7 @@ module.exports = {
   date: 'October 27, 2026',
   iso: '2026-10-27',
   icon: 'compare',
+  imageAlt: 'React source code open in a code editor',
   related: [
     ['how-much-does-business-website-cost.html', 'How much does a business website cost?'],
     ['custom-vs-nocode.html', 'Custom code vs no-code'],

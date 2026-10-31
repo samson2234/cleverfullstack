@@ -20,7 +20,15 @@ const PHOTOS = {
   'poor-website-killing-business': ['1758519288176-0cde8339e06f', 'A business owner reviewing his website on a laptop'],
   'optimized-website-advantages': ['1426024084828-5da21e13f5dc', 'A website shown on a laptop, tablet and phone'],
   'how-much-does-business-website-cost': ['1626266061368-46a8f578ddd6', 'Working out a website budget with a calculator'],
-  'why-small-business-needs-website': ['1753351052363-53ce102830eb', 'A small business owner in her coffee shop']
+  'why-small-business-needs-website': ['1753351052363-53ce102830eb', 'A small business owner in her coffee shop'],
+  'upwork-fiverr-vs-development-team': ['1590402494587-44b71d7772f6', 'Two developers planning a project together on a wall of sticky notes'],
+  'mobile-app-development-cost': ['1551650975-87deedd944c3', 'A hand holding a phone with a mobile app dashboard open'],
+  'cost-to-hire-full-stack-developer': ['1619410283995-43d9134e7656', 'React source code open in a developer\'s code editor'],
+  'how-long-to-build-a-web-app': ['1611224885990-ab7363d1f2a9', 'Sticky notes reading To Do, Doing and Done, the stages of a project'],
+  'shopify-store-cost': ['1658297063569-162817482fb6', 'A laptop open on the Shopify page for starting an online store'],
+  'wordpress-vs-custom-website-law-firm': ['1678341859828-bfb1a2bd527a', 'A laptop showing the WordPress logo'],
+  'zoho-crm-vs-hubspot': ['1542744095-0d53267d353e', 'A marketer working in a CRM, with lead generation software on screen'],
+  'wix-vs-custom-website': ['1678690832311-bb6e361989ca', 'A laptop showing a website builder template that says build your dream website']
 };
 const WIDTHS = [480, 800, 1200, 1400];
 const name = (id, w) => id + '-photo-' + w + '.webp';
@@ -40,14 +48,16 @@ const write = (f, s) => fs.writeFileSync(path.join(root, f), s);
 (async () => {
   const posts = JSON.parse(read('blog/posts.json'));
   for (const [id, [photo, alt]] of Object.entries(PHOTOS)) {
-    const post = posts.find((p) => p.id === id);
-    if (!post) throw new Error('unknown post ' + id);
     if (!fs.existsSync(path.join(root, 'images/blog', name(id, 1400)))) {
       const src = await download(photo);
       for (const w of WIDTHS) {
         await sharp(src).resize(w, Math.round(w * 2 / 3), { fit: 'cover', position: 'attention' }).webp({ quality: 78 }).toFile(path.join(root, 'images/blog', name(id, w)));
       }
     }
+    // posts written in blog-src/ pick the photo up on `npm run blog` (alt text: imageAlt in the source)
+    if (fs.existsSync(path.join(root, 'blog-src', id + '.js'))) { console.log('photo ->', id); continue; }
+    const post = posts.find((p) => p.id === id);
+    if (!post) throw new Error('unknown post ' + id);
     const old = post.image; // e.g. /images/blog/<id>.webp or /images/blog/u-<photo>-800.webp
     post.image = '/images/blog/' + name(id, 800);
     post.imageAlt = alt;
@@ -60,7 +70,7 @@ const write = (f, s) => fs.writeFileSync(path.join(root, f), s);
     if (m) html = html.replace(new RegExp('/images/blog/' + m[1] + '-(\\d+)\\.webp', 'g'), (_, w) => '/images/blog/' + name(id, WIDTHS.includes(+w) ? w : 1200));
     else html = html.split('/images/blog/' + id + '.webp').join('/images/blog/' + name(id, 1200));
     html = html.replace(/(<img[^>]*src="\/images\/blog\/[^"]*-photo-\d+\.webp"[^>]*alt=")[^"]*(")/, '$1' + alt.replace(/"/g, '&quot;') + '$2');
-    if (html === before) throw new Error(file + ': no cover reference replaced');
+    if (html === before && !html.includes('/images/blog/' + id + '-photo-')) throw new Error(file + ': no cover reference replaced');
     write(file, html);
     console.log('cover ->', id);
   }

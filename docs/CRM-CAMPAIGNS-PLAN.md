@@ -30,7 +30,7 @@ Requested 31 Oct 2026. Executed step by step; each step is tested (automated tes
 - Forgot password: sends a one-time reset link (valid 30 minutes) to the owner email. `ADMIN_PASSWORD` in Vercel keeps working until you set a new password here.
 - Test: change, old password rejected, new accepted, other sessions revoked, reset link single-use and expiring.
 
-### 4. Blog: new posts with real images
+### 4. Blog: new posts with real images — DONE (31 Oct)
 - Real stock photos (free licence) that show what the post is about on every recent post, including the four published this week: a store on screen for Shopify, a site editor for WordPress, a CRM dashboard for Zoho/HubSpot, and so on.
 - New posts: Shopify store setup cost, WordPress vs custom website for law firms, Zoho vs HubSpot for small agencies, Wix vs custom website.
 

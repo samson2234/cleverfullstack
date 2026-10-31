@@ -1,13 +1,57 @@
 [
   {
+    "id": "shopify-store-cost",
+    "title": "How Much Does a Shopify Store Cost? Setup, Apps and Monthly Fees",
+    "excerpt": "The full cost of a Shopify store: the plan, payment fees, theme, apps and setup, plus the costs most budgets miss and where to save without hurting sales.",
+    "author": "Henry George",
+    "date": "October 31, 2026",
+    "category": "E-Commerce",
+    "image": "/images/blog/shopify-store-cost-photo-800.webp",
+    "imageAlt": "A laptop open on the Shopify page for starting an online store",
+    "readingTime": "5 min read"
+  },
+  {
+    "id": "wordpress-vs-custom-website-law-firm",
+    "title": "WordPress vs a Custom Website for a Law Firm: Which Is Right?",
+    "excerpt": "Most law firms choose between WordPress and a custom-built site. An honest comparison of cost, security, speed, editing and what clients expect to see.",
+    "author": "Henry George",
+    "date": "October 31, 2026",
+    "category": "Web Development",
+    "image": "/images/blog/wordpress-vs-custom-website-law-firm-photo-800.webp",
+    "imageAlt": "A laptop showing the WordPress logo",
+    "readingTime": "5 min read"
+  },
+  {
+    "id": "zoho-crm-vs-hubspot",
+    "title": "Zoho CRM vs HubSpot: Which CRM Is Right for a Small Business?",
+    "excerpt": "Zoho CRM and HubSpot are the two CRMs small businesses compare most. How they differ on price, ease of use, automation and marketing, and how to choose.",
+    "author": "Henry George",
+    "date": "October 31, 2026",
+    "category": "Business Growth",
+    "image": "/images/blog/zoho-crm-vs-hubspot-photo-800.webp",
+    "imageAlt": "A marketer working in a CRM, with lead generation software on screen",
+    "readingTime": "5 min read"
+  },
+  {
+    "id": "wix-vs-custom-website",
+    "title": "Wix vs a Custom Website: When to Switch and What It Costs",
+    "excerpt": "Wix is a fine way to get online. Here is when it starts holding a business back, what a custom website changes, and how to switch without losing rankings.",
+    "author": "Henry George",
+    "date": "October 31, 2026",
+    "category": "Web Development",
+    "image": "/images/blog/wix-vs-custom-website-photo-800.webp",
+    "imageAlt": "A laptop showing a website builder template that says build your dream website",
+    "readingTime": "5 min read"
+  },
+  {
     "id": "upwork-fiverr-vs-development-team",
     "title": "Upwork or Fiverr vs a Dedicated Development Team: Which Should You Hire?",
     "excerpt": "Freelance marketplaces are great for some jobs and risky for others. An honest comparison of cost, risk, quality and ownership, and how to choose.",
     "author": "Henry George",
     "date": "October 28, 2026",
     "category": "Hiring",
-    "image": "/images/blog/upwork-fiverr-vs-development-team.webp",
-    "imageAlt": "Upwork or Fiverr vs a Dedicated Development Team: Which Should You Hire?",
+    "image": "/images/blog/upwork-fiverr-vs-development-team-photo-800.webp",
+    "imageAlt": "Two developers planning a project together on a wall of sticky notes",
     "readingTime": "5 min read"
   },
   {
@@ -17,8 +61,8 @@
     "author": "Henry George",
     "date": "October 28, 2026",
     "category": "Mobile Apps",
-    "image": "/images/blog/mobile-app-development-cost.webp",
-    "imageAlt": "How Much Does It Cost to Build a Mobile App? What Drives the Price",
+    "image": "/images/blog/mobile-app-development-cost-photo-800.webp",
+    "imageAlt": "A hand holding a phone with a mobile app dashboard open",
     "readingTime": "5 min read"
   },
   {
@@ -28,8 +72,8 @@
     "author": "Henry George",
     "date": "October 27, 2026",
     "category": "Hiring",
-    "image": "/images/blog/cost-to-hire-full-stack-developer.webp",
-    "imageAlt": "How Much Does It Cost to Hire a Full-Stack Developer? Freelancer vs Agency vs In-House",
+    "image": "/images/blog/cost-to-hire-full-stack-developer-photo-800.webp",
+    "imageAlt": "React source code open in a code editor",
     "readingTime": "5 min read"
   },
   {
@@ -39,8 +83,8 @@
     "author": "Henry George",
     "date": "October 27, 2026",
     "category": "Web Development",
-    "image": "/images/blog/how-long-to-build-a-web-app.webp",
-    "imageAlt": "How Long Does It Take to Build a Web App? Realistic Timelines, Stage by Stage",
+    "image": "/images/blog/how-long-to-build-a-web-app-photo-800.webp",
+    "imageAlt": "Sticky notes reading To Do, Doing and Done, the stages of a project",
     "readingTime": "5 min read"
   },
   {

@@ -8,6 +8,7 @@ module.exports = {
   date: 'October 28, 2026',
   iso: '2026-10-28',
   icon: 'gauge',
+  imageAlt: 'A hand holding a phone with a mobile app dashboard open',
   related: [
     ['how-long-to-build-a-web-app.html', 'How long does it take to build a web app?'],
     ['cost-to-hire-full-stack-developer.html', 'What it costs to hire a full-stack developer'],

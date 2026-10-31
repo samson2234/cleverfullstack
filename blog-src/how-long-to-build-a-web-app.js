@@ -8,6 +8,7 @@ module.exports = {
   date: 'October 27, 2026',
   iso: '2026-10-27',
   icon: 'gauge',
+  imageAlt: 'Sticky notes reading To Do, Doing and Done, the stages of a project',
   related: [
     ['cost-to-hire-full-stack-developer.html', 'What it costs to hire a full-stack developer'],
     ['custom-vs-nocode.html', 'Custom code vs no-code'],

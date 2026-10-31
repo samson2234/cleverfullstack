@@ -8,6 +8,7 @@ module.exports = {
   date: 'October 28, 2026',
   iso: '2026-10-28',
   icon: 'compare',
+  imageAlt: 'Two developers planning a project together on a wall of sticky notes',
   related: [
     ['cost-to-hire-full-stack-developer.html', 'What it costs to hire a full-stack developer'],
     ['how-long-to-build-a-web-app.html', 'How long does it take to build a web app?'],

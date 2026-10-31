@@ -203,11 +203,15 @@
   </url>
   <url>
     <loc>https://cleverstack.dev/blog</loc>
-    <lastmod>2026-10-28</lastmod>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/upwork-fiverr-vs-development-team.webp</image:loc></image:image>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/mobile-app-development-cost.webp</image:loc></image:image>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/cost-to-hire-full-stack-developer.webp</image:loc></image:image>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/how-long-to-build-a-web-app.webp</image:loc></image:image>
+    <lastmod>2026-10-31</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/shopify-store-cost-photo-800.webp</image:loc></image:image>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/wordpress-vs-custom-website-law-firm-photo-800.webp</image:loc></image:image>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/zoho-crm-vs-hubspot-photo-800.webp</image:loc></image:image>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/wix-vs-custom-website-photo-800.webp</image:loc></image:image>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/upwork-fiverr-vs-development-team-photo-800.webp</image:loc></image:image>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/mobile-app-development-cost-photo-800.webp</image:loc></image:image>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/cost-to-hire-full-stack-developer-photo-800.webp</image:loc></image:image>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/how-long-to-build-a-web-app-photo-800.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/website-no-enquiries-fix-photo-800.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/why-is-my-website-slow-photo-800.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/google-maps-local-seo-checklist-photo-800.webp</image:loc></image:image>
@@ -220,10 +224,6 @@
     <image:image><image:loc>https://cleverstack.dev/images/blog/u-1554224155-6726b3ff858f-800.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/u-1551288049-bebda4e38f71-800.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/u-1518432031352-d6fc5c10da5a-800.webp</image:loc></image:image>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/poor-website-killing-business-photo-800.webp</image:loc></image:image>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/u-1553729459-efe14ef6055d-800.webp</image:loc></image:image>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/optimized-website-advantages-photo-800.webp</image:loc></image:image>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/how-much-does-business-website-cost-photo-800.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://cleverstack.dev/blog/best-web-development-company-usa</loc>
@@ -237,8 +237,8 @@
   </url>
   <url>
     <loc>https://cleverstack.dev/blog/cost-to-hire-full-stack-developer</loc>
-    <lastmod>2026-10-28</lastmod>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/cost-to-hire-full-stack-developer.webp</image:loc></image:image>
+    <lastmod>2026-10-31</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/cost-to-hire-full-stack-developer-photo-1200.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://cleverstack.dev/blog/custom-vs-nocode</loc>
@@ -253,8 +253,8 @@
   </url>
   <url>
     <loc>https://cleverstack.dev/blog/how-long-to-build-a-web-app</loc>
-    <lastmod>2026-10-28</lastmod>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/how-long-to-build-a-web-app.webp</image:loc></image:image>
+    <lastmod>2026-10-31</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/how-long-to-build-a-web-app-photo-1200.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://cleverstack.dev/blog/how-much-does-business-website-cost</loc>
@@ -269,8 +269,8 @@
   </url>
   <url>
     <loc>https://cleverstack.dev/blog/mobile-app-development-cost</loc>
-    <lastmod>2026-10-28</lastmod>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/mobile-app-development-cost.webp</image:loc></image:image>
+    <lastmod>2026-10-31</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/mobile-app-development-cost-photo-1200.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://cleverstack.dev/blog/optimized-website-advantages</loc>
@@ -289,6 +289,11 @@
     <image:image><image:loc>https://cleverstack.dev/images/blog/u-1498050108023-c5249f4df085-1400.webp</image:loc></image:image>
   </url>
   <url>
+    <loc>https://cleverstack.dev/blog/shopify-store-cost</loc>
+    <lastmod>2026-10-31</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/shopify-store-cost-photo-1200.webp</image:loc></image:image>
+  </url>
+  <url>
     <loc>https://cleverstack.dev/blog/shopify-vs-woocommerce</loc>
     <lastmod>2026-10-28</lastmod>
     <image:image><image:loc>https://cleverstack.dev/images/blog/u-1563013544-824ae1b704d3-800.webp</image:loc></image:image>
@@ -301,8 +306,8 @@
   </url>
   <url>
     <loc>https://cleverstack.dev/blog/upwork-fiverr-vs-development-team</loc>
-    <lastmod>2026-10-28</lastmod>
-    <image:image><image:loc>https://cleverstack.dev/images/blog/upwork-fiverr-vs-development-team.webp</image:loc></image:image>
+    <lastmod>2026-10-31</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/upwork-fiverr-vs-development-team-photo-1200.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://cleverstack.dev/blog/web-development</loc>
@@ -342,6 +347,21 @@
     <lastmod>2026-10-28</lastmod>
     <image:image><image:loc>https://cleverstack.dev/images/blog/u-1460925895917-afdab827c52f-800.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/blog/why-small-business-needs-website-photo-1400.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://cleverstack.dev/blog/wix-vs-custom-website</loc>
+    <lastmod>2026-10-31</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/wix-vs-custom-website-photo-1200.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://cleverstack.dev/blog/wordpress-vs-custom-website-law-firm</loc>
+    <lastmod>2026-10-31</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/wordpress-vs-custom-website-law-firm-photo-1200.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://cleverstack.dev/blog/zoho-crm-vs-hubspot</loc>
+    <lastmod>2026-10-31</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/blog/zoho-crm-vs-hubspot-photo-1200.webp</image:loc></image:image>
   </url>
   <url>
     <loc>https://cleverstack.dev/work/ab-cleaning-solution-website</loc>
