@@ -28,8 +28,8 @@
     "lastmod": "2026-10-28"
   },
   "https://cleverstack.dev/blog": {
-    "fp": "27098f54fd729059d7dab884034bfe63d8fc974e",
-    "lastmod": "2026-10-28"
+    "fp": "82bd3d9141123201467efefb7b603128a32d9d4c",
+    "lastmod": "2026-10-31"
   },
   "https://cleverstack.dev/blog/optimized-website-advantages": {
     "fp": "d9353c023fc8180bfae704636f10e13418fb738a",
@@ -288,19 +288,35 @@
     "lastmod": "2026-10-28"
   },
   "https://cleverstack.dev/blog/cost-to-hire-full-stack-developer": {
-    "fp": "fcba428deef3595e4b4f20b28d5e5aa1fe6b6c5f",
-    "lastmod": "2026-10-28"
+    "fp": "b2e8f36db417d6d84bfeac51c8af045e04cac3dd",
+    "lastmod": "2026-10-31"
   },
   "https://cleverstack.dev/blog/how-long-to-build-a-web-app": {
-    "fp": "8f9293c164dd6925b46761f2d06c5ddc85f6561c",
-    "lastmod": "2026-10-28"
+    "fp": "e1bdd76f7d66b23620e6a9f8df20b4b32ae74553",
+    "lastmod": "2026-10-31"
   },
   "https://cleverstack.dev/blog/mobile-app-development-cost": {
-    "fp": "163fac8e04ffe61b4076fff90e72645725f78190",
-    "lastmod": "2026-10-28"
+    "fp": "cf5540cdaf36711198c02eb96517fca4ad6cb4e8",
+    "lastmod": "2026-10-31"
   },
   "https://cleverstack.dev/blog/upwork-fiverr-vs-development-team": {
-    "fp": "0cdff2184f6e744888471785071385443d5331f0",
-    "lastmod": "2026-10-28"
+    "fp": "0c4ffbc0faa443f81e39e015931b73f502defc99",
+    "lastmod": "2026-10-31"
+  },
+  "https://cleverstack.dev/blog/shopify-store-cost": {
+    "fp": "5f9ac0ce7fcf3f5f5a048c643734c4ffb81ce458",
+    "lastmod": "2026-10-31"
+  },
+  "https://cleverstack.dev/blog/wix-vs-custom-website": {
+    "fp": "11e60a80db9110a04d73380e50fe12e07f1e7d95",
+    "lastmod": "2026-10-31"
+  },
+  "https://cleverstack.dev/blog/wordpress-vs-custom-website-law-firm": {
+    "fp": "c99d8b0382f9eb0359394371d1ceadd4394dd91d",
+    "lastmod": "2026-10-31"
+  },
+  "https://cleverstack.dev/blog/zoho-crm-vs-hubspot": {
+    "fp": "14b9fb27ad213009f10463aa4d8b9ba21b3f6a5c",
+    "lastmod": "2026-10-31"
   }
 }
