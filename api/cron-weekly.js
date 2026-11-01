@@ -9,6 +9,7 @@ export const config = { runtime: 'nodejs' };
 
 import crypto from 'node:crypto';
 import { sendWeeklyReport } from '../lib/analytics-report.js';
+import { withMonitor, reportError } from '../lib/monitor.js';
 
 function authorised(req) {
   const secret = process.env.CRON_SECRET;
@@ -19,7 +20,7 @@ function authorised(req) {
   return crypto.timingSafeEqual(a, b);
 }
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (!process.env.CRON_SECRET) return res.status(503).json({ error: 'CRON_SECRET is not set' });
   if (!authorised(req)) return res.status(401).json({ error: 'Unauthorised' });
   if (!process.env.TURSO_DATABASE_URL) return res.status(503).json({ error: 'Database not configured' });
@@ -27,7 +28,9 @@ export default async function handler(req, res) {
     const r = await sendWeeklyReport();
     return res.status(r.ok ? 200 : 502).json(r);
   } catch (err) {
-    console.error('weekly report failed:', err);
+    await reportError(err, { where: 'cron: weekly report' });
     return res.status(500).json({ error: 'Report failed' });
   }
 }
+
+export default withMonitor('api/cron-weekly', handler);

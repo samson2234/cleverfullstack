@@ -72,6 +72,7 @@ import { clientMessageTemplate, teamInviteTemplate, ownerResetTemplate, ownerEma
 import { can, login as staffLogin, ownerLogin, userForToken, logout as staffLogout, listStaff, createStaff, updateStaff, resetStaffPassword, deleteStaff, changeOwnPassword, changeOwnerPassword, createOwnerReset, resetOwnerPassword, ownerPasswordOk } from '../lib/staff.js';
 import { sendWeeklyReport, sendMonthlyLeadsReport } from '../lib/analytics-report.js';
 import crypto from 'node:crypto';
+import { withMonitor, reportError } from '../lib/monitor.js';
 
 // Failed-login lockout: after MAX_FAILS wrong passwords from an IP, the IP is
 // blocked for LOCKOUT_MS. Stored in-memory (per instance) — same threat model
@@ -227,7 +228,7 @@ function jsonToCsv(headers, rows) {
   return '\uFEFF' + lines.join('\r\n');
 }
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   // Same-origin only: no CORS headers, so other websites cannot read this API from a visitor's browser.
   res.setHeader('Cache-Control', 'no-store');
   if (req.method === 'OPTIONS') return res.status(204).end();
@@ -827,7 +828,9 @@ export default async function handler(req, res) {
 
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (err) {
-    console.error('Admin API error:', err);
+    await reportError(err, { where: 'api/admin' });
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+export default withMonitor('api/admin', handler);

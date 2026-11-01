@@ -11,6 +11,7 @@ import { recordEvents, isBot } from '../lib/analytics.js';
 import { rateLimit, clientIp } from '../lib/rate-limit.js';
 import { siteUrl } from '../lib/email.js';
 import { activeTests } from '../lib/ab.js';
+import { withMonitor, reportError } from '../lib/monitor.js';
 
 function ownHosts() {
   const hosts = ['cleverstack.dev', 'cleverfullstack.vercel.app'];
@@ -22,7 +23,22 @@ const hostOf = (u) => { try { return new URL(u).hostname.toLowerCase().replace(/
 const header = (req, k) => { const v = req.headers[k]; return Array.isArray(v) ? v[0] : v || ''; };
 const decode = (v) => { try { return decodeURIComponent(v); } catch (e) { return v; } };
 
-export default async function handler(req, res) {
+function reportBrowserError(ev, req, ua) {
+  const s = (v, n) => String(v == null ? '' : v).slice(0, n);
+  const page = s(ev.p, 200) || '/';
+  const msg = s(ev.m, 300).replace(/^Uncaught /, '') || 'Unknown error';
+  // no stack (older browsers): point at the file/line the browser gave us
+  const stack = s(ev.st, 2000) || (ev.f ? '    at ' + s(ev.f, 200) + ':' + (+ev.l || 0) + ':' + (+ev.c || 0) : '');
+  let url = page;
+  try { url = new URL(page, siteUrl()).href; } catch (e) {}
+  return reportError(new Error(msg), {
+    source: 'browser', where: 'page ' + page.split('?')[0], stack, url, ua,
+    type: ev.k === 'promise' ? 'UnhandledRejection' : (/^(\w*Error):/.exec(msg) || [])[1] || 'Error',
+    tags: { page: page.split('?')[0], country: header(req, 'x-vercel-ip-country'), device: /Mobi/i.test(ua) ? 'mobile' : 'desktop' }
+  });
+}
+
+async function handler(req, res) {
   if (req.method === 'GET' && /[?&]ab=1/.test(req.url || '')) {
     // running A/B tests for the website (no names or results); cached at the edge for a minute
     let tests = [];
@@ -47,6 +63,15 @@ export default async function handler(req, res) {
     if (typeof body === 'string') { if (body.length > 16000) return res.status(204).end(); try { body = JSON.parse(body); } catch (e) { return res.status(204).end(); } }
     if (!body || typeof body !== 'object' || body.wd) return res.status(204).end();
 
+    // JavaScript errors from visitors' browsers -> error alerts (not analytics). Capped per visitor IP.
+    const errs = Array.isArray(body.e) ? body.e.filter((ev) => ev && ev.t === 'err') : [];
+    if (errs.length) {
+      body.e = body.e.filter((ev) => !(ev && ev.t === 'err'));
+      const cap = await rateLimit(req, { limit: 20, windowMs: 3600000, key: 'pulse-err' });
+      if (cap.allowed) for (const ev of errs.slice(0, 3)) await reportBrowserError(ev, req, ua);
+      if (!body.e.length) return res.status(204).end();
+    }
+
     await recordEvents(body, {
       ip: clientIp(req), ua,
       country: header(req, 'x-vercel-ip-country'),
@@ -59,3 +84,5 @@ export default async function handler(req, res) {
   }
   return res.status(204).end();
 }
+
+export default withMonitor('api/pulse', handler);

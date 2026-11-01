@@ -10,10 +10,11 @@ import { upsertReturningClient } from '../lib/contacts.js';
 import { sendResendEmail, ownerEmail, esc } from '../lib/email.js';
 import { rateLimit } from '../lib/rate-limit.js';
 import { isBotPayload } from '../lib/honeypot.js';
+import { withMonitor, reportError } from '../lib/monitor.js';
 
 const clip = (v, n) => String(v == null ? '' : v).trim().slice(0, n);
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
@@ -38,7 +39,7 @@ export default async function handler(req, res) {
   try {
     await upsertReturningClient(d);
   } catch (err) {
-    console.error('Reconnect save failed:', err);
+    await reportError(err, { where: 'reconnect: not saved' });
     return res.status(500).json({ error: 'Something went wrong. Please try again.' });
   }
 
@@ -56,3 +57,5 @@ export default async function handler(req, res) {
 
   return res.status(200).json({ success: true });
 }
+
+export default withMonitor('api/reconnect', handler);

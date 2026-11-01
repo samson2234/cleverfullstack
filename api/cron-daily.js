@@ -9,6 +9,7 @@ export const config = { runtime: 'nodejs' };
 import crypto from 'node:crypto';
 import { buildPendingRollups } from '../lib/analytics.js';
 import { sendMonthlyLeadsReport } from '../lib/analytics-report.js';
+import { withMonitor, reportError } from '../lib/monitor.js';
 
 function authorised(req) {
   const secret = process.env.CRON_SECRET;
@@ -18,7 +19,7 @@ function authorised(req) {
   return crypto.timingSafeEqual(a, b);
 }
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (!process.env.CRON_SECRET) return res.status(503).json({ error: 'CRON_SECRET is not set' });
   if (!authorised(req)) return res.status(401).json({ error: 'Unauthorised' });
   if (!process.env.TURSO_DATABASE_URL) return res.status(503).json({ error: 'Database not configured' });
@@ -26,11 +27,13 @@ export default async function handler(req, res) {
     const checkedDays = await buildPendingRollups();
     let monthly;
     if (new Date().getUTCDate() === 3 && process.env.RESEND_API_KEY) {
-      try { monthly = await sendMonthlyLeadsReport(); } catch (e) { console.error('monthly leads report failed:', e); monthly = { ok: false }; }
+      try { monthly = await sendMonthlyLeadsReport(); } catch (err) { await reportError(err, { where: 'cron: monthly leads report' }); monthly = { ok: false }; }
     }
     return res.status(200).json({ ok: true, checkedDays, monthly });
   } catch (err) {
-    console.error('daily rollup failed:', err);
+    await reportError(err, { where: 'cron: daily job' });
     return res.status(500).json({ error: 'Rollup failed' });
   }
 }
+
+export default withMonitor('api/cron-daily', handler);

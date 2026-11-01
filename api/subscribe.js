@@ -20,8 +20,9 @@ import {
 } from '../lib/email.js';
 import { rateLimit } from '../lib/rate-limit.js';
 import { isBotPayload } from '../lib/honeypot.js';
+import { withMonitor, reportError } from '../lib/monitor.js';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -66,7 +67,7 @@ export default async function handler(req, res) {
         });
       }
     } catch (err) {
-      console.error('Subscriber DB save failed:', err.message);
+      await reportError(err, { where: 'subscribe: subscriber not saved' });
     }
   } else {
     console.log('TURSO_DATABASE_URL not set — skipping subscriber DB save');
@@ -131,10 +132,12 @@ export default async function handler(req, res) {
   }
 
   // Nothing is configured to store it. Personal data is never written to the logs.
-  console.error('Subscribe: no database or email configured; subscriber was not stored');
+  await reportError(new Error('Subscribe: no database or email configured; subscriber was not stored'), { where: 'subscribe: subscriber lost' });
 
   return res.status(200).json({
     success: true,
     message: 'Thank you for subscribing!'
   });
 }
+
+export default withMonitor('api/subscribe', handler);

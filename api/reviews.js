@@ -12,6 +12,7 @@ import { getPublicReviews, getValidInvite, submitVerifiedReview, submitPendingRe
 import { rateLimit } from '../lib/rate-limit.js';
 import { isBotPayload } from '../lib/honeypot.js';
 import { sendResendEmail, ownerEmail, reviewNotificationTemplate } from '../lib/email.js';
+import { withMonitor, reportError } from '../lib/monitor.js';
 
 const clip = (v, n) => String(v == null ? '' : v).trim().slice(0, n);
 
@@ -30,7 +31,7 @@ async function notifyOwner(data, published) {
   }
 }
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   if (!process.env.TURSO_DATABASE_URL) {
@@ -90,7 +91,9 @@ export default async function handler(req, res) {
     await notifyOwner(data, false);
     return res.status(200).json({ success: true, published: false });
   } catch (err) {
-    console.error('Reviews API error:', err);
+    await reportError(err, { where: 'api/reviews' });
     return res.status(500).json({ error: 'Something went wrong. Please try again.' });
   }
 }
+
+export default withMonitor('api/reviews', handler);

@@ -18,6 +18,7 @@ import { conversationForToken, getMessages, changedSince, serverNow, addMessage,
 import { sendResendEmail, ownerEmail, ownerMessageTemplate } from '../lib/email.js';
 import { rateLimit } from '../lib/rate-limit.js';
 import { isBotPayload } from '../lib/honeypot.js';
+import { withMonitor, reportError } from '../lib/monitor.js';
 
 const publicMessage = (m) => ({ id: m.id, from: m.sender === 'client' ? 'you' : m.sender, name: m.sender === 'client' ? '' : (m.staff_name || 'CleverStack'),
   body: m.body, at: m.created_at, edited: m.edited, deleted: m.deleted, file: m.file });
@@ -39,7 +40,7 @@ async function emailOwner(conv, text) {
   } catch (e) { console.error('portal owner email failed:', e.message); }
 }
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('X-Robots-Tag', 'noindex');
   if (!process.env.TURSO_DATABASE_URL) return res.status(503).json({ error: 'Messaging is temporarily unavailable.' });
@@ -108,7 +109,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (err) {
     if (err.status) return res.status(err.status).json({ error: err.message });
-    console.error('portal error:', err);
+    await reportError(err, { where: 'api/portal' });
     return res.status(500).json({ error: 'Something went wrong. Please try again.' });
   }
 }
+
+export default withMonitor('api/portal', handler);

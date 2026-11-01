@@ -7,8 +7,9 @@ export const config = { runtime: 'nodejs' };
 import { getClient } from '../lib/db.js';
 import { siteUrl } from '../lib/email.js';
 import { markUnsubscribed } from '../lib/contacts.js';
+import { withMonitor } from '../lib/monitor.js';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
@@ -40,3 +41,5 @@ export default async function handler(req, res) {
     '</div></body></html>'
   );
 }
+
+export default withMonitor('api/unsubscribe', handler);

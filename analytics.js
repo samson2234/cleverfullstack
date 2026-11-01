@@ -229,6 +229,22 @@
 
   window.__csPulse = function (events) { send(events); };   // used by the A/B block below
 
+  // 0. broken pages: JavaScript errors go to the owner's error alerts (Sentry, via /api/pulse). Only errors from
+  // this site's own scripts, at most 5 per page view; browser extensions and other sites' scripts are ignored.
+  var errSent = 0;
+  function reportErr(msg, src, line, col, stack, kind) {
+    try {
+      msg = String(msg || '');
+      if (errSent >= 5 || !msg || /^Script error\.?$/i.test(msg) || /ResizeObserver loop/.test(msg)) return;
+      if (/extension:\/\//.test((src || '') + ' ' + (stack || ''))) return;
+      if (src) { try { if (new URL(src, location.href).host !== location.host) return; } catch (x) {} }
+      errSent++;
+      send([{ t: 'err', p: PATH, m: msg.slice(0, 300), f: String(src || '').slice(0, 200), l: line || 0, c: col || 0, st: String(stack || '').slice(0, 2000), k: kind }]);
+    } catch (e) {}
+  }
+  window.addEventListener('error', function (e) { if (e && e.message) reportErr(e.message, e.filename, e.lineno, e.colno, e.error && e.error.stack, 'error'); });
+  window.addEventListener('unhandledrejection', function (e) { var r = e && e.reason; reportErr((r && r.message) || String(r), '', 0, 0, r && r.stack, 'promise'); });
+
   // 1. page view
   var utm = {};
   try {

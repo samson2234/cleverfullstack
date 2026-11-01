@@ -41,8 +41,9 @@ import { notifyHotLead } from '../lib/hot-lead.js';
 import { createConversation, linkFor } from '../lib/messages.js';
 import { siteUrl } from '../lib/email.js';
 import { detectPitch, intentLabel } from '../lib/pitch.js';
+import { withMonitor, reportError } from '../lib/monitor.js';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -141,7 +142,7 @@ export default async function handler(req, res) {
         submission.conversationLink = await linkFor(conversation.id, siteUrl());
       } catch (err) { console.error('Conversation create failed:', err.message); }
     } catch (err) {
-      console.error('Database save failed:', err.message);
+      await reportError(err, { where: 'contact: lead not saved to database' });
     }
   } else {
     console.log('TURSO_DATABASE_URL not set — skipping database save');
@@ -165,9 +166,9 @@ export default async function handler(req, res) {
         status: result.ok ? 'sent' : 'failed',
         error: result.ok ? '' : result.error
       });
-      if (!result.ok) console.error('Resend error:', result.error);
+      if (!result.ok) await reportError(new Error('Resend: ' + result.error), { where: 'contact: owner lead email not sent' });
     } catch (err) {
-      console.error('Resend request failed:', err.message);
+      await reportError(err, { where: 'contact: owner lead email not sent' });
     }
   }
 
@@ -208,7 +209,7 @@ export default async function handler(req, res) {
         console.log('Auto-response sent');
       }
     } catch (err) {
-      console.error('Auto-responder failed:', err.message);
+      await reportError(err, { where: 'contact: auto-reply not sent' });
     }
   }
 
@@ -268,7 +269,7 @@ export default async function handler(req, res) {
         console.log('Email sent via Web3Forms');
       }
     } catch (err) {
-      console.error('Web3Forms request failed:', err.message);
+      await reportError(err, { where: 'contact: Web3Forms fallback failed' });
     }
   }
 
@@ -286,10 +287,12 @@ export default async function handler(req, res) {
   }
 
   // Nothing is configured to store or deliver it. Personal data is never written to the logs.
-  console.error('Contact form: no database or email configured; submission was not stored');
+  await reportError(new Error('Contact form: no database or email configured; submission was not stored'), { where: 'contact: submission lost' });
 
   return res.status(200).json({
     success: true,
     message: 'Thank you! We received your message and will respond within 24 hours.'
   });
 }
+
+export default withMonitor('api/contact', handler);
