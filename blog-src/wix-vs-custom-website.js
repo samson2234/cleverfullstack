@@ -4,7 +4,6 @@ module.exports = {
   title: 'Wix vs a Custom Website: When to Switch and What It Costs',
   excerpt: 'Wix is a fine way to get online. Here is when it starts holding a business back, what a custom website changes, and how to switch without losing rankings.',
   description: 'Wix or a custom website? When a website builder is enough, the signs you have outgrown it, what a custom site costs and how to switch without losing SEO.',
-  category: 'Web Development',
   date: 'October 31, 2026',
   iso: '2026-10-31',
   icon: 'compare',

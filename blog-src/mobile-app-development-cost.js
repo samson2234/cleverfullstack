@@ -4,7 +4,6 @@ module.exports = {
   title: 'How Much Does It Cost to Build a Mobile App? What Drives the Price',
   excerpt: 'What really decides the price of an iOS and Android app, the running costs most quotes leave out, and how to launch for less without cutting corners.',
   description: 'How much does a mobile app cost to build? What drives the price of an iOS and Android app, the running costs to plan for, and how to launch for less.',
-  category: 'Mobile Apps',
   date: 'October 28, 2026',
   iso: '2026-10-28',
   icon: 'gauge',

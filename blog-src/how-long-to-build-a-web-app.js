@@ -4,7 +4,6 @@ module.exports = {
   title: 'How Long Does It Take to Build a Web App? Realistic Timelines, Stage by Stage',
   excerpt: 'From a simple internal tool to a full SaaS product: what each stage involves, how long it usually takes, and the decisions that speed it up or slow it down.',
   description: 'How long does it take to build a web app? Realistic timelines for each stage, from scoping and design to launch, and what makes projects faster or slower.',
-  category: 'Web Development',
   date: 'October 27, 2026',
   iso: '2026-10-27',
   icon: 'gauge',

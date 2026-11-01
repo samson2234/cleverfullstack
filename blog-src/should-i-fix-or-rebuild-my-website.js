@@ -4,7 +4,6 @@ module.exports = {
   title: 'Should I Fix My Website or Rebuild It? A Simple Decision Guide',
   excerpt: 'Worried about wasting money or being upsold? A ten-question scorecard to decide between fixing, refreshing and rebuilding, and how to protect your Google rankings if you rebuild.',
   description: 'Fix, refresh or rebuild? A ten-question scorecard to decide, what each option involves, and how to protect your search rankings and avoid being upsold.',
-  category: 'Web Development',
   readingTime: '9 min read',
   date: 'October 5, 2026',
   iso: '2026-10-05',

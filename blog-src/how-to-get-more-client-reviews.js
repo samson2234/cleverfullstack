@@ -4,7 +4,6 @@ module.exports = {
   title: 'How to Get More Client Reviews (and Use Them to Win New Customers)',
   excerpt: 'Happy clients rarely volunteer reviews, and many businesses collect them but never use them. How to ask, how to reach past clients, and where to put reviews so they sell.',
   description: 'Get more genuine client reviews: when and how to ask, reconnecting with past clients, handling criticism and where to place reviews on your website.',
-  category: 'Trust',
   readingTime: '9 min read',
   date: 'October 5, 2026',
   iso: '2026-10-05',

@@ -5,10 +5,11 @@
     "excerpt": "The full cost of a Shopify store: the plan, payment fees, theme, apps and setup, plus the costs most budgets miss and where to save without hurting sales.",
     "author": "Henry George",
     "date": "October 31, 2026",
-    "category": "E-Commerce",
+    "category": "Costs & Pricing",
     "image": "/images/blog/shopify-store-cost-photo-800.webp",
     "imageAlt": "A laptop open on the Shopify page for starting an online store",
-    "readingTime": "5 min read"
+    "readingTime": "5 min read",
+    "topic": "costs-and-pricing"
   },
   {
     "id": "wordpress-vs-custom-website-law-firm",
@@ -16,10 +17,11 @@
     "excerpt": "Most law firms choose between WordPress and a custom-built site. An honest comparison of cost, security, speed, editing and what clients expect to see.",
     "author": "Henry George",
     "date": "October 31, 2026",
-    "category": "Web Development",
+    "category": "Compare Platforms",
     "image": "/images/blog/wordpress-vs-custom-website-law-firm-photo-800.webp",
     "imageAlt": "A laptop showing the WordPress logo",
-    "readingTime": "5 min read"
+    "readingTime": "5 min read",
+    "topic": "compare-platforms"
   },
   {
     "id": "zoho-crm-vs-hubspot",
@@ -27,10 +29,11 @@
     "excerpt": "Zoho CRM and HubSpot are the two CRMs small businesses compare most. How they differ on price, ease of use, automation and marketing, and how to choose.",
     "author": "Henry George",
     "date": "October 31, 2026",
-    "category": "Business Growth",
+    "category": "Compare Platforms",
     "image": "/images/blog/zoho-crm-vs-hubspot-photo-800.webp",
     "imageAlt": "A marketer working in a CRM, with lead generation software on screen",
-    "readingTime": "5 min read"
+    "readingTime": "5 min read",
+    "topic": "compare-platforms"
   },
   {
     "id": "wix-vs-custom-website",
@@ -38,10 +41,11 @@
     "excerpt": "Wix is a fine way to get online. Here is when it starts holding a business back, what a custom website changes, and how to switch without losing rankings.",
     "author": "Henry George",
     "date": "October 31, 2026",
-    "category": "Web Development",
+    "category": "Compare Platforms",
     "image": "/images/blog/wix-vs-custom-website-photo-800.webp",
     "imageAlt": "A laptop showing a website builder template that says build your dream website",
-    "readingTime": "5 min read"
+    "readingTime": "5 min read",
+    "topic": "compare-platforms"
   },
   {
     "id": "upwork-fiverr-vs-development-team",
@@ -49,10 +53,11 @@
     "excerpt": "Freelance marketplaces are great for some jobs and risky for others. An honest comparison of cost, risk, quality and ownership, and how to choose.",
     "author": "Henry George",
     "date": "October 28, 2026",
-    "category": "Hiring",
+    "category": "Plan & Hire",
     "image": "/images/blog/upwork-fiverr-vs-development-team-photo-800.webp",
     "imageAlt": "Two developers planning a project together on a wall of sticky notes",
-    "readingTime": "5 min read"
+    "readingTime": "5 min read",
+    "topic": "plan-and-hire"
   },
   {
     "id": "mobile-app-development-cost",
@@ -60,10 +65,11 @@
     "excerpt": "What really decides the price of an iOS and Android app, the running costs most quotes leave out, and how to launch for less without cutting corners.",
     "author": "Henry George",
     "date": "October 28, 2026",
-    "category": "Mobile Apps",
+    "category": "Costs & Pricing",
     "image": "/images/blog/mobile-app-development-cost-photo-800.webp",
     "imageAlt": "A hand holding a phone with a mobile app dashboard open",
-    "readingTime": "5 min read"
+    "readingTime": "5 min read",
+    "topic": "costs-and-pricing"
   },
   {
     "id": "cost-to-hire-full-stack-developer",
@@ -71,10 +77,11 @@
     "excerpt": "Salaries, freelance rates and fixed-price projects compared honestly, with the hidden costs most guides leave out, so you can pick the right way to hire.",
     "author": "Henry George",
     "date": "October 27, 2026",
-    "category": "Hiring",
+    "category": "Costs & Pricing",
     "image": "/images/blog/cost-to-hire-full-stack-developer-photo-800.webp",
     "imageAlt": "React source code open in a code editor",
-    "readingTime": "5 min read"
+    "readingTime": "5 min read",
+    "topic": "costs-and-pricing"
   },
   {
     "id": "how-long-to-build-a-web-app",
@@ -82,10 +89,11 @@
     "excerpt": "From a simple internal tool to a full SaaS product: what each stage involves, how long it usually takes, and the decisions that speed it up or slow it down.",
     "author": "Henry George",
     "date": "October 27, 2026",
-    "category": "Web Development",
+    "category": "Plan & Hire",
     "image": "/images/blog/how-long-to-build-a-web-app-photo-800.webp",
     "imageAlt": "Sticky notes reading To Do, Doing and Done, the stages of a project",
-    "readingTime": "5 min read"
+    "readingTime": "5 min read",
+    "topic": "plan-and-hire"
   },
   {
     "id": "website-no-enquiries-fix",
@@ -93,10 +101,11 @@
     "excerpt": "Traffic is not the problem most of the time. Here is how to find out why visitors leave without contacting you, and nine practical fixes to make this week.",
     "author": "Henry George",
     "date": "October 5, 2026",
-    "category": "Conversion",
+    "category": "Get More Customers",
     "image": "/images/blog/website-no-enquiries-fix-photo-800.webp",
     "imageAlt": "Website analytics on a screen showing visitors who never get in touch",
-    "readingTime": "6 min read"
+    "readingTime": "6 min read",
+    "topic": "get-more-customers"
   },
   {
     "id": "why-is-my-website-slow",
@@ -104,10 +113,11 @@
     "excerpt": "A slow site quietly loses enquiries. Learn how to test your speed properly, read the report in plain English, and fix the usual causes in order.",
     "author": "Henry George",
     "date": "October 5, 2026",
-    "category": "Performance",
+    "category": "Fix Your Website",
     "image": "/images/blog/why-is-my-website-slow-photo-800.webp",
     "imageAlt": "A loading bar, the wait visitors have on a slow website",
-    "readingTime": "5 min read"
+    "readingTime": "5 min read",
+    "topic": "fix-your-website"
   },
   {
     "id": "google-maps-local-seo-checklist",
@@ -115,10 +125,11 @@
     "excerpt": "Customers nearby cannot find you while competitors fill the map results. A step-by-step checklist for your Google Business Profile, reviews and website.",
     "author": "Henry George",
     "date": "October 5, 2026",
-    "category": "SEO",
+    "category": "Get Found on Google",
     "image": "/images/blog/google-maps-local-seo-checklist-photo-800.webp",
     "imageAlt": "A customer searching for a local business on her phone in the city",
-    "readingTime": "5 min read"
+    "readingTime": "5 min read",
+    "topic": "get-found-on-google"
   },
   {
     "id": "how-to-get-more-client-reviews",
@@ -126,10 +137,11 @@
     "excerpt": "Happy clients rarely volunteer reviews, and many businesses collect them but never use them. How to ask, how to reach past clients, and where to put reviews so they sell.",
     "author": "Henry George",
     "date": "October 5, 2026",
-    "category": "Trust",
+    "category": "Get More Customers",
     "image": "/images/blog/how-to-get-more-client-reviews-photo-800.webp",
     "imageAlt": "A row of five gold stars, like a five-star client review",
-    "readingTime": "5 min read"
+    "readingTime": "5 min read",
+    "topic": "get-more-customers"
   },
   {
     "id": "should-i-fix-or-rebuild-my-website",
@@ -137,10 +149,11 @@
     "excerpt": "Worried about wasting money or being upsold? A ten-question scorecard to decide between fixing, refreshing and rebuilding, and how to protect your Google rankings if you rebuild.",
     "author": "Henry George",
     "date": "October 5, 2026",
-    "category": "Web Development",
+    "category": "Fix Your Website",
     "image": "/images/blog/should-i-fix-or-rebuild-my-website-photo-800.webp",
     "imageAlt": "A hand-drawn website wireframe for planning a redesign",
-    "readingTime": "5 min read"
+    "readingTime": "5 min read",
+    "topic": "fix-your-website"
   },
   {
     "id": "website-security-basics-small-business",
@@ -148,10 +161,11 @@
     "excerpt": "Hacked sites, spam and browser warnings cost small businesses leads and trust. Ten practical basics that stop most attacks, and what to do if you have already been hacked.",
     "author": "Henry George",
     "date": "October 5, 2026",
-    "category": "Security",
+    "category": "Fix Your Website",
     "image": "/images/blog/website-security-basics-small-business-photo-800.webp",
     "imageAlt": "A red padlock on a laptop keyboard, website security",
-    "readingTime": "6 min read"
+    "readingTime": "6 min read",
+    "topic": "fix-your-website"
   },
   {
     "id": "web-development",
@@ -159,9 +173,10 @@
     "excerpt": "Off-the-shelf templates cost less upfront but cost you leads every single day. Here’s why custom development wins for serious businesses.",
     "author": "Henry George",
     "date": "2026-07-15",
-    "category": "Web Development",
+    "category": "Compare Platforms",
     "image": "/images/blog/u-1460925895917-afdab827c52f-800.webp",
-    "readingTime": "5 min read"
+    "readingTime": "5 min read",
+    "topic": "compare-platforms"
   },
   {
     "id": "shopify-vs-woocommerce",
@@ -169,9 +184,10 @@
     "excerpt": "Both platforms work. But the right choice depends on your payment gateway, inventory size, and growth plan.",
     "author": "Henry George",
     "date": "2026-07-08",
-    "category": "E-Commerce",
+    "category": "Compare Platforms",
     "image": "/images/blog/u-1556742049-0cfed4f6a45d-800.webp",
-    "readingTime": "6 min read"
+    "readingTime": "6 min read",
+    "topic": "compare-platforms"
   },
   {
     "id": "seo-tips-2026",
@@ -179,9 +195,10 @@
     "excerpt": "SEO changes every year. These 7 tactics are working right now based on real client results, not theory.",
     "author": "Henry George",
     "date": "2026-06-28",
-    "category": "SEO",
+    "category": "Get Found on Google",
     "image": "/images/blog/u-1562577309-4932fdd64cd1-800.webp",
-    "readingTime": "4 min read"
+    "readingTime": "4 min read",
+    "topic": "get-found-on-google"
   },
   {
     "id": "website-cost-2026",
@@ -189,9 +206,10 @@
     "excerpt": "We break down exactly what goes into a custom website budget and why the cheapest option almost always costs you more.",
     "author": "Henry George",
     "date": "2026-07-22",
-    "category": "Web Development",
+    "category": "Costs & Pricing",
     "image": "/images/blog/u-1554224155-6726b3ff858f-800.webp",
-    "readingTime": "6 min read"
+    "readingTime": "6 min read",
+    "topic": "costs-and-pricing"
   },
   {
     "id": "website-mistakes-conversions",
@@ -199,9 +217,10 @@
     "excerpt": "These common design and UX mistakes could be costing you 50% or more of your potential leads.",
     "author": "Henry George",
     "date": "2026-07-29",
-    "category": "Web Development",
+    "category": "Get More Customers",
     "image": "/images/blog/u-1551288049-bebda4e38f71-800.webp",
-    "readingTime": "6 min read"
+    "readingTime": "6 min read",
+    "topic": "get-more-customers"
   },
   {
     "id": "custom-vs-nocode",
@@ -209,9 +228,10 @@
     "excerpt": "No-code tools are tempting. But when do they cost you more than they save? Here’s when to build custom and when to use off-the-shelf.",
     "author": "Henry George",
     "date": "2026-08-01",
-    "category": "Web Development",
+    "category": "Compare Platforms",
     "image": "/images/blog/u-1518432031352-d6fc5c10da5a-800.webp",
-    "readingTime": "6 min read"
+    "readingTime": "6 min read",
+    "topic": "compare-platforms"
   },
   {
     "id": "poor-website-killing-business",
@@ -219,10 +239,11 @@
     "excerpt": "75% of consumers judge a business’s credibility by website design alone. Is yours losing you customers before they ever contact you?",
     "author": "Henry George",
     "date": "2026-08-17",
-    "category": "Web Development",
+    "category": "Get More Customers",
     "image": "/images/blog/poor-website-killing-business-photo-800.webp",
     "readingTime": "6 min read",
-    "imageAlt": "A business owner reviewing his website on a laptop"
+    "imageAlt": "A business owner reviewing his website on a laptop",
+    "topic": "get-more-customers"
   },
   {
     "id": "businesses-refuse-to-scale",
@@ -230,9 +251,10 @@
     "excerpt": "Only 47% of SMEs actively seek to grow. Here’s why founders choose stability over growth — and what it really costs them.",
     "author": "Henry George",
     "date": "2026-08-17",
-    "category": "Business Growth",
+    "category": "Get More Customers",
     "image": "/images/blog/u-1553729459-efe14ef6055d-800.webp",
-    "readingTime": "7 min read"
+    "readingTime": "7 min read",
+    "topic": "get-more-customers"
   },
   {
     "id": "optimized-website-advantages",
@@ -240,10 +262,11 @@
     "excerpt": "69% of SMBs say their website is their #1 lead source. Here’s what separates websites that convert from those that just exist.",
     "author": "Henry George",
     "date": "2026-08-17",
-    "category": "Web Development",
+    "category": "Get More Customers",
     "image": "/images/blog/optimized-website-advantages-photo-800.webp",
     "readingTime": "6 min read",
-    "imageAlt": "A website shown on a laptop, tablet and phone"
+    "imageAlt": "A website shown on a laptop, tablet and phone",
+    "topic": "get-more-customers"
   },
   {
     "id": "how-much-does-business-website-cost",
@@ -251,10 +274,11 @@
     "excerpt": "From $499 starter sites to $30,000+ custom builds — here’s exactly what businesses in the USA and UK should expect to pay.",
     "author": "Henry George",
     "date": "2026-08-17",
-    "category": "Web Development",
+    "category": "Costs & Pricing",
     "image": "/images/blog/how-much-does-business-website-cost-photo-800.webp",
     "readingTime": "7 min read",
-    "imageAlt": "Working out a website budget with a calculator"
+    "imageAlt": "Working out a website budget with a calculator",
+    "topic": "costs-and-pricing"
   },
   {
     "id": "best-web-development-company-usa",
@@ -262,9 +286,10 @@
     "excerpt": "85% of consumers research online before buying. Here’s how to choose a web development partner that actually delivers results.",
     "author": "Henry George",
     "date": "2026-08-17",
-    "category": "Web Development",
+    "category": "Plan & Hire",
     "image": "/images/blog/u-1522071820081-009f0129c71c-800.webp",
-    "readingTime": "6 min read"
+    "readingTime": "6 min read",
+    "topic": "plan-and-hire"
   },
   {
     "id": "why-small-business-needs-website",
@@ -272,9 +297,10 @@
     "excerpt": "69% of SMBs say their website is their #1 lead source. If you don’t have one, you’re leaving money on the table.",
     "author": "Henry George",
     "date": "2026-08-17",
-    "category": "Web Development",
+    "category": "Get More Customers",
     "image": "/images/blog/why-small-business-needs-website-photo-800.webp",
     "readingTime": "6 min read",
-    "imageAlt": "A small business owner in her coffee shop"
+    "imageAlt": "A small business owner in her coffee shop",
+    "topic": "get-more-customers"
   }
 ]

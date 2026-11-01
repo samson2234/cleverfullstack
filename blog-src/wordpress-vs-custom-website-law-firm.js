@@ -4,7 +4,6 @@ module.exports = {
   title: 'WordPress vs a Custom Website for a Law Firm: Which Is Right?',
   excerpt: 'Most law firms choose between WordPress and a custom-built site. An honest comparison of cost, security, speed, editing and what clients expect to see.',
   description: 'WordPress or a custom website for your law firm? Compare cost, security, speed, ease of editing and lead generation, with a checklist for choosing.',
-  category: 'Web Development',
   date: 'October 31, 2026',
   iso: '2026-10-31',
   icon: 'compare',

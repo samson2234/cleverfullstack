@@ -4,7 +4,6 @@ module.exports = {
   title: 'Why Is My Website Slow? How to Find the Cause and Fix It Without Being Technical',
   excerpt: 'A slow site quietly loses enquiries. Learn how to test your speed properly, read the report in plain English, and fix the usual causes in order.',
   description: 'Slow website? Test it with PageSpeed Insights, read the results in plain English and fix the usual culprits: huge images, too many plugins and heavy scripts.',
-  category: 'Performance',
   readingTime: '8 min read',
   date: 'October 5, 2026',
   iso: '2026-10-05',

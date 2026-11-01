@@ -31,7 +31,7 @@ test('every post image loads: local file exists, or the host is allowed by the C
 
 test('the blog index lists exactly the posts in posts.json, in the same order, as crawlable links that resolve', () => {
   const idx = read('blog/index.html');
-  const ids = [...idx.matchAll(/<article class="blog-card(?: reveal)?" data-id="([^"]+)">/g)].map((m) => m[1]);
+  const ids = [...idx.matchAll(/<article class="blog-card(?: reveal)?" data-id="([^"]+)"[^>]*>/g)].map((m) => m[1]);
   assert.deepEqual(ids, posts.map((p) => p.id));
   for (const p of posts) {
     assert.ok(idx.includes('<a href="/blog/' + p.id + '">'), p.id + ': card link');
@@ -106,4 +106,25 @@ test('new posts: each solves a stated problem, with a useful length and a call t
     const mins = parseInt(posts.find((p) => p.id === id).readingTime, 10);
     assert.ok(Math.abs(mins - words / 200) <= 1, `${f}: reading time ${mins} min vs ${Math.round(words / 200)} by word count`);
   }
+});
+
+test('topics: every post has one clear topic, shown the same everywhere, and /blog can filter by it', () => {
+  const idx = fs.readFileSync(path.join(root, 'blog', 'index.html'), 'utf8');
+  const chips = [...idx.matchAll(/class="topic-chip[^"]*" data-topic="([^"]*)">([^<]+)<span>(\d+)<\/span>/g)].map((m) => ({ slug: m[1], name: m[2].trim().replace(/&amp;/g, '&'), n: +m[3] }));
+  const topics = chips.filter((c) => c.slug);
+  assert.ok(topics.length >= 4 && topics.length <= 8, 'a handful of topics, not a long list');
+  assert.equal(chips[0].n, posts.length, '"All topics" counts every post');
+  for (const t of topics) {
+    const mine = posts.filter((p) => p.topic === t.slug);
+    assert.equal(mine.length, t.n, `${t.slug}: chip count`);
+    assert.ok(mine.length > 0, `${t.slug}: empty topic`);
+    assert.ok(mine.every((p) => p.category === t.name), `${t.slug}: label matches topic name`);
+  }
+  for (const p of posts) {
+    assert.ok(topics.some((t) => t.slug === p.topic), `${p.id}: unknown topic ${p.topic}`);
+    assert.ok(idx.includes('data-id="' + p.id + '" data-topic="' + p.topic + '"'), `${p.id}: card is not tagged with its topic`);
+    const page = fs.readFileSync(path.join(root, 'blog', p.id + '.html'), 'utf8');
+    assert.ok(page.includes('<a class="cat" href="/blog?topic=' + p.topic + '">'), `${p.id}: post page does not link to its topic`);
+  }
+  assert.match(idx, /<script id="topic-filter">/, 'filter script present');
 });

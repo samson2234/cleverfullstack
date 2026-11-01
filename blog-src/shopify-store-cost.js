@@ -4,7 +4,6 @@ module.exports = {
   title: 'How Much Does a Shopify Store Cost? Setup, Apps and Monthly Fees',
   excerpt: 'The full cost of a Shopify store: the plan, payment fees, theme, apps and setup, plus the costs most budgets miss and where to save without hurting sales.',
   description: 'How much does a Shopify store cost? The plan, payment fees, theme, apps and professional setup explained, plus the hidden costs and where to save.',
-  category: 'E-Commerce',
   date: 'October 31, 2026',
   iso: '2026-10-31',
   icon: 'gauge',

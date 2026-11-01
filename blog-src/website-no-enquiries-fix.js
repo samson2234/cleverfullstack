@@ -4,7 +4,6 @@ module.exports = {
   title: 'My Website Gets Visitors but Nobody Contacts Me: 9 Fixes You Can Make This Week',
   excerpt: 'Traffic is not the problem most of the time. Here is how to find out why visitors leave without contacting you, and nine practical fixes to make this week.',
   description: 'Visitors but no enquiries? Nine practical fixes: clearer message, one main action, shorter forms, real proof and faster replies. No jargon, most are free.',
-  category: 'Conversion',
   readingTime: '8 min read',
   date: 'October 5, 2026',
   iso: '2026-10-05',

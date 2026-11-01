@@ -4,7 +4,6 @@ module.exports = {
   title: 'Zoho CRM vs HubSpot: Which CRM Is Right for a Small Business?',
   excerpt: 'Zoho CRM and HubSpot are the two CRMs small businesses compare most. How they differ on price, ease of use, automation and marketing, and how to choose.',
   description: 'Zoho CRM vs HubSpot for small businesses: compare pricing model, ease of use, automation, marketing tools and integrations, with a checklist for choosing.',
-  category: 'Business Growth',
   date: 'October 31, 2026',
   iso: '2026-10-31',
   icon: 'compare',

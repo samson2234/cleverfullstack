@@ -4,7 +4,6 @@ module.exports = {
   title: 'How Much Does It Cost to Hire a Full-Stack Developer? Freelancer vs Agency vs In-House',
   excerpt: 'Salaries, freelance rates and fixed-price projects compared honestly, with the hidden costs most guides leave out, so you can pick the right way to hire.',
   description: 'What it really costs to hire a full-stack developer in 2026: in-house salary, freelance hourly rates and fixed-price agency projects, plus the hidden costs.',
-  category: 'Hiring',
   date: 'October 27, 2026',
   iso: '2026-10-27',
   icon: 'compare',

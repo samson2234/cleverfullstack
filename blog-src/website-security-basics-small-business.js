@@ -4,7 +4,6 @@ module.exports = {
   title: 'Website Security for Small Businesses: 10 Basics That Prevent Most Hacks',
   excerpt: 'Hacked sites, spam and browser warnings cost small businesses leads and trust. Ten practical basics that stop most attacks, and what to do if you have already been hacked.',
   description: 'Website security basics for small businesses: HTTPS, updates, strong passwords, two-factor login, backups, spam protection and what to do if hacked.',
-  category: 'Security',
   readingTime: '9 min read',
   date: 'October 5, 2026',
   iso: '2026-10-05',

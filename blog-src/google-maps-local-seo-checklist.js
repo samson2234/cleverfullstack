@@ -4,7 +4,6 @@ module.exports = {
   title: 'How to Show Up on Google Maps and "Near Me" Searches: A Local Business Checklist',
   excerpt: 'Customers nearby cannot find you while competitors fill the map results. A step-by-step checklist for your Google Business Profile, reviews and website.',
   description: 'A practical local SEO checklist: set up your Google Business Profile, keep details consistent, collect reviews and make your website support local searches.',
-  category: 'SEO',
   readingTime: '9 min read',
   date: 'October 5, 2026',
   iso: '2026-10-05',

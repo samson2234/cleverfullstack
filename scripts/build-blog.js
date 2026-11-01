@@ -24,6 +24,30 @@ const ORDER = [ // tie-break for posts published the same day (first = shown fir
   'how-to-get-more-client-reviews', 'should-i-fix-or-rebuild-my-website', 'website-security-basics-small-business'
 ];
 
+// Topics: every post belongs to exactly one, named after the problem it solves for the reader. This is the single
+// place that decides a post's topic (card label, post page, filters on /blog, feed, homepage). A new post must be
+// added here or the build stops. /blog?topic=<slug> shows one topic (shareable, e.g. as an ad landing page).
+const TOPICS = [
+  { slug: 'get-more-customers', name: 'Get More Customers', blurb: 'Your website gets visitors but not enough calls, bookings or sales? Start here.',
+    posts: ['website-no-enquiries-fix', 'website-mistakes-conversions', 'poor-website-killing-business', 'how-to-get-more-client-reviews', 'optimized-website-advantages', 'why-small-business-needs-website', 'businesses-refuse-to-scale'] },
+  { slug: 'get-found-on-google', name: 'Get Found on Google', blurb: 'Show up when customers search for what you do on Google and Google Maps.',
+    posts: ['google-maps-local-seo-checklist', 'seo-tips-2026'] },
+  { slug: 'costs-and-pricing', name: 'Costs & Pricing', blurb: 'What websites, online stores, apps and developers really cost, and what drives the price.',
+    posts: ['how-much-does-business-website-cost', 'website-cost-2026', 'shopify-store-cost', 'mobile-app-development-cost', 'cost-to-hire-full-stack-developer'] },
+  { slug: 'compare-platforms', name: 'Compare Platforms', blurb: 'Shopify, WooCommerce, WordPress, Wix, no-code, custom code or a CRM: which one fits your business.',
+    posts: ['shopify-vs-woocommerce', 'wordpress-vs-custom-website-law-firm', 'wix-vs-custom-website', 'custom-vs-nocode', 'web-development', 'zoho-crm-vs-hubspot'] },
+  { slug: 'plan-and-hire', name: 'Plan & Hire', blurb: 'Who should build your project, how long it takes, and how to choose a partner you can trust.',
+    posts: ['upwork-fiverr-vs-development-team', 'best-web-development-company-usa', 'how-long-to-build-a-web-app'] },
+  { slug: 'fix-your-website', name: 'Fix Your Website', blurb: 'Slow, hacked or outdated? Find the cause and decide whether to fix or rebuild.',
+    posts: ['why-is-my-website-slow', 'website-security-basics-small-business', 'should-i-fix-or-rebuild-my-website'] }
+];
+function topicOf(id) {
+  const t = TOPICS.find((x) => x.posts.includes(id));
+  if (!t) throw new Error(id + ': no topic. Add it to one of the TOPICS in scripts/build-blog.js');
+  return t;
+}
+const topicHref = (t) => '/blog?topic=' + t.slug;
+
 const read = (f) => fs.readFileSync(path.join(root, f), 'utf8');
 const write = (f, s) => fs.writeFileSync(path.join(root, f), s);
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -37,11 +61,12 @@ function loadSources() {
   const list = fs.readdirSync(dir).filter((f) => f.endsWith('.js')).map((f) => require(path.join(dir, f)));
   const seen = new Set();
   for (const p of list) {
-    for (const k of ['id', 'title', 'excerpt', 'description', 'category', 'date', 'iso', 'body', 'cta', 'related']) if (!p[k]) throw new Error((p.id || '?') + ': missing ' + k);
+    for (const k of ['id', 'title', 'excerpt', 'description', 'date', 'iso', 'body', 'cta', 'related']) if (!p[k]) throw new Error((p.id || '?') + ': missing ' + k);
     // reading time comes from the real word count (about 200 words a minute), never guessed
     const words = p.body.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
     p.readingTime = Math.max(3, Math.round(words / 200)) + ' min read';
     if (seen.has(p.id)) throw new Error('duplicate id ' + p.id);
+    const t = topicOf(p.id); p.category = t.name; p.topic = t.slug;
     seen.add(p.id);
     if (!hasPhoto(p.id) && !fs.existsSync(path.join(root, 'images', 'blog', p.id + '.webp'))) throw new Error(p.id + ': cover missing (run node scripts/make-blog-covers.js)');
   }
@@ -75,13 +100,13 @@ function renderPost(p, tpl) {
     { '@type': 'ListItem', position: 3, name: p.title, item: url(p.id) }] });
   const article = ld({ '@context': 'https://schema.org', '@type': 'Article', headline: p.title, description: p.description,
     author: { '@type': 'Person', name: AUTHOR }, publisher: { '@type': 'Organization', '@id': BASE + '/#organization' },
-    datePublished: p.iso, dateModified: p.iso, mainEntityOfPage: { '@type': 'WebPage', '@id': url(p.id) }, image: BASE + cover(p.id) });
+    articleSection: p.category, datePublished: p.iso, dateModified: p.iso, mainEntityOfPage: { '@type': 'WebPage', '@id': url(p.id) }, image: BASE + cover(p.id) });
   let n = 0;
   html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/g, () => (n++ === 0 ? crumbs + article : ''));
   if (n !== 2) throw new Error('expected 2 JSON-LD blocks in template, found ' + n);
 
   const related = p.related.map(([href, label]) => '<a href="' + esc(href) + '" style="color:var(--indigo);font-weight:600">' + esc(label) + '</a>').join('');
-  const main = '<main id="main"><div class="post-hero" style="background-image:url(\'' + cover(p.id) + '\')"><div class="overlay"></div><div class="content"><div class="meta"><span class="cat">' + esc(p.category) + '</span><span>' + esc(p.date) + '</span><span>' + esc(p.readingTime) + '</span></div><h1>' + title + '</h1><div class="author-line">By ' + AUTHOR + '</div></div></div>' +
+  const main = '<main id="main"><div class="post-hero" style="background-image:url(\'' + cover(p.id) + '\')"><div class="overlay"></div><div class="content"><div class="meta"><a class="cat" href="' + topicHref(topicOf(p.id)) + '">' + esc(p.category) + '</a><span>' + esc(p.date) + '</span><span>' + esc(p.readingTime) + '</span></div><h1>' + title + '</h1><div class="author-line">By ' + AUTHOR + '</div></div></div>' +
     '<div class="post-body rich"><div class="back-bar"><a href="index.html">&larr; Back to all articles</a></div>' + p.body.trim() +
     '<div class="keep-reading" style="display:flex;flex-wrap:wrap;gap:8px 20px;margin:32px 0 0;padding-top:24px;border-top:1px solid var(--border);font-size:14px;color:var(--text-muted)"><span style="font-weight:600;color:var(--text-dark)">Keep reading:</span>' + related + '</div>' +
     '<div class="cta-section"><h3>' + esc(p.cta.h3) + '</h3><p>' + esc(p.cta.p) + '</p><a href="' + esc(p.cta.href) + '" class="btn btn-primary btn-glow">' + esc(p.cta.btn) + ' <span class="btn-arrow">&rarr;</span></a></div>' +
@@ -101,10 +126,11 @@ function main() {
 
   // 2) posts.json (new posts first; existing ones keep their order)
   const altOf = Object.fromEntries(JSON.parse(read('blog/posts.json')).map((p) => [p.id, p.imageAlt])); // keeps photo descriptions
-  const entry = (p) => ({ id: p.id, title: p.title, excerpt: p.excerpt, author: AUTHOR, date: p.date, category: p.category, image: cover(p.id, 800), imageAlt: p.imageAlt || altOf[p.id] || p.title, readingTime: p.readingTime });
+  const entry = (p) => ({ id: p.id, title: p.title, excerpt: p.excerpt, author: AUTHOR, date: p.date, category: p.category, topic: p.topic, image: cover(p.id, 800), imageAlt: p.imageAlt || altOf[p.id] || p.title, readingTime: p.readingTime });
   const ids = new Set(sources.map((p) => p.id));
   const existing = JSON.parse(read('blog/posts.json')).filter((p) => !ids.has(p.id));
-  const posts = sources.map(entry).concat(existing);
+  for (const p of existing) { const t = topicOf(p.id); p.category = t.name; p.topic = t.slug; }
+  const posts = sources.map(entry).concat(existing).map((p) => { const { topic, ...rest } = p; return { ...rest, category: topicOf(p.id).name, topic: topicOf(p.id).slug }; });
   write('blog/posts.json', JSON.stringify(posts, null, 2) + '\n');
   log.push('posts.json: ' + posts.length + ' posts');
 
@@ -112,13 +138,32 @@ function main() {
   // (/blog/<id>): the index is served at /blog, where a relative "<id>.html" would resolve to /<id>.html (404).
   let idx = read('blog/index.html');
   // the first row is on screen at load: no reveal animation, and the first photo (the LCP image) loads first
-  const card = (p, i) => '<article class="blog-card' + (i < 3 ? '' : ' reveal') + '" data-id="' + p.id + '"><div class="thumb"><a href="/blog/' + p.id + '"><img src="' + p.image + '" alt="' + esc(p.imageAlt || p.title) + '" ' + (i === 0 ? 'fetchpriority="high"' : i < 3 ? 'loading="eager"' : 'loading="lazy"') + ' width="800" height="533"></a></div>' +
-    '<div class="body"><div class="meta"><span class="cat">' + esc(p.category) + '</span><span>' + esc(p.date) + '</span></div><h3><a href="/blog/' + p.id + '">' + esc(p.title) + '</a></h3><p>' + esc(p.excerpt) + '</p>' +
+  const card = (p, i) => '<article class="blog-card' + (i < 3 ? '' : ' reveal') + '" data-id="' + p.id + '" data-topic="' + p.topic + '"><div class="thumb"><a href="/blog/' + p.id + '"><img src="' + p.image + '" alt="' + esc(p.imageAlt || p.title) + '" ' + (i === 0 ? 'fetchpriority="high"' : i < 3 ? 'loading="eager"' : 'loading="lazy"') + ' width="800" height="533"></a></div>' +
+    '<div class="body"><div class="meta"><a class="cat" href="/blog?topic=' + p.topic + '">' + esc(p.category) + '</a><span>' + esc(p.date) + '</span></div><h3><a href="/blog/' + p.id + '">' + esc(p.title) + '</a></h3><p>' + esc(p.excerpt) + '</p>' +
     '<div class="foot"><span>' + esc(p.author) + '</span><span>' + esc(p.readingTime) + '</span></div></div></article>';
   const grid = /(<div class="blog-grid" id="blog-list">)[\s\S]*?(<\/div><\/div><\/section><\/main>)/;
   if (!grid.test(idx)) throw new Error('blog-list grid not found in blog/index.html');
   idx = idx.replace(grid, (m, open, close) => open + posts.map(card).join('') + close);
   idx = idx.replace(/<script>var posts = \[[\s\S]*?\n\}\);<\/script>/, ''); // the old in-browser list builder
+  // topic filter: real links (work without JS), filtered in place with JS; ?topic=<slug> opens one topic
+  const count = (t) => posts.filter((p) => p.topic === t.slug).length;
+  const bar = '<nav class="topic-bar" aria-label="Blog topics"><a href="/blog" class="topic-chip active" data-topic="">All topics <span>' + posts.length + '</span></a>' +
+    TOPICS.map((t) => '<a href="' + topicHref(t) + '" class="topic-chip" data-topic="' + t.slug + '">' + esc(t.name) + ' <span>' + count(t) + '</span></a>').join('') + '</nav>' +
+    '<p class="topic-blurb" id="topicBlurb" aria-live="polite">Pick a topic to see the guides for the problem you want to solve.</p>';
+  idx = idx.replace(/<nav class="topic-bar"[\s\S]*?<\/nav><p class="topic-blurb"[^>]*>[\s\S]*?<\/p>/, '');
+  idx = idx.replace('<div class="blog-grid" id="blog-list">', () => bar + '<div class="blog-grid" id="blog-list">');
+  const topicData = JSON.stringify(TOPICS.map((t) => ({ slug: t.slug, name: t.name, blurb: t.blurb })));
+  const filter = '<script id="topic-filter">(function(){var T=' + topicData + ',bar=document.querySelector(".topic-bar"),blurb=document.getElementById("topicBlurb"),def=blurb.textContent,title=document.title;' +
+    'function show(slug,push){var t=T.filter(function(x){return x.slug===slug})[0];slug=t?slug:"";' +
+    'bar.querySelectorAll(".topic-chip").forEach(function(c){var on=c.getAttribute("data-topic")===slug;c.classList.toggle("active",on);c.setAttribute("aria-current",on?"true":"false")});' +
+    'document.querySelectorAll("#blog-list .blog-card").forEach(function(c){var on=!slug||c.getAttribute("data-topic")===slug;c.style.display=on?"":"none";if(on)c.classList.add("in")});' +
+    'blurb.textContent=t?t.blurb:def;document.title=t?t.name+" | Blog | CleverStack":title;' +
+    'if(push)history.pushState(null,"",slug?"/blog?topic="+slug:"/blog")}' +
+    'bar.addEventListener("click",function(e){var a=e.target.closest(".topic-chip");if(!a)return;e.preventDefault();show(a.getAttribute("data-topic"),true)});' +
+    'window.addEventListener("popstate",function(){show(new URLSearchParams(location.search).get("topic")||"",false)});' +
+    'show(new URLSearchParams(location.search).get("topic")||"",false)})();</script>';
+  idx = idx.replace(/<script id="topic-filter">[\s\S]*?<\/script>/, '');
+  idx = idx.replace('</main>', () => '</main>' + filter);
   write('blog/index.html', idx);
 
   // 4) RSS feed (newest first)
@@ -174,9 +219,21 @@ function main() {
   }
   log.push('case-study + services links in ' + linked + ' posts');
 
+  // 6c) every post page shows its topic (legacy pages are not rebuilt from blog-src)
+  for (const p of posts) {
+    const pf = 'blog/' + p.id + '.html';
+    let ps = read(pf);
+    const before = ps;
+    ps = ps.replace(/(<div class="meta">)(?:<span class="cat">[^<]*<\/span>|<a class="cat"[^>]*>[^<]*<\/a>)/, (m, open) => open + '<a class="cat" href="/blog?topic=' + p.topic + '">' + esc(p.category) + '</a>');
+    if (ps === before && !ps.includes('class="cat" href="/blog?topic=' + p.topic + '"')) throw new Error(pf + ': topic label not found');
+    if (ps !== before) write(pf, ps);
+  }
+
   // 7) homepage "Latest Insights" (3 newest)
   let sc = read('script.js');
-  const prev = sorted.slice(0, 3).map((p) => ({ id: p.id, title: p.title, excerpt: p.excerpt, category: p.category, date: p.date, image: p.image }));
+  const picked = [];
+  for (const p of sorted) if (picked.length < 3 && !picked.some((q) => q.topic === p.topic)) picked.push(p);
+  const prev = picked.map((p) => ({ id: p.id, title: p.title, excerpt: p.excerpt, category: p.category, topic: p.topic, date: p.date, image: p.image }));
   if (!/previewPosts=\[[\s\S]*?\}\](?=,html="")/.test(sc)) throw new Error('previewPosts not found in script.js');
   sc = sc.replace(/previewPosts=\[[\s\S]*?\}\](?=,html="")/, () => 'previewPosts=' + JSON.stringify(prev));
   write('script.js', sc);

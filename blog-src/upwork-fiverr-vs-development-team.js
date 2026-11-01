@@ -4,7 +4,6 @@ module.exports = {
   title: 'Upwork or Fiverr vs a Dedicated Development Team: Which Should You Hire?',
   excerpt: 'Freelance marketplaces are great for some jobs and risky for others. An honest comparison of cost, risk, quality and ownership, and how to choose.',
   description: 'Upwork, Fiverr or a dedicated development team? An honest comparison of cost, risk, quality and code ownership, with a checklist for choosing well.',
-  category: 'Hiring',
   date: 'October 28, 2026',
   iso: '2026-10-28',
   icon: 'compare',
