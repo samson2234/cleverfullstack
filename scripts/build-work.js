@@ -19,7 +19,7 @@ const url = (p) => SITE + '/work/' + p.slug;
 
 // meta description: the opening of the goal, cut on a word boundary (Google shows ~155 characters)
 function describe(p) {
-  let d = p.title + ': ' + p.subtitle.split('•').pop().trim() + ' for a ' + p.industry + ' client. ' + p.goal;
+  let d = p.demo ? p.goal : p.title + ': ' + p.subtitle.split('•').pop().trim() + ' for a ' + p.industry + ' client. ' + p.goal;
   if (d.length <= 155) return d;
   d = d.slice(0, 152);
   return d.slice(0, d.lastIndexOf(' ')).replace(/[,;:—-]$/, '') + '…';
@@ -35,22 +35,25 @@ function related(p) {
 }
 
 function body(p) {
-  const h1 = p.title + ' — ' + p.subtitle.split('•').pop().trim() + ' Case Study';
+  const h1 = p.title + ' — ' + p.subtitle.split('•').pop().trim() + (p.demo ? '' : ' Case Study');
   let h = '<div class="pd-hero">'; // on screen at load: no reveal animation (Core Web Vitals)
   h += '<h1 class="pd-h1" style="font-size:34px;line-height:1.25;margin:0 0 18px;color:var(--text-dark);">' + esc(h1) + '</h1>';
   h += '<div class="pd-img-wrap"><img src="' + p.img + '" alt="' + esc(p.imgAlt) + '" data-lightbox loading="eager" fetchpriority="high" decoding="async" width="1200" height="800"></div>';
-  h += '<div class="pd-meta"><span><strong>' + esc(p.subtitle) + '</strong></span><span>Industry: ' + esc(p.industry) + '</span><span>Duration: ' + esc(p.duration) + '</span><span>Price Range: ' + esc(p.price) + '</span>';
-  if (p.liveUrl) h += '<a href="' + esc(p.liveUrl) + '" target="_blank" rel="noopener" class="btn btn-primary" style="padding:8px 20px;font-size:13px;margin-left:auto;">Visit Live Site →</a>';
+  h += '<div class="pd-meta"><span><strong>' + esc(p.subtitle) + '</strong></span><span>Industry: ' + esc(p.industry) + '</span><span>Duration: ' + esc(p.duration) + '</span>' + (p.demo ? '' : '<span>Price Range: ' + esc(p.price) + '</span>');
+  if (p.liveUrl) h += '<a href="' + esc(p.liveUrl) + '" target="_blank" rel="noopener" class="btn btn-primary" style="padding:8px 20px;font-size:13px;margin-left:auto;">' + (p.demo ? 'View the Demo' : 'Visit Live Site') + ' →</a>';
   h += '</div></div>';
   h += '<div class="pd-body" style="margin-top:40px;">';
-  h += '<div class="pd-client-card"><div class="info"><b>' + esc(p.client.name) + '</b><span>' + esc(p.client.title) + ' — ' + esc(p.client.country) + '</span></div><div class="stars">★★★★★</div></div>';
+  // our own demos have no client, no rating and no results
+  h += p.demo
+    ? '<div class="pd-client-card"><div class="info"><b>Demo project</b><span>Built by CleverStack to show what this kind of site can do. Not a client project.</span></div></div>'
+    : '<div class="pd-client-card"><div class="info"><b>' + esc(p.client.name) + '</b><span>' + esc(p.client.title) + ' — ' + esc(p.client.country) + '</span></div><div class="stars">★★★★★</div></div>';
   h += '<h2>The Goal</h2><p>' + esc(p.goal) + '</p>';
   h += '<h2>Challenges</h2><p>' + esc(p.challenges) + '</p>';
   h += '<h2>Solutions</h2><p>' + esc(p.solutions) + '</p>';
-  h += '<h2>The Result</h2><p>' + esc(p.outcome) + '</p>';
+  h += '<h2>' + (p.demo ? 'See It Yourself' : 'The Result') + '</h2><p>' + esc(p.outcome) + '</p>';
   h += '<h2>Role & Skills</h2><div class="pd-skills">' + p.skills.map((s) => '<span>' + esc(s) + '</span>').join('') + '</div>';
   h += '<div class="pd-stats">' +
-    '<div class="pd-stat"><div class="val">' + esc(p.price) + '</div><div class="lbl">Price Range</div></div>' +
+    (p.demo ? '' : '<div class="pd-stat"><div class="val">' + esc(p.price) + '</div><div class="lbl">Price Range</div></div>') +
     '<div class="pd-stat"><div class="val">' + esc(p.duration) + '</div><div class="lbl">Project Duration</div></div>' +
     '<div class="pd-stat"><div class="val">' + esc(p.industry) + '</div><div class="lbl">Industry</div></div>' +
     '<div class="pd-stat"><div class="val">' + p.skills.length + '</div><div class="lbl">Core Skills</div></div></div>';

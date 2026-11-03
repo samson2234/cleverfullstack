@@ -330,7 +330,7 @@ module.exports = [
     sections: [
       ['What makes a landing page convert', [
         'The best-performing pages we build share a few traits: the headline repeats the promise from the ad, the first screen shows what you get and what to do next, proof sits close to the button, and the form is short. Speed matters too, because visitors on a phone will not wait for a heavy page.',
-        'Pure Energy, a smoothie brand launch page we built, combines a scroll-driven product story with a sticky call to action and an email sign-up connected to Mailchimp.'
+        'Pure Energy, a demo launch page we built for a smoothie brand, combines a scroll-driven product story with a sticky call to action and an email sign-up.'
       ]],
       ['Landing page or full website?', [
         'A landing page is the right tool when you are sending traffic to one offer: a campaign, a launch, a webinar or a single service. It removes everything that does not help that visitor act. A full website does a different job, answering many questions for many kinds of visitors, and it is where people go to check you out before they buy.',
@@ -399,5 +399,317 @@ module.exports = [
       ['Can you make my site show up in ChatGPT and AI search?', 'We can make your site easier for AI assistants to read and cite, but nobody can guarantee a mention. We keep your pages open to AI crawlers, add structured data and an llms.txt file, and write direct answers to the questions your customers ask.']
     ],
     related: ['website-redesign', 'wordpress-woocommerce-development', 'landing-page-design']
+  },
+  {
+    slug: 'multi-vendor-marketplace-development',
+    kind: 'service',
+    name: 'Multi-Vendor Marketplace Development',
+    title: 'Multi-Vendor Marketplace Development: Amazon, Etsy & eBay Style Platforms | CleverStack',
+    description: 'Multi-vendor marketplace development on WordPress or as a scalable custom build: seller accounts, listings, commissions and payouts, like Etsy, Amazon or eBay.',
+    eyebrow: 'Multi-Vendor Marketplaces',
+    h1: 'Multi-vendor marketplace development, on WordPress or fully custom',
+    sub: 'We build marketplaces where many sellers list and sell in one place, in the style of Amazon, Etsy, eBay or AliExpress, plus Shopify-style platforms where each seller runs their own store.',
+    price: {
+      label: 'Quoted per project',
+      delivery: 'Agreed in your proposal',
+      includes: 'A marketplace depends on your sellers, payment flow and features, so we scope it on a free call and send a fixed quote. A WordPress build is usually the quicker route to launch, and a custom build gives you more room to scale.'
+    },
+    intro: [
+      'A marketplace is much more than an online store with extra sellers. Every seller needs an account, a way to manage listings and orders, and a clear view of what they have earned. Buyers need to search across all of those sellers, trust who they are buying from, and check out without confusion. You need to approve sellers, take your commission, handle refunds and see what is going on across the platform.',
+      'We build those pieces as one system. Depending on your budget and plans, that can be a WordPress and WooCommerce marketplace or a custom web app built to scale. We help you choose honestly, because the right answer depends on how many sellers you expect, how unusual your rules are and how fast you need to launch.'
+    ],
+    forWho: [
+      'Founders launching a niche marketplace in the style of Etsy, eBay or Amazon',
+      'Wholesale and cross-border platforms in the style of AliExpress',
+      'Shopify-style platforms where each seller runs their own store',
+      'Store owners who want to open up to other sellers'
+    ],
+    deliverables: [
+      [
+        'Seller accounts and dashboards',
+        'Sign-up, approval, store profiles and a dashboard where sellers manage products, stock, orders and earnings.'
+      ],
+      [
+        'Listings and catalogue',
+        'Product or service listings with categories, variations, images and rules for what needs your approval.'
+      ],
+      [
+        'Search and filters',
+        'Search across all sellers, with the filters your buyers need, so a growing catalogue stays easy to browse.'
+      ],
+      [
+        'Checkout, commissions and payouts',
+        'One checkout across sellers, commission rules you control and seller payouts through a provider such as Stripe Connect.'
+      ],
+      [
+        'Reviews and trust',
+        'Buyer reviews and seller ratings, plus messaging between buyers and sellers if your marketplace needs it.'
+      ],
+      [
+        'Admin control panel',
+        'Manage sellers, products, orders, commissions, refunds and disputes from one place, with reports on how the platform is doing.'
+      ]
+    ],
+    sections: [
+      [
+        'WordPress or a custom build?',
+        [
+          'A WordPress and WooCommerce marketplace, built with a multi-vendor plugin, is often the right first step. It usually launches faster and costs less, and it suits a marketplace with fairly standard rules while you prove that sellers and buyers will come.',
+          'A custom build makes more sense when your marketplace has its own logic, such as special pricing, bookings, complex shipping or a very large catalogue, or when you expect heavy traffic from the start. It costs more up front, but you are not limited by what a plugin allows. We can also start on WordPress and plan a move to custom when the numbers justify it.'
+        ]
+      ],
+      [
+        'Which marketplace model fits?',
+        [
+          'An Amazon or eBay style marketplace focuses on a large catalogue and strong search. An Etsy style marketplace depends on seller stores and a sense of community. An AliExpress style platform has to handle cross-border sales, currencies and shipping. A Shopify style platform gives each seller their own storefront and tools.',
+          'You do not have to copy any of them completely. Most new marketplaces do better by starting with one type of seller and one type of buyer, then adding features once people are using it. We help you decide what belongs in the first version and what can wait.'
+        ]
+      ],
+      [
+        'Built to grow',
+        [
+          'Marketplaces get harder to run as they grow, so we plan for that early. We look at search performance as the catalogue grows, image handling, background jobs for emails and payouts, and permissions that keep each seller inside their own data.',
+          'Payments deserve particular care. Money passes through your platform on its way to other people, so we use an established payment provider and agree the flow for commissions, refunds and failed payouts before we build it. Check the rules that apply in your country too, as tax and seller verification vary from place to place.'
+        ]
+      ]
+    ],
+    faqs: [
+      [
+        'How much does a multi-vendor marketplace cost?',
+        'It depends on the platform and features, so we give a fixed quote after a free call. A WordPress marketplace usually costs less than a custom build. Our Custom Web App package starts at $3,000, and a full marketplace is larger than that starter scope.'
+      ],
+      [
+        'Can you build a marketplace like Etsy or Amazon?',
+        'Yes. We build marketplaces in the style of Etsy, Amazon, eBay and AliExpress, and Shopify-style multi-store platforms. We build the features your marketplace needs, with your own brand and rules. We do not copy another company\'s design or content.'
+      ],
+      [
+        'Should I use WordPress or a custom build?',
+        'Use WordPress if your rules are fairly standard and you want to launch sooner. Choose a custom build if your marketplace has unusual logic, or you expect a large catalogue and heavy traffic from the start.'
+      ],
+      [
+        'How do sellers get paid?',
+        'Usually through a provider such as Stripe Connect, which splits each payment between the seller and your commission. We agree the payment flow with you and check the provider supports your countries before building.'
+      ],
+      [
+        'Can a marketplace scale as it grows?',
+        'Yes, if it is planned for. A custom build gives you the most room, and we design the database, search and background jobs with growth in mind. A WordPress marketplace can grow too, up to a point, and we will tell you when it is time to move.'
+      ],
+      [
+        'Do I own the marketplace and its code?',
+        'Yes. The code, data and accounts are yours, and they are set up in your name.'
+      ],
+      [
+        'Can you add a mobile app?',
+        'Yes. We build iOS and Android apps with React Native that connect to the same marketplace. Mobile apps start from $3,000.'
+      ]
+    ],
+    related: ['ecommerce-websites', 'wordpress-woocommerce-development', 'saas-mvp-development']
+  },
+  {
+    slug: 'lovable-bolt-app-fixes',
+    kind: 'service',
+    name: 'Lovable & Bolt App Fixes',
+    title: 'Fix a Lovable or Bolt App: Deployment, Bugs & Security | CleverStack',
+    description: 'Lovable or Bolt app that will not deploy or keeps breaking? Developers fix build errors, logins, databases and security, then get it live and ready for real users.',
+    eyebrow: 'Lovable & Bolt App Fixes',
+    h1: 'Lovable or Bolt app won\'t deploy? We fix it and get it live',
+    sub: 'Developers who take over apps built with Lovable, Bolt and similar AI tools: we fix what is broken, close security gaps and get your app ready for real users.',
+    price: {
+      label: 'Quoted per project',
+      delivery: 'Agreed in your proposal',
+      includes: 'We review your project first, then send a fixed quote for what needs doing. The price depends on what is broken and how far you want to take the app.'
+    },
+    intro: [
+      'AI app builders are a fast way to get an idea on screen. The trouble often starts at the last step: the build fails, the login stops working once the app is live, data does not save, or each new prompt fixes one thing and breaks another. It can feel as though you are almost finished for weeks.',
+      'We are developers, so we can work in the code itself instead of prompting around the problem. We read what the tool generated, find the actual cause and fix it. You keep what is already working, and you end up with an app that runs reliably on real hosting.'
+    ],
+    forWho: [
+      'Founders whose Lovable or Bolt app will not build or deploy',
+      'Apps that work in preview but break once they are live',
+      'Projects stuck in a loop where each new prompt breaks something else',
+      'Anyone about to launch who wants a developer to check the app first'
+    ],
+    deliverables: [
+      [
+        'Deployment fixes',
+        'Build errors, missing dependencies, environment variables and hosting settings, until your app runs on a real domain.'
+      ],
+      [
+        'Login and account fixes',
+        'Sign-up, sign-in, password reset and redirects that work on the live site as well as in preview.'
+      ],
+      [
+        'Database and backend fixes',
+        'Data that saves and loads correctly, cleaner tables and fixes to your Supabase or other backend setup.'
+      ],
+      [
+        'Security review',
+        'Exposed keys, missing access rules and data other users should not be able to see. These are checked and closed before launch.'
+      ],
+      [
+        'Payments and integrations',
+        'Stripe, email and other services connected properly, including the webhooks that are easy to get wrong.'
+      ],
+      [
+        'Clean handover',
+        'Your code in your own GitHub repository, your hosting in your name, and clear notes on what changed and why.'
+      ]
+    ],
+    sections: [
+      [
+        'Why these apps get stuck',
+        [
+          'AI tools are good at generating screens and at getting the common path working. They are weaker at the things that only show up on real servers: settings that differ between preview and production, database permissions, and what happens when several people use the app at once.',
+          'A tool can also lose track of a growing project. It may fix a problem by adding a second copy of something, so the code gets harder to change with every prompt. At that point, more prompts rarely help. Someone needs to read the code and fix the cause.'
+        ]
+      ],
+      [
+        'Check security before you launch',
+        [
+          'This is the part we would not skip. A generated app can look finished while leaving data open. Common problems include database tables without proper access rules, API keys visible in the browser, and pages that check who you are on screen but not on the server.',
+          'None of this shows up in a demo, so it is easy to miss. We check for it on every app we take over, tell you plainly what we found, and fix it before real customer data goes in.'
+        ]
+      ],
+      [
+        'Fix it or rebuild it?',
+        [
+          'Most of the time a project can be fixed, and that is where we start. The screens you like are often fine and just need the parts underneath repaired.',
+          'Sometimes the foundations will not support where you are going. If so, we say so, explain why and show you the options. We can often keep your design and move the logic onto a cleaner base, so you are not starting again from nothing.'
+        ]
+      ]
+    ],
+    faqs: [
+      [
+        'Who can fix a Lovable or Bolt app that won\'t deploy?',
+        'CleverStack can. Our developers work directly in the code to fix build errors, environment variables and hosting settings, then get your app running on a real domain.'
+      ],
+      [
+        'How much does it cost to fix a Lovable or Bolt app?',
+        'It depends on what is broken, so we review the project and send a fixed quote. You will know the price before any work starts.'
+      ],
+      [
+        'Why does my app work in preview but not when it is live?',
+        'Usually because the live environment differs from the preview: missing environment variables, wrong redirect addresses, database rules or hosting settings. Those are normally fixable without rebuilding the app.'
+      ],
+      [
+        'Do I have to start again?',
+        'Usually not. We keep what works and fix what does not. If the foundations are a real problem, we explain why and show you your options before you decide.'
+      ],
+      [
+        'Do you work with other AI app builders?',
+        'Yes. We can take over projects from similar AI tools, as long as we can get access to the code.'
+      ],
+      [
+        'Can I keep using Lovable or Bolt afterwards?',
+        'Often, yes, though prompting can overwrite manual fixes, so we will explain what to watch for. Many clients move to a normal developer workflow once the app has real users.'
+      ],
+      [
+        'Do you own any part of my app afterwards?',
+        'No. The code, accounts and data are yours. We also sign an NDA if you want one before sharing your idea.'
+      ]
+    ],
+    related: ['react-nextjs-development', 'saas-mvp-development', 'hire-full-stack-developers']
+  },
+  {
+    slug: 'n8n-automation',
+    kind: 'service',
+    name: 'n8n & Make.com Automation',
+    title: 'n8n Automation Expert: Lead Follow-Up & Workflow Automation | CleverStack',
+    description: 'n8n and Make.com automation for small businesses: lead follow-up, CRM updates, AI steps and connections between your tools, built and handed over by developers.',
+    eyebrow: 'n8n & Make.com Automation',
+    h1: 'n8n automation experts for lead follow-up and everyday workflows',
+    sub: 'We connect your website, CRM, email and AI tools with n8n or Make.com, so leads get followed up quickly and your team stops copying data between systems.',
+    price: {
+      label: 'Quoted per project',
+      delivery: 'Agreed in your proposal',
+      includes: 'Automation work depends on how many steps and tools are involved, so we scope it on a free call and send a fixed quote. Workflows can also be added to a website or CRM project.'
+    },
+    intro: [
+      'Most small teams lose time in the gaps between their tools. A lead arrives by form, someone copies it into the CRM, someone else remembers to reply, and a few days later nobody is sure whether it happened. The slower that follow-up is, the more likely the lead has already spoken to someone else.',
+      'We map out those steps with you and automate the ones that do not need a person. Our team builds workflows in n8n and Make.com and connects AI to everyday business processes. Because we are also developers, we can write custom code when a ready-made connector does not do what you need.'
+    ],
+    forWho: [
+      'Businesses that want every new lead followed up automatically',
+      'Teams copying data by hand between forms, spreadsheets and a CRM',
+      'Companies that want AI steps inside a real business workflow',
+      'Anyone with n8n or Make.com workflows that keep failing'
+    ],
+    deliverables: [
+      [
+        'Lead follow-up',
+        'New leads are captured, added to your CRM, sent a reply and passed to the right person, with reminders if nobody responds.'
+      ],
+      [
+        'CRM automation',
+        'Workflows that keep Zoho CRM or your existing CRM up to date, without anyone having to re-enter data.'
+      ],
+      [
+        'Tool connections',
+        'Your website, forms, email, calendar, spreadsheets, chat and payment tools connected, using ready-made connectors or APIs.'
+      ],
+      [
+        'AI steps',
+        'AI that sorts enquiries, drafts replies or summarises information, with a person checking anything sensitive.'
+      ],
+      [
+        'Errors you can see',
+        'Alerts and retries, so a failed step is noticed and fixed rather than quietly losing a lead.'
+      ],
+      ['Handover', 'Workflows in your own account, with notes that explain what each one does and how to change it.']
+    ],
+    sections: [
+      [
+        'What a lead follow-up workflow looks like',
+        [
+          'A typical workflow starts when someone fills in your form. The lead is checked for duplicates and added to your CRM, the right person is notified, and the lead gets a helpful reply straight away. If nobody has responded after a set time, a reminder goes out. Later follow-ups stop as soon as the person replies, so nobody gets chased after they have answered.',
+          'We agree each step with you first. A good automation follows how you already sell, and it should be clear when a person needs to step in.'
+        ]
+      ],
+      [
+        'n8n or Make.com?',
+        [
+          'Make.com is hosted for you and is quick to get started with, so it suits many simple and medium-sized workflows. n8n can be used in the cloud or hosted on your own server, which gives you more control over your data and suits more complex workflows with custom code.',
+          'We recommend one based on your workflows, your budget and how sensitive your data is. If you already use one of them, we will usually stay with it.'
+        ]
+      ],
+      [
+        'Automation that keeps working',
+        [
+          'Automations often fail quietly: a connected app changes, a password expires, or one unusual form entry stops the whole flow. We build in error handling and alerts, and test with the awkward cases as well as the normal ones.',
+          'AI steps need particular care. We keep them to jobs where a mistake is easy to catch, and we have a person approve anything that goes out with real consequences. Sensitive data only goes to services you have agreed to.'
+        ]
+      ]
+    ],
+    faqs: [
+      [
+        'Can you automate lead follow-up with n8n?',
+        'Yes. We build n8n workflows that capture each new lead, add it to your CRM, send a reply, alert the right person and remind them if nobody responds.'
+      ],
+      [
+        'How much does n8n automation cost?',
+        'It depends on the number of steps and tools involved, so we scope it on a free call and send a fixed quote.'
+      ],
+      [
+        'Should I use n8n or Make.com?',
+        'Make.com is quicker to start with and hosted for you. n8n gives you more control, can run on your own server and suits more complex workflows. We recommend one after looking at what you need.'
+      ],
+      [
+        'Can you add AI to our workflows?',
+        'Yes. We connect AI to tasks like sorting enquiries, drafting replies and summarising information, and we keep a person in the loop for anything sensitive.'
+      ],
+      [
+        'Can you fix our existing workflows?',
+        'Yes. We review what you have, find out why it fails and fix it or rebuild the parts that need it.'
+      ],
+      [
+        'Which tools can you connect?',
+        'Most tools with an API or a ready-made connector, including Zoho and other CRMs, forms, email, calendars, spreadsheets and payment tools. If there is no connector, we can usually write one.'
+      ],
+      [
+        'Who owns the workflows?',
+        'You do. They run in your account, and we hand them over with notes on what each one does.'
+      ]
+    ],
+    related: ['zoho-crm-automation', 'react-nextjs-development', 'saas-mvp-development']
   }
 ];

@@ -21,6 +21,9 @@
 - [Website Redesign](https://cleverstack.dev/website-redesign): from $799. Website redesign for businesses with an outdated or slow site: audit, redesign, speed fixes and content migration without losing rankings. From $799.
 - [Landing Page Design](https://cleverstack.dev/landing-page-design): from $499. Landing page design and build for ads, launches and lead generation: fast, mobile-first, tracked and ready to A/B test. Delivered in 5–7 days, from $499.
 - [SEO & Site Speed Optimization](https://cleverstack.dev/seo-speed-optimization): from $549. Technical SEO and site speed optimization: Core Web Vitals, audits, schema, on-page fixes and Search Console setup. Results in 3–5 days, from $549.
+- [Multi-Vendor Marketplace Development](https://cleverstack.dev/multi-vendor-marketplace-development). Multi-vendor marketplace development on WordPress or as a scalable custom build: seller accounts, listings, commissions and payouts, like Etsy, Amazon or eBay.
+- [Lovable & Bolt App Fixes](https://cleverstack.dev/lovable-bolt-app-fixes). Lovable or Bolt app that will not deploy or keeps breaking? Developers fix build errors, logins, databases and security, then get it live and ready for real users.
+- [n8n & Make.com Automation](https://cleverstack.dev/n8n-automation). n8n and Make.com automation for small businesses: lead follow-up, CRM updates, AI steps and connections between your tools, built and handed over by developers.
 - [Mobile App Development](https://cleverstack.dev/mobile-app-development): from $3,000. Mobile app development for iOS and Android with React Native: one codebase, native feel, backend and App Store launch included. Fixed quote after a free call.
 - [Desktop App Development](https://cleverstack.dev/desktop-app-development): from $5,000. Desktop app development for Windows, macOS and Linux with Electron or Tauri: offline-ready tools, auto-updates, installers and secure sync. Fixed quotes.
 - [Plugin & Extension Development](https://cleverstack.dev/plugin-extension-development): from $1,000. Custom plugin and extension development: WordPress and WooCommerce plugins, Shopify apps, and Chrome, Edge and Firefox browser extensions. Fixed quotes.
@@ -29,6 +32,7 @@
 - [Hire Full-Stack Developers](https://cleverstack.dev/hire-full-stack-developers): from $3,000. Hire full-stack developers and software engineers for your website, SaaS or web app: React, Next.js, Node.js and databases. Fixed quotes or ongoing support.
 - [Hire Frontend Developers](https://cleverstack.dev/hire-frontend-developers): from $499. Hire frontend developers for fast, accessible React and Next.js interfaces: pixel-accurate builds from Figma, Core Web Vitals and design systems.
 - [Hire Backend Developers](https://cleverstack.dev/hire-backend-developers): from $3,000. Hire backend developers for secure Node.js APIs, databases, authentication, payments and integrations. Software engineers who build systems that scale.
+- [Hire Claude Code Developers](https://cleverstack.dev/hire-claude-code-developers): from $3,000. Hire developers who build with Claude Code: web apps and SaaS products shipped faster, with experienced people reviewing, testing and owning every change.
 
 ## Industries
 - [Websites for Dentists & Clinics](https://cleverstack.dev/dental-clinic-websites): from $999. Dental and clinic website design: treatment pages, online booking, trust signals and local SEO, built for practices in the USA, UK, Canada and Europe.
@@ -38,6 +42,7 @@
 - [SaaS & Startup Websites](https://cleverstack.dev/saas-startup-websites): from $999. SaaS website design and development for startups: marketing site, pricing, docs, sign-up flow and product analytics, built with Next.js. Also MVP builds.
 - [E-Commerce Websites for Brands](https://cleverstack.dev/ecommerce-websites): from $1,749. E-commerce website development for fashion, beauty and lifestyle brands: Shopify or WooCommerce, product pages that sell, fast checkout. From $1,749.
 - [Websites for Cleaning Companies](https://cleverstack.dev/cleaning-company-websites): from $499. Website design for cleaning companies: service pages, service areas, quote forms and local SEO, built for commercial, carpet and home cleaning businesses.
+- [Websites for Coaches & Consultants](https://cleverstack.dev/coaching-websites): from $499. Website design for coaches and consultants: clear offers, proof, online booking and email sign-up, built to turn visitors into discovery calls and paying clients.
 
 ## Countries
 - [Web development USA](https://cleverstack.dev/web-development-usa)

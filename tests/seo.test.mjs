@@ -250,7 +250,7 @@ test('AI search: one brand description, team schema that matches the About page,
 });
 
 test('AI search: every service, industry and country page answers at least 6 questions; every post has dates', async () => {
-  const slugs = fs.readdirSync(root).filter((f) => /^(web-development-|hire-)/.test(f) || /-(websites|development|automation|redesign|design|optimization)\.html$/.test(f)).filter((f) => f.endsWith('.html'));
+  const slugs = fs.readdirSync(root).filter((f) => /^(web-development-|hire-)/.test(f) || /-(websites|development|developers|automation|redesign|design|optimization|fixes)\.html$/.test(f)).filter((f) => f.endsWith('.html'));
   assert.ok(slugs.length >= 25, 'found ' + slugs.length);
   for (const f of slugs) {
     const html = read(f);
@@ -264,4 +264,28 @@ test('AI search: every service, industry and country page answers at least 6 que
     assert.match(html, /"datePublished"/, f);
     assert.match(html, /"dateModified"/, f);
   }
+});
+
+test('our own demo projects are labelled as demos and claim no client, rating, price or result', () => {
+  const projects = JSON.parse(read('work-src/projects.json'));
+  const demos = projects.filter((p) => /netlify\.app/.test(p.liveUrl || ''));
+  assert.equal(demos.length, 4);
+  for (const p of demos) {
+    assert.equal(p.demo, true, p.slug);
+    assert.equal(p.client, undefined, p.slug + ': no invented client');
+    assert.doesNotMatch(p.goal + p.solutions + p.outcome, /\d+%|tripled|\b\d+x\b|subscribers/i, p.slug + ': no results');
+    const html = read('work/' + p.slug + '.html');
+    const main = html.match(/<main[\s\S]*<\/main>/)[0];
+    assert.match(main, /Demo project/, p.slug);
+    assert.doesNotMatch(main, /★|Price Range|Case Study|The Result/, p.slug);
+    assert.doesNotMatch(read('portfolio.html'), new RegExp(p.title.replace('&', '(&|&amp;)') + '<\\/h3><p>[^<]*• (Business Site|Web App|Landing Page) —'), p.slug + ': portfolio card');
+  }
+});
+
+test('AI search prompts from the audit each have a page', () => {
+  for (const slug of ['multi-vendor-marketplace-development', 'lovable-bolt-app-fixes', 'hire-claude-code-developers', 'n8n-automation', 'coaching-websites', 'cleaning-company-websites']) {
+    assert.ok(read('llms.txt').includes(SITE + '/' + slug + ')'), slug + ' in llms.txt');
+    assert.ok(read('sitemap.xml').includes(SITE + '/' + slug + '<'), slug + ' in sitemap');
+  }
+  assert.match(read('hire-claude-code-developers.html'), /not affiliated with or endorsed by Anthropic/);
 });

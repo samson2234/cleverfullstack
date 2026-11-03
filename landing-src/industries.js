@@ -194,7 +194,7 @@ module.exports = [
       ]]
     ],
     cases: ['spice-and-savor-restaurant-web-app', 'pure-energy-smoothie-landing-page'],
-    caseNote: 'Spice & Savor is a restaurant web app we built in React with a dynamic menu that supports dietary filters and dish categories, and an online reservation system. Pure Energy is a launch page for a smoothie brand with a sticky call to action and email sign-up.',
+    caseNote: 'Spice & Savor is a demo restaurant web app we built in React with a dynamic menu that supports dietary filters and dish categories, and an online reservation system. Pure Energy is a demo launch page for a smoothie brand with a sticky call to action and email sign-up.',
     faqs: [
       ['How much does a restaurant website cost?', 'A restaurant site starts with our Starter Website package at $499 for up to 5 pages with a menu, map and contact details. Online ordering, bookings and larger sites are quoted after a free call.'],
       ['Can I update the menu myself?', 'Yes. The menu is managed in the CMS, so changing a dish or a price takes a minute.'],
@@ -303,7 +303,7 @@ module.exports = [
       ['Can you sell in several currencies?', 'Yes. We set up multi-currency, shipping zones and tax for the markets you sell in.'],
       ['Do you photograph products?', 'No, but we advise on the shots your product pages need and optimise the images you provide.'],
       ['Can you connect my store to marketplaces and social shops?', 'Yes. Shopify and WooCommerce both connect to Google Shopping, Meta and Instagram shops, and to marketplaces such as Amazon through apps or plugins, so your products and stock stay in sync from one place.'],
-      ['Can you build a multi-vendor marketplace like Etsy?', 'Yes, as a custom web app rather than a standard store, because sellers need their own accounts, listings and payouts. Custom web apps start at $3,000. A marketplace is larger than that starter scope, so we quote it after a free call.']
+      ['Can you build a multi-vendor marketplace like Etsy?', 'Yes. We build multi-vendor marketplaces on WordPress and as scalable custom web apps, with seller accounts, listings and payouts. We quote each one after a free call. See our multi-vendor marketplace development page for details.']
     ],
     related: ['shopify-development', 'wordpress-woocommerce-development', 'seo-speed-optimization']
   },
@@ -320,7 +320,7 @@ module.exports = [
       from: 499,
       label: 'Starter Website package',
       delivery: '5–7 days',
-      includes: 'Up to 5 pages, mobile-responsive, SEO foundation, contact form, social links, Google Maps and basic analytics. Online ordering, bookings and larger sites are quoted after a free call.'
+      includes: 'Up to 5 pages, mobile-responsive, SEO foundation, contact form, social links, Google Maps and basic analytics. Online booking and larger sites are quoted after a free call.'
     },
     intro: [
       'People look for a cleaning company when they need one soon. They search for the service and their town, open two or three sites and contact the one that looks trustworthy and easy to reach. A cleaning website has to show what you clean, where you work and how to get a price, within seconds and on a phone.',
@@ -405,5 +405,105 @@ module.exports = [
       ]
     ],
     related: ['seo-speed-optimization', 'website-redesign', 'landing-page-design']
+  },
+  {
+    slug: 'coaching-websites',
+    kind: 'industry',
+    name: 'Websites for Coaches & Consultants',
+    title: 'Websites for Coaches & Consultants: Turn Visitors Into Booked Calls | CleverStack',
+    description: 'Website design for coaches and consultants: clear offers, proof, online booking and email sign-up, built to turn visitors into discovery calls and paying clients.',
+    eyebrow: 'Coaches & Consultants',
+    h1: 'Websites for coaches and consultants that turn visitors into booked calls',
+    sub: 'Clear, personal websites for coaches, consultants and trainers, with an offer people understand and booking that takes a minute.',
+    price: {
+      from: 499,
+      label: 'Starter Website package',
+      delivery: '5–7 days',
+      includes: 'Up to 5 pages, mobile-responsive, SEO foundation, contact form, social links, Google Maps and basic analytics. Online booking and larger sites are quoted after a free call.'
+    },
+    intro: [
+      'When people look for a coach or consultant, they are really asking two questions: can this person help with my problem, and do I trust them? Your website has to answer both quickly. Many coaching sites do neither, because they talk about the coach\'s journey before saying who the coaching is for and what changes as a result.',
+      'We build coaching websites around the decision your visitor is trying to make. A clear statement of who you help comes first, followed by your offer, real proof and an easy way to book a call. The design feels personal, because people are buying a relationship with you as much as a service.'
+    ],
+    forWho: [
+      'Business, career and executive coaches',
+      'Consultants and independent advisers',
+      'Fitness, wellness and personal trainers',
+      'Course creators and group programme leaders'
+    ],
+    deliverables: [
+      [
+        'A clear offer',
+        'Pages that say who you help, what the problem is and what working with you involves, in your client\'s own words.'
+      ],
+      ['Online booking', 'Calendly or the booking tool you already use, with a button to book a call always within reach.'],
+      [
+        'Proof that persuades',
+        'Your real testimonials and results placed next to the offers they support, with permission from your clients.'
+      ],
+      [
+        'An about page that sells',
+        'Your story told in a way that builds trust, focusing on why you can help the person reading.'
+      ],
+      [
+        'Email sign-up',
+        'A sign-up form connected to your email tool, so visitors who are not ready yet can stay in touch.'
+      ],
+      [
+        'Search visibility',
+        'SEO foundations, clean page titles and structure, and a blog if you want to be found for the questions your clients ask.'
+      ]
+    ],
+    sections: [
+      [
+        'What makes someone book a call',
+        [
+          'Most people visit a coach\'s website more than once before they book. On the first visit they check whether you understand their problem. Later they look for proof and try to picture what working with you would be like. Each page should move them one step closer.',
+          'That means showing how you work, who it suits and what to expect from the first call. If you can share prices, or a rough starting point, that helps people decide. If you prefer to discuss pricing on the call, we make the next step feel easy and low pressure.'
+        ]
+      ],
+      [
+        'One offer or several',
+        [
+          'If you work with different kinds of clients, each one needs to see themselves quickly. We give each service or programme its own clear section or page, while keeping one simple booking flow, so the site does not become confusing as your offers grow.'
+        ]
+      ],
+      [
+        'Real proof, used well',
+        [
+          'Testimonials work best when they are specific and sit close to the thing they support. A short quote about what changed for a real client does more than a long list of general praise. We help you ask for them and choose the best ones.',
+          'Coaching claims can also come under advertising rules in some countries, especially around income and health. We build the pages so the facts come first, and we ask you to confirm any claims about results.'
+        ]
+      ]
+    ],
+    cases: ['helen-may-coaching-platform', 'alexfit-coaching-fitness-website'],
+    caseNote: 'Helen May Coaching is a Next.js platform with its own section for each service category and one booking flow. AlexFit Coaching is a demo website we built to show trainer profiles and a three-click booking flow.',
+    faqs: [
+      [
+        'How much does a coaching website cost?',
+        'A coaching website starts with our Starter Website package at $499 for up to 5 pages. If you want a blog and want to edit pages yourself, the Business Website package is $999 for up to 10 pages with a CMS.'
+      ],
+      [
+        'How long does it take to build?',
+        'The Starter Website package is delivered in 5 to 7 days once we have your content.'
+      ],
+      [
+        'Can clients book a call on the site?',
+        'Yes. We connect Calendly or the booking tool you already use, with a button that stays within reach on a phone.'
+      ],
+      [
+        'Can you help me write the copy?',
+        'Yes. We help you shape your offer and write or tighten the page copy from what you tell us about your clients and how you work.'
+      ],
+      [
+        'Can I sell courses or take payments?',
+        'Yes. We can connect the course platform or payment tool you prefer, or build something custom if you need it. Tell us what you sell and we will include it in your quote.'
+      ],
+      [
+        'Do you work with consultants too?',
+        'Yes. Consultants need the same things as coaches: a clear offer, real proof and an easy way to get in touch.'
+      ]
+    ],
+    related: ['landing-page-design', 'wordpress-woocommerce-development', 'seo-speed-optimization']
   }
 ];

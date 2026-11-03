@@ -3,19 +3,14 @@
     "id": "alexfit",
     "slug": "alexfit-coaching-fitness-website",
     "title": "AlexFit Coaching",
-    "subtitle": "Fitness • Business Site",
+    "subtitle": "Fitness • Demo Site",
     "img": "/images/portfolio/demo-fitness-800.webp",
     "imgAlt": "AlexFit Coaching website screenshot",
     "liveUrl": "https://alexfitness.netlify.app/",
-    "client": {
-      "name": "Drake Walker",
-      "title": "Founder, AlexFit Coaching",
-      "country": "United States"
-    },
-    "goal": "AlexFit needed a modern, brand-focused website that could showcase their coaching services, display trainer profiles, and allow clients to book sessions online. The existing site was outdated, slow, and not converting visitors into leads.",
-    "challenges": "Balancing a clean, motivational aesthetic with functional scheduling and payment features. The client wanted the site to feel premium without overwhelming visitors with too many options on the first screen.",
-    "solutions": "I built a responsive site using HTML/CSS and JavaScript with a bold, fitness-focused design. The booking flow was simplified to three clicks, and I added a dynamic trainer spotlight section that rotates featured coaches on the homepage.",
-    "outcome": "The new site loads 2x faster than the previous version. Online booking requests increased by 60% within the first two months, and the trainer spotlight feature became a top engagement driver.",
+    "goal": "AlexFit Coaching is a demo website we built to show how a fitness coach can present services and trainer profiles and take bookings online, in a modern, brand-focused site.",
+    "challenges": "Balancing a clean, motivational look with scheduling and payment features, and keeping the site feeling premium without overwhelming visitors with too many options on the first screen.",
+    "solutions": "We built a responsive site using HTML/CSS and JavaScript with a bold, fitness-focused design. The booking flow is simplified to three clicks, and a trainer spotlight section rotates featured coaches on the homepage.",
+    "outcome": "Open the demo to try the layout, the trainer spotlight and the booking flow yourself. It is not a client project, so it has no client results to report. We can build the same kind of site around your business, with your real services and photos.",
     "skills": [
       "Web Development",
       "UI/UX Design",
@@ -24,25 +19,21 @@
     ],
     "price": "$400 – $600",
     "duration": "7–14 days",
-    "industry": "Fitness & Health"
+    "industry": "Fitness & Health",
+    "demo": true
   },
   {
     "id": "spicesavor",
     "slug": "spice-and-savor-restaurant-web-app",
     "title": "Spice & Savor",
-    "subtitle": "Restaurant • Web App",
+    "subtitle": "Restaurant • Demo Web App",
     "img": "/images/portfolio/demo-restaurant-800.webp",
     "imgAlt": "Spice & Savor restaurant web app screenshot",
     "liveUrl": "https://spicesavorresaturant.netlify.app/",
-    "client": {
-      "name": "Sarah Mitchell",
-      "title": "Owner, Spice & Savor",
-      "country": "United Kingdom"
-    },
-    "goal": "Create an interactive restaurant web app with an engaging digital menu, online reservation system, and location discovery features to help the restaurant attract more diners.",
-    "challenges": "Building a visually rich menu that works beautifully on mobile while integrating a real-time reservation system without third-party dependency overload.",
-    "solutions": "Developed a React-based single-page application with a dynamic menu component that supports dietary filters and dish categories. The reservation system sends instant confirmations and integrates with the restaurant's existing calendar.",
-    "outcome": "Online reservations grew by 45% in the first quarter. The digital menu reduced printing costs and allows the restaurant to update offerings in real time.",
+    "goal": "Spice & Savor is a demo restaurant web app we built to show an engaging digital menu, online reservations and location details working together on a phone.",
+    "challenges": "Building a visually rich menu that works well on mobile, with a reservation system that does not depend on a pile of third-party tools.",
+    "solutions": "We developed a React single-page application with a dynamic menu component that supports dietary filters and dish categories, plus an online reservation flow.",
+    "outcome": "Open the demo to try the menu filters and the reservation flow yourself. It is not a client project, so it has no client results to report. We can build the same kind of app around your restaurant, with your real menu and booking system.",
     "skills": [
       "Web App Development",
       "React",
@@ -51,25 +42,21 @@
     ],
     "price": "$500 – $800",
     "duration": "10–18 days",
-    "industry": "Food & Beverage"
+    "industry": "Food & Beverage",
+    "demo": true
   },
   {
     "id": "pureenergy",
     "slug": "pure-energy-smoothie-landing-page",
     "title": "Pure Energy",
-    "subtitle": "Food & Beverage • Landing Page",
+    "subtitle": "Food & Beverage • Demo Landing Page",
     "img": "/images/portfolio/demo-smoothie-800.webp",
     "imgAlt": "Pure Energy smoothie brand landing page screenshot",
     "liveUrl": "https://smoothiewebsite1.netlify.app/",
-    "client": {
-      "name": "Brooklyn Foster",
-      "title": "Marketing Director, Pure Energy",
-      "country": "United States"
-    },
-    "goal": "Design a high-converting landing page for a new smoothie brand launch that clearly communicates product benefits, drives pre-orders, and captures email subscribers for the launch list.",
-    "challenges": "Condensing a brand story, product line, and call-to-action into a single-page experience that holds attention without overwhelming the visitor.",
-    "solutions": "Built a scroll-triggered storytelling landing page using HTML/CSS and JavaScript with product animations, a sticky CTA bar, and an email capture flow integrated with Mailchimp.",
-    "outcome": "The landing page achieved a 12% conversion rate on pre-orders and grew the email list by 850 subscribers during the launch week.",
+    "goal": "Pure Energy is a demo landing page we built to show how a new smoothie brand could explain its product benefits, take pre-orders and collect email sign-ups for a launch.",
+    "challenges": "Condensing a brand story, product line and call to action into a single page that holds attention without overwhelming the visitor.",
+    "solutions": "We built a scroll-triggered storytelling page using HTML/CSS and JavaScript, with product animations, a sticky call-to-action bar and an email sign-up flow.",
+    "outcome": "Open the demo to see the scroll story and the sticky call to action yourself. It is not a client project, so it has no client results to report. We can build the same kind of launch page for your product and connect it to your email tool.",
     "skills": [
       "Landing Page Design",
       "HTML/CSS",
@@ -78,25 +65,21 @@
     ],
     "price": "$300 – $500",
     "duration": "5–10 days",
-    "industry": "Food & Beverage"
+    "industry": "Food & Beverage",
+    "demo": true
   },
   {
     "id": "sparkleclean",
     "slug": "sparkle-clean-cleaning-business-website",
     "title": "Sparkle Clean",
-    "subtitle": "Cleaning Services • Business Site",
+    "subtitle": "Cleaning Services • Demo Site",
     "img": "/images/portfolio/demo-cleaning-800.webp",
     "imgAlt": "Sparkle Clean cleaning services website screenshot",
     "liveUrl": "https://cleaningwebsitedemo.netlify.app/",
-    "client": {
-      "name": "Emma Wilson",
-      "title": "Owner, Sparkle Clean",
-      "country": "Canada"
-    },
-    "goal": "Build a trust-driven service website for a cleaning business that helps visitors feel confident booking services online. The site needed instant quote functionality and clear service tier comparisons.",
-    "challenges": "Establishing credibility and trust through design alone — cleaning services face skepticism, so the site needed reviews, guarantees, and transparency front and center.",
-    "solutions": "Developed a clean, professional site with a live quote calculator, service comparison table, and a testimonials section with real client photos. Integrated Formspree for contact submissions.",
-    "outcome": "Online quote requests tripled in the first month. The service comparison table reduced inbound calls by 25% as visitors could self-educate before reaching out.",
+    "goal": "Sparkle Clean is a demo website we built to show how a cleaning business can help visitors feel confident booking online, with instant quotes and clear service comparisons.",
+    "challenges": "Earning trust through design: people are careful about who they let into their home or office, so reviews, guarantees and clear information need to be easy to find.",
+    "solutions": "We developed a clean, professional site with a live quote calculator, a service comparison table and a testimonials section, using Formspree for contact submissions.",
+    "outcome": "Open the demo to try the quote calculator and the comparison table yourself. It is not a client project, so it has no client results to report. We can build the same kind of site around your cleaning business, with your real prices and reviews.",
     "skills": [
       "Web Development",
       "Form Integration",
@@ -105,7 +88,8 @@
     ],
     "price": "$350 – $550",
     "duration": "7–12 days",
-    "industry": "Home Services"
+    "industry": "Home Services",
+    "demo": true
   },
   {
     "id": "affiliateblog",

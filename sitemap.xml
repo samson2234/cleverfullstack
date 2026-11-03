@@ -30,6 +30,12 @@
     <image:image><image:loc>https://cleverstack.dev/images/portfolio/dc-carpet-1200.webp</image:loc></image:image>
   </url>
   <url>
+    <loc>https://cleverstack.dev/coaching-websites</loc>
+    <lastmod>2026-11-03</lastmod>
+    <image:image><image:loc>https://cleverstack.dev/images/portfolio/fv-8fa46884-1200.webp</image:loc></image:image>
+    <image:image><image:loc>https://cleverstack.dev/images/portfolio/demo-fitness-800.webp</image:loc></image:image>
+  </url>
+  <url>
     <loc>https://cleverstack.dev/contact</loc>
     <lastmod>2026-11-03</lastmod>
   </url>
@@ -54,6 +60,10 @@
     <image:image><image:loc>https://cleverstack.dev/images/portfolio/fv-15fd9a83-1200.webp</image:loc></image:image>
   </url>
   <url>
+    <loc>https://cleverstack.dev/hire-claude-code-developers</loc>
+    <lastmod>2026-11-03</lastmod>
+  </url>
+  <url>
     <loc>https://cleverstack.dev/hire-frontend-developers</loc>
     <lastmod>2026-11-03</lastmod>
     <image:image><image:loc>https://cleverstack.dev/images/portfolio/ab-clean-1200.webp</image:loc></image:image>
@@ -76,10 +86,22 @@
     <image:image><image:loc>https://cleverstack.dev/images/portfolio/bouhan-800.webp</image:loc></image:image>
   </url>
   <url>
+    <loc>https://cleverstack.dev/lovable-bolt-app-fixes</loc>
+    <lastmod>2026-11-03</lastmod>
+  </url>
+  <url>
     <loc>https://cleverstack.dev/mobile-app-development</loc>
     <lastmod>2026-11-03</lastmod>
     <image:image><image:loc>https://cleverstack.dev/images/portfolio/fv-4fbc79f2-1200.webp</image:loc></image:image>
     <image:image><image:loc>https://cleverstack.dev/images/portfolio/fv-80184ef0-1200.webp</image:loc></image:image>
+  </url>
+  <url>
+    <loc>https://cleverstack.dev/multi-vendor-marketplace-development</loc>
+    <lastmod>2026-11-03</lastmod>
+  </url>
+  <url>
+    <loc>https://cleverstack.dev/n8n-automation</loc>
+    <lastmod>2026-11-03</lastmod>
   </url>
   <url>
     <loc>https://cleverstack.dev/plugin-extension-development</loc>

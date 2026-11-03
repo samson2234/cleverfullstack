@@ -39,10 +39,12 @@ const CASE_BLURB = {
   'meloforge-ai-music-web3-app': 'An AI music platform built with Next.js, Google Gemini recommendations and Solana minting.',
   'ab-cleaning-solution-website': 'A fast React site for a commercial cleaning company in the Portland metro, with click-to-call, estimate requests and local business schema.',
   'dc-carpet-cleaning-website': 'A conversion-focused site for an Australian carpet cleaning business, with service pages, quote requests on every page and local SEO foundations.',
-  'pure-energy-smoothie-landing-page': 'A launch landing page for a smoothie brand, with scroll-driven product storytelling, a sticky call to action and Mailchimp sign-up.',
-  'spice-and-savor-restaurant-web-app': 'A React restaurant web app with a dynamic menu, dietary filters and online reservations.',
+  'pure-energy-smoothie-landing-page': 'A demo launch landing page for a smoothie brand, with scroll-driven product storytelling, a sticky call to action and Mailchimp sign-up.',
+  'spice-and-savor-restaurant-web-app': 'A demo React restaurant web app with a dynamic menu, dietary filters and online reservations.',
   'enterprise-analytics-dashboard': 'A Next.js and PostgreSQL analytics dashboard with real-time updates, role-based access and admin tools.',
   'ai-skincare-mobile-app': 'A React Native app for iOS and Android with on-device AI skin analysis, personalised product recommendations and an ingredient checker.',
+  'helen-may-coaching-platform': 'A Next.js coaching platform with its own section for each service category and one booking and contact flow.',
+  'alexfit-coaching-fitness-website': 'A demo website for a fitness coach, with trainer profiles and a three-click booking flow.',
   'fittrack-fitness-tracking-app': 'A React Native fitness app with quick workout logging, progress charts, goals and streaks, on a Node.js backend.'
 };
 

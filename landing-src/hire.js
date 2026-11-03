@@ -157,5 +157,111 @@ module.exports = [
       ['Can you take over an existing backend?', 'Yes. We start by reviewing the code, database and infrastructure, then agree what to fix first before changing anything.']
     ],
     related: ['hire-full-stack-developers', 'saas-mvp-development', 'zoho-crm-automation']
+  },
+  {
+    slug: 'hire-claude-code-developers',
+    kind: 'service',
+    name: 'Hire Claude Code Developers',
+    title: 'Hire Claude Code Developers to Build Your Web App | CleverStack',
+    description: 'Hire developers who build with Claude Code: web apps and SaaS products shipped faster, with experienced people reviewing, testing and owning every change.',
+    eyebrow: 'Hire Claude Code Developers',
+    h1: 'Hire Claude Code developers to build your web app',
+    sub: 'Experienced developers who use Claude Code, Anthropic\'s AI coding tool, to build web apps and SaaS products, and who review and test the code before it reaches your users.',
+    price: {
+      from: 3000,
+      label: 'Custom Web App package',
+      delivery: '14–28 days',
+      includes: 'Web apps start with the Custom Web App package at $3,000: database design, logins and roles, one API integration and an admin panel. Larger builds and work on existing code are quoted after a free call.'
+    },
+    intro: [
+      'Claude Code can write working software quickly, in the hands of someone who knows what to ask for and can tell whether the answer is right. It reads a whole project, makes changes across files and runs commands. It can also make confident mistakes, and those are expensive if nobody catches them.',
+      'That is where we come in. We use Claude Code as a tool within a normal professional process: we plan the work, review what it produces, test it and take responsibility for the result. You get the benefit of AI-assisted speed, with experienced developers accountable for the code. You deal with people, not a prompt.'
+    ],
+    forWho: [
+      'Founders who want a web app or SaaS MVP built with modern AI tools',
+      'Businesses that want AI-assisted speed without giving up code quality',
+      'Teams with a codebase started in Claude Code that needs an experienced review',
+      'Companies that want help setting up Claude Code on their own project'
+    ],
+    deliverables: [
+      [
+        'Web apps and SaaS products',
+        'Full-stack builds, usually with Next.js, Node.js and PostgreSQL, from first plan to live product.'
+      ],
+      [
+        'Reviewed code',
+        'A developer reads and understands what goes in. AI-written code gets the same review as anything else.'
+      ],
+      [
+        'Automated tests',
+        'Tests around the parts of the system that matter most, so later changes do not quietly break them.'
+      ],
+      [
+        'Security checks',
+        'Logins, permissions, input handling and secrets are checked by a person, because these are costly to get wrong.'
+      ],
+      [
+        'Taking over AI-written code',
+        'A review of code written with Claude Code or similar tools, followed by a plan to fix what needs fixing.'
+      ],
+      [
+        'Set-up for your team',
+        'Project instructions, tests and a review process that help your own developers get reliable results from Claude Code.'
+      ]
+    ],
+    sections: [
+      [
+        'What you get that AI alone does not give you',
+        [
+          'Knowing what to build matters as much as building it. We help you decide what belongs in the first version, choose a stack that suits it, and design the data model so it will not need replacing a few months later. Those decisions shape everything the AI then writes.',
+          'We also carry responsibility. When something breaks on launch day, you have people to call who understand the system. Claude Code is a very capable tool, but it does not know your business, and it cannot be accountable for your product.'
+        ]
+      ],
+      [
+        'How we use Claude Code on a project',
+        [
+          'We start with a clear scope and break the work into small pieces that can each be checked. Claude Code works on those pieces with tests and project instructions to keep it on track, and a developer reviews each change before it is merged.',
+          'Your code lives in a repository in your name throughout the project, so you can see what is happening. There is nothing proprietary about it: when we hand over, any competent developer can carry on, with or without AI tools.'
+        ]
+      ],
+      [
+        'Is this the right fit?',
+        [
+          'If you want an idea tested over a weekend, you may not need us yet. Try a tool yourself first, and come back when it needs to handle real users and real data. If you are building something customers will pay for or trust with their information, an experienced developer pays for itself.',
+          'CleverStack is an independent studio. We use Claude Code as one of our tools, and we are not affiliated with or endorsed by Anthropic.'
+        ]
+      ]
+    ],
+    faqs: [
+      [
+        'Where can I hire a Claude Code developer for a web app?',
+        'CleverStack builds web apps with Claude Code, with experienced developers planning, reviewing and testing the work. Our Custom Web App package starts at $3,000 and is delivered in 14 to 28 days.'
+      ],
+      [
+        'How much does it cost to hire a Claude Code developer?',
+        'Fixed-price web apps start at $3,000. Larger builds and work on existing code are quoted after a free call.'
+      ],
+      [
+        'Is code written with Claude Code safe to use in production?',
+        'It can be, if an experienced person reviews and tests it. We check every change, with particular care around logins, permissions and handling of data.'
+      ],
+      [
+        'Can you take over a project started in Claude Code?',
+        'Yes. We start with a short review of the code, then agree what to fix first. It does not matter which tool wrote it.'
+      ],
+      [
+        'Who owns the code?',
+        'You do. It lives in a repository in your name from the start, and it is ordinary code that any developer can work on.'
+      ],
+      [
+        'Can you help our team use Claude Code?',
+        'Yes. We can set up project instructions, tests and a review process on your codebase, so your developers get more reliable results.'
+      ],
+      [
+        'Are you affiliated with Anthropic?',
+        'No. CleverStack is an independent studio. Claude Code is one of the tools we use.'
+      ]
+    ],
+    related: ['hire-full-stack-developers', 'saas-mvp-development', 'lovable-bolt-app-fixes']
   }
 ];
