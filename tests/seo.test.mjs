@@ -210,3 +210,17 @@ test('AI search (llms.txt): lists every landing page, the email contact, and no 
   assert.match(txt, /hello@cleverstack\.dev/);
   assert.doesNotMatch(txt, /\+234|Phone:/);
 });
+
+test('the homepage heading reads as one sentence to crawlers, in every language', () => {
+  const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+  const h1 = /<h1[^>]*>([\s\S]*?)<\/h1>/.exec(html)[1];
+  assert.equal(h1.replace(/<[^>]+>/g, ''), 'Websites and web apps built to turn visitors into leads, sales, and revenue.');
+  assert.match(h1, /data-text="[^"]{20,}"/, 'the animation still reserves its space');
+  const i18n = fs.readFileSync(path.join(root, 'i18n.js'), 'utf8');
+  assert.doesNotMatch(i18n, /visually-hidden[^<]*<\/span>'?,\s*"?hero\.rotate/, 'no hidden list of phrases');
+  assert.equal((i18n.match(/data-text=/g) || []).length, 3);
+});
+
+test('own seller accounts are never shown as clients', () => {
+  for (const f of ['index.html', 'reviews.html']) assert.doesNotMatch(fs.readFileSync(path.join(root, f), 'utf8'), /maxcodedev/i, f);
+});
