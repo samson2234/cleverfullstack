@@ -297,8 +297,9 @@
   .score-why li{ display:flex; gap:10px; } .score-why li span{ color:#6ee7b7; font-weight:700; min-width:30px; font-variant-numeric:tabular-nums; }
 </style>
 <link rel="stylesheet" href="chat-ui.css?v=ffc185d3">
-<link rel="stylesheet" href="admin-inbox.css?v=81b972a8">
-<link rel="stylesheet" href="admin-tools.css?v=3dd84f43">
+<link rel="stylesheet" href="admin-inbox.css?v=00fdf506">
+<link rel="stylesheet" href="admin-tools.css?v=b71a4fd5">
+<link rel="stylesheet" href="admin-campaigns.css?v=b13429ad">
 <link rel="stylesheet" href="admin-analytics.css?v=bd46682f">
 </head><body>
 <!-- LOGIN -->
@@ -345,6 +346,7 @@
       <button class="tab" data-view="reviews" title="Reviews"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="tab-label">Reviews</span><span class="badge" id="revBadge" style="display:none;">0</span></button>
       <button class="tab" data-view="email_log" title="Email Log"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg><span class="tab-label">Email Log</span></button>
       <div class="nav-group">Tools</div>
+      <button class="tab" data-view="campaigns" title="Email campaigns"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg><span class="tab-label">Email campaigns</span></button>
       <button class="tab" data-view="utm" title="Campaign links"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="tab-label">Campaign links</span></button>
       <button class="tab" data-view="abtests" title="A/B tests"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg><span class="tab-label">A/B tests</span></button>
       <div class="nav-group">Settings</div>
@@ -370,6 +372,7 @@
   <main class="admin-body">
     <div class="must-change" id="mustChange" style="display:none;">You are using a temporary password. <button class="btn-sm primary" type="button" onclick="document.querySelector('.tab[data-view=account]').click()">Choose your own</button></div>
     <section class="view" id="view-inbox"></section>
+    <section class="view" id="view-campaigns"></section>
     <section class="view" id="view-utm"></section>
     <section class="view" id="view-abtests"></section>
     <section class="view" id="view-team"></section>
@@ -400,6 +403,7 @@
       <div class="dash-cols" style="grid-template-columns:1fr;">
         <div class="panel"><h4>Follow-ups Due</h4><ul class="follow-list" id="followList"></ul></div>
       </div>
+      <div id="dashCampaigns" style="margin-top:18px;"></div>
     </section>
 
     <!-- LEADS VIEW -->
@@ -437,6 +441,7 @@
         <input type="text" class="search-box" id="ctSearch" placeholder="Search name, email, company, phone...">
         <select class="search-box" id="ctCountry" style="max-width:190px;"><option value="">All countries</option></select>
         <select class="search-box" id="ctIndustry" style="max-width:190px;"><option value="">All industries</option></select>
+        <select class="search-box" id="ctList" style="max-width:190px;"><option value="">All lists</option></select>
         <select class="search-box" id="ctInactive" style="max-width:190px;" title="Find people you have not been in touch with">
           <option value="">Any activity</option><option value="30">Quiet 30+ days</option><option value="90">Quiet 90+ days</option><option value="180">Quiet 180+ days</option><option value="365">Quiet 1+ year</option>
         </select>
@@ -445,6 +450,7 @@
         </select>
         <div class="toolbar-right">
           <button class="btn-sm primary" id="ctAdd">+ Add contact</button>
+          <button class="btn-sm" id="ctToList" title="Add everyone matching the current filters to a list">Add to list</button>
           <button class="btn-sm" id="ctCampaign" title="Email everyone matching the current filters">Email segment</button>
           <button class="btn-sm" id="ctImport">Import CSV</button>
           <button class="btn-sm" id="ctExport">Export CSV</button>
@@ -462,6 +468,7 @@
       <div class="leads-toolbar">
         <input type="text" class="search-box" id="subsSearch" placeholder="Search subscribers by email or name...">
         <div class="toolbar-right">
+          <button class="btn-sm primary" id="subsCampaign" onclick="window.CSCampaigns && window.CSCampaigns.newFor({subscribers:true})">New campaign to subscribers</button>
           <button class="btn-sm" id="broadcastBtn"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Broadcast</button>
           <button class="btn-sm" id="exportSubsBtn"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</button>
         </div>
@@ -523,6 +530,7 @@
       </div>
       <button class="modal-x" onclick="window.closeModal('leadModal')">x</button>
     </div>
+    <div id="leadAudience" style="margin:12px 0 2px;"></div>
     <div class="lead-grid">
       <div class="lead-field"><label>Company</label><div class="lf-val" id="leadCompany">-</div></div>
       <div class="lead-field"><label>Country</label><div class="lf-val" id="leadCountry">-</div></div>
@@ -615,6 +623,7 @@
       <div><label>Tags (comma separated)</label><input type="text" id="cfTags" placeholder="fiverr, vip"></div>
       <div><label>Owner</label><input type="text" id="cfOwner" placeholder="Who looks after them"></div>
     </div>
+    <div id="cfAudience" style="margin-top:14px;"></div>
     <div id="cfHistory" style="margin-top:18px;display:none;">
       <strong style="font-size:.9rem;">Timeline</strong>
       <div style="display:flex;gap:8px;margin:10px 0;">
@@ -761,7 +770,11 @@
       document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
       $('view-' + name).classList.add('active');
       if (name === 'dashboard') loadDashboard();
-      if (name === 'analytics' && window.CSAnalytics) window.CSAnalytics.load();
+      if (name === 'analytics' && window.CSAnalytics) {
+        window.CSAnalytics.load();
+        if (window.CSCampaigns) { var anEmail = document.createElement('div'); anEmail.id = 'anEmailPanel'; $('view-analytics').appendChild(anEmail); window.CSCampaigns.channelPanel(anEmail); }
+      }
+      if (name === 'campaigns' && window.CSCampaigns) window.CSCampaigns.load();
       if (window.CSTools) window.CSTools.load(name);
       if (name === 'inbox' && window.CSInbox) window.CSInbox.load();
       if (name === 'leads') loadLeads();
@@ -779,6 +792,7 @@
   }
 
   async function loadDashboard(){
+    if (window.CSCampaigns) window.CSCampaigns.channelPanel($('dashCampaigns'));
     try {
       var s = await apiCall('GET', '?stats=true');
       $('stTotal').textContent = s.total;
@@ -1145,6 +1159,7 @@
       $('leadAvatar').textContent = initials(currentLead.name);
       $('leadAvatar').style.background = avatarColor(currentLead.id);
       $('leadName').textContent = currentLead.name;
+      if (window.CSCampaigns) window.CSCampaigns.chips($('leadAudience'), currentLead.email, currentLead.name);
       $('leadSub').textContent = currentLead.email + (currentLead.phone && currentLead.phone !== 'Not provided' ? ' · ' + currentLead.phone : '') + '  |  ' + meta.label;
       $('leadCompany').textContent = currentLead.company || '-';
       $('leadCountry').textContent = currentLead.country || '-';
@@ -1295,7 +1310,7 @@
   var KIND_PILL = { lead:'new', prospect:'proposal', client:'won', past_client:'contacted', partner:'followup' };
   var ctState = { kind:'', offset:0, limit:50, total:0, filtersLoaded:false };
   var ctTimer = null;
-  var ctEditing = null;
+  var ctEditing = null; $('cfAudience').innerHTML = ''; $('cfAudience').removeAttribute('data-email-key');
 
   function ctQuery(extra){
     var p = 'view=contacts&limit=' + ctState.limit + '&offset=' + ctState.offset + '&sort=' + encodeURIComponent($('ctSort').value);
@@ -1304,6 +1319,7 @@
     if ($('ctCountry').value) p += '&country=' + encodeURIComponent($('ctCountry').value);
     if ($('ctIndustry').value) p += '&industry=' + encodeURIComponent($('ctIndustry').value);
     if ($('ctInactive').value) p += '&inactive_days=' + $('ctInactive').value;
+    if ($('ctList').value) p += '&list=' + $('ctList').value;
     return p + (extra || '');
   }
 
@@ -1324,8 +1340,19 @@
     }
   }
 
+  async function loadCtLists(){
+    var d = await apiCall('GET', '?view=lists');
+    ctLists = d.lists || [];
+    var cur = window.__ctPendingList || $('ctList').value;
+    window.__ctPendingList = null;
+    $('ctList').innerHTML = '<option value="">All lists</option>' + ctLists.map(function(l){ return '<option value="' + l.id + '">' + escapeHtml(l.name) + ' (' + l.members + ')</option>'; }).join('');
+    $('ctList').value = cur;
+  }
+  var ctLists = [];
+
   async function loadContacts(refreshStats){
     try {
+      if (refreshStats) await loadCtLists();
       if (refreshStats) await loadContactStats();
       var d = await apiCall('GET', '?' + ctQuery());
       ctState.total = d.total;
@@ -1334,7 +1361,7 @@
         $('ctTable').innerHTML = '<tr><td colspan="6" class="empty-state">No contacts match. Add one, import a CSV, or clear the filters.</td></tr>';
       } else {
         $('ctTable').innerHTML = rows.map(function(c){
-          var tags = (c.tags || '').split(',').filter(Boolean).map(function(t){ return '<span class="pill new" style="margin-right:4px;">' + escapeHtml(t) + '</span>'; }).join('');
+          var tags = (c.list_names || '').split('|').filter(Boolean).map(function(t){ return '<span class="pill proposal" style="margin-right:4px;">' + escapeHtml(t) + '</span>'; }).join('') + (c.tags || '').split(',').filter(Boolean).map(function(t){ return '<span class="pill new" style="margin-right:4px;">' + escapeHtml(t) + '</span>'; }).join('');
           return '<tr style="cursor:pointer;" onclick="window.__ctOpen(' + c.id + ')"><td><strong>' + escapeHtml(c.name) + '</strong><div style="color:var(--crm-muted);font-size:.78rem;">' + escapeHtml(c.company || '') + '</div></td><td>' + escapeHtml(c.email) + '</td><td>' + escapeHtml(c.country || '-') + '</td><td><span class="pill ' + (KIND_PILL[c.kind] || 'new') + '">' + escapeHtml(KIND_LABEL[c.kind] || c.kind) + '</span>' + (c.unsubscribed_at ? ' <span class="pill lost" title="Unsubscribed: will not receive campaigns">unsubscribed</span>' : '') + '</td><td>' + (tags || '-') + '</td><td>' + formatDate(c.last_activity_at || c.created_at) + '</td></tr>';
         }).join('');
       }
@@ -1361,6 +1388,7 @@
       $('ctTitle').textContent = d.contact.name;
       $('ctSub').textContent = 'Added ' + fmtDate(d.contact.created_at) + (d.contact.source ? ' \u00b7 via ' + d.contact.source : '');
       $('cfEmail').readOnly = true;
+      if (window.CSCampaigns) window.CSCampaigns.chips($('cfAudience'), d.contact.email, d.contact.name);
       $('cfHistory').style.display = 'block'; $('cfArchive').style.display = ''; $('cfReview').style.display = '';
       $('cfInviteBox').style.display = 'none';
       var items = d.activities.map(function(a){ return '<div style="padding:8px 0;border-bottom:1px solid var(--crm-line-soft);"><span class="pill ' + (a.type === 'form' ? 'new' : (a.type === 'status' ? 'proposal' : 'contacted')) + '">' + escapeHtml(a.type) + '</span> <span style="color:var(--crm-muted);font-size:.76rem;">' + formatDate(a.created_at) + '</span><div style="margin-top:4px;white-space:pre-wrap;">' + escapeHtml(a.body) + '</div></div>'; });
@@ -1421,7 +1449,22 @@
   });
 
   ['ctSearch'].forEach(function(id){ $(id).addEventListener('input', function(){ clearTimeout(ctTimer); ctTimer = setTimeout(function(){ ctState.offset = 0; loadContacts(); }, 300); }); });
-  ['ctCountry','ctIndustry','ctSort','ctInactive'].forEach(function(id){ $(id).addEventListener('change', function(){ ctState.offset = 0; loadContacts(); }); });
+  ['ctCountry','ctIndustry','ctSort','ctInactive','ctList'].forEach(function(id){ $(id).addEventListener('change', function(){ ctState.offset = 0; loadContacts(); }); });
+
+  $('ctToList').addEventListener('click', async function(){
+    try {
+      await loadCtLists();
+      if (!ctLists.length) return showToast('Create a list first (Email campaigns > Lists)');
+      var pick = window.prompt('Add these ' + ctState.total + ' people to which list? Type its number:\n\n' + ctLists.map(function(l, i){ return (i + 1) + '. ' + l.name; }).join('\n'));
+      if (!pick) return;
+      var list = ctLists[parseInt(pick, 10) - 1];
+      if (!list) return showToast('That is not one of the numbers');
+      var filters = cmFilters(); filters.q = $('ctSearch').value.trim();
+      var d = await apiCall('POST', '', { action:'list_add', list_id:list.id, filters:filters });
+      showToast(d.added + ' added to ' + list.name);
+      loadContacts(true);
+    } catch(e){ showToast('Error: ' + e.message); }
+  });
 
   $('ctExport').addEventListener('click', async function(){
     try {
@@ -1431,6 +1474,7 @@
       if ($('ctCountry').value) p += '&country=' + encodeURIComponent($('ctCountry').value);
       if ($('ctIndustry').value) p += '&industry=' + encodeURIComponent($('ctIndustry').value);
       if ($('ctInactive').value) p += '&inactive_days=' + $('ctInactive').value;
+      if ($('ctList').value) p += '&list=' + $('ctList').value;
       var res = await fetch(API_BASE + p, { credentials: 'same-origin' });
       if (!res.ok) throw new Error('Export failed');
       var blob = await res.blob(); var a = document.createElement('a');
@@ -1456,7 +1500,7 @@
   }
 
   function cmFilters(){
-    return { kind:ctState.kind, country:$('ctCountry').value, industry:$('ctIndustry').value, inactive_days:$('ctInactive').value };
+    return { kind:ctState.kind, country:$('ctCountry').value, industry:$('ctIndustry').value, inactive_days:$('ctInactive').value, list:$('ctList').value };
   }
   function cmDescribe(){
     var f = cmFilters(), bits = [];
@@ -1768,6 +1812,8 @@
     $('dashboard').style.display = 'block';
     try { localStorage.setItem('cs_notrack', '1'); } catch (e) {}
     if (window.CSTools) window.CSTools.loadMe();
+    var campHash = /^#campaign-(\d+)$/.exec(location.hash);
+    if (campHash && window.CSCampaigns) window.CSCampaigns.openReport(+campHash[1]);
     if (window.CSInbox) { window.CSInbox.pollBadge(); if (/^#inbox-\d+$/.test(location.hash)) { var it = document.querySelector('.tab[data-view="inbox"]'); if (it) it.click(); } }
     loadDashboard();
   }
@@ -1833,6 +1879,7 @@
 })();
 </script>
 <script src="chat-ui.js?v=79ac6803" defer></script>
-<script src="admin-inbox.js?v=db4a87ce" defer></script>
-<script src="admin-tools.js?v=8f9f44d1" defer></script>
+<script src="admin-inbox.js?v=128aac75" defer></script>
+<script src="admin-tools.js?v=77188b0b" defer></script>
+<script src="admin-campaigns.js?v=c2de671c" defer></script>
 <script src="admin-analytics.js?v=0c42d406" defer></script></body></html>

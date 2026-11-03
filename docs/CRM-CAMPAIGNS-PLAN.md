@@ -34,7 +34,11 @@ Requested 31 Oct 2026. Executed step by step; each step is tested (automated tes
 - Real stock photos (free licence) that show what the post is about on every recent post, including the four published this week: a store on screen for Shopify, a site editor for WordPress, a CRM dashboard for Zoho/HubSpot, and so on.
 - New posts: Shopify store setup cost, WordPress vs custom website for law firms, Zoho vs HubSpot for small agencies, Wix vs custom website.
 
-### 5. Email campaign system (Tools → Campaigns), built in stages
+### 5. Email campaign system (Tools → Campaigns), built in stages — DONE (2 Nov)
+
+> **Built and tested (2 Nov):** 19 campaign tests with a fake email provider, plus browser walk-throughs of every screen, including a 230-person send, pause/resume, an A/B test and scheduling. No real campaign has been sent yet.
+> **Differences from the plan below:** old binary `.xls` files can't be read (the screen asks for `.xlsx` or CSV). JSON files and text in any layout also work. A scheduled campaign or an A/B winner goes out when the Campaigns screen is opened, or at the daily run (00:15 UTC), so not always at the exact minute.
+> **Owner setup before the first real send:** postal address (Settings); Resend plan and daily limit; Resend webhook and `RESEND_WEBHOOK_SECRET` (steps on the Settings tab). The webhook has only been tested locally with signed test events until it is connected.
 
 **5a. Audience: lists, tags, contacts**
 - One audience: CRM contacts, website leads and newsletter subscribers are connected (a subscriber is a contact tagged `newsletter`; unsubscribing anywhere unsubscribes everywhere).
@@ -66,5 +70,5 @@ Requested 31 Oct 2026. Executed step by step; each step is tested (automated tes
 **5h. Lists and tags in the Inbox**
 - In a conversation, the client's lists and tags show at the top (e.g. *Upsell client*), and you can add or remove them there.
 
-### 6. Final check
+### 6. Final check — DONE for the build (2 Nov); first real send waits on the owner setup above
 - All automated tests, a full browser walk-through of every new screen, live check after deploy, and this plan marked done.

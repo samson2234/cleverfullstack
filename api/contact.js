@@ -26,7 +26,7 @@ export const config = { runtime: 'nodejs' };
 //   3. Database auto-initializes on first request (creates tables)
 
 import { saveSubmission, addSubscriber, logEmail } from '../lib/db.js';
-import { linkSubmissionToContact } from '../lib/contacts.js';
+import { linkSubmissionToContact, syncSubscriberToContact } from '../lib/contacts.js';
 import {
   sendResendEmail,
   contactNotificationTemplate,
@@ -218,6 +218,7 @@ async function handler(req, res) {
   if (subscribeOptIn && process.env.TURSO_DATABASE_URL && submission.email) {
     try {
       const result = await addSubscriber(submission.email, submission.name, 'contact form opt-in');
+      await syncSubscriberToContact(submission.email, submission.name, 'contact form opt-in');
       if (result.added) {
         subscribed = true;
         if (process.env.RESEND_API_KEY) {

@@ -12,6 +12,7 @@ export const config = { runtime: 'nodejs' };
 // and a verified RESEND_FROM domain (see lib/email.js).
 
 import { addSubscriber, logEmail } from '../lib/db.js';
+import { syncSubscriberToContact } from '../lib/contacts.js';
 import {
   sendResendEmail,
   welcomeEmailTemplate,
@@ -56,6 +57,7 @@ async function handler(req, res) {
   if (process.env.TURSO_DATABASE_URL) {
     try {
       const result = await addSubscriber(email, name, source);
+      await syncSubscriberToContact(email, name, source);
       subscriberId = result.id;
       saved = true;
       if (!result.added) {

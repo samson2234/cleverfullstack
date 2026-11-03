@@ -193,7 +193,9 @@
       '<label>Version B text<textarea id="abText" rows="2" maxlength="300" required></textarea></label>' +
       '<label>Goal<select id="abGoal"><option value="lead">Became a lead (sent a form)</option><option value="contact">Clicked booking, WhatsApp, call or email</option><option value="cta">Clicked any call-to-action</option></select></label>' +
       '<button class="btn-sm primary" type="submit">Start test</button></form></section>' : '') +
-      '<section class="tl-card"><h3>Tests</h3><p class="muted small">A winner is only declared with at least 100 visitors per version and 95% confidence. Until then, keep the test running.</p><div id="abList"><div class="loading"><div class="spinner"></div></div></div></section>';
+      '<section class="tl-card"><h3>Tests</h3><p class="muted small">A winner is only declared with at least 100 visitors per version and 95% confidence. Until then, keep the test running.</p><div id="abList"><div class="loading"><div class="spinner"></div></div></div></section>' +
+      '<section class="tl-card"><h3>Email tests</h3><p class="muted small">Subject line and content tests from your email campaigns. Open one for its results.</p><div id="abEmail"></div></section>';
+    if (window.CSCampaigns) window.CSCampaigns.abList($('abEmail'));
     if (canEdit) {
       var showCurrent = function () {
         var p = PRESETS[+$('abPreset').value];

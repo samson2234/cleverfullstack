@@ -38,7 +38,8 @@ import {
   setReviewReply,
   deleteReview,
   getPendingReviewCount,
-  tagPitches
+  tagPitches,
+  getClient
 } from '../lib/db.js';
 import { detectPitch } from '../lib/pitch.js';
 import {
@@ -60,8 +61,15 @@ import {
   importContacts,
   exportContacts,
   campaignRecipients,
-  recordCampaignSent
+  recordCampaignSent,
+  listLists, createList, updateList, deleteList, addToList, removeFromList, audienceOf, setAudience,
+  listSuppressions, suppress, unsuppress, removeNewsletterTag, importAudience, importFromSite
 } from '../lib/contacts.js';
+import {
+  getSettings as getCampaignSettings, saveSettings as saveCampaignSettings, audienceSummary, saveCampaign, getCampaign, deleteCampaign,
+  duplicateCampaign, startCampaign, runCampaign, runDue, pickWinner, controlCampaign, listCampaigns, campaignReport, campaignRecipientRows,
+  campaignsOverview, renderPreview, sendTest
+} from '../lib/campaigns.js';
 import { rateLimit, clientIp } from '../lib/rate-limit.js';
 import { getAnalytics, getRecentJourneys, getJourneySummaries } from '../lib/analytics.js';
 import { scoreLead } from '../lib/lead-score.js';
@@ -362,9 +370,24 @@ async function handler(req, res) {
         if (!c) return res.status(404).json({ error: 'Contact not found' });
         return res.status(200).json(c);
       }
+      if (view === 'lists') return res.status(200).json({ lists: await listLists() });
+      if (view === 'suppressions') return res.status(200).json(await listSuppressions({ q: params.get('q') || '', limit: params.get('limit'), offset: params.get('offset') }));
+      if (view === 'audience') return res.status(200).json(await audienceOf(params.get('email') || ''));
+      if (view === 'campaigns') return res.status(200).json({ campaigns: await listCampaigns() });
+      if (view === 'campaign') {
+        const c = await getCampaign(parseInt(params.get('id')));
+        return c ? res.status(200).json({ campaign: c }) : res.status(404).json({ error: 'Campaign not found' });
+      }
+      if (view === 'campaign_report') {
+        const r = await campaignReport(parseInt(params.get('id')));
+        return r ? res.status(200).json(r) : res.status(404).json({ error: 'Campaign not found' });
+      }
+      if (view === 'campaign_recipients') return res.status(200).json(await campaignRecipientRows(parseInt(params.get('id')), { filter: params.get('filter') || '', limit: params.get('limit'), offset: params.get('offset') }));
+      if (view === 'campaign_settings') return res.status(200).json(await getCampaignSettings());
+      if (view === 'campaigns_overview') return res.status(200).json(await campaignsOverview());
       if (view === 'contacts') {
         const data = await listContacts({
-          q: params.get('q') || '', kind: params.get('kind') || '', country: params.get('country') || '',
+          q: params.get('q') || '', kind: params.get('kind') || '', country: params.get('country') || '', list: params.get('list') || '',
           industry: params.get('industry') || '', tag: params.get('tag') || '', sort: params.get('sort') || 'recent',
           inactiveDays: params.get('inactive_days'), limit: params.get('limit'), offset: params.get('offset')
         });
@@ -680,6 +703,47 @@ async function handler(req, res) {
       // Sent in small batches (max 100 per call) so a serverless function never runs long; the
       // screen calls again until nothing remains. Anyone who unsubscribed or already received this
       // campaign name is skipped automatically, so re-running is always safe.
+      // ---- Audience: lists, tags, suppression, import ----
+      const listResult = (r) => (r && r.error ? res.status(400).json({ error: r.error }) : res.status(200).json({ success: true, ...r }));
+      if (action === 'list_create') return listResult(await createList(body.name, body.description));
+      if (action === 'list_update') return listResult(await updateList(parseInt(body.id), body));
+      if (action === 'list_delete') { await deleteList(parseInt(body.id)); return res.status(200).json({ success: true }); }
+      if (action === 'list_add') return listResult(await addToList(parseInt(body.list_id), { contactIds: body.contact_ids, emails: body.emails, filters: body.filters }));
+      if (action === 'list_remove') { await removeFromList(parseInt(body.list_id), body.contact_ids); return res.status(200).json({ success: true }); }
+      if (action === 'audience_set') return listResult(await setAudience(body.email, { name: body.name, listId: body.list_id, add: !!body.add, addTag: body.add_tag, removeTag: body.remove_tag }));
+      if (action === 'suppression_add') {
+        const emails = String(body.emails || '').split(/[\s,;]+/).map((e) => e.trim().toLowerCase()).filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)).slice(0, 1000);
+        for (const e of emails) await suppress(e, 'manual');
+        return res.status(200).json({ success: true, added: emails.length });
+      }
+      if (action === 'suppression_remove') {
+        const r = await unsuppress(body.email);
+        return r.removed ? res.status(200).json({ success: true }) : res.status(400).json({ error: r.error });
+      }
+      if (action === 'audience_import') return res.status(200).json({ success: true, ...(await importAudience(body.rows, { listId: body.list_id, tags: body.tags, source: body.source, consent: body.consent })) });
+      if (action === 'audience_import_site') return listResult(await importFromSite({ source: body.source, status: body.status, since: body.since, listId: body.list_id, tags: body.tags }));
+
+      // ---- Email campaigns (lib/campaigns.js) ----
+      if (action === 'camp_settings') return res.status(200).json({ success: true, settings: await saveCampaignSettings(body) });
+      if (action === 'camp_audience') return res.status(200).json({ success: true, ...(await audienceSummary(body.audience)) });
+      if (action === 'camp_save') return listResult(await saveCampaign(body));
+      if (action === 'camp_delete') return listResult(await deleteCampaign(parseInt(body.id)));
+      if (action === 'camp_duplicate') return listResult(await duplicateCampaign(parseInt(body.id)));
+      if (action === 'camp_preview') return res.status(200).json({ success: true, ...(await renderPreview(body, body.variant)) });
+      if (action === 'camp_test') return listResult(await sendTest(body, body.emails));
+      if (action === 'camp_start') {
+        const r = await startCampaign(parseInt(body.id), { schedule_at: body.schedule_at, confirm_permission: !!body.confirm_permission });
+        if (r.needs_confirmation) return res.status(409).json(r);
+        return listResult(r);
+      }
+      if (action === 'camp_tick') {
+        await runDue(0); // scheduled campaigns and A/B winners that are now due
+        if (!parseInt(body.id)) return res.status(200).json({ success: true });
+        return res.status(200).json({ success: true, ...(await runCampaign(parseInt(body.id), 35000)) });
+      }
+      if (action === 'camp_control') return listResult(await controlCampaign(parseInt(body.id), String(body.op || '')));
+      if (action === 'camp_winner') return listResult(await pickWinner(parseInt(body.id), body.winner));
+
       if (action === 'campaign_preview' || action === 'campaign_send') {
         const campaign = String(body.campaign || '').replace(/[^A-Za-z0-9 \-]/g, '').trim().slice(0, 60);
         if (campaign.length < 3) return res.status(400).json({ error: 'Give the campaign a name (letters, numbers, spaces, hyphens)' });
@@ -767,14 +831,17 @@ async function handler(req, res) {
       // ---- Subscriber actions ----
       if (action === 'delete_subscriber') {
         if (!body.id) return res.status(400).json({ error: 'id required' });
+        const gone = (await getClient().execute({ sql: 'SELECT email FROM subscribers WHERE id = ?', args: [body.id] })).rows[0];
         await deleteSubscriber(body.id);
+        if (gone) await removeNewsletterTag(gone.email); // no longer a newsletter subscriber, still a contact
         return res.status(200).json({ success: true, message: 'Subscriber deleted' });
       }
 
       if (action === 'broadcast') {
         if (!body.subject || !body.body) return res.status(400).json({ error: 'subject and body required' });
         const all = await getSubscribers({ limit: 10000, offset: 0 });
-        const active = all.filter((s) => s.status === 'active' || !s.status);
+        const blocked = new Set((await getClient().execute('SELECT lower(email) AS e FROM email_suppressions')).rows.map((r) => r.e));
+        const active = all.filter((s) => (s.status === 'active' || !s.status) && !blocked.has(String(s.email).toLowerCase()));
         const target = active.map((s) => s.email);
 
         if (target.length === 0) {

@@ -10,6 +10,7 @@ import crypto from 'node:crypto';
 import { buildPendingRollups } from '../lib/analytics.js';
 import { sendMonthlyLeadsReport } from '../lib/analytics-report.js';
 import { withMonitor, reportError } from '../lib/monitor.js';
+import { runDue } from '../lib/campaigns.js';
 
 function authorised(req) {
   const secret = process.env.CRON_SECRET;
@@ -29,7 +30,9 @@ async function handler(req, res) {
     if (new Date().getUTCDate() === 3 && process.env.RESEND_API_KEY) {
       try { monthly = await sendMonthlyLeadsReport(); } catch (err) { await reportError(err, { where: 'cron: monthly leads report' }); monthly = { ok: false }; }
     }
-    return res.status(200).json({ ok: true, checkedDays, monthly });
+    let campaigns;
+    try { campaigns = await runDue(30000); } catch (err) { await reportError(err, { where: 'cron: email campaigns' }); campaigns = { ok: false }; }
+    return res.status(200).json({ ok: true, checkedDays, monthly, campaigns });
   } catch (err) {
     await reportError(err, { where: 'cron: daily job' });
     return res.status(500).json({ error: 'Rollup failed' });

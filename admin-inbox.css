@@ -76,3 +76,5 @@
 .ib-menu-st .ib-st.cur{ border-color:currentColor; }
 .ib-menu-st .ib-st:hover{ filter:brightness(1.25); }
 [data-theme=light] .ib-menu{ background:#fff; }
+.ib-aud{ padding:8px 16px; border-bottom:1px solid var(--crm-line-soft); }
+.ib-aud:empty{ display:none; }

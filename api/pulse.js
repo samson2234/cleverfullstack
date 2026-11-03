@@ -12,6 +12,7 @@ import { rateLimit, clientIp } from '../lib/rate-limit.js';
 import { siteUrl } from '../lib/email.js';
 import { activeTests } from '../lib/ab.js';
 import { withMonitor, reportError } from '../lib/monitor.js';
+import { PIXEL, recordOpen, resolveClick } from '../lib/campaigns.js';
 
 function ownHosts() {
   const hosts = ['cleverstack.dev', 'cleverfullstack.vercel.app'];
@@ -39,6 +40,24 @@ function reportBrowserError(ev, req, ua) {
 }
 
 async function handler(req, res) {
+  // email campaigns: open pixel (?o=token) and link clicks (?c=token&l=link). Always answers, even if the DB is down.
+  if (req.method === 'GET' && /[?&]o=/.test(req.url || '')) {
+    const q = new URL(req.url, 'http://x').searchParams;
+    try { if (process.env.TURSO_DATABASE_URL) { const ua = header(req, 'user-agent'); await recordOpen(q.get('o'), ua, isBot(ua)); } }
+    catch (err) { await reportError(err, { where: 'campaign: open not recorded' }); }
+    res.setHeader('Content-Type', 'image/gif');
+    res.setHeader('Cache-Control', 'no-store, private');
+    return res.status(200).send(PIXEL);
+  }
+  if (req.method === 'GET' && /[?&]c=/.test(req.url || '')) {
+    const q = new URL(req.url, 'http://x').searchParams;
+    let target = null;
+    try { if (process.env.TURSO_DATABASE_URL) { const ua = header(req, 'user-agent'); target = await resolveClick(q.get('c'), q.get('l'), ua, isBot(ua)); } }
+    catch (err) { await reportError(err, { where: 'campaign: click not recorded' }); }
+    res.setHeader('Cache-Control', 'no-store, private');
+    res.setHeader('Location', target || siteUrl());
+    return res.status(302).end();
+  }
   if (req.method === 'GET' && /[?&]ab=1/.test(req.url || '')) {
     // running A/B tests for the website (no names or results); cached at the edge for a minute
     let tests = [];

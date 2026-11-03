@@ -5,6 +5,7 @@
 /* role-based visibility (the server enforces every permission; this only tidies the UI) */
 body:not([data-role="owner"]) .owner-only{ display:none !important; }
 body[data-role="sales"] #exportLeadsBtn, body[data-role="sales"] #ctExport, body[data-role="sales"] #exportSubsBtn,
+body[data-role="sales"] #subsCampaign, body[data-role="sales"] #ctToList, body[data-role="viewer"] #subsCampaign, body[data-role="viewer"] #ctToList,
 body[data-role="sales"] #broadcastBtn, body[data-role="sales"] #ctCampaign, body[data-role="sales"] #ctImport, body[data-role="sales"] #leadDeleteBtn,
 body[data-role="sales"] [onclick*="__deleteLead"], body[data-role="sales"] [onclick*="__deleteSubscriber"], body[data-role="sales"] [onclick*="__revDelete"],
 body[data-role="viewer"] #exportLeadsBtn, body[data-role="viewer"] #ctExport, body[data-role="viewer"] #exportSubsBtn,

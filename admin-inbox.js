@@ -160,7 +160,7 @@
     $('ibItems').querySelectorAll('.ib-item').forEach(function (b) { b.classList.toggle('on', +b.getAttribute('data-id') === id); });
     document.querySelector('.ib').classList.add('reading');
     var canWrite = role() !== 'viewer';
-    $('ibMain').innerHTML = '<div class="ib-head" id="ibHead"></div><div class="ib-thread" id="ibThread"></div>' +
+    $('ibMain').innerHTML = '<div class="ib-head" id="ibHead"></div><div class="ib-aud" id="ibAudience"></div><div class="ib-thread" id="ibThread"></div>' +
       (canWrite ? '<div class="ib-quick" id="ibQuick">' + QUICK.map(function (q, i) { return '<button type="button" data-q="' + i + '">' + q[0] + '</button>'; }).join('') + '</div>' +
       '<form class="ib-compose" id="ibCompose"><textarea id="ibBody" rows="2" maxlength="5000" placeholder="Write a reply… (Enter to send, Shift+Enter for a new line). Drop or paste files here."></textarea>' +
       '<div class="ib-send"><div class="ib-send-l"><button type="button" class="ch-tool" id="ibAttach" aria-label="Attach a file" title="Attach a file (max 4 MB)">' + CSChat.ICON.clip + '</button>' +
@@ -212,6 +212,8 @@
 
   function head(c, link) {
     var canWrite = role() !== 'viewer';
+    var aud = $('ibAudience');
+    if (aud && window.CSCampaigns && aud.getAttribute('data-email-key') !== c.client_email) window.CSCampaigns.chips(aud, c.client_email, c.client_name);
     $('ibHead').innerHTML = '<button type="button" class="ib-back" id="ibBack" aria-label="Back to list">‹</button>' +
       '<div class="ib-who"><b>' + esc(c.client_name || c.client_email) + '</b><span>' + esc(c.client_email) + ' · ' + esc(c.subject) + '</span></div>' +
       '<div class="ib-actions">' + (canWrite ? '<select id="ibStatus">' + Object.keys(STATUS).map(function (s) { return '<option value="' + s + '"' + (s === c.status ? ' selected' : '') + '>' + STATUS[s] + '</option>'; }).join('') + '</select>' : '<em class="ib-st ' + c.status + '">' + STATUS[c.status] + '</em>') +
