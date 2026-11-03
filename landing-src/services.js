@@ -244,7 +244,9 @@ module.exports = [
       ['Can you migrate our data from spreadsheets?', 'Yes. We clean, de-duplicate and import contacts, companies and deals, and check the result with you before switching over.'],
       ['Can website leads go straight into Zoho CRM?', 'Yes. We connect your website forms so each lead arrives in the CRM with its source and campaign, and can trigger an assignment and a follow-up task automatically.'],
       ['Do you write Deluge scripts?', 'Yes. When the standard workflow rules are not enough, we use Deluge functions and the Zoho API to automate the rest.'],
-      ['Do you work with other Zoho apps?', 'We work with the Zoho apps that connect to CRM, such as Forms, Campaigns, Books and Desk, as part of a CRM project.']
+      ['Do you work with other Zoho apps?', 'We work with the Zoho apps that connect to CRM, such as Forms, Campaigns, Books and Desk, as part of a CRM project.'],
+      ['Can you automate lead follow-up with n8n or Make.com?', 'Yes. We build workflows in n8n and Make.com as well as Zoho, so a new lead can be routed, followed up and logged in your CRM without manual work. We agree the steps with you and quote the work per project.'],
+      ['Do you train our team on the CRM?', 'Yes. Training and handover are part of the project, so your team can run the CRM day to day without us.']
     ],
     related: ['react-nextjs-development', 'wordpress-woocommerce-development', 'website-redesign']
   },
@@ -292,7 +294,8 @@ module.exports = [
       ['Will I lose my Google rankings?', 'Not if the redesign is done carefully. We redirect every old URL, keep the content that ranks, and make the new site faster, which usually helps rankings.'],
       ['How long does a redesign take?', 'The Fix & Redesign package is delivered in 5 to 10 days. Larger redesigns usually take 2 to 4 weeks.'],
       ['Can you keep my current platform?', 'Yes, if it is sound. We redesign WordPress, Wix, Squarespace, Shopify and custom sites, and only recommend moving when the platform is the problem.'],
-      ['Do I need new content?', 'Usually some. We help restructure and tighten your existing content, and can write new copy for key pages.']
+      ['Do I need new content?', 'Usually some. We help restructure and tighten your existing content, and can write new copy for key pages.'],
+      ['Will a redesign make my site faster?', 'It should. Speed and mobile performance are part of every redesign, and the Fix & Redesign package includes speed optimisation.']
     ],
     related: ['seo-speed-optimization', 'wordpress-woocommerce-development', 'landing-page-design']
   },
@@ -343,7 +346,8 @@ module.exports = [
       ['How fast can you deliver?', 'Most landing pages are delivered in 5 to 7 days once we have your offer, copy notes and branding.'],
       ['Can you connect the form to my email tool or CRM?', 'Yes. We connect to Mailchimp, HubSpot, Zoho CRM and most other tools, so leads arrive where your team works.'],
       ['Can you build it on my existing website?', 'Yes. We can build the page inside WordPress, Shopify, Webflow or your current site, or as a standalone page on its own address.'],
-      ['Do you run the ads too?', 'We focus on the page and the tracking. We work alongside your ads team or freelancer and make sure conversions are reported correctly.']
+      ['Do you run the ads too?', 'We focus on the page and the tracking. We work alongside your ads team or freelancer and make sure conversions are reported correctly.'],
+      ['Can you help write the copy?', 'Yes. We help shape the message and write or tighten the page copy from what you tell us about your offer and your customers.']
     ],
     related: ['website-redesign', 'seo-speed-optimization', 'shopify-development']
   },
@@ -391,7 +395,8 @@ module.exports = [
       ['How long until I see results?', 'Technical fixes can show in Search Console within weeks, as pages are re-crawled. Ranking gains usually build over 2 to 6 months, depending on competition and content. Anyone who promises page one by a date is guessing.'],
       ['Can you guarantee first-page rankings?', 'No, and you should be wary of anyone who does. We fix what holds your site back and build the foundations that rankings depend on, and we report honestly on what changes.'],
       ['Can you make my site pass Core Web Vitals?', 'In most cases, yes. We measure your pages, fix the causes and check the result in field data over the following weeks.'],
-      ['Do you build links?', 'We do not buy links. We help you earn them through real content, directory profiles and partners, which is safer and lasts.']
+      ['Do you build links?', 'We do not buy links. We help you earn them through real content, directory profiles and partners, which is safer and lasts.'],
+      ['Can you make my site show up in ChatGPT and AI search?', 'We can make your site easier for AI assistants to read and cite, but nobody can guarantee a mention. We keep your pages open to AI crawlers, add structured data and an llms.txt file, and write direct answers to the questions your customers ask.']
     ],
     related: ['website-redesign', 'wordpress-woocommerce-development', 'landing-page-design']
   }

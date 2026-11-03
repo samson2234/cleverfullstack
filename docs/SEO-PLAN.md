@@ -216,6 +216,8 @@ For every target we record: the search phrase, the page that owns it (one page p
 - Keep `llms.txt` and the structured data current. Be listed on the directories and "best agencies" lists AI tools read (Phase 4).
 - Track "AI assistant" as a lead source (it's already detected on the lead card).
 
+**Status (2 Nov):** on-site batch 1 done: one brand line ("CleverStack (cleverstack.dev) is a full-stack web development studio...") in schema, footer and llms.txt; Person schema for the 5 people on the About page; About FAQ including the difference from the similarly named framework; at least 6 FAQs on every service, industry and country page; new /cleaning-company-websites page using only the 2 real cleaning clients; dateModified on all posts. Tests guard these. **Waiting on the owner:** the 25 prompt "before" score; which case-study numbers are real (none go into schema until confirmed); whether Lovable/Bolt rescue and Claude Code are services we sell (prompts 17, 18: no page until confirmed); Organization sameAs when the accounts are ready.
+
 ## 4. Timeline (first 90 days)
 
 | Weeks | Work |

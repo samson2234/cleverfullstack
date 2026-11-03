@@ -16,7 +16,7 @@ function el(type, props, ...children) {
 export default async function handler(req) {
   try {
     const url = new URL(req.url, 'https://cleverstack.dev');
-    const title = url.searchParams.get('title') || 'Full-Stack Development Studio';
+    const title = url.searchParams.get('title') || 'Full-Stack Web Development Studio';
     const type = url.searchParams.get('type') || 'website';
 
     const node = el(
@@ -69,7 +69,7 @@ export default async function handler(req) {
       el(
         'div',
         { style: { fontSize: 18, color: muted, marginTop: 28, letterSpacing: 2, textTransform: 'uppercase' } },
-        'Full-Stack Development Studio',
+        'Full-Stack Web Development Studio',
       ),
       type === 'article' &&
         el('div', { style: { fontSize: 14, color: muted, marginTop: 16, opacity: 0.7 } }, 'cleverstack.dev'),

@@ -44,7 +44,8 @@ module.exports = [
       ['Can you connect our booking system?', 'Yes. We embed or link the booking system you already use, such as Dentally, Cliniko, Fresha or Calendly, and put the booking button on every page.'],
       ['Can we update treatment prices and team members ourselves?', 'Yes. Treatments, prices and team profiles are managed in the CMS, and we show your team how at handover.'],
       ['Do you help with local SEO for clinics?', 'Yes. We set up local business schema, location pages and Google Business Profile basics so you appear for searches in your area.'],
-      ['Is patient data safe?', 'We keep website forms minimal and avoid collecting medical details by email. For clinical records, patients should use your practice management system, which we link to.']
+      ['Is patient data safe?', 'We keep website forms minimal and avoid collecting medical details by email. For clinical records, patients should use your practice management system, which we link to.'],
+      ['How long does a clinic website take?', 'The Business Website package is delivered in 7 to 14 days once we have your content. Online booking integration is added to your quote.']
     ],
     related: ['wordpress-woocommerce-development', 'seo-speed-optimization', 'website-redesign']
   },
@@ -95,7 +96,8 @@ module.exports = [
       ['Can we update attorney profiles ourselves?', 'Yes. Profiles, practice areas and news are managed in WordPress, and your team gets a walkthrough at handover.'],
       ['Do you write legal content?', 'We structure pages and edit for clarity. Legal substance should come from your lawyers, and we never publish legal claims without your approval.'],
       ['Can you help us rank for local legal searches?', 'Yes. We set up practice-area and location pages, legal service schema and Google Business Profile basics, which are the foundations of local legal SEO.'],
-      ['Can you redesign our current site without losing rankings?', 'Yes. We redirect every old URL and keep the content that ranks. See our website redesign service.']
+      ['Can you redesign our current site without losing rankings?', 'Yes. We redirect every old URL and keep the content that ranks. See our website redesign service.'],
+      ['How long does a law firm website take?', 'A smaller firm site on the Business Website package is delivered in 7 to 14 days once we have your content. Larger sites with many attorneys and practice areas take longer, and we confirm the date in your quote.']
     ],
     related: ['wordpress-woocommerce-development', 'website-redesign', 'seo-speed-optimization']
   },
@@ -145,7 +147,9 @@ module.exports = [
       ['How much does a real estate website cost?', 'Agent and agency sites start with our Business Website package at $999. Listing feeds, IDX and custom search are quoted after a free call, with a fixed price before work starts.'],
       ['Can you connect IDX or MLS listings?', 'Yes, where your MLS and IDX provider allows it. In the UK and Europe we connect to property software feeds where available.'],
       ['Can agents update listings themselves?', 'Yes. Listings either come from your feed automatically or are managed in the CMS by your team.'],
-      ['Do you build property management portals?', 'Yes, as custom web apps. Our Custom Web App package starts at $3,000.']
+      ['Do you build property management portals?', 'Yes, as custom web apps. Our Custom Web App package starts at $3,000.'],
+      ['How long does a real estate website take?', 'The Business Website package is delivered in 7 to 14 days once we have your content. Listing feeds and custom tools can add time, and we confirm the date in your quote.'],
+      ['Can you add area guides and seller lead capture?', 'Yes. We build area guides for the neighbourhoods you cover and forms that let sellers ask for a valuation.']
     ],
     related: ['react-nextjs-development', 'wordpress-woocommerce-development', 'seo-speed-optimization']
   },
@@ -195,7 +199,9 @@ module.exports = [
       ['How much does a restaurant website cost?', 'A restaurant site starts with our Starter Website package at $499 for up to 5 pages with a menu, map and contact details. Online ordering, bookings and larger sites are quoted after a free call.'],
       ['Can I update the menu myself?', 'Yes. The menu is managed in the CMS, so changing a dish or a price takes a minute.'],
       ['Can you add online ordering?', 'Yes. We connect the ordering system you prefer, or recommend one that fits your volume and commission budget.'],
-      ['Will my restaurant show up on Google Maps?', 'We set up restaurant schema and align your website with your Google Business Profile, which is what Google uses for local results.']
+      ['Will my restaurant show up on Google Maps?', 'We set up restaurant schema and align your website with your Google Business Profile, which is what Google uses for local results.'],
+      ['How long does a restaurant website take?', 'The Starter Website package is delivered in 5 to 7 days once we have your menu, photos and opening hours.'],
+      ['Can guests book a table on the site?', 'Yes. We connect the table booking system you use, so guests can book from their phone.']
     ],
     related: ['landing-page-design', 'wordpress-woocommerce-development', 'seo-speed-optimization']
   },
@@ -245,7 +251,8 @@ module.exports = [
       ['Can you build the product too?', 'Yes. See our SaaS MVP development and React and Next.js services. Product builds start at $3,000.'],
       ['Which CMS do you use for SaaS sites?', 'Often Next.js with a headless CMS such as Sanity, so marketers can publish without developers and the site stays fast.'],
       ['Can you help with positioning and copy?', 'Yes. We help sharpen your message and write page copy from your notes and customer conversations.'],
-      ['How long does a SaaS marketing site take?', 'A focused launch site with a homepage, pricing, sign-up and a few supporting pages usually takes 2 to 4 weeks once the message is agreed. Larger sites with docs and many use-case pages take longer, and you get a specific timeline in your proposal.']
+      ['How long does a SaaS marketing site take?', 'A focused launch site with a homepage, pricing, sign-up and a few supporting pages usually takes 2 to 4 weeks once the message is agreed. Larger sites with docs and many use-case pages take longer, and you get a specific timeline in your proposal.'],
+      ['Can you add docs and a changelog?', 'Yes. We can add documentation and changelog pages to your marketing site, so customers and search engines can find them in one place.']
     ],
     related: ['saas-mvp-development', 'react-nextjs-development', 'landing-page-design']
   },
@@ -295,8 +302,108 @@ module.exports = [
       ['Can you migrate my store from another platform?', 'Yes. We move products, customers and orders where possible, and redirect every old URL to keep your rankings.'],
       ['Can you sell in several currencies?', 'Yes. We set up multi-currency, shipping zones and tax for the markets you sell in.'],
       ['Do you photograph products?', 'No, but we advise on the shots your product pages need and optimise the images you provide.'],
-      ['Can you connect my store to marketplaces and social shops?', 'Yes. Shopify and WooCommerce both connect to Google Shopping, Meta and Instagram shops, and to marketplaces such as Amazon through apps or plugins, so your products and stock stay in sync from one place.']
+      ['Can you connect my store to marketplaces and social shops?', 'Yes. Shopify and WooCommerce both connect to Google Shopping, Meta and Instagram shops, and to marketplaces such as Amazon through apps or plugins, so your products and stock stay in sync from one place.'],
+      ['Can you build a multi-vendor marketplace like Etsy?', 'Yes, as a custom web app rather than a standard store, because sellers need their own accounts, listings and payouts. Custom web apps start at $3,000. A marketplace is larger than that starter scope, so we quote it after a free call.']
     ],
     related: ['shopify-development', 'wordpress-woocommerce-development', 'seo-speed-optimization']
+  },
+  {
+    slug: 'cleaning-company-websites',
+    kind: 'industry',
+    name: 'Websites for Cleaning Companies',
+    title: 'Websites for Cleaning Companies: More Quote Requests From Local Search | CleverStack',
+    description: 'Website design for cleaning companies: service pages, service areas, quote forms and local SEO, built for commercial, carpet and home cleaning businesses.',
+    eyebrow: 'Cleaning & Janitorial Companies',
+    h1: 'Websites for cleaning companies that turn local searches into quote requests',
+    sub: 'Clear, fast websites for commercial cleaners, carpet cleaners and home cleaning businesses, with service area pages and a quote form that works on a phone.',
+    price: {
+      from: 499,
+      label: 'Starter Website package',
+      delivery: '5–7 days',
+      includes: 'Up to 5 pages, mobile-responsive, SEO foundation, contact form, social links, Google Maps and basic analytics. Online ordering, bookings and larger sites are quoted after a free call.'
+    },
+    intro: [
+      'People look for a cleaning company when they need one soon. They search for the service and their town, open two or three sites and contact the one that looks trustworthy and easy to reach. A cleaning website has to show what you clean, where you work and how to get a price, within seconds and on a phone.',
+      'We build cleaning websites around those questions. Each service gets its own clear explanation, your service areas are spelled out, and a call button and quote form are always within reach. Commercial clients see a business they can trust with their building, and homeowners see how easy it is to book.'
+    ],
+    forWho: [
+      'Commercial cleaning and janitorial companies',
+      'Carpet, upholstery and floor care specialists',
+      'Home and end-of-tenancy cleaning businesses',
+      'Pressure washing and exterior cleaning companies'
+    ],
+    deliverables: [
+      [
+        'Service pages',
+        'A clear page or section for each service, such as office cleaning, floor care, carpet cleaning or pressure washing: what is included and who it is for.'
+      ],
+      [
+        'Service area pages',
+        'The towns and districts you cover, with useful content for each one instead of a copied list of place names.'
+      ],
+      [
+        'Quote requests',
+        'A short form that asks for the job details you need, plus call buttons that stay within reach on mobile.'
+      ],
+      [
+        'Commercial and residential paths',
+        'Facility managers and homeowners want different things, so each gets a clear route to the right service.'
+      ],
+      ['Local SEO', 'Local business schema, clean page titles and a website that matches your Google Business Profile.'],
+      [
+        'Trust signals',
+        'Your real reviews, photos of your work, and any insurance or certifications you hold, shown where people decide.'
+      ]
+    ],
+    sections: [
+      [
+        'What makes someone request a quote',
+        [
+          'Most people comparing cleaners want three answers: do you do this job, do you work in my area, and how do I get a price? When those answers are easy to find, the next step is simple. When they are hidden, people go back to search and try the next company.',
+          'Real photos and real reviews do more than any slogan. If you have them, we place them next to your services. If you do not have many yet, we keep the page honest and help you plan how to collect them.'
+        ]
+      ],
+      [
+        'Commercial and home cleaning need different pages',
+        [
+          'A facility manager wants to know about reliability, the services you cover and how to arrange a walk-through. A homeowner wants to know what is included and how quickly you can come. We keep those paths separate, so neither has to read through content meant for the other.'
+        ]
+      ],
+      [
+        'Showing up in local search',
+        [
+          'Local rankings depend on your website, your Google Business Profile and your reviews working together. We handle the website side: service and area pages, local business schema, fast loading and consistent contact details. We also show you how to keep your profile up to date. Nobody can honestly guarantee a first-page ranking, and we will not promise one.'
+        ]
+      ]
+    ],
+    cases: ['ab-cleaning-solution-website', 'dc-carpet-cleaning-website'],
+    caseNote: 'A&B Cleaning Solution is a commercial cleaning company serving the Portland metro and SW Washington. DC Carpet Cleaning serves residential and commercial clients in Australia. We built both sites around their services, with quote requests that are easy to make.',
+    faqs: [
+      [
+        'How much does a cleaning company website cost?',
+        'A cleaning website starts with our Starter Website package at $499 for up to 5 pages. If you need more service and area pages and want to edit them yourself, the Business Website package is $999 for up to 10 pages with a CMS.'
+      ],
+      [
+        'How long does it take to build?',
+        'The Starter Website package is delivered in 5 to 7 days once we have your services, service areas and photos.'
+      ],
+      [
+        'Can customers request a quote on the site?',
+        'Yes. We add a short quote form and call buttons that stay within reach on a phone. Requests go to your email or CRM.'
+      ],
+      [
+        'Do you help with local SEO for cleaning companies?',
+        'Yes. We set up service and area pages, local business schema and consistent contact details, and show you how to keep your Google Business Profile up to date. We do not guarantee rankings.'
+      ],
+      [
+        'Do you work with commercial and home cleaning companies?',
+        'Yes. We have built a site for a commercial cleaning company in the Portland area and one for a carpet cleaning business in Australia that serves homes and businesses.'
+      ],
+      [
+        'Can I change my services and prices myself?',
+        'Yes, on a site with a CMS. The Business Website package includes a CMS and editor training, so you can update services, prices and photos without calling us.'
+      ]
+    ],
+    related: ['seo-speed-optimization', 'website-redesign', 'landing-page-design']
   }
 ];

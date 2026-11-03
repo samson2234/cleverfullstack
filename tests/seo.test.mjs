@@ -224,3 +224,44 @@ test('the homepage heading reads as one sentence to crawlers, in every language'
 test('own seller accounts are never shown as clients', () => {
   for (const f of ['index.html', 'reviews.html']) assert.doesNotMatch(fs.readFileSync(path.join(root, f), 'utf8'), /maxcodedev/i, f);
 });
+
+test('AI search: one brand description, team schema that matches the About page, and valid structured data everywhere', () => {
+  const STD = "CleverStack (cleverstack.dev) is a full-stack web development studio building fast, scalable websites and web applications for founders and growing businesses.";
+  const pages = fs.readdirSync(root).filter((f) => f.endsWith('.html'));
+  for (const dir of ['blog', 'work']) for (const f of fs.readdirSync(path.join(root, dir))) if (f.endsWith('.html')) pages.push(dir + '/' + f);
+  for (const f of pages) {
+    const html = read(f);
+    // the short hero label keeps its old wording: the longer one wraps on 360px phones and moves the heading
+    assert.doesNotMatch(html, /[Ff]ull-stack development studio/, f + ': use the standard brand wording');
+    for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+      const j = JSON.parse(m[1]);
+      if (j['@id'] === SITE + '/#organization') assert.equal(j.description, STD, f + ': organization description');
+    }
+  }
+  const about = read('about.html');
+  const blocks = [...about.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1]));
+  const shown = [...about.matchAll(/<div class="team-card[^"]*">[\s\S]*?<h3>([^<]+)<\/h3>/g)].map((m) => m[1]);
+  assert.deepEqual(blocks.find((b) => b['@graph'])['@graph'].map((p) => p.name), shown, 'team schema lists the people on the page');
+  const faq = blocks.find((b) => b['@type'] === 'FAQPage');
+  assert.equal(faq.mainEntity.length, (about.match(/class="faq-item"/g) || []).length, 'About FAQ schema matches the visible FAQ');
+  const llms = read('llms.txt');
+  assert.match(llms, /CleverStack \(cleverstack\.dev\) is a full-stack web development studio/);
+  for (const name of shown) assert.ok(llms.includes(name), 'llms.txt names ' + name);
+});
+
+test('AI search: every service, industry and country page answers at least 6 questions; every post has dates', async () => {
+  const slugs = fs.readdirSync(root).filter((f) => /^(web-development-|hire-)/.test(f) || /-(websites|development|automation|redesign|design|optimization)\.html$/.test(f)).filter((f) => f.endsWith('.html'));
+  assert.ok(slugs.length >= 25, 'found ' + slugs.length);
+  for (const f of slugs) {
+    const html = read(f);
+    const faq = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1])).find((b) => b['@type'] === 'FAQPage');
+    assert.ok(faq && faq.mainEntity.length >= 6, f + ': needs 6 FAQs, has ' + (faq ? faq.mainEntity.length : 0));
+    for (const q of faq.mainEntity) assert.ok(html.replace(/&amp;/g, '&').includes(q.name.replace(/&amp;/g, '&')) , f + ': ' + q.name);
+  }
+  for (const f of fs.readdirSync(path.join(root, 'blog'))) {
+    if (!f.endsWith('.html') || f === 'index.html') continue;
+    const html = read('blog/' + f);
+    assert.match(html, /"datePublished"/, f);
+    assert.match(html, /"dateModified"/, f);
+  }
+});

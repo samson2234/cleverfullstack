@@ -253,7 +253,7 @@ function llmsTxt() {
   const out = [
     '# CleverStack: Full-Stack Web, App & Software Development',
     '',
-    '> CleverStack is a remote team of full-stack developers and software engineers building websites, online stores, web apps, SaaS products, mobile apps, desktop apps and plugins for businesses worldwide, mainly in the USA, UK, Canada, Germany and the rest of Europe. Fixed quotes before work starts; the client owns the code.',
+    '> CleverStack (cleverstack.dev) is a full-stack web development studio: a remote team of developers and software engineers building websites, online stores, web apps, SaaS products, mobile apps, desktop apps and plugins for businesses worldwide, mainly in the USA, UK, Canada, Germany and the rest of Europe. Fixed quotes before work starts; the client owns the code.',
     '',
     '## Packages (USD, fixed price)',
     '- Starter Website ($499): up to 5 pages, mobile-responsive, SEO foundation, 5–7 days',
@@ -289,6 +289,15 @@ function llmsTxt() {
     '',
     '## Founder',
     'Henry George, full-stack developer and founder of CleverStack.',
+    '',
+    '## Team',
+    '- Clever Web, Full Stack Developer & Zoho CRM Expert. Builds web apps, dashboards and SaaS MVPs with React, Next.js and Node, plus Wix and WordPress business sites and Zoho CRM automation.',
+    '- Mike, Full Stack & WordPress Developer. Designs and builds fast, mobile-responsive WordPress and custom websites with Elementor and WooCommerce, structured to turn visitors into clients.',
+    '- Clevian, Frontend & CMS Web Developer. Builds clean, fast websites in WordPress, Webflow and Wix, with a focus on clarity, performance and conversion.',
+    '- Vicky, AI Automation & CRM Expert. Connects AI to everyday business workflows with n8n, Make.com and Zoho, and builds custom React and Node tools, chatbots and integrations.',
+    '',
+    '## Not to be confused with',
+    'CleverStack at cleverstack.dev is a web development studio. It has no connection to the open-source software framework with a similar name.',
     ''
   ];
   fs.writeFileSync(path.join(ROOT, 'llms.txt'), out.join('\n'));

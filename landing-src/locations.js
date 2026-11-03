@@ -113,7 +113,8 @@ module.exports = [
       ['Do you build French websites for Quebec?', 'Yes. We build English and French sites with separate pages for each language. French copy comes from your team or a professional translator, and we handle the structure and search setup.'],
       ['Can my Shopify store sell in Canadian dollars?', 'Yes. We set up Shopify Markets for CAD pricing, Canadian taxes and shipping, and can sell to the USA from the same store.'],
       ['Do your forms follow CASL?', 'We set up email sign-ups with clear, unticked consent checkboxes and a record of when consent was given. Your adviser can confirm what your business needs.'],
-      ['Which time zone do you work in?', 'UTC+1. Our afternoon overlaps with Eastern Time mornings, and we schedule calls at times that work for you.']
+      ['Which time zone do you work in?', 'UTC+1. Our afternoon overlaps with Eastern Time mornings, and we schedule calls at times that work for you.'],
+      ['How long does a website take?', 'A starter website takes 5 to 7 days, a business website 7 to 14 days and a custom web app 14 to 28 days, once we have your content.']
     ],
     related: ['shopify-development', 'wordpress-woocommerce-development', 'website-redesign']
   }

@@ -102,7 +102,8 @@ module.exports = [
       ['Can you build from our Figma designs?', 'Yes. Send the Figma file and we will build it faithfully, raising anything that will not work well on small screens before we start.'],
       ['Do you also design?', 'Yes. If you do not have designs yet, we design the interface first and agree it with you before building.'],
       ['Can you improve our Core Web Vitals?', 'Usually, yes. We find what slows your pages down and fix it at the source. See our SEO and speed optimisation service.'],
-      ['Which frameworks do you use?', 'React and Next.js with TypeScript are our default. We also work with WordPress, Shopify and headless CMSs.']
+      ['Which frameworks do you use?', 'React and Next.js with TypeScript are our default. We also work with WordPress, Shopify and headless CMSs.'],
+      ['Do you build accessible websites?', 'Yes. Accessibility is part of our frontend work: we build to WCAG 2.1 AA guidelines and test keyboard navigation.']
     ],
     related: ['hire-full-stack-developers', 'react-nextjs-development', 'seo-speed-optimization']
   },
@@ -152,7 +153,8 @@ module.exports = [
       ['Which backend technologies do you use?', 'Mainly Node.js with TypeScript, Express or Next.js API routes, and PostgreSQL. We also work with Laravel, MongoDB and serverless platforms when they suit the job.'],
       ['Can you build an API for our mobile app?', 'Yes. We design APIs for web and mobile clients, with authentication, versioning and documentation.'],
       ['Can you review our backend for security issues?', 'Yes. We review authentication, permissions, input handling, secrets and dependencies, and fix the issues in order of risk.'],
-      ['Do you write tests?', 'Yes. We write automated tests for the parts of the system where mistakes are expensive, such as payments, permissions and data changes, and run them on every change.']
+      ['Do you write tests?', 'Yes. We write automated tests for the parts of the system where mistakes are expensive, such as payments, permissions and data changes, and run them on every change.'],
+      ['Can you take over an existing backend?', 'Yes. We start by reviewing the code, database and infrastructure, then agree what to fix first before changing anything.']
     ],
     related: ['hire-full-stack-developers', 'saas-mvp-development', 'zoho-crm-automation']
   }
