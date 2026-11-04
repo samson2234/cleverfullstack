@@ -77,7 +77,7 @@ test('structured data is valid JSON, truthful and has breadcrumbs', () => {
 
 test('no links or schema claim social profiles that are not ours', () => {
   // these handles belong to someone else or do not exist (confirmed by the owner, 27 Oct 2026)
-  const notOurs = /linkedin\.com\/company\/cleverstack|(?:twitter|x)\.com\/cleverstack|goodfirms\.co\/company\/cleverstack|clutch\.co\/profile\/cleverstack/i;
+  const notOurs = /linkedin\.com\/company\/cleverstack(?!-dev)|(?:twitter|x)\.com\/cleverstack|goodfirms\.co\/company\/cleverstack|clutch\.co\/profile\/cleverstack/i;
   for (const p of pages) assert.ok(!notOurs.test(p.html), p.rel + ': ' + (p.html.match(notOurs) || [])[0]);
 });
 
@@ -307,4 +307,16 @@ test('homepage Recent Work shows the six projects the owner chose', () => {
   const home = read('index.html');
   const found = [...home.matchAll(/<a href="\/work\/([a-z0-9-]+)" class="project-card/g)].map((m) => m[1]);
   assert.deepEqual(found, ["fytr-hub-fight-night-platform","lumea-glow-skin-clinic-website","fittrack-fitness-tracking-app","ai-skincare-mobile-app","stringmaster-guitar-learning-platform","helen-may-coaching-platform"]);
+});
+
+test('the company LinkedIn page is in the footer and the organization schema', () => {
+  const co = 'https://www.linkedin.com/company/cleverstack-dev';
+  for (const f of ['index.html', 'about.html', 'contact.html', 'web-development-usa.html', 'cleaning-company-websites.html', 'blog/custom-vs-nocode.html', 'work/bouhan-falligant-law-firm-website.html']) {
+    assert.ok(read(f).includes('<a href="' + co + '"'), f + ': footer link');
+    assert.ok(!read(f).includes('<a href="https://www.linkedin.com/in/henrygeorge01" target="_blank" rel="noopener" aria-label="LinkedIn"'), f);
+  }
+  for (const f of ['index.html', 'about.html']) {
+    const org = [...read(f).matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1])).find((j) => j['@id'] === SITE + '/#organization');
+    assert.deepEqual(org.sameAs, [co], f);
+  }
 });
