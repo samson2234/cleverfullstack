@@ -302,3 +302,9 @@ test('every project has a portfolio card; FYTR HUB shows no rating, price or cli
   const guitar = read('work/stringmaster-guitar-learning-platform.html').match(/<main[\s\S]*<\/main>/)[0];
   assert.doesNotMatch(guitar, /50K|4\.9|Berklee/, 'placeholder stats on the demo site are not repeated here');
 });
+
+test('homepage Recent Work shows the six projects the owner chose', () => {
+  const home = read('index.html');
+  const found = [...home.matchAll(/<a href="\/work\/([a-z0-9-]+)" class="project-card/g)].map((m) => m[1]);
+  assert.deepEqual(found, ["fytr-hub-fight-night-platform","lumea-glow-skin-clinic-website","fittrack-fitness-tracking-app","ai-skincare-mobile-app","stringmaster-guitar-learning-platform","helen-may-coaching-platform"]);
+});
