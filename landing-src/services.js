@@ -410,9 +410,10 @@ module.exports = [
     h1: 'Multi-vendor marketplace development, on WordPress or fully custom',
     sub: 'We build marketplaces where many sellers list and sell in one place, in the style of Amazon, Etsy, eBay or AliExpress, plus Shopify-style platforms where each seller runs their own store.',
     price: {
-      label: 'Quoted per project',
+      from: 1000,
+      label: 'Starting price',
       delivery: 'Agreed in your proposal',
-      includes: 'A marketplace depends on your sellers, payment flow and features, so we scope it on a free call and send a fixed quote. A WordPress build is usually the quicker route to launch, and a custom build gives you more room to scale.'
+      includes: 'Marketplaces start from $1,000. The final price depends on how big the project is: your sellers, payment flow and features. We scope it on a free call and send a fixed quote.'
     },
     intro: [
       'A marketplace is much more than an online store with extra sellers. Every seller needs an account, a way to manage listings and orders, and a clear view of what they have earned. Buyers need to search across all of those sellers, trust who they are buying from, and check out without confusion. You need to approve sellers, take your commission, handle refunds and see what is going on across the platform.',
@@ -476,7 +477,7 @@ module.exports = [
     faqs: [
       [
         'How much does a multi-vendor marketplace cost?',
-        'It depends on the platform and features, so we give a fixed quote after a free call. A WordPress marketplace usually costs less than a custom build. Our Custom Web App package starts at $3,000, and a full marketplace is larger than that starter scope.'
+        'Marketplaces start from $1,000. The final price depends on how big the project is, so we send a fixed quote after a free call. A WordPress marketplace usually costs less than a custom build.'
       ],
       [
         'Can you build a marketplace like Etsy or Amazon?',
@@ -515,9 +516,10 @@ module.exports = [
     h1: 'Lovable or Bolt app won\'t deploy? We fix it and get it live',
     sub: 'Developers who take over apps built with Lovable, Bolt and similar AI tools: we fix what is broken, close security gaps and get your app ready for real users.',
     price: {
-      label: 'Quoted per project',
+      from: 300,
+      label: 'Starting price',
       delivery: 'Agreed in your proposal',
-      includes: 'We review your project first, then send a fixed quote for what needs doing. The price depends on what is broken and how far you want to take the app.'
+      includes: 'Fixes start from $300. The final price depends on what is broken and how far you want to take the app. We review your project first and send a fixed quote.'
     },
     intro: [
       'AI app builders are a fast way to get an idea on screen. The trouble often starts at the last step: the build fails, the login stops working once the app is live, data does not save, or each new prompt fixes one thing and breaks another. It can feel as though you are almost finished for weeks.',
@@ -585,7 +587,7 @@ module.exports = [
       ],
       [
         'How much does it cost to fix a Lovable or Bolt app?',
-        'It depends on what is broken, so we review the project and send a fixed quote. You will know the price before any work starts.'
+        'Fixes start from $300. The final price depends on what is broken, so we review the project and send a fixed quote. You will know the price before any work starts.'
       ],
       [
         'Why does my app work in preview but not when it is live?',
@@ -620,9 +622,10 @@ module.exports = [
     h1: 'n8n automation experts for lead follow-up and everyday workflows',
     sub: 'We connect your website, CRM, email and AI tools with n8n or Make.com, so leads get followed up quickly and your team stops copying data between systems.',
     price: {
-      label: 'Quoted per project',
+      from: 500,
+      label: 'Starting price',
       delivery: 'Agreed in your proposal',
-      includes: 'Automation work depends on how many steps and tools are involved, so we scope it on a free call and send a fixed quote. Workflows can also be added to a website or CRM project.'
+      includes: 'Automations start from $500. The final price depends on how big the task is: the number of steps and tools involved. We scope it on a free call and send a fixed quote.'
     },
     intro: [
       'Most small teams lose time in the gaps between their tools. A lead arrives by form, someone copies it into the CRM, someone else remembers to reply, and a few days later nobody is sure whether it happened. The slower that follow-up is, the more likely the lead has already spoken to someone else.',
@@ -687,7 +690,7 @@ module.exports = [
       ],
       [
         'How much does n8n automation cost?',
-        'It depends on the number of steps and tools involved, so we scope it on a free call and send a fixed quote.'
+        'Automations start from $500. The final price depends on how big the task is, so we scope it on a free call and send a fixed quote.'
       ],
       [
         'Should I use n8n or Make.com?',

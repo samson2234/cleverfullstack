@@ -1,5 +1,56 @@
 [
   {
+    "id": "fytrhub",
+    "slug": "fytr-hub-fight-night-platform",
+    "title": "FYTR HUB",
+    "subtitle": "Sports & Events • Full-Stack Platform",
+    "img": "/images/portfolio/fytrhub-1200.webp",
+    "imgAlt": "FYTR HUB website: find fight nights near you",
+    "liveUrl": "https://www.fytrhub.com/",
+    "client": {
+      "name": "FYTR HUB",
+      "title": "Fight night platform",
+      "country": "United Kingdom"
+    },
+    "rated": false,
+    "goal": "FYTR HUB is a UK platform where fans find boxing, MMA, Muay Thai and other fight nights near them, and where gyms and promoters list their events. It needed to work for fans searching by location and for the hosts running each show.",
+    "challenges": "Finding events by real distance from a town or postcode, showing fight cards with fighters, records and weights, and giving gyms and promoters their own tools. The team running the platform also needed a way to review accounts and listings, and to connect outside tools.",
+    "solutions": "We built a full-stack Next.js platform on PostgreSQL with PostGIS for distance search and Mapbox for locations. Fans search by town, postcode or their current location and choose how far they will travel. Gyms and promoters get dashboards for events, fight cards, rosters and profile pages. An admin area handles host verification, reports and event listings, and a secure API lets outside tools publish events.",
+    "outcome": "FYTR HUB is live at fytrhub.com, where fans can search for fight nights across the UK and gyms and promoters can list events for free.",
+    "skills": [
+      "Next.js",
+      "TypeScript",
+      "PostgreSQL & PostGIS",
+      "Prisma",
+      "Mapbox",
+      "REST API"
+    ],
+    "industry": "Sports & Events"
+  },
+  {
+    "id": "stringmaster",
+    "slug": "stringmaster-guitar-learning-platform",
+    "title": "StringMaster",
+    "subtitle": "Education • Demo Web App",
+    "img": "/images/portfolio/stringmaster-1200.webp",
+    "imgAlt": "StringMaster interactive guitar fretboard",
+    "liveUrl": "https://theguitar.vercel.app/",
+    "demo": true,
+    "goal": "StringMaster is a demo guitar learning platform we built to show how an online course business can teach through hands-on practice, not just video.",
+    "challenges": "Making a guitar fretboard feel playable in a browser: it has to respond straight away, show exactly where the fingers go and still be clear on a landing page that also explains the product.",
+    "solutions": "We built it with Next.js and TypeScript, with Clerk for sign-up and sign-in, and PostgreSQL with Prisma for data. Visitors can click a chord to see it on the fretboard, click frets to play notes with sound on or off, and play along to songs such as Greensleeves.",
+    "outcome": "Open the demo to try the fretboard, the chords and the song player yourself. It is not a client project, so it has no client results to report. We can build the same kind of learning platform around your own lessons and pricing.",
+    "skills": [
+      "Next.js",
+      "TypeScript",
+      "Clerk Auth",
+      "PostgreSQL",
+      "Prisma",
+      "Interactive UI"
+    ],
+    "industry": "Education"
+  },
+  {
     "id": "alexfit",
     "slug": "alexfit-coaching-fitness-website",
     "title": "AlexFit Coaching",

@@ -303,7 +303,7 @@ module.exports = [
       ['Can you sell in several currencies?', 'Yes. We set up multi-currency, shipping zones and tax for the markets you sell in.'],
       ['Do you photograph products?', 'No, but we advise on the shots your product pages need and optimise the images you provide.'],
       ['Can you connect my store to marketplaces and social shops?', 'Yes. Shopify and WooCommerce both connect to Google Shopping, Meta and Instagram shops, and to marketplaces such as Amazon through apps or plugins, so your products and stock stay in sync from one place.'],
-      ['Can you build a multi-vendor marketplace like Etsy?', 'Yes. We build multi-vendor marketplaces on WordPress and as scalable custom web apps, with seller accounts, listings and payouts. We quote each one after a free call. See our multi-vendor marketplace development page for details.']
+      ['Can you build a multi-vendor marketplace like Etsy?', 'Yes. We build multi-vendor marketplaces on WordPress and as scalable custom web apps, with seller accounts, listings and payouts. Marketplaces start from $1,000, depending on how big the project is. See our multi-vendor marketplace development page for details.']
     ],
     related: ['shopify-development', 'wordpress-woocommerce-development', 'seo-speed-optimization']
   },

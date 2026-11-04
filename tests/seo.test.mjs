@@ -148,7 +148,8 @@ test('service and industry pages: substantial, honest prices, real case studies,
   assert.ok(src.filter((p) => p.kind === 'location').length >= 2, 'Germany and Canada pages');
   // only the package prices published on /services (USD) and /web-development-europe (EUR), plus starting prices the
   // owner confirmed for app and extension work (27 Oct 2026: plugins/extensions $1,000, desktop apps $5,000)
-  const OWNER_CONFIRMED = [1000, 5000];
+  // and 3 Nov 2026: marketplaces $1,000, n8n automation $500, Lovable/Bolt fixes $300
+  const OWNER_CONFIRMED = [300, 500, 1000, 5000];
   const published = { USD: new Set([...read('services.html').matchAll(/"@type": "Offer", "price": "(\d+)"/g)].map((m) => Number(m[1])).concat(OWNER_CONFIRMED)),
     EUR: new Set([...read('web-development-europe.html').matchAll(/€([\d,]+)/g)].map((m) => Number(m[1].replace(/,/g, '')))) };
   const projects = new Set(JSON.parse(read('work-src/projects.json')).map((p) => p.slug));
@@ -268,8 +269,9 @@ test('AI search: every service, industry and country page answers at least 6 que
 
 test('our own demo projects are labelled as demos and claim no client, rating, price or result', () => {
   const projects = JSON.parse(read('work-src/projects.json'));
-  const demos = projects.filter((p) => /netlify\.app/.test(p.liveUrl || ''));
-  assert.equal(demos.length, 4);
+  const demos = projects.filter((p) => p.demo);
+  for (const p of projects) if (/netlify\.app/.test(p.liveUrl || '')) assert.equal(p.demo, true, p.slug);
+  assert.ok(demos.length >= 5);
   for (const p of demos) {
     assert.equal(p.demo, true, p.slug);
     assert.equal(p.client, undefined, p.slug + ': no invented client');
@@ -288,4 +290,15 @@ test('AI search prompts from the audit each have a page', () => {
     assert.ok(read('sitemap.xml').includes(SITE + '/' + slug + '<'), slug + ' in sitemap');
   }
   assert.match(read('hire-claude-code-developers.html'), /not affiliated with or endorsed by Anthropic/);
+});
+
+test('every project has a portfolio card; FYTR HUB shows no rating, price or client details', () => {
+  const projects = JSON.parse(read('work-src/projects.json'));
+  const pf = read('portfolio.html');
+  for (const p of projects) assert.ok(pf.includes('href="/work/' + p.slug + '"'), p.slug + ': portfolio card');
+  const main = read('work/fytr-hub-fight-night-platform.html').match(/<main[\s\S]*<\/main>/)[0];
+  assert.doesNotMatch(main, /★|Price Range|Project Duration|Noki|Enoch/);
+  assert.match(main, /fytrhub\.com/);
+  const guitar = read('work/stringmaster-guitar-learning-platform.html').match(/<main[\s\S]*<\/main>/)[0];
+  assert.doesNotMatch(guitar, /50K|4\.9|Berklee/, 'placeholder stats on the demo site are not repeated here');
 });

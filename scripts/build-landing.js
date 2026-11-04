@@ -45,6 +45,8 @@ const CASE_BLURB = {
   'ai-skincare-mobile-app': 'A React Native app for iOS and Android with on-device AI skin analysis, personalised product recommendations and an ingredient checker.',
   'helen-may-coaching-platform': 'A Next.js coaching platform with its own section for each service category and one booking and contact flow.',
   'alexfit-coaching-fitness-website': 'A demo website for a fitness coach, with trainer profiles and a three-click booking flow.',
+  'fytr-hub-fight-night-platform': 'A full-stack Next.js platform for finding UK fight nights by distance, with fight cards and dashboards for gyms and promoters.',
+  'stringmaster-guitar-learning-platform': 'A demo guitar learning platform in Next.js, with an interactive fretboard, chord diagrams and a play-along song player.',
   'fittrack-fitness-tracking-app': 'A React Native fitness app with quick workout logging, progress charts, goals and streaks, on a Node.js backend.'
 };
 
@@ -265,6 +267,7 @@ function llmsTxt() {
     '- SEO & Growth ($549): technical SEO audit, keyword research, on-page optimisation',
     '- Fix & Redesign ($799): site audit, redesign, speed optimisation',
     '- Mobile apps from $3,000 (iOS + Android), desktop apps from $5,000, plugins and browser extensions from $1,000',
+    '- Multi-vendor marketplaces from $1,000, n8n and Make.com automation from $500, Lovable and Bolt app fixes from $300; the final price depends on the size of the job',
     '- Prices in pounds and euros: ' + SITE + '/web-development-uk, ' + SITE + '/web-development-europe',
     '',
     '## Services', ...svc.map(line),

@@ -10,6 +10,7 @@
 - SEO & Growth ($549): technical SEO audit, keyword research, on-page optimisation
 - Fix & Redesign ($799): site audit, redesign, speed optimisation
 - Mobile apps from $3,000 (iOS + Android), desktop apps from $5,000, plugins and browser extensions from $1,000
+- Multi-vendor marketplaces from $1,000, n8n and Make.com automation from $500, Lovable and Bolt app fixes from $300; the final price depends on the size of the job
 - Prices in pounds and euros: https://cleverstack.dev/web-development-uk, https://cleverstack.dev/web-development-europe
 
 ## Services
@@ -21,9 +22,9 @@
 - [Website Redesign](https://cleverstack.dev/website-redesign): from $799. Website redesign for businesses with an outdated or slow site: audit, redesign, speed fixes and content migration without losing rankings. From $799.
 - [Landing Page Design](https://cleverstack.dev/landing-page-design): from $499. Landing page design and build for ads, launches and lead generation: fast, mobile-first, tracked and ready to A/B test. Delivered in 5–7 days, from $499.
 - [SEO & Site Speed Optimization](https://cleverstack.dev/seo-speed-optimization): from $549. Technical SEO and site speed optimization: Core Web Vitals, audits, schema, on-page fixes and Search Console setup. Results in 3–5 days, from $549.
-- [Multi-Vendor Marketplace Development](https://cleverstack.dev/multi-vendor-marketplace-development). Multi-vendor marketplace development on WordPress or as a scalable custom build: seller accounts, listings, commissions and payouts, like Etsy, Amazon or eBay.
-- [Lovable & Bolt App Fixes](https://cleverstack.dev/lovable-bolt-app-fixes). Lovable or Bolt app that will not deploy or keeps breaking? Developers fix build errors, logins, databases and security, then get it live and ready for real users.
-- [n8n & Make.com Automation](https://cleverstack.dev/n8n-automation). n8n and Make.com automation for small businesses: lead follow-up, CRM updates, AI steps and connections between your tools, built and handed over by developers.
+- [Multi-Vendor Marketplace Development](https://cleverstack.dev/multi-vendor-marketplace-development): from $1,000. Multi-vendor marketplace development on WordPress or as a scalable custom build: seller accounts, listings, commissions and payouts, like Etsy, Amazon or eBay.
+- [Lovable & Bolt App Fixes](https://cleverstack.dev/lovable-bolt-app-fixes): from $300. Lovable or Bolt app that will not deploy or keeps breaking? Developers fix build errors, logins, databases and security, then get it live and ready for real users.
+- [n8n & Make.com Automation](https://cleverstack.dev/n8n-automation): from $500. n8n and Make.com automation for small businesses: lead follow-up, CRM updates, AI steps and connections between your tools, built and handed over by developers.
 - [Mobile App Development](https://cleverstack.dev/mobile-app-development): from $3,000. Mobile app development for iOS and Android with React Native: one codebase, native feel, backend and App Store launch included. Fixed quote after a free call.
 - [Desktop App Development](https://cleverstack.dev/desktop-app-development): from $5,000. Desktop app development for Windows, macOS and Linux with Electron or Tauri: offline-ready tools, auto-updates, installers and secure sync. Fixed quotes.
 - [Plugin & Extension Development](https://cleverstack.dev/plugin-extension-development): from $1,000. Custom plugin and extension development: WordPress and WooCommerce plugins, Shopify apps, and Chrome, Edge and Firefox browser extensions. Fixed quotes.
