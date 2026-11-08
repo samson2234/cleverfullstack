@@ -317,7 +317,7 @@ test('the company LinkedIn page is in the footer and the organization schema', (
   }
   for (const f of ['index.html', 'about.html']) {
     const org = [...read(f).matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => JSON.parse(m[1])).find((j) => j['@id'] === SITE + '/#organization');
-    assert.deepEqual(org.sameAs, [co, 'https://x.com/Cleverstackdev'], f);
+    assert.deepEqual(org.sameAs, [co, 'https://x.com/Cleverstackdev', 'https://www.facebook.com/profile.php?id=61593363610983'], f);
   }
 });
 
@@ -326,4 +326,18 @@ test('the footer links the real X account and not the dead Twitter profile', () 
     assert.ok(read(f).includes('<a href="https://x.com/Cleverstackdev"'), f);
     assert.ok(!read(f).includes('twitter.com/henrygeorge01'), f);
   }
+});
+
+test('every footer shows X, LinkedIn and Facebook with clean icons and no Instagram', () => {
+  const pages = ['.', 'blog', 'work'].flatMap((d) => fs.readdirSync(d === '.' ? root : path.join(root, d)).filter((f) => f.endsWith('.html')).map((f) => (d === '.' ? f : d + '/' + f)));
+  const row = '<div class="social-row"><a href="https://x.com/Cleverstackdev" target="_blank" rel="noopener" aria-label="X">&#120143;</a> <a href="https://www.linkedin.com/company/cleverstack-dev" target="_blank" rel="noopener" aria-label="LinkedIn">in</a> <a href="https://www.facebook.com/profile.php?id=61593363610983" target="_blank" rel="noopener" aria-label="Facebook">f</a></div>';
+  let withFooter = 0;
+  for (const f of pages) {
+    const s = read(f);
+    for (const m of s.match(/<div class="social-row">[\s\S]*?<\/div>/g) || []) { assert.equal(m, row, f); withFooter++; }
+    assert.ok(!/<a href="https:\/\/www\.instagram\.com\/henrygeorge01"/.test(s), f + ': instagram link');
+  }
+  assert.ok(withFooter >= 90, 'footers checked: ' + withFooter);
+  for (const f of pages) assert.ok(!read(f).includes('footer.copyright">Ac 2026'), f + ': garbled copyright');
+  assert.ok(read('contact.html').includes('<a href="https://www.facebook.com/profile.php?id=61593363610983"'), 'contact facebook');
 });
