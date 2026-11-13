@@ -15,25 +15,60 @@
   function role() { return document.body.getAttribute('data-role') || 'owner'; }
   var STATUS = { open: 'Open', waiting: 'Waiting on client', won: 'Won', closed: 'Closed' };
   var QUICK = [
-    ['Thanks', 'Thanks for the details! I will review everything and get back to you shortly.'],
+    ['Hi', 'Hi {first}, thanks for reaching out! I\'m Henry from CleverStack. '],
+    ['Thanks', 'Thanks for the details, {first}! I will review everything and get back to you shortly.'],
     ['Book a call', 'It would be great to talk this through. You can pick a time that suits you here: https://calendly.com/henryygeorge25/30min'],
     ['Need info', 'To give you an accurate plan and fixed price, could you share: your current website (if any), 2-3 sites you like, and your ideal launch date?'],
     ['Proposal sent', 'I have sent your proposal by email. Have a look and reply here with any questions.'],
     ['Follow up', 'Just checking in on this. Are you still planning to move ahead? Happy to answer any questions.']
   ];
-  var state = { filter: '', q: '', current: null, conv: null, since: '', thread: null, busy: false, timer: null, ticks: 0, files: {}, items: {} };
+  var state = { filter: '', q: '', current: null, conv: null, since: '', thread: null, busy: false, timer: null, ticks: 0, files: {}, items: {}, unread: null, side: false };
+  var SIDE_KEY = 'cs_inbox_details', SOUND_KEY = 'cs_inbox_sound';
+  function pref(k, d) { try { var v = localStorage.getItem(k); return v == null ? d : v === '1'; } catch (e) { return d; } }
+  function setPref(k, v) { try { localStorage.setItem(k, v ? '1' : '0'); } catch (e) {} }
+  state.side = pref(SIDE_KEY, true);
+  // avatar: initials on a colour picked from the name, so each client keeps the same colour
+  var HUES = ['#2AA79F', '#6366F1', '#D97706', '#DB2777', '#0284C7', '#7C3AED', '#059669', '#DC2626'];
+  function initials(n) { var p = String(n || '?').trim().split(/[\s@._-]+/).filter(Boolean); return ((p[0] || '?').charAt(0) + (p.length > 1 ? p[1].charAt(0) : '')).toUpperCase(); }
+  function avatar(n, cls) { var h = 0, t = String(n || ''); for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) >>> 0; return '<span class="ib-av' + (cls ? ' ' + cls : '') + '" style="background:' + HUES[h % HUES.length] + '" aria-hidden="true">' + esc(initials(n)) + '</span>'; }
+  function firstName(c) { return String((c && c.client_name) || '').trim().split(/\s+/)[0] || 'there'; }
+  // a short two-note ping when a new client message arrives (switch off with the bell)
+  var actx = null;
+  function ping() {
+    if (!pref(SOUND_KEY, true)) return;
+    try {
+      actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+      [[660, 0], [990, 0.12]].forEach(function (n) {
+        var g = actx.createGain(), o = actx.createOscillator(), t = actx.currentTime + n[1]; o.type = 'sine'; o.frequency.value = n[0];
+        g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.09, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+        o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + 0.32);
+      });
+    } catch (e) { /* sound is optional */ }
+  }
 
-  function ago(s) { var d = new Date(String(s).replace(' ', 'T') + 'Z'), m = Math.round((Date.now() - d) / 60000); return isNaN(m) ? '' : m < 1 ? 'now' : m < 60 ? m + 'm' : m < 1440 ? Math.round(m / 60) + 'h' : Math.round(m / 1440) + 'd'; }
+  // list time like WhatsApp: 14:05 today, Yesterday, Mon, then 3 Nov
+  function when(s) {
+    var d = new Date(String(s).replace(' ', 'T') + 'Z'); if (isNaN(d)) return '';
+    var now = new Date(), days = Math.round((new Date(now.getFullYear(), now.getMonth(), now.getDate()) - new Date(d.getFullYear(), d.getMonth(), d.getDate())) / 864e5);
+    if (days <= 0) return d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+    if (days === 1) return 'Yesterday';
+    if (days < 7) return d.toLocaleDateString(undefined, { weekday: 'short' });
+    return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+  }
+  function ago(s) { var d = new Date(String(s).replace(' ', 'T') + 'Z'), m = Math.round((Date.now() - d) / 60000); return isNaN(m) ? '' : m < 1 ? 'just now' : m < 60 ? m + ' min ago' : m < 1440 ? Math.round(m / 60) + ' h ago' : Math.round(m / 1440) + ' days ago'; }
 
   function shell() {
     var v = $('view-inbox');
     if (v.getAttribute('data-ready')) return;
     v.setAttribute('data-ready', '1');
     v.innerHTML = '<div class="ib">' +
-      '<aside class="ib-list"><div class="ib-tools"><input id="ibSearch" type="search" placeholder="Search name, email, subject"><button class="btn-sm primary ib-new" id="ibNew" type="button">New</button></div>' +
+      '<aside class="ib-list"><div class="ib-tools"><input id="ibSearch" type="search" placeholder="Search name, email, subject"><button class="ib-icon" id="ibSound" type="button"></button><button class="btn-sm primary ib-new" id="ibNew" type="button">New</button></div>' +
       '<div class="ib-filters" id="ibFilters">' + [['', 'All'], ['unread', 'Unread'], ['open', 'Open'], ['waiting', 'Waiting'], ['won', 'Won'], ['closed', 'Closed'], ['archived', 'Archived']].map(function (f) { return '<button type="button" data-f="' + f[0] + '" class="' + (f[0] === '' ? 'on' : '') + '">' + f[1] + '</button>'; }).join('') + '</div>' +
       '<div id="ibItems" class="ib-items"></div></aside>' +
-      '<section class="ib-main" id="ibMain"><div class="ib-empty">Select a conversation, or start a new one.</div></section></div>';
+      '<section class="ib-main" id="ibMain">' + EMPTY + '</section><aside class="ib-side" id="ibSide" hidden></aside></div>';
+    function soundBtn() { var on = pref(SOUND_KEY, true), b = $('ibSound'); b.innerHTML = on ? ICON.bell : ICON.bellOff; b.title = on ? 'Sound on for new messages (click to mute)' : 'Sound muted (click to turn on)'; b.setAttribute('aria-label', b.title); b.classList.toggle('off', !on); }
+    soundBtn();
+    $('ibSound').addEventListener('click', function () { setPref(SOUND_KEY, !pref(SOUND_KEY, true)); soundBtn(); if (pref(SOUND_KEY, true)) ping(); });
     $('ibFilters').querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { $('ibFilters').querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); }); state.filter = b.getAttribute('data-f'); list(); }); });
     var t; $('ibSearch').addEventListener('input', function () { clearTimeout(t); t = setTimeout(function () { state.q = $('ibSearch').value.trim(); list(); }, 300); });
     $('ibNew').addEventListener('click', function () { compose({}); });
@@ -42,15 +77,21 @@
   function list() {
     return api('GET', '?view=inbox&limit=100&status=' + encodeURIComponent(state.filter) + '&q=' + encodeURIComponent(state.q)).then(function (d) {
       badge(d.unread);
+      // a new client message anywhere in the inbox: ping (the open thread also alerts via CSChat.alert when the tab is hidden)
+      if (state.unread !== null && d.unread > state.unread && document.visibilityState === 'visible') ping();
+      state.unread = d.unread;
       state.items = {};
       var canMenu = role() !== 'viewer';
       $('ibItems').innerHTML = !d.conversations.length ? '<div class="ib-none">' + (state.filter === 'archived' ? 'No archived conversations.' : 'No conversations here yet.') + '</div>' : d.conversations.map(function (c) {
         state.items[c.id] = c;
+        var chat = c.subject === 'Website chat';
         return '<div role="button" tabindex="0" class="ib-item' + (state.current === c.id ? ' on' : '') + (c.unread_staff ? ' unread' : '') + (c.pinned ? ' pinned' : '') + '" data-id="' + c.id + '">' +
-          '<span class="ib-top"><b>' + (c.pinned ? '<i class="ib-pin" title="Pinned">' + ICON.pin + '</i>' : '') + esc(c.client_name || c.client_email) + '</b><time>' + ago(c.last_message_at) + '</time></span>' +
-          (canMenu ? '<button type="button" class="ib-more" aria-label="Conversation options" title="More options">' + ICON.dots + '</button>' : '') +
-          '<span class="ib-subj">' + esc(c.subject) + ' <em class="ib-st ' + c.status + '">' + STATUS[c.status] + '</em></span>' +
-          '<span class="ib-prev">' + (c.client_typing ? '<i class="ib-typing">typing…</i>' : (c.last_sender === 'staff' ? 'You: ' : '') + esc(c.preview)) + '</span>' + (c.unread_staff ? '<i class="ib-dot">' + c.unread_staff + '</i>' : '') + '</div>';
+          avatar(c.client_name || c.client_email) + '<span class="ib-body">' +
+          '<span class="ib-top"><b>' + (c.pinned ? '<i class="ib-pin" title="Pinned">' + ICON.pin + '</i>' : '') + esc(c.client_name || c.client_email) + '</b><time title="' + esc(c.last_message_at) + ' UTC">' + when(c.last_message_at) + '</time></span>' +
+          '<span class="ib-subj">' + (chat ? '<em class="ib-tag">' + ICON.chat + 'Website chat</em>' : esc(c.subject)) + ' <em class="ib-st ' + c.status + '">' + STATUS[c.status] + '</em></span>' +
+          '<span class="ib-prev">' + (c.client_typing ? '<i class="ib-typing">typing…</i>' : (c.last_sender === 'staff' ? '<i class="ib-tick">' + ICON.ticks + '</i>' : '') + esc(c.preview)) + '</span></span>' +
+          (c.unread_staff ? '<i class="ib-dot">' + c.unread_staff + '</i>' : '') +
+          (canMenu ? '<button type="button" class="ib-more" aria-label="Conversation options" title="More options">' + ICON.dots + '</button>' : '') + '</div>';
       }).join('');
       $('ibItems').querySelectorAll('.ib-item').forEach(function (b) {
         var cid = +b.getAttribute('data-id');
@@ -63,7 +104,16 @@
     }).catch(function (e) { $('ibItems').innerHTML = '<div class="ib-none">' + esc(e.message) + '</div>'; });
   }
 
+  var EMPTY = '<div class="ib-empty"><span class="ib-empty-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9 9 0 0 1-3.9-.9L3 21l1.9-4.6A8.4 8.4 0 0 1 12 3.1a8.4 8.4 0 0 1 9 8.4z"/></svg></span><b>CleverStack Inbox</b><span>Website chats and project conversations. Pick one on the left, or start a new one.</span></div>';
   var ICON = {
+    bell: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>',
+    bellOff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.7 21a2 2 0 0 1-3.4 0M18.6 13A17.9 17.9 0 0 1 18 8M6.3 6.3A6 6 0 0 0 6 8c0 7-3 9-3 9h14M18 8a6 6 0 0 0-9.3-5M1 1l22 22"/></svg>',
+    chat: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.5 3 2 6.9 2 11.7c0 2.6 1.3 4.9 3.4 6.5L4.6 22l4.3-2.3c1 .3 2 .4 3.1.4 5.5 0 10-3.9 10-8.7S17.5 3 12 3z"/></svg>',
+    ticks: '<svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 8.5l4 4L13 3M9.5 12.5L18 3"/></svg>',
+    link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>',
+    info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
+    send: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20l18-8L3 4v6l12 2-12 2z"/></svg>',
+    back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>',
     dots: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>',
     pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5M9 10.76V6h6v4.76l2 2.24v2H7v-2z"/><path d="M8 6h8V3H8z"/></svg>',
     unread: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="6" r="3"/><path d="M13 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/></svg>',
@@ -93,6 +143,11 @@
         return act(c, 'conv_archive', { archived: !c.archived }, c.archived ? 'Moved back to the inbox' : 'Archived. Find it under "Archived"; it comes back if the client replies.')
           .then(function () { if (state.current === c.id && !c.archived) closeThread(); });
       }],
+      state.link && state.current === c.id ? [ICON.copy, 'Copy client link', function () { return (navigator.clipboard ? navigator.clipboard.writeText(state.link) : Promise.reject()).then(function () { toast('Client link copied'); }).catch(function () { window.prompt('Client link:', state.link); }); }] : null,
+      state.current === c.id ? [ICON.link, 'New client link', function () {
+        if (!confirm('Create a new private link? The current link (in emails already sent) will stop working. Send the new one to the client.')) return;
+        return api('POST', '', { action: 'conv_rotate', id: c.id }).then(function (r) { state.link = r.link; window.prompt('New client link (copy it and send it to the client):', r.link); });
+      }] : null,
       [ICON.copy, 'Copy email address', function () { return (navigator.clipboard ? navigator.clipboard.writeText(c.client_email) : Promise.reject()).then(function () { toast('Email copied'); }).catch(function () { window.prompt('Email:', c.client_email); }); }],
       c.submission_id && window.__openLead ? [ICON.lead, 'Open the lead', function () { window.__openLead(c.submission_id); }] : null,
       'status',
@@ -130,9 +185,44 @@
   }
   function closeThread() {
     state.current = null; state.thread = null;
-    $('ibMain').innerHTML = '<div class="ib-empty">Select a conversation, or start a new one.</div>';
+    $('ibMain').innerHTML = EMPTY; sidePane(null);
     document.querySelector('.ib').classList.remove('reading');
     try { history.replaceState(null, '', '#inbox'); } catch (e) {}
+  }
+
+  // right-hand lead panel: who they are, where they came from, how hot the lead is, earlier enquiries.
+  // Wide screens: a third column. Narrower: slides over the thread (.siding), only after clicking the (i) button.
+  var sideFor = 0;
+  function sidePane(id, toggled) {
+    var side = $('ibSide'), ib = document.querySelector('.ib'); if (!side) return;
+    var show = !!id && state.side;
+    side.hidden = !show; ib.classList.toggle('with-side', show); ib.classList.toggle('siding', show && !!toggled);
+    if (!show) { sideFor = 0; return; }
+    if (sideFor === id && side.innerHTML) return;
+    sideFor = id; side.innerHTML = '<div class="ib-none">Loading details…</div>';
+    api('GET', '?view=thread_lead&id=' + id).then(function (d) {
+      if (sideFor !== id) return;
+      var c = state.conv || state.items[id] || {}, L = d.lead, j = L && L.journey;
+      function row(k, v) { return v ? '<div class="ib-kv"><span>' + k + '</span><b>' + esc(v) + '</b></div>' : ''; }
+      var src = L ? [L.utm_source, L.utm_medium, L.utm_campaign].filter(Boolean).join(' / ') : '';
+      var chatPage = L && /^website chat/.test(L.source) ? (L.source.replace(/^website chat\s*/, '') || '/') : '';
+      side.innerHTML = '<div class="ib-side-head"><button type="button" class="ib-back ib-side-x" id="ibSideX" aria-label="Close details">' + ICON.back + '</button><b>Lead details</b></div>' +
+        '<div class="ib-side-card">' + avatar(c.client_name || c.client_email, 'xl') + '<b>' + esc(c.client_name || '') + '</b><a href="mailto:' + esc(c.client_email) + '">' + esc(c.client_email) + '</a>' +
+        (L ? '<span class="ib-score ' + esc(L.tier) + '" title="' + esc((L.score_reasons || []).join(' · ')) + '">' + (L.tier === 'hot' ? '🔥 ' : '') + 'Lead score ' + L.score + '/100</span>' : '') + '</div>' +
+        (L ? '<div class="ib-side-sec"><small>Enquiry</small>' +
+          row('Started', ago(L.created_at)) + row('Chat started on', chatPage) + row('Source', chatPage ? 'Website chat' : L.source) + row('Ad / campaign', src) +
+          row('Location', [j && j.city, L.country || (j && j.country)].filter(Boolean).join(', ')) + row('Company', L.company) + row('Industry', L.industry) + row('Phone', L.phone) +
+          row('Device', j && j.device) + row('First page', j && j.landing) + row('Came from', j && j.referrer) +
+          (j ? row('Visit', j.pages + ' page' + (j.pages === 1 ? '' : 's') + (j.engagedSec ? ', ' + (Math.round(j.engagedSec / 6) / 10) + ' min engaged' : '')) : '') +
+          ((L.score_reasons || []).length ? '<ul class="ib-reasons">' + L.score_reasons.slice(0, 5).map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('') + '</ul>' : '') +
+          (window.__openLead ? '<button type="button" class="btn-sm ghost ib-side-btn" id="ibOpenLead">Open the full lead</button>' : '') + '</div>'
+          : '<div class="ib-side-sec"><small>Enquiry</small><p class="ib-hint">Started from the CRM, so no website enquiry is linked.</p></div>') +
+        '<div class="ib-side-sec"><small>Earlier enquiries (' + d.earlier.length + ')</small>' + (d.earlier.length ? d.earlier.map(function (e) {
+          return '<div class="ib-prev-enq"><span>' + esc(when(e.created_at)) + ' · ' + esc(/^website chat/.test(e.source) ? 'Website chat' : e.source || 'Enquiry') + '</span><p>' + esc(e.message) + '</p></div>';
+        }).join('') : '<p class="ib-hint">None. This is their first enquiry.</p>') + '</div>';
+      $('ibSideX').addEventListener('click', function () { var b = $('ibInfo'); if (b) b.click(); else sidePane(null); });
+      if ($('ibOpenLead')) $('ibOpenLead').addEventListener('click', function () { window.__openLead(L.id); });
+    }).catch(function (e) { if (sideFor === id) side.innerHTML = '<div class="ib-none">' + esc(e.message) + '</div>'; });
   }
 
   function badge(n) {
@@ -156,16 +246,17 @@
   }
 
   function open(id) {
-    state.current = id; state.since = ''; state.conv = null; state.busy = false;
+    state.current = id; state.since = ''; state.conv = null; state.busy = false; state.link = '';
     $('ibItems').querySelectorAll('.ib-item').forEach(function (b) { b.classList.toggle('on', +b.getAttribute('data-id') === id); });
     document.querySelector('.ib').classList.add('reading');
     var canWrite = role() !== 'viewer';
     $('ibMain').innerHTML = '<div class="ib-head" id="ibHead"></div><div class="ib-aud" id="ibAudience"></div><div class="ib-thread" id="ibThread"></div>' +
-      (canWrite ? '<div class="ib-quick" id="ibQuick">' + QUICK.map(function (q, i) { return '<button type="button" data-q="' + i + '">' + q[0] + '</button>'; }).join('') + '</div>' +
-      '<form class="ib-compose" id="ibCompose"><textarea id="ibBody" rows="2" maxlength="5000" placeholder="Write a reply… (Enter to send, Shift+Enter for a new line). Drop or paste files here."></textarea>' +
-      '<div class="ib-send"><div class="ib-send-l"><button type="button" class="ch-tool" id="ibAttach" aria-label="Attach a file" title="Attach a file (max 4 MB)">' + CSChat.ICON.clip + '</button>' +
+      (canWrite ? '<div class="ib-quick" id="ibQuick">' + QUICK.map(function (q, i) { return '<button type="button" data-q="' + i + '">' + q[0] + '</button>'; }).join('') +
+      '<label class="ib-check" title="Also email the reply with a link back to the chat, so they see it even if they left the website"><input type="checkbox" id="ibMail" checked> Email too</label></div>' +
+      '<form class="ib-compose" id="ibCompose"><button type="button" class="ch-tool" id="ibAttach" aria-label="Attach a file" title="Attach a file (max 4 MB)">' + CSChat.ICON.clip + '</button>' +
       '<button type="button" class="ch-tool" id="ibEmoji" aria-label="Insert an emoji" title="Emoji">' + CSChat.ICON.smile + '</button>' +
-      '<label class="ib-check"><input type="checkbox" id="ibMail" checked> Email the client too</label></div><button class="btn-sm primary" type="submit" id="ibSendBtn">Send</button></div></form>' : '<div class="ib-none">Read-only access.</div>');
+      '<textarea id="ibBody" rows="1" maxlength="5000" placeholder="Type a message" aria-label="Reply"></textarea>' +
+      '<button class="ib-sendbtn" type="submit" id="ibSendBtn" aria-label="Send" title="Send (Enter)">' + ICON.send + '</button></form>' : '<div class="ib-none">Read-only access.</div>');
     var staffMsg = function (m) { return canWrite && m.sender !== 'client'; };
     state.thread = CSChat.thread($('ibThread'), {
       mine: function (m) { return m.sender !== 'client'; },
@@ -177,12 +268,13 @@
       onDelete: function (m) { return api('POST', '', { action: 'msg_delete', id: id, message_id: m.id }).then(function () { refresh(false, true); list(); }); }
     });
     if (canWrite) {
-      $('ibQuick').querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { var t = $('ibBody'); t.value = (t.value ? t.value + '\n' : '') + QUICK[+b.getAttribute('data-q')][1]; t.focus(); t.dispatchEvent(new Event('input')); }); });
+      $('ibQuick').querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { var t = $('ibBody'); t.value = (t.value ? t.value + '\n' : '') + QUICK[+b.getAttribute('data-q')][1].replace(/\{first\}/g, firstName(state.conv || state.items[id])); t.focus(); t.dispatchEvent(new Event('input')); }); });
       CSChat.composer({ form: $('ibCompose'), input: $('ibBody'), attach: $('ibAttach'), emoji: $('ibEmoji'), drop: $('ibMain'),
         onSend: function (text) { sendText(id, text); }, onFiles: function (files) { sendFiles(id, files); },
         onTyping: function () { api('POST', '', { action: 'msg_typing', id: id }).catch(function () {}); } });
     }
     refresh(true);
+    sidePane(id);
     try { history.replaceState(null, '', '#inbox-' + id); } catch (e) {}
   }
 
@@ -212,22 +304,20 @@
 
   function head(c, link) {
     var canWrite = role() !== 'viewer';
+    if (link) state.link = link;
     var aud = $('ibAudience');
     if (aud && window.CSCampaigns && aud.getAttribute('data-email-key') !== c.client_email) window.CSCampaigns.chips(aud, c.client_email, c.client_name);
-    $('ibHead').innerHTML = '<button type="button" class="ib-back" id="ibBack" aria-label="Back to list">‹</button>' +
-      '<div class="ib-who"><b>' + esc(c.client_name || c.client_email) + '</b><span>' + esc(c.client_email) + ' · ' + esc(c.subject) + '</span></div>' +
+    $('ibHead').innerHTML = '<button type="button" class="ib-back" id="ibBack" aria-label="Back to list">' + ICON.back + '</button>' + avatar(c.client_name || c.client_email, 'lg') +
+      '<div class="ib-who"><b>' + esc(c.client_name || c.client_email) + '</b><span id="ibWhoLine">' + esc(c.client_email) + ' · ' + esc(c.subject) + '</span></div>' +
       '<div class="ib-actions">' + (canWrite ? '<select id="ibStatus">' + Object.keys(STATUS).map(function (s) { return '<option value="' + s + '"' + (s === c.status ? ' selected' : '') + '>' + STATUS[s] + '</option>'; }).join('') + '</select>' : '<em class="ib-st ' + c.status + '">' + STATUS[c.status] + '</em>') +
-      (link ? '<button class="btn-sm ghost" id="ibCopy" type="button" title="Copy the client\'s private link">Copy client link</button>' : '') +
-      (canWrite ? '<button class="btn-sm ghost" id="ibRotate" type="button" title="Make a new link; the old one stops working">New link</button>' : '') +
+      (link && !canWrite ? '<button class="ib-more ib-more-head" id="ibCopy" type="button" aria-label="Copy the client\'s private link" title="Copy the client\'s private link">' + ICON.copy + '</button>' : '') +
+      '<button class="ib-more ib-more-head' + (state.side ? ' on' : '') + '" id="ibInfo" type="button" aria-label="Lead details" title="Lead details" aria-pressed="' + state.side + '">' + ICON.info + '</button>' +
       (canWrite ? '<button class="ib-more ib-more-head" id="ibMore" type="button" aria-label="Conversation options" title="More options">' + ICON.dots + '</button>' : '') + '</div>';
+    $('ibInfo').addEventListener('click', function () { state.side = !state.side; setPref(SIDE_KEY, state.side); this.classList.toggle('on', state.side); this.setAttribute('aria-pressed', state.side); sidePane(c.id, true); });
     if ($('ibMore')) $('ibMore').addEventListener('click', function (e) { e.stopPropagation(); menu(Object.assign({}, c, state.items[c.id] || {}, { status: ($('ibStatus') || {}).value || c.status }), this); });
-    $('ibBack').addEventListener('click', function () { document.querySelector('.ib').classList.remove('reading'); });
+    $('ibBack').addEventListener('click', function () { document.querySelector('.ib').classList.remove('reading', 'siding'); });
     if ($('ibStatus')) $('ibStatus').addEventListener('change', function () { api('POST', '', { action: 'conv_status', id: c.id, status: this.value }).then(function () { toast('Status updated'); list(); }).catch(function (e) { alert(e.message); }); });
-    if ($('ibCopy')) $('ibCopy').addEventListener('click', function () { var b = this; (navigator.clipboard ? navigator.clipboard.writeText(link) : Promise.reject()).then(function () { b.textContent = 'Copied ✓'; setTimeout(function () { b.textContent = 'Copy client link'; }, 1500); }).catch(function () { window.prompt('Client link:', link); }); });
-    if ($('ibRotate')) $('ibRotate').addEventListener('click', function () {
-      if (!confirm('Create a new private link? The current link (in emails already sent) will stop working. Send the new one to the client.')) return;
-      api('POST', '', { action: 'conv_rotate', id: c.id }).then(function (r) { window.prompt('New client link (copy it and send it to the client):', r.link); head(c, r.link); }).catch(function (e) { alert(e.message); });
-    });
+    if ($('ibCopy')) $('ibCopy').addEventListener('click', function () { (navigator.clipboard ? navigator.clipboard.writeText(link) : Promise.reject()).then(function () { toast('Client link copied'); }).catch(function () { window.prompt('Client link:', link); }); });
   }
 
   // first: load the whole thread; force: run even if a poll is in flight (after sending)
@@ -243,6 +333,7 @@
       th.update(d.changed || []);
       th.seen(d.seen);
       th.typing(d.typing, String(d.conversation.client_name || 'The client').split(' ')[0]);
+      var wl = $('ibWhoLine'); if (wl) { wl.classList.toggle('typing', !!d.typing); wl.textContent = d.typing ? 'typing…' : d.conversation.client_email + ' · ' + d.conversation.subject; }
       state.since = d.now || state.since;
       if (!first) { CSChat.alert(fresh); if (fresh) list(); } // a new message moves the chat to the top
     }).catch(function (e) { if (first) $('ibMain').innerHTML = '<div class="ib-empty">' + esc(e.message) + '</div>'; })
@@ -252,9 +343,9 @@
   // New conversation (optionally prefilled from a lead)
   function compose(p) {
     if (role() === 'viewer') return;
-    state.current = null; state.thread = null;
+    state.current = null; state.thread = null; sidePane(null);
     document.querySelector('.ib').classList.add('reading');
-    $('ibMain').innerHTML = '<div class="ib-head"><button type="button" class="ib-back" id="ibBack2">‹</button><div class="ib-who"><b>New conversation</b><span>The client gets an email with a private link to reply on the website.</span></div></div>' +
+    $('ibMain').innerHTML = '<div class="ib-head"><button type="button" class="ib-back" id="ibBack2" aria-label="Back to list">' + ICON.back + '</button><div class="ib-who"><b>New conversation</b><span>The client gets an email with a private link to reply on the website.</span></div></div>' +
       '<form class="ib-newform" id="ibNewForm"><div class="ib-row"><label>Name<input id="ncName" maxlength="120" value="' + esc(p.name || '') + '"></label><label>Email<input id="ncEmail" type="email" required value="' + esc(p.email || '') + '"></label></div>' +
       '<label>Subject<input id="ncSubject" maxlength="140" value="' + esc(p.subject || 'Your project') + '"></label>' +
       '<label>Message<textarea id="ncBody" rows="6" maxlength="5000" required>' + esc(p.body || '') + '</textarea></label>' +

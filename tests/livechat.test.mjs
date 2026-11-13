@@ -71,6 +71,22 @@ test('visitor and team talk in the same thread; peek=1 never marks the team repl
   assert.deepEqual(t.body.messages.map((m) => m.from), ['you', 'system', 'you', 'staff']);
 });
 
+test('inbox lead panel (thread_lead): the chat page, source and score; earlier enquiries by the same email', async () => {
+  await startChat({ name: 'Dana Visitor', email: 'DANA@visitor.test', message: 'Earlier: a quote for a shop website please.', source: 'contact form' });
+  const inbox = await call(admin, { url: '/api/admin?view=inbox', headers: ADMIN, ip: ip() });
+  const id = inbox.body.conversations.find((x) => x.subject === 'Website chat').id;
+  const r = await call(admin, { url: '/api/admin?view=thread_lead&id=' + id, headers: ADMIN, ip: ip() });
+  assert.equal(r.code, 200);
+  assert.equal(r.body.lead.source, 'website chat /services');
+  assert.equal(typeof r.body.lead.score, 'number');
+  assert.ok(['hot', 'warm', 'cold'].includes(r.body.lead.tier), 'tier: ' + r.body.lead.tier);
+  assert.equal(r.body.earlier.length, 1, 'the earlier form enquiry from the same email (any case)');
+  assert.match(r.body.earlier[0].message, /shop website/);
+  assert.ok(!('notes' in r.body.lead), 'only the fields the panel needs');
+  assert.equal((await call(admin, { url: '/api/admin?view=thread_lead&id=999999', headers: ADMIN, ip: ip() })).code, 404);
+  assert.equal((await call(admin, { url: '/api/admin?view=thread_lead&id=' + id, ip: ip() })).code, 401);
+});
+
 test('a vendor pitch through the chat gets no token (the widget then just says thanks)', async () => {
   const { r } = await startChat({ chat: true, name: 'Sam Seller', email: 'sam@seo.test', message: 'Hi, we provide high quality guest posts on DA 50+ sites. Are you interested?', page: '/' });
   assert.equal(r.code, 200);

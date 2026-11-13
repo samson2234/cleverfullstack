@@ -445,6 +445,23 @@ async function handler(req, res) {
         if (!file) return res.status(404).json({ error: 'File not found' });
         return sendFile(res, file, { download: params.get('dl') === '1' });
       }
+      // Inbox lead panel: the enquiry behind a conversation (score, first page, source, country) and earlier enquiries
+      if (view === 'thread_lead') {
+        const conversation = await getConversation(parseInt(params.get('id')));
+        if (!conversation) return res.status(404).json({ error: 'Conversation not found' });
+        const sub = conversation.submission_id ? await getSubmission(conversation.submission_id) : null;
+        let lead = null;
+        if (sub) {
+          const s = (await withScores([{ ...sub }]))[0];
+          lead = { id: Number(s.id), name: s.name, email: s.email, phone: s.phone || '', company: s.company || '', country: s.country || '', industry: s.industry || '',
+            source: s.source || '', status: s.status || 'new', created_at: s.created_at, utm_source: s.utm_source || '', utm_medium: s.utm_medium || '', utm_campaign: s.utm_campaign || '',
+            intent: s.intent || '', score: s.score, tier: s.tier, score_reasons: s.score_reasons || [], journey: s.journey || null };
+        }
+        const db = getClient();
+        const earlier = (await db.execute({ sql: 'SELECT id, source, status, created_at, substr(message, 1, 140) AS message FROM submissions WHERE lower(email) = lower(?) AND id <> ? ORDER BY id DESC LIMIT 10', args: [conversation.client_email, sub ? sub.id : 0] })).rows
+          .map((r) => ({ id: Number(r.id), source: r.source || '', status: r.status || '', created_at: r.created_at, message: r.message || '' }));
+        return res.status(200).json({ lead, earlier });
+      }
       if (view === 'lead_conversations') {
         return res.status(200).json({ conversations: await conversationsForSubmission(parseInt(params.get('id'))) });
       }
