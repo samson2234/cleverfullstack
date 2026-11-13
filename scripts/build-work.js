@@ -60,7 +60,7 @@ function body(p) {
   h += '<h2>More projects</h2><div class="pd-nav" style="flex-wrap:wrap;">' + related(p).map((q) => '<a href="/work/' + q.slug + '">' + esc(q.title) + ' — ' + esc(q.subtitle.replace(/\s*•\s*/g, ' ')) + ' →</a>').join('') + '</div>';
   h += '<div style="text-align:center;margin-top:20px;"><p style="font-size:16px;color:var(--text-dark);font-weight:500;">Need something similar built for your business?</p><div class="ctas" style="justify-content:center;">' +
     '<a href="https://calendly.com/henryygeorge25/30min" class="btn btn-primary" target="_blank" rel="noopener">Book a Free Call <span class="btn-arrow">→</span></a>' +
-    '<a href="https://wa.me/2349165400534?text=Hi%20CleverStack%2C%20I%27d%20like%20to%20discuss%20a%20project" class="btn-wa" target="_blank" rel="noopener">Chat on WhatsApp</a></div></div>';
+    '<a href="/contact?chat=1" data-chat-open class="btn-chat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3C6.5 3 2 6.9 2 11.7c0 2.6 1.3 4.9 3.4 6.5L4.6 22l4.3-2.3c1 .3 2 .4 3.1.4 5.5 0 10-3.9 10-8.7S17.5 3 12 3z"/></svg> <span>Chat with an expert</span></a></div></div>';
   h += '<div class="pd-nav"><a href="portfolio.html">← Back to Portfolio</a><a href="blog/website-cost-2026.html">What should a project like this cost? →</a><a href="contact.html">Start Your Project →</a></div>';
   h += '</div>';
   return { h1, html: h };

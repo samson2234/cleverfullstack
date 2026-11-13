@@ -236,9 +236,9 @@
     $('anLive').textContent = n(d.live.visitors);
     $('anLivePages').innerHTML = rows(d.live.pages.map(function (r) { return { _v: r.visitors, _name: esc(r.path), a: r.visitors }; }), function (r) { return '<span class="num">' + n(r.a) + '</span>'; }, { tone: 'teal', empty: 'Nobody on the site in the last 5 minutes.' });
   }
-  var KIND_LABEL = { booking: 'Book a call (Calendly)', whatsapp: 'WhatsApp', phone: 'Phone call', email: 'Email', cta: 'Call-to-action buttons', outbound: 'Links to other sites', nav: 'Internal links', button: 'Other buttons', submit: 'Form submits', anchor: 'On-page jumps' };
+  var KIND_LABEL = { booking: 'Book a call (Calendly)', chat: 'Website chat opened', whatsapp: 'WhatsApp (before Nov 2026)', phone: 'Phone call', email: 'Email', cta: 'Call-to-action buttons', outbound: 'Links to other sites', nav: 'Internal links', button: 'Other buttons', submit: 'Form submits', anchor: 'On-page jumps' };
   function clickKinds(d) {
-    var order = ['booking', 'whatsapp', 'phone', 'email', 'cta', 'submit', 'outbound', 'nav', 'button', 'anchor'];
+    var order = ['booking', 'chat', 'whatsapp', 'phone', 'email', 'cta', 'submit', 'outbound', 'nav', 'button', 'anchor'];
     var list = d.clickKinds.slice().sort(function (a, b) { return order.indexOf(a.kind) - order.indexOf(b.kind); });
     $('anClickKinds').innerHTML = rows(list.map(function (r) { return { _v: r.count, _name: '<span class="an-chip ' + esc(r.kind) + '">' + esc(r.kind) + '</span>' + esc(KIND_LABEL[r.kind] || r.kind), a: r.count, s: r.sessions }; }),
       function (r) { return '<span class="num" title="People">' + n(r.s) + '</span><span class="num" title="Clicks">' + n(r.a) + '</span>'; });

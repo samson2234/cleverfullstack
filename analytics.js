@@ -86,7 +86,7 @@
   var GOOGLE_ADS_ID = 'AW-18534927695';
   var ADS_LABEL_LEAD = 'JYLUCNPb2KgdEM-akoZF';      // "Contact form lead": contact / planner / ROI form accepted
   var ADS_LABEL_BOOK = '7DqoCJHB0qgdEM-akoZF';      // "Book a call click": Calendly link
-  var ADS_LABEL_WHATSAPP = '0UCXCNLU3KgdEM-akoZF';  // "Contact click": WhatsApp link
+  var ADS_LABEL_CONTACT = '0UCXCNLU3KgdEM-akoZF';   // "Contact click": opening the website chat (was the WhatsApp link)
   var ADS_LABEL_SIGNUP = 'IrkCCNzD3KgdEM-akoZF';    // "Sign-up Click": newsletter subscription accepted
 
   function adsConversion(label, value) {
@@ -129,8 +129,15 @@
     };
   }
 
-  // Click tracking: booking, WhatsApp, phone, email
+  // Click tracking: booking, website chat, phone, email
   document.addEventListener('click', function (e) {
+    var chat = e.target && e.target.closest ? e.target.closest('[data-chat-open]') : null;
+    if (chat) {
+      window.csEvent('chat_open', { location: location.pathname });
+      if (typeof window.fbq === 'function') fbq('track', 'Contact');
+      adsConversion(ADS_LABEL_CONTACT, 50);
+      return;
+    }
     var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
     if (!a) return;
     var href = a.getAttribute('href') || '';
@@ -138,10 +145,6 @@
       window.csEvent('book_call_click', { location: location.pathname });
       if (typeof window.fbq === 'function') fbq('track', 'Schedule');
       adsConversion(ADS_LABEL_BOOK, 100);
-    } else if (href.indexOf('wa.me') !== -1 || href.indexOf('api.whatsapp.com') !== -1) {
-      window.csEvent('whatsapp_click', { location: location.pathname });
-      if (typeof window.fbq === 'function') fbq('track', 'Contact');
-      adsConversion(ADS_LABEL_WHATSAPP, 50);
     } else if (href.indexOf('tel:') === 0) {
       window.csEvent('phone_click', { location: location.pathname });
     } else if (href.indexOf('mailto:') === 0) {
@@ -257,7 +260,7 @@
   function kindOf(el, href) {
     if (/^tel:/i.test(href)) return 'phone';
     if (/^mailto:/i.test(href)) return 'email';
-    if (/wa\.me|whatsapp\.com/i.test(href)) return 'whatsapp';
+    if (el.hasAttribute && el.hasAttribute('data-chat-open')) return 'chat';
     if (/calendly\.com/i.test(href)) return 'booking';
     if (el.tagName === 'A' && href) {
       if (href.charAt(0) === '#') return 'anchor';
@@ -276,10 +279,10 @@
       var kind = kindOf(el, href), dest = '';
       if (kind === 'outbound') { try { dest = new URL(href, location.href).hostname.replace(/^www\./, ''); } catch (x) {} }
       else if (kind === 'nav' || kind === 'cta') { try { var u = new URL(href, location.href); dest = u.hostname === location.hostname ? u.pathname : u.hostname; } catch (x) {} }
-      else if (kind === 'booking' || kind === 'whatsapp') { try { dest = new URL(href, location.href).hostname.replace(/^www\./, ''); } catch (x) {} }
+      else if (kind === 'booking') { try { dest = new URL(href, location.href).hostname.replace(/^www\./, ''); } catch (x) {} }
       var ev = [{ t: 'click', p: PATH, pid: PID, tg: label || href.slice(0, 80) || el.tagName.toLowerCase(), k: kind, d: dest }];
       // a link that leaves the page: send the time spent here together with the click, before unload
-      if (/^(nav|cta|booking|whatsapp|outbound|phone|email)$/.test(kind)) { var eng = takeEngage(); if (eng) ev.push(eng); }
+      if (/^(nav|cta|booking|outbound|phone|email)$/.test(kind)) { var eng = takeEngage(); if (eng) ev.push(eng); }
       send(ev);
     } catch (x) {}
   }, true);

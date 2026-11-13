@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// scripts/add-mobile-cta.js — puts the phone sticky bar (WhatsApp + Book a Free Call, styled by .mobile-cta-bar in
+// scripts/add-mobile-cta.js — puts the phone sticky bar (website chat + Book a Free Call, styled by .mobile-cta-bar in
 // style.css) on every indexable page that lacks it, right after the footer. Idempotent. The blog and landing-page
 // builders copy it from their layout donors, so generated pages keep it.
 const fs = require('fs');

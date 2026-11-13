@@ -178,8 +178,8 @@ function render(tpl, p) {
   set(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="${d}">`, 'twitter:description');
   set(/(?:<script type="application\/ld\+json">[\s\S]*?<\/script>)+/, schema(p), 'json-ld');
   set(/<a href="services.html" data-i18n="nav.services">/, '<a href="services.html" class="active" data-i18n="nav.services">', 'nav');
-  const wa = (tpl.match(/<a href="https:\/\/wa\.me\/[^"]*" class="btn-wa"[\s\S]*?<\/a>/) || [])[0];
-  if (!wa) throw new Error('template: WhatsApp button');
+  const wa = (tpl.match(/<a href="\/contact\?chat=1" data-chat-open class="btn-chat"[\s\S]*?<\/a>/) || [])[0];
+  if (!wa) throw new Error('template: chat button');
   set(/<main id="main">[\s\S]*<\/main>/, main(p, wa), 'main');
   return h;
 }

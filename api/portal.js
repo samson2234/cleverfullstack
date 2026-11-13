@@ -65,7 +65,8 @@ async function handler(req, res) {
       const messages = (await getMessages(conv.id, after)).map(publicMessage);
       const changed = after ? (await changedSince(conv.id, u.searchParams.get('since'), after)).map(publicMessage) : [];
       const newest = messages.length ? messages[messages.length - 1].id : after;
-      if (await needsRead(conv, 'client', newest)) await markRead(conv.id, 'client');
+      // peek=1: the website chat checking for an unread badge while closed, so nothing is marked as seen
+      if (u.searchParams.get('peek') !== '1' && await needsRead(conv, 'client', newest)) await markRead(conv.id, 'client');
       return res.status(200).json({ conversation: { subject: conv.subject, status: conv.status, name: conv.client_name },
         messages, changed, now, seen: conv.staff_seen_id, typing: conv.staff_typing, editMinutes: CLIENT_EDIT_MINUTES });
     }

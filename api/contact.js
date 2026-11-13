@@ -38,10 +38,12 @@ import { isBotPayload } from '../lib/honeypot.js';
 import { scoreLead } from '../lib/lead-score.js';
 import { getJourneySummaries } from '../lib/analytics.js';
 import { notifyHotLead } from '../lib/hot-lead.js';
-import { createConversation, linkFor } from '../lib/messages.js';
+import { createConversation, linkFor, addMessage } from '../lib/messages.js';
 import { siteUrl } from '../lib/email.js';
 import { detectPitch, intentLabel } from '../lib/pitch.js';
 import { withMonitor, reportError } from '../lib/monitor.js';
+
+const escHtml = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 async function handler(req, res) {
 
@@ -77,6 +79,10 @@ async function handler(req, res) {
   const industry = str(body.industry);
   const message = str(body.message);
   const subscribeOptIn = body.subscribe === true || body.subscribe === 'true';
+  // Website chat (chat-widget.js): same pipeline as the form, plus an instant reply in the chat and the
+  // conversation token in the response so the visitor keeps chatting on the page.
+  const isChat = body.chat === true;
+  const chatPage = isChat ? str(body.page).replace(/[^\w\-/.?=&%]/g, '').slice(0, 80) : '';
 
   if (!name || !email || !message) {
     return res.status(400).json({
@@ -102,7 +108,7 @@ async function handler(req, res) {
     company: company,
     industry: industry,
     message: message,
-    source: str(body.source).slice(0, 120) || 'cleverstack.dev contact form',
+    source: isChat ? ('website chat' + (chatPage ? ' ' + chatPage : '')).slice(0, 120) : (str(body.source).slice(0, 120) || 'cleverstack.dev contact form'),
     utm_source: str(body.utm_source).slice(0, 120),
     utm_medium: str(body.utm_medium).slice(0, 120),
     utm_campaign: str(body.utm_campaign).slice(0, 120),
@@ -137,9 +143,15 @@ async function handler(req, res) {
       console.log('Submission saved to DB. ID:', submissionId);
       // Every enquiry starts a project conversation the client can continue on the website (not sales pitches)
       if (!pitch.pitch) try {
-        const subject = submission.source === 'budget-planner' ? 'Your project plan' : submission.source === 'roi-calculator' ? 'Your website audit' : 'Your enquiry';
-        const { conversation } = await createConversation({ name: submission.name, email: submission.email, subject, submissionId, firstMessage: submission.message, firstSender: 'client' });
+        const subject = isChat ? 'Website chat' : submission.source === 'budget-planner' ? 'Your project plan' : submission.source === 'roi-calculator' ? 'Your website audit' : 'Your enquiry';
+        const { conversation, token } = await createConversation({ name: submission.name, email: submission.email, subject, submissionId, firstMessage: submission.message, firstSender: 'client' });
         submission.conversationLink = await linkFor(conversation.id, siteUrl());
+        if (isChat) {
+          submission.chatToken = token;
+          const first = submission.name.split(/\s+/)[0];
+          await addMessage(conversation.id, { sender: 'system', staffName: 'Henry George', log: false,
+            body: 'Thanks, ' + first + '! I\'ve got your message and I usually reply within an hour. If you leave this page, I\'ll also email you at ' + submission.email + ' as soon as I reply, so you won\'t miss it. Feel free to add any details in the meantime.' });
+        }
       } catch (err) { console.error('Conversation create failed:', err.message); }
     } catch (err) {
       await reportError(err, { where: 'contact: lead not saved to database' });
@@ -154,7 +166,7 @@ async function handler(req, res) {
     try {
       const result = await sendResendEmail({
         to: ownerEmail(),
-        subject: (pitch.pitch ? 'Vendor pitch (filtered): ' : lead.tier === 'hot' ? '🔥 HOT lead (' + lead.score + '/100): ' : 'New Contact: ') + submission.name + ' — CleverStack',
+        subject: (pitch.pitch ? 'Vendor pitch (filtered): ' : lead.tier === 'hot' ? '🔥 HOT lead (' + lead.score + '/100): ' : isChat ? '💬 New website chat: ' : 'New Contact: ') + submission.name + ' — CleverStack',
         html: contactNotificationTemplate(submission),
         replyTo: submission.email
       });
@@ -188,16 +200,18 @@ async function handler(req, res) {
         body: JSON.stringify({
           from: process.env.RESEND_FROM || 'CleverStack <onboarding@resend.dev>',
           to: [submission.email],
-          subject: 'We received your message — CleverStack',
+          subject: isChat ? 'Your chat with Henry at CleverStack' : 'We received your message — CleverStack',
           html: '<div style="font-family:sans-serif;max-width:520px;margin:0 auto;">' +
-            '<h2 style="color:#4F46E5;">Thank you, ' + submission.name + '!</h2>' +
-            '<p>We received your message and will respond within <strong>24 business hours</strong>.</p>' +
+            '<h2 style="color:#4F46E5;">Thank you, ' + escHtml(submission.name) + '!</h2>' +
+            (isChat
+              ? '<p>Thanks for starting a chat. Henry usually replies within <strong>an hour</strong>, and we will email you as soon as he does.</p>'
+              : '<p>We received your message and will respond within <strong>24 business hours</strong>.</p>') +
             '<p>Here is a copy of what you sent:</p>' +
             '<blockquote style="border-left:3px solid #4F46E5;padding:12px 16px;margin:16px 0;background:#f6f7fb;border-radius:6px;">' +
             '<p style="margin:0 0 4px;"><strong>Message:</strong></p>' +
-            '<p style="margin:0;color:#5B6079;">' + submission.message.replace(/\n/g, '<br>') + '</p>' +
+            '<p style="margin:0;color:#5B6079;">' + escHtml(submission.message).replace(/\n/g, '<br>') + '</p>' +
             '</blockquote>' +
-            (submission.conversationLink ? '<p style="font-size:15px;">You can add details, files links or questions any time in your private project conversation:</p><p style="margin:16px 0 22px;"><a href="' + submission.conversationLink + '" style="display:inline-block;background:#4F46E5;color:#fff;padding:12px 24px;border-radius:100px;text-decoration:none;font-weight:600;">Open your conversation</a></p>' : '') +
+            (submission.conversationLink ? '<p style="font-size:15px;">' + (isChat ? 'Continue the chat any time, from any device:' : 'You can add details, files links or questions any time in your private project conversation:') + '</p><p style="margin:16px 0 22px;"><a href="' + submission.conversationLink + '" style="display:inline-block;background:#4F46E5;color:#fff;padding:12px 24px;border-radius:100px;text-decoration:none;font-weight:600;">' + (isChat ? 'Open your chat' : 'Open your conversation') + '</a></p>' : '') +
             '<p style="color:#5B6079;font-size:14px;">In the meantime, you can book a free strategy call:</p>' +
             '<a href="https://calendly.com/henryygeorge25/30min" style="display:inline-block;background:#00C2A8;color:#fff;padding:12px 24px;border-radius:100px;text-decoration:none;font-weight:600;">Book a Free Call</a>' +
             '<p style="color:#aaa;font-size:12px;margin-top:24px;">CleverStack — Remote, worldwide</p>' +
@@ -278,6 +292,7 @@ async function handler(req, res) {
     return res.status(200).json({
       success: true,
       message: 'Thank you! We received your message and will respond within 24 hours.',
+      ...(isChat && submission.chatToken ? { chat: { token: submission.chatToken } } : {}),
       _meta: {
         saved_to_db: dbSaved,
         email_sent: emailSent,

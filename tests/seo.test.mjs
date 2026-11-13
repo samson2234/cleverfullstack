@@ -182,7 +182,7 @@ test('landing pages are up to date with their source (npm run landing)', () => {
   function src2html() { return Object.fromEntries(files.filter((f) => /^[a-z0-9-]+\.html$/.test(f)).map((f) => [f, read(f).replace(/\?v=[a-f0-9]+/g, '')])); }
 });
 
-test('conversion: every indexable page has the phone sticky bar (WhatsApp + Book a Free Call) exactly once', () => {
+test('conversion: every indexable page has the phone sticky bar (website chat + Book a Free Call) exactly once', () => {
   for (const p of indexable) assert.equal((p.html.match(/class="mobile-cta-bar"/g) || []).length, 1, p.rel);
 });
 
@@ -191,7 +191,7 @@ test('no half-styled first paint: stylesheets load normally, never deferred with
   assert.doesNotMatch(read('style.css'), /(^|})(main|body){[^}]*animation:(?!none)/, 'style.css: the whole page must not fade in on every load or reload');
 });
 
-test('contact is email only: no phone number shown on any page (WhatsApp buttons are fine)', () => {
+test('contact is email only: no phone number shown on any page (chat buttons are fine)', () => {
   for (const p of pages) assert.doesNotMatch(p.html, /href="tel:|\+234 \d/, p.rel);
 });
 
@@ -299,7 +299,7 @@ test('every project has a portfolio card; FYTR HUB shows no rating, price or cli
   const main = read('work/fytr-hub-fight-night-platform.html').match(/<main[\s\S]*<\/main>/)[0];
   assert.doesNotMatch(main, /★|Price Range|Project Duration|Noki|Enoch/);
   assert.match(main, /fytrhub\.com/);
-  const guitar = read('work/stringmaster-guitar-learning-platform.html').match(/<main[\s\S]*<\/main>/)[0];
+  const guitar = read('work/stringmaster-guitar-learning-platform.html').match(/<main[\s\S]*<\/main>/)[0].replace(/<svg[\s\S]*?<\/svg>/g, ''); // icon paths hold numbers like 4.9
   assert.doesNotMatch(guitar, /50K|4\.9|Berklee/, 'placeholder stats on the demo site are not repeated here');
 });
 
