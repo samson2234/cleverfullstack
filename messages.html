@@ -6,12 +6,19 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
 <title>Your project conversation | CleverStack</title>
+<link rel="manifest" id="ptManifest">
+<meta name="theme-color" content="#0F5F5A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CleverStack">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="/images/app/chat-apple-180.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='20' height='20' rx='5' fill='%234F46E5'/><rect y='40' width='20' height='20' rx='5' fill='%2300C2A8'/><rect y='80' width='20' height='20' rx='5' fill='%23FF6B4A'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <link rel="stylesheet" href="style.css?v=8acfb5fe">
-<link rel="stylesheet" href="chat-ui.css?v=ffc185d3">
+<link rel="stylesheet" href="chat-ui.css?v=8af708c7">
 <script>try{var t=localStorage.getItem('cleverstack_theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark')}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
 <style>
   body{min-height:100vh;margin:0;background:var(--paper)}
@@ -54,6 +61,7 @@
     <a href="/" class="logo"><span class="stackmark"></span>Clever<span class="dot">Stack</span></a>
     <div class="pt-sub"><b id="ptSubject">Your project conversation</b><span id="ptStatus">Loading…</span></div>
   </header>
+  <div id="ptInstall" hidden></div>
   <section class="pt-glass pt-box" id="ptBox">
     <div class="pt-thread" id="ptThread" aria-live="polite"></div>
     <div class="pt-msgerr" id="ptErr" role="alert"></div>
@@ -69,18 +77,27 @@
   <p class="pt-note">This is your private conversation with the CleverStack team. We also email you when we reply. Please do not share this link.</p>
 </main><script>/* show what is already on screen without waiting for the animation scripts */(function(){var h=innerHeight;document.querySelectorAll(".reveal,.reveal-left,.reveal-right,.reveal-scale,.stagger").forEach(function(e){if(e.getBoundingClientRect().top<h)e.classList.add("in")})})();</script>
 <script src="chat-ui.js?v=79ac6803"></script>
+<script src="app-install.js?v=1fb7b2a1" defer data-scope="/messages" data-app="CleverStack Chat" data-slot="ptInstall" data-icon="/images/app/chat-192.png" data-pitch="Get Henry's replies straight on your phone, like any chat app."></script>
 <script>
 (function () {
   'use strict';
   var token = ((location.search + location.hash).match(/[?&#]c=([A-Za-z0-9_-]{40,60})/) || [])[1] || '';
+  // remember the chat on this device (shared with the website chat button, chat-widget.js), so the page and the
+  // installed app also open it without the link
+  var KEY = 'cleverstack_chat', saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || 'null') || {}; } catch (e) {}
+  if (!token && /^[A-Za-z0-9_-]{40,60}$/.test(saved.token || '')) token = saved.token;
+  if (token && saved.token !== token) { saved.token = token; delete saved.seen; try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} }
   var form = document.getElementById('ptForm'), box = document.getElementById('ptBody'), err = document.getElementById('ptErr');
   var since = '', editMinutes = 15, busy = false, timer = null, loaded = false;
   var STATUS = { open: 'Open', waiting: 'Awaiting your reply', won: 'Project confirmed', closed: 'Closed' };
-  function fail(title, text) { document.getElementById('ptBox').outerHTML = '<section class="pt-glass pt-error"><h2>' + title + '</h2><p>' + text + '</p><p><a class="btn btn-primary" href="/contact">Contact us</a></p></section>'; document.getElementById('ptStatus').textContent = ''; clearInterval(timer); }
-  if (!token) { fail('Link incomplete', 'This conversation link is missing part of its address. Please open it again from your email.'); return; }
+  function fail(title, text) { document.getElementById('ptBox').outerHTML = '<section class="pt-glass pt-error"><h2>' + title + '</h2><p>' + text + '</p><p><a class="btn btn-primary" href="/contact?chat=1">Chat with us</a></p></section>'; document.getElementById('ptStatus').textContent = ''; clearInterval(timer); }
+  if (!token) { fail('No conversation yet', 'Open the link from our email, or start a chat with Henry and it will appear here.'); return; }
   // remove the secret from the address bar / history once read
   try { history.replaceState(null, '', location.pathname + '#c=' + token); } catch (e) {}
   var T = encodeURIComponent(token);
+  // the install file carries this chat's link, so the home-screen app opens it (iPhone apps don't share Safari's storage)
+  document.getElementById('ptManifest').href = '/api/portal?manifest=1&t=' + T;
   document.getElementById('ptAttach').innerHTML = CSChat.ICON.clip;
   document.getElementById('ptEmoji').innerHTML = CSChat.ICON.smile;
 

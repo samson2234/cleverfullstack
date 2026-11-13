@@ -1,0 +1,16 @@
+{
+  "id": "/admin",
+  "name": "CleverStack CRM",
+  "short_name": "CS Inbox",
+  "description": "CleverStack CRM: reply to website chats and leads from your phone.",
+  "start_url": "/admin#inbox",
+  "scope": "/admin",
+  "display": "standalone",
+  "background_color": "#0b0b15",
+  "theme_color": "#0b0b15",
+  "icons": [
+    { "src": "/images/app/crm-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/images/app/crm-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/images/app/crm-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

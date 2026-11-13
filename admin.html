@@ -4,6 +4,13 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="CleverStack mini-CRM for managing leads, subscribers, and email outreach.">
 <title>CleverStack - CRM</title>
+<link rel="manifest" href="/crm.webmanifest">
+<meta name="theme-color" content="#0b0b15">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CS Inbox">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="/images/app/crm-apple-180.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='20' height='20' rx='5' fill='%234F46E5'/><rect y='40' width='20' height='20' rx='5' fill='%2300C2A8'/><rect y='80' width='20' height='20' rx='5' fill='%23FF6B4A'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -295,8 +302,9 @@
   select option:disabled{ color:#7c8199; }
   .score-why{ list-style:none; margin:0; padding:0; display:grid; gap:4px; font-size:.84rem; }
   .score-why li{ display:flex; gap:10px; } .score-why li span{ color:#6ee7b7; font-weight:700; min-width:30px; font-variant-numeric:tabular-nums; }
+.crm-install{ margin-bottom:14px; }
 </style>
-<link rel="stylesheet" href="chat-ui.css?v=ffc185d3">
+<link rel="stylesheet" href="chat-ui.css?v=8af708c7">
 <link rel="stylesheet" href="admin-inbox.css?v=65d415ad">
 <link rel="stylesheet" href="admin-tools.css?v=b71a4fd5">
 <link rel="stylesheet" href="admin-campaigns.css?v=b13429ad">
@@ -371,6 +379,7 @@
 
   <main class="admin-body">
     <div class="must-change" id="mustChange" style="display:none;">You are using a temporary password. <button class="btn-sm primary" type="button" onclick="document.querySelector('.tab[data-view=account]').click()">Choose your own</button></div>
+    <div id="crmInstall" class="crm-install" hidden></div>
     <section class="view" id="view-inbox"></section>
     <section class="view" id="view-campaigns"></section>
     <section class="view" id="view-utm"></section>
@@ -1880,6 +1889,7 @@
 </script>
 <script src="chat-ui.js?v=79ac6803" defer></script>
 <script src="admin-inbox.js?v=9ffe3aa2" defer></script>
+<script src="app-install.js?v=1fb7b2a1" defer data-scope="/admin" data-app="the CRM app" data-slot="crmInstall" data-icon="/images/app/crm-192.png" data-pitch="Reply to website chats and leads from your phone."></script>
 <script src="admin-tools.js?v=77188b0b" defer></script>
 <script src="admin-campaigns.js?v=c2de671c" defer></script>
 <script src="admin-analytics.js?v=ccf5fe1b" defer></script></body></html>

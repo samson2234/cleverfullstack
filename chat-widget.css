@@ -66,6 +66,13 @@
 .cw-composer .cw-err{ position:absolute; left:12px; right:12px; bottom:100%; padding:6px 10px; background:var(--cw-panel); border-radius:8px 8px 0 0; }
 .cw.ch-dragging{ outline:3px dashed #2AA79F; outline-offset:-6px; }
 
+/* "get the app" strip above the thread */
+.cw-app{ flex:0 0 auto; display:flex; align-items:center; gap:8px; padding:7px 10px 7px 14px; font-size:.8rem; background:rgba(42,167,159,.16); border-bottom:1px solid var(--cw-line); }
+.cw-app span{ flex:1; min-width:0; }
+.cw-app a{ flex:0 0 auto; font-weight:700; color:#2DD4BF; text-decoration:none; padding:4px 10px; border-radius:100px; border:1px solid rgba(45,212,191,.5); }
+[data-theme=light] .cw-app a{ color:#0F766E; }
+.cw-app button{ flex:0 0 auto; width:26px; height:26px; border:0; border-radius:50%; background:transparent; color:var(--cw-muted); cursor:pointer; }
+
 @media (max-width:640px){
   .cw{ inset:0; width:auto; height:100%; height:100dvh; border-radius:0; border:0; transform:translateY(24px); }
   html.cw-open, html.cw-open body{ overflow:hidden; }

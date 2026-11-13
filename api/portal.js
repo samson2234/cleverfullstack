@@ -24,6 +24,20 @@ const publicMessage = (m) => ({ id: m.id, from: m.sender === 'client' ? 'you' : 
   body: m.body, at: m.created_at, edited: m.edited, deleted: m.deleted, file: m.file });
 const INVALID = 'This conversation link is not valid. Ask us for a new one.';
 
+export function chatManifest(token) {
+  const t = String(token).replace(/[^A-Za-z0-9_-]/g, '');
+  return {
+    id: '/messages', name: 'CleverStack Chat', short_name: 'CleverStack', description: 'Your chat with Henry and the CleverStack team.',
+    start_url: '/messages#c=' + t, scope: '/messages', display: 'standalone', orientation: 'portrait',
+    background_color: '#0b141a', theme_color: '#0F5F5A',
+    icons: [
+      { src: '/images/app/chat-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: '/images/app/chat-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: '/images/app/chat-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+    ]
+  };
+}
+
 async function limited(req, res, key, limit, windowMs, message) {
   const rl = await rateLimit(req, { limit, windowMs, key });
   if (rl.allowed) return false;
@@ -58,6 +72,14 @@ async function handler(req, res) {
         return sendFile(res, file, { download: u.searchParams.get('dl') === '1' });
       }
       if (await limited(req, res, 'portal-read', 60, 60000)) return;
+      // The installable "CleverStack Chat" app. Built per visitor so the installed app opens THEIR chat: on iPhone a
+      // home-screen app does not share storage with Safari, so the private link has to be in the start URL.
+      if (u.searchParams.get('manifest') === '1') {
+        const mconv = await conversationForToken(u.searchParams.get('t'));
+        if (!mconv) return res.status(404).json({ error: INVALID });
+        res.setHeader('Content-Type', 'application/manifest+json; charset=utf-8');
+        return res.status(200).send(JSON.stringify(chatManifest(u.searchParams.get('t'))));
+      }
       const conv = await conversationForToken(u.searchParams.get('t'));
       if (!conv) return res.status(404).json({ error: INVALID });
       const after = parseInt(u.searchParams.get('after'), 10) || 0;

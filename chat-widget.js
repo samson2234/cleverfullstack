@@ -105,6 +105,14 @@
     panel.querySelector('.cw-done').hidden = true;
     var box = panel.querySelector('.cw-thread'), comp = panel.querySelector('.cw-composer'), full = panel.querySelector('.cw-full');
     box.hidden = false; comp.hidden = false; full.hidden = false; full.href = '/messages#c=' + state.token;
+    // offer the installable chat app (the /messages page shows the Install button / iPhone steps)
+    if (!state.noApp && !panel.querySelector('.cw-app')) {
+      var tip = el('div', 'cw-app');
+      tip.innerHTML = '<span>📲 Get Henry\'s replies on your phone</span><a target="_blank" rel="noopener">Get the app</a><button type="button" aria-label="Hide">✕</button>';
+      tip.querySelector('a').href = '/messages#c=' + state.token;
+      tip.querySelector('button').addEventListener('click', function () { state.noApp = true; store.set(state); tip.remove(); });
+      panel.querySelector('.cw-body').insertBefore(tip, box);
+    }
     if (thread) { load(false); return; }
     var input = comp.querySelector('textarea'), err = comp.querySelector('.cw-err');
     comp.querySelector('.cw-attach').innerHTML = CSChat.ICON.clip;
