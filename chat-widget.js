@@ -29,7 +29,7 @@
   function build() {
     panel = el('div', 'cw'); panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', 'Chat with ' + AGENT); panel.hidden = true;
     panel.innerHTML =
-      '<header class="cw-head"><span class="cw-av" aria-hidden="true">HG<i></i></span><span class="cw-who"><b>' + AGENT + '</b><small>CleverStack · Typically replies within an hour</small></span>' +
+      '<header class="cw-head"><span class="cw-av" aria-hidden="true">HG<img src="/images/henry-avatar.webp" alt="" width="42" height="42"><i></i></span><span class="cw-who"><b>' + AGENT + '</b><small>CleverStack · Typically replies within an hour</small></span>' +
       '<a class="cw-ic cw-full" target="_blank" rel="noopener" title="Open full screen" aria-label="Open the chat full screen" hidden><svg viewBox="0 0 24 24"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></a>' +
       '<button type="button" class="cw-ic cw-x" aria-label="Close chat"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></header>' +
       '<div class="cw-body">' +
@@ -60,6 +60,7 @@
     if (state.name) form.name.value = state.name;
     if (state.email) form.email.value = state.email;
     form.addEventListener('submit', function (e) { e.preventDefault(); start(form); });
+    var avImg = panel.querySelector('.cw-av img'); avImg.addEventListener('error', function () { avImg.remove(); }); // initials stay if the photo fails
     panel.querySelector('.cw-x').addEventListener('click', close);
     panel.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !document.querySelector('.ch-menu,.ch-emoji,.ch-lightbox')) close(); });
   }
