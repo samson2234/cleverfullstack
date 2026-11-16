@@ -39,6 +39,7 @@ import { scoreLead } from '../lib/lead-score.js';
 import { getJourneySummaries } from '../lib/analytics.js';
 import { notifyHotLead } from '../lib/hot-lead.js';
 import { createConversation, linkFor, addMessage } from '../lib/messages.js';
+import { pushToStaff } from '../lib/push.js';
 import { siteUrl } from '../lib/email.js';
 import { detectPitch, intentLabel } from '../lib/pitch.js';
 import { withMonitor, reportError } from '../lib/monitor.js';
@@ -152,6 +153,8 @@ async function handler(req, res) {
           await addMessage(conversation.id, { sender: 'system', staffName: 'Henry George', log: false,
             body: 'Thanks, ' + first + '! I\'ve got your message and I usually reply within an hour. If you leave this page, I\'ll also email you at ' + submission.email + ' as soon as I reply, so you won\'t miss it. Feel free to add any details in the meantime.' });
         }
+        // the team's phones (CRM Inbox notifications). Never throws.
+        await pushToStaff(conversation, { text: submission.message, isNew: true });
       } catch (err) { console.error('Conversation create failed:', err.message); }
     } catch (err) {
       await reportError(err, { where: 'contact: lead not saved to database' });

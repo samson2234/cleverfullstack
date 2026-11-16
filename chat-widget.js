@@ -105,14 +105,7 @@
     panel.querySelector('.cw-done').hidden = true;
     var box = panel.querySelector('.cw-thread'), comp = panel.querySelector('.cw-composer'), full = panel.querySelector('.cw-full');
     box.hidden = false; comp.hidden = false; full.hidden = false; full.href = '/messages#c=' + state.token;
-    // offer the installable chat app (the /messages page shows the Install button / iPhone steps)
-    if (!state.noApp && !panel.querySelector('.cw-app')) {
-      var tip = el('div', 'cw-app');
-      tip.innerHTML = '<span>📲 Get Henry\'s replies on your phone</span><a target="_blank" rel="noopener">Get the app</a><button type="button" aria-label="Hide">✕</button>';
-      tip.querySelector('a').href = '/messages#c=' + state.token;
-      tip.querySelector('button').addEventListener('click', function () { state.noApp = true; store.set(state); tip.remove(); });
-      panel.querySelector('.cw-body').insertBefore(tip, box);
-    }
+    offerAlerts(box);
     if (thread) { load(false); return; }
     var input = comp.querySelector('textarea'), err = comp.querySelector('.cw-err');
     comp.querySelector('.cw-attach').innerHTML = CSChat.ICON.clip;
@@ -152,6 +145,47 @@
     CSChat.composer({ form: comp, input: input, attach: comp.querySelector('.cw-attach'), emoji: comp.querySelector('.cw-emoji'), drop: panel,
       onSend: sendText, onFiles: sendFiles, onTyping: function () { post({ op: 'typing' }).catch(function () {}); } });
     load(true).then(function () { if (isOpen && window.innerWidth > 640) input.focus({ preventScroll: true }); });
+  }
+
+  // Strip above the thread: notifications when Henry replies where the browser supports them (push-client.js),
+  // otherwise the installable chat app (the /messages page shows Install / iPhone "Add to Home Screen" steps).
+  var pushLoad = null;
+  function loadPush() {
+    if (window.CSPush) return Promise.resolve();
+    if (!pushLoad) pushLoad = new Promise(function (ok, bad) { var s = el('script'); s.src = asset('data-push-src'); s.onload = ok; s.onerror = bad; document.head.appendChild(s); });
+    return pushLoad;
+  }
+  function pushSave(sub) { return post({ op: 'push_sub', sub: sub }); }
+  function offerAlerts(box) {
+    if (state.noApp || panel.querySelector('.cw-app')) return;
+    var tip = el('div', 'cw-app'), body = panel.querySelector('.cw-body');
+    function close() { state.noApp = true; store.set(state); tip.remove(); }
+    function appTip() {
+      tip.innerHTML = '<span>📲 Get Henry\'s replies on your phone</span><a target="_blank" rel="noopener">Get the app</a><button type="button" aria-label="Hide">✕</button>';
+      tip.querySelector('a').href = '/messages#c=' + state.token;
+      tip.querySelector('button').addEventListener('click', close);
+      if (!tip.parentNode) body.insertBefore(tip, box);
+    }
+    loadPush().then(function () {
+      if (!window.CSPush.supported()) return appTip();
+      return fetch('/api/portal?push_key=1', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
+        if (!d.key) return appTip();
+        return CSPush.state('/messages').then(function (s) {
+          if (s === 'on') { CSPush.enable({ scope: '/messages', key: d.key, save: pushSave }).catch(function () {}); return; } // quietly follow this chat
+          if (s === 'blocked') return appTip();
+          tip.innerHTML = '<span>🔔 Get a notification when Henry replies</span><a href="#" role="button">Turn on</a><button type="button" aria-label="Hide">✕</button>';
+          tip.querySelector('button').addEventListener('click', close);
+          tip.querySelector('a').addEventListener('click', function (e) {
+            e.preventDefault();
+            CSPush.enable({ scope: '/messages', key: d.key, save: pushSave }).then(function () {
+              tip.innerHTML = '<span>✓ Notifications on. We\'ll ping this device when Henry replies.</span>';
+              setTimeout(function () { tip.remove(); }, 4000);
+            }).catch(function (er) { tip.querySelector('span').textContent = er.message; });
+          });
+          body.insertBefore(tip, box);
+        });
+      });
+    }).catch(appTip);
   }
 
   function load(first) {

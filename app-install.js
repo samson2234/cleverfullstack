@@ -48,5 +48,9 @@
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', iosHelp); else iosHelp();
 
+  // the number on the app icon (set by notifications in sw.js) clears when the app is opened
+  function clearBadge() { if (navigator.clearAppBadge && document.visibilityState === 'visible') navigator.clearAppBadge().catch(function () {}); }
+  clearBadge(); document.addEventListener('visibilitychange', clearBadge);
+
   window.CSApp = { installed: installed };
 })();

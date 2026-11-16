@@ -8,6 +8,9 @@ export const config = { runtime: 'nodejs' };
 //   GET  /api/portal?t=TOKEN&file=ID[&dl=1]      -> an attached file (images inline, everything else downloads)
 //   POST /api/portal { t, body }                 -> client message; emails the owner
 //   POST /api/portal { t, op: 'typing' | 'edit' | 'delete', id?, body? }
+//   POST /api/portal { t, op: 'push_sub' | 'push_unsub', sub } -> phone notifications for this conversation (lib/push.js)
+//   GET  /api/portal?push_key=1                 -> the public Web Push key (null until VAPID keys are set)
+//   GET  /api/portal?manifest=1&t=TOKEN         -> the installable chat app's manifest
 //   POST /api/portal?t=TOKEN&name=FILE           -> raw file bytes (application/octet-stream, max 4 MB) as a message
 //
 // NOTE: this is function 12 of the 12 allowed on Vercel's Hobby plan. New server features must be added to an
@@ -19,6 +22,7 @@ import { sendResendEmail, ownerEmail, ownerMessageTemplate } from '../lib/email.
 import { rateLimit } from '../lib/rate-limit.js';
 import { isBotPayload } from '../lib/honeypot.js';
 import { withMonitor, reportError } from '../lib/monitor.js';
+import { pushKey, pushToStaff, subscribe, unsubscribe } from '../lib/push.js';
 
 const publicMessage = (m) => ({ id: m.id, from: m.sender === 'client' ? 'you' : m.sender, name: m.sender === 'client' ? '' : (m.staff_name || 'CleverStack'),
   body: m.body, at: m.created_at, edited: m.edited, deleted: m.deleted, file: m.file });
@@ -74,6 +78,7 @@ async function handler(req, res) {
       if (await limited(req, res, 'portal-read', 60, 60000)) return;
       // The installable "CleverStack Chat" app. Built per visitor so the installed app opens THEIR chat: on iPhone a
       // home-screen app does not share storage with Safari, so the private link has to be in the start URL.
+      if (u.searchParams.get('push_key') === '1') return res.status(200).json({ key: pushKey() });
       if (u.searchParams.get('manifest') === '1') {
         const mconv = await conversationForToken(u.searchParams.get('t'));
         if (!mconv) return res.status(404).json({ error: INVALID });
@@ -101,7 +106,7 @@ async function handler(req, res) {
         if (!conv) return res.status(404).json({ error: INVALID });
         const file = await saveFile(conv.id, { name: u.searchParams.get('name'), data: req.body });
         const id = await addMessage(conv.id, { sender: 'client', body: '', fileId: file.id });
-        await emailOwner(conv, '📎 Sent a file: ' + file.name);
+        await Promise.all([emailOwner(conv, '📎 Sent a file: ' + file.name), pushToStaff(conv, { text: '📎 ' + file.name })]);
         return res.status(200).json({ success: true, id, file });
       }
 
@@ -111,6 +116,15 @@ async function handler(req, res) {
         const conv = await conversationForToken(b.t);
         if (!conv) return res.status(404).json({ error: INVALID });
         await setTyping(conv.id, 'client');
+        return res.status(200).json({ success: true });
+      }
+      // phone notifications for this conversation (chat button, /messages, installed chat app)
+      if (b.op === 'push_sub' || b.op === 'push_unsub') {
+        if (await limited(req, res, 'portal-push', 20, 600000)) return;
+        const conv = await conversationForToken(b.t);
+        if (!conv) return res.status(404).json({ error: INVALID });
+        if (b.op === 'push_sub') await subscribe({ kind: 'client', conversationId: conv.id, sub: b.sub });
+        else await unsubscribe(String((b.sub && b.sub.endpoint) || b.endpoint || ''), { conversationId: conv.id });
         return res.status(200).json({ success: true });
       }
       if (await limited(req, res, 'portal-post', 30, 600000, 'You are sending messages very quickly. Please wait a moment.')) return;
@@ -125,7 +139,7 @@ async function handler(req, res) {
       const conv = await conversationForToken(b.t);
       if (!conv) return res.status(404).json({ error: INVALID });
       const id = await addMessage(conv.id, { sender: 'client', body: b.body });
-      await emailOwner(conv, String(b.body));
+      await Promise.all([emailOwner(conv, String(b.body)), pushToStaff(conv, { text: String(b.body) })]);
       return res.status(200).json({ success: true, id });
     }
     res.setHeader('Allow', 'GET, POST');

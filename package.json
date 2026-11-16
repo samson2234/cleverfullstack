@@ -5,7 +5,7 @@
   "description": "CleverStack marketing site — static HTML/CSS/JS, deployed to Vercel",
   "scripts": {
     "minify": "node scripts/minify.js",
-    "test": "node --test tests/assets.test.mjs tests/csp.test.mjs tests/routing.test.mjs tests/roi.test.mjs tests/blog.test.mjs tests/seo.test.mjs tests/reviews.test.mjs tests/crm.test.mjs tests/retention.test.mjs tests/resilience.test.mjs tests/analytics.test.mjs tests/leadscore.test.mjs tests/staff.test.mjs tests/ab.test.mjs tests/messages.test.mjs tests/chat.test.mjs tests/livechat.test.mjs tests/apps.test.mjs tests/security.test.mjs tests/pitch.test.mjs tests/owner-password.test.mjs tests/monitor.test.mjs tests/campaigns.test.mjs",
+    "test": "node --test tests/assets.test.mjs tests/csp.test.mjs tests/routing.test.mjs tests/roi.test.mjs tests/blog.test.mjs tests/seo.test.mjs tests/reviews.test.mjs tests/crm.test.mjs tests/retention.test.mjs tests/resilience.test.mjs tests/analytics.test.mjs tests/leadscore.test.mjs tests/staff.test.mjs tests/ab.test.mjs tests/messages.test.mjs tests/chat.test.mjs tests/livechat.test.mjs tests/apps.test.mjs tests/push.test.mjs tests/security.test.mjs tests/pitch.test.mjs tests/owner-password.test.mjs tests/monitor.test.mjs tests/campaigns.test.mjs",
     "test:scale": "node --test tests/scale.test.mjs",
     "assets": "node scripts/version-assets.js",
     "assets:check": "node scripts/version-assets.js --check",
@@ -18,7 +18,8 @@
     "@libsql/client": "^0.17.4",
     "@vercel/analytics": "^2.0.1",
     "@vercel/og": "^0.6.2",
-    "react": "^18.3.1"
+    "react": "^18.3.1",
+    "web-push": "3.6.7"
   },
   "devDependencies": {
     "clean-css": "^5.3.3",

@@ -83,7 +83,7 @@
 .ib{ position:relative; }
 .ib.with-side{ grid-template-columns:340px minmax(0,1fr) 300px; }
 .ib-icon{ flex:0 0 auto; width:38px; height:38px; display:grid; place-items:center; border-radius:10px; border:1px solid var(--crm-line); background:transparent; color:var(--crm-text); cursor:pointer; }
-.ib-icon svg{ width:18px; height:18px; } .ib-icon.off{ color:var(--crm-muted); } .ib-icon:hover{ background:rgba(255,255,255,.06); }
+.ib-icon svg{ width:18px; height:18px; } .ib-icon.off{ color:var(--crm-muted); } .ib-icon[hidden]{ display:none; } .ib-icon.on-push{ color:#5eead4; border-color:rgba(45,212,191,.45); background:rgba(45,212,191,.12); } .ib-icon:hover{ background:rgba(255,255,255,.06); }
 /* list rows: avatar | name+time / tag+status / ticks+preview, unread badge on the right */
 .ib-item{ flex-direction:row; align-items:center; gap:12px; padding:11px 12px; }
 .ib-body{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }

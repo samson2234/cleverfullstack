@@ -73,6 +73,7 @@ import {
 import { rateLimit, clientIp } from '../lib/rate-limit.js';
 import { getAnalytics, getRecentJourneys, getJourneySummaries } from '../lib/analytics.js';
 import { scoreLead } from '../lib/lead-score.js';
+import { pushKey, pushToClient, subscribe as pushSubscribe, unsubscribe as pushUnsubscribe } from '../lib/push.js';
 import { createTest, setTestStatus, deleteTest, listTestsWithResults } from '../lib/ab.js';
 import { listConversations, getConversation, getMessages, addMessage, createConversation, setStatus as setConvStatus, rotateToken, setFlags as setConvFlags, markUnread as markConvUnread, deleteConversation, markRead as markConvRead, linkFor, conversationsForSubmission,
   changedSince, serverNow, needsRead, editMessage, deleteMessage, setTyping, saveFile, getFile, sendFile } from '../lib/messages.js';
@@ -446,6 +447,7 @@ async function handler(req, res) {
         return sendFile(res, file, { download: params.get('dl') === '1' });
       }
       // Inbox lead panel: the enquiry behind a conversation (score, first page, source, country) and earlier enquiries
+      if (view === 'push_key') return res.status(200).json({ key: pushKey() });
       if (view === 'thread_lead') {
         const conversation = await getConversation(parseInt(params.get('id')));
         if (!conversation) return res.status(404).json({ error: 'Conversation not found' });
@@ -551,7 +553,8 @@ async function handler(req, res) {
           const id = parseInt(body.id);
           await addMessage(id, { sender: 'staff', body: body.body, staffName: me.name || 'CleverStack' });
           const conv = await getConversation(id);
-          const mail = body.email === false ? { sent: false } : await notifyClient(conv, me.name || 'The CleverStack team', String(body.body));
+          const [mail] = await Promise.all([body.email === false ? { sent: false } : notifyClient(conv, me.name || 'The CleverStack team', String(body.body)),
+            pushToClient(conv, { staffName: me.name || 'Henry', text: String(body.body) })]);
           return res.status(200).json({ success: true, emailed: mail.sent, emailError: mail.error });
         }
         if (action === 'conv_create') {
@@ -567,9 +570,14 @@ async function handler(req, res) {
           if (!conv) return res.status(404).json({ error: 'Conversation not found' });
           const file = await saveFile(id, { name: ps.get('name'), data: req.body });
           const msgId = await addMessage(id, { sender: 'staff', body: '', fileId: file.id, staffName: me.name || 'CleverStack' });
+          const push = pushToClient(conv, { staffName: me.name || 'Henry', text: '📎 ' + file.name });
           const mail = ps.get('email') === '1' ? await notifyClient(conv, me.name || 'The CleverStack team', '📎 Sent you a file: ' + file.name + '\n\nOpen the conversation to view or download it.') : { sent: false };
+          await push;
           return res.status(200).json({ success: true, id: msgId, file, emailed: mail.sent, emailError: mail.error });
         }
+        // this device gets a notification for every client message (CRM Inbox bell / installed CRM app)
+        if (action === 'push_sub') { await pushSubscribe({ kind: 'staff', staffId: Number(me.id) || 0, sub: body.sub }); return res.status(200).json({ success: true }); }
+        if (action === 'push_unsub') { await pushUnsubscribe(String((body.sub && body.sub.endpoint) || body.endpoint || '')); return res.status(200).json({ success: true }); }
         if (action === 'msg_edit') { await editMessage(parseInt(body.id), parseInt(body.message_id), 'staff', body.body); return res.status(200).json({ success: true }); }
         if (action === 'msg_delete') { await deleteMessage(parseInt(body.id), parseInt(body.message_id), 'staff'); return res.status(200).json({ success: true }); }
         if (action === 'msg_typing') { await setTyping(parseInt(body.id), 'staff'); return res.status(200).json({ success: true }); }

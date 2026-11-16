@@ -62,13 +62,14 @@
     if (v.getAttribute('data-ready')) return;
     v.setAttribute('data-ready', '1');
     v.innerHTML = '<div class="ib">' +
-      '<aside class="ib-list"><div class="ib-tools"><input id="ibSearch" type="search" placeholder="Search name, email, subject"><button class="ib-icon" id="ibSound" type="button"></button><button class="btn-sm primary ib-new" id="ibNew" type="button">New</button></div>' +
+      '<aside class="ib-list"><div class="ib-tools"><input id="ibSearch" type="search" placeholder="Search name, email, subject"><button class="ib-icon" id="ibSound" type="button"></button><button class="ib-icon" id="ibPush" type="button" hidden></button><button class="btn-sm primary ib-new" id="ibNew" type="button">New</button></div>' +
       '<div class="ib-filters" id="ibFilters">' + [['', 'All'], ['unread', 'Unread'], ['open', 'Open'], ['waiting', 'Waiting'], ['won', 'Won'], ['closed', 'Closed'], ['archived', 'Archived']].map(function (f) { return '<button type="button" data-f="' + f[0] + '" class="' + (f[0] === '' ? 'on' : '') + '">' + f[1] + '</button>'; }).join('') + '</div>' +
       '<div id="ibItems" class="ib-items"></div></aside>' +
       '<section class="ib-main" id="ibMain">' + EMPTY + '</section><aside class="ib-side" id="ibSide" hidden></aside></div>';
     function soundBtn() { var on = pref(SOUND_KEY, true), b = $('ibSound'); b.innerHTML = on ? ICON.bell : ICON.bellOff; b.title = on ? 'Sound on for new messages (click to mute)' : 'Sound muted (click to turn on)'; b.setAttribute('aria-label', b.title); b.classList.toggle('off', !on); }
     soundBtn();
     $('ibSound').addEventListener('click', function () { setPref(SOUND_KEY, !pref(SOUND_KEY, true)); soundBtn(); if (pref(SOUND_KEY, true)) ping(); });
+    pushSetup();
     $('ibFilters').querySelectorAll('button').forEach(function (b) { b.addEventListener('click', function () { $('ibFilters').querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); }); state.filter = b.getAttribute('data-f'); list(); }); });
     var t; $('ibSearch').addEventListener('input', function () { clearTimeout(t); t = setTimeout(function () { state.q = $('ibSearch').value.trim(); list(); }, 300); });
     $('ibNew').addEventListener('click', function () { compose({}); });
@@ -111,6 +112,7 @@
     chat: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3C6.5 3 2 6.9 2 11.7c0 2.6 1.3 4.9 3.4 6.5L4.6 22l4.3-2.3c1 .3 2 .4 3.1.4 5.5 0 10-3.9 10-8.7S17.5 3 12 3z"/></svg>',
     ticks: '<svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 8.5l4 4L13 3M9.5 12.5L18 3"/></svg>',
     link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>',
+    phone: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/><path d="M20.5 7.5a6 6 0 0 1 0 5M2.5 12.5a6 6 0 0 1 0-5"/></svg>',
     info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>',
     send: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 20l18-8L3 4v6l12 2-12 2z"/></svg>',
     back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>',
@@ -360,6 +362,35 @@
     });
     $('ncBody').focus();
   }
+
+  // 📳 phone / desktop notifications for this device (push-client.js; lib/push.js on the server). Hidden until the
+  // VAPID keys are set, and where the browser can't (iPhone: install the CRM app to the Home Screen first).
+  function pushSetup() {
+    var b = $('ibPush'); if (!b || !window.CSPush || !CSPush.supported()) return;
+    var key = null, save = function (sub) { return api('POST', '', { action: 'push_sub', sub: sub }); };
+    function paint(s) {
+      b.innerHTML = ICON.phone; b.classList.toggle('on-push', s === 'on'); b.classList.toggle('off', s !== 'on');
+      b.title = s === 'on' ? 'Notifications on this device: ON (click to turn off)' : s === 'blocked' ? 'Notifications are blocked for this site in your browser settings' : 'Get a notification on this device for every new message';
+      b.setAttribute('aria-label', b.title);
+    }
+    api('GET', '?view=push_key').then(function (d) {
+      if (!d.key) return;
+      key = d.key; b.hidden = false;
+      CSPush.state('/admin').then(function (s) { paint(s); if (s === 'on') CSPush.enable({ scope: '/admin', key: key, save: save }).catch(function () {}); });
+    }).catch(function () {});
+    b.addEventListener('click', function () {
+      CSPush.state('/admin').then(function (s) {
+        if (s === 'on') return CSPush.disable({ scope: '/admin', remove: function (sub) { return api('POST', '', { action: 'push_unsub', sub: sub }); } }).then(function () { paint('off'); toast('Notifications off on this device'); });
+        return CSPush.enable({ scope: '/admin', key: key, save: save }).then(function () { paint('on'); toast('Notifications on. You\'ll get a ping for every new message.'); });
+      }).catch(function (e) { alert(e.message); CSPush.state('/admin').then(paint); });
+    });
+  }
+  // a tapped notification moves an open CRM to #inbox-ID
+  window.addEventListener('hashchange', function () {
+    var m = location.hash.match(/^#inbox-(\d+)$/); if (!m || state.current === +m[1]) return;
+    var tab = document.querySelector('.tab[data-view="inbox"]'); if (tab && !$('view-inbox').classList.contains('active')) tab.click();
+    if ($('ibItems')) open(+m[1]);
+  });
 
   function load() {
     shell();

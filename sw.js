@@ -3,9 +3,9 @@
    - Page loads go to the network first (chats must always be fresh); when the phone is offline it shows a small
      "you're offline" page instead of the browser's error, and retries by itself when the connection is back.
    - API calls, files and everything else pass straight through (no caching of private data).
-   Phase 4 (Web Push) will add 'push' and 'notificationclick' handlers here. */
+   - Web Push (lib/push.js): shows the notification; tapping it focuses the open chat / CRM, or opens it. */
 'use strict';
-var VERSION = 'cs-apps-1';
+var VERSION = 'cs-apps-2';
 
 self.addEventListener('install', function () { self.skipWaiting(); });
 self.addEventListener('activate', function (e) {
@@ -30,3 +30,35 @@ self.addEventListener('fetch', function (e) {
     return new Response(OFFLINE, { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
   }));
 });
+
+// ---- notifications (Phase 4) ---------------------------------------------------------------------------
+self.addEventListener('push', function (e) {
+  var d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (err) { d = { body: e.data ? e.data.text() : '' }; }
+  var crm = /^\/admin/.test(d.url || '') || /\/admin$/.test(self.registration.scope);
+  var icon = crm ? '/images/app/crm-192.png' : '/images/app/chat-192.png';
+  e.waitUntil(Promise.all([
+    self.registration.showNotification(d.title || 'CleverStack', {
+      body: d.body || 'You have a new message.', icon: icon, badge: icon, tag: d.tag || 'cs-message', renotify: true,
+      data: { url: d.url || (crm ? '/admin#inbox' : '/messages') }
+    }),
+    // number on the app icon where supported (cleared when the app is opened)
+    self.navigator && self.navigator.setAppBadge ? self.navigator.setAppBadge().catch(function () {}) : null
+  ]));
+});
+
+self.addEventListener('notificationclick', function (e) {
+  e.notification.close();
+  var url = new URL((e.notification.data && e.notification.data.url) || '/', self.location.origin);
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (list) {
+    // an open window of the same app: bring it forward (and move the CRM to the right chat)
+    for (var i = 0; i < list.length; i++) {
+      var c = list[i], cu = new URL(c.url);
+      if (cu.origin === url.origin && cu.pathname.replace(/\.html$/, '') === url.pathname) {
+        return c.focus().then(function (w) { if (w && url.hash && w.url !== url.href && 'navigate' in w) return w.navigate(url.href).catch(function () {}); });
+      }
+    }
+    return self.clients.openWindow(url.href);
+  }));
+});
+

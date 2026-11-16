@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const tag = (pre) => '<script src="' + pre + 'chat-widget.js" defer data-ui-src="' + pre + 'chat-ui.js" data-ui-href="' + pre + 'chat-ui.css" data-css-href="' + pre + 'chat-widget.css"></script>';
+const tag = (pre) => '<script src="' + pre + 'chat-widget.js" defer data-ui-src="' + pre + 'chat-ui.js" data-ui-href="' + pre + 'chat-ui.css" data-css-href="' + pre + 'chat-widget.css" data-push-src="' + pre + 'push-client.js"></script>';
 const OLD = /<script src="(?:\.\.\/)?chat-widget\.js[^"]*"[^>]*><\/script>\n?/g;
 
 let added = 0, kept = 0;
