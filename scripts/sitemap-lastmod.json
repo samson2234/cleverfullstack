@@ -108,8 +108,8 @@
     "lastmod": "2026-11-16"
   },
   "https://cleverstack.dev/services": {
-    "fp": "2e091794508f2ac97d194fef8c92bff33d7a0dbc",
-    "lastmod": "2026-11-16"
+    "fp": "e12e789f2aadac945c6b8c92d40ba5fd0086f85f",
+    "lastmod": "2026-11-25"
   },
   "https://cleverstack.dev/terms": {
     "fp": "143196e09bd0e1a3f3135033ef929728c006d308",
@@ -350,5 +350,9 @@
   "https://cleverstack.dev/work/stringmaster-guitar-learning-platform": {
     "fp": "a695e03cf6858f7c1fc920a80404670128b2d8fc",
     "lastmod": "2026-11-16"
+  },
+  "https://cleverstack.dev/translation-services": {
+    "fp": "ab6ee194a710b6109867bdb7458f80e473ef3d5f",
+    "lastmod": "2026-11-25"
   }
 }

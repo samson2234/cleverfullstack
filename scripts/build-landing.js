@@ -17,7 +17,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const SITE = 'https://cleverstack.dev';
 const BOOK = 'https://calendly.com/henryygeorge25/30min';
-const PAGES = [...require('../landing-src/services.js'), ...require('../landing-src/apps.js'), ...require('../landing-src/hire.js'), ...require('../landing-src/industries.js'), ...require('../landing-src/locations.js')];
+const PAGES = [...require('../landing-src/services.js'), ...require('../landing-src/apps.js'), ...require('../landing-src/hire.js'), ...require('../landing-src/industries.js'), ...require('../landing-src/locations.js'), ...require('../landing-src/translation.js')];
 const PROJECTS = Object.fromEntries(JSON.parse(fs.readFileSync(path.join(ROOT, 'work-src/projects.json'), 'utf8')).map((p) => [p.slug, p]));
 const BY_SLUG = Object.fromEntries(PAGES.map((p) => [p.slug, p]));
 
@@ -82,8 +82,10 @@ const head2 = (eyebrow, h2, sub) => `<div class="section-head reveal"><div class
 const prose = (paras) => paras.map((t) => `<p style="margin-bottom:16px;line-height:1.75;">${esc(t)}</p>`).join('');
 
 function hero(p, wa) {
-  const chips = p.price.from
-    ? `<div><div style="font-size:2rem; font-weight:700; color:var(--indigo);">From ${money(p.price.from, p.price.currency)}</div><div style="font-size:0.9rem; color:var(--text-muted);">${esc(p.price.label)}</div></div><div><div style="font-size:2rem; font-weight:700; color:var(--teal);">${esc(p.price.delivery)}</div><div style="font-size:0.9rem; color:var(--text-muted);">Typical delivery</div></div>`
+  const chips = p.heroStats
+    ? p.heroStats.map(([n, l], i) => `<div><div style="font-size:2rem; font-weight:700; color:var(--${i % 2 ? 'teal' : 'indigo'});">${esc(n)}</div><div style="font-size:0.9rem; color:var(--text-muted);">${esc(l)}</div></div>`).join('')
+    : p.price.from
+    ?`<div><div style="font-size:2rem; font-weight:700; color:var(--indigo);">From ${money(p.price.from, p.price.currency)}</div><div style="font-size:0.9rem; color:var(--text-muted);">${esc(p.price.label)}</div></div><div><div style="font-size:2rem; font-weight:700; color:var(--teal);">${esc(p.price.delivery)}</div><div style="font-size:0.9rem; color:var(--text-muted);">Typical delivery</div></div>`
     : `<div><div style="font-size:2rem; font-weight:700; color:var(--indigo);">Fixed quote</div><div style="font-size:0.9rem; color:var(--text-muted);">Agreed before work starts</div></div>`;
   return `<section class="hero"><div class="mesh-bg"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div><div class="container hero-grid" style="position:relative; z-index:1;"><div>` +
     `<nav aria-label="Breadcrumb" style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;"><a href="/" style="color:inherit;">Home</a> / <a href="/services" style="color:inherit;">Services</a> / <span aria-current="page">${esc(p.name)}</span></nav>` +
@@ -112,6 +114,12 @@ function priceBlock(p) {
       `<div class="grid grid-2" style="gap:24px;">${p.packages.map(([h, from, b]) => `<div class="card reveal" style="padding:28px;"><h3 style="margin-bottom:6px;">${esc(h)}</h3><div style="font-size:1.5rem; font-weight:700; color:var(--indigo); margin-bottom:8px;">From ${money(from, cur)}</div><p style="color:var(--text-muted);">${esc(b)}</p></div>`).join('')}</div>` +
       `<div class="hero-ctas reveal" style="margin-top:24px;"><a href="${BOOK}" class="btn btn-primary" target="_blank" rel="noopener">Get a fixed quote <span class="btn-arrow">&#8594;</span></a> <a href="/services#budget" class="btn btn-ghost">Plan around your budget</a></div></div></section>`;
   }
+  if (p.kind === 'translation') {
+    return `<section class="section-pad section-light" id="pricing"><div class="container">${head2('Pricing', 'How pricing works', 'Every project gets a written quote before any work starts. We quote in USD, GBP or EUR.')}` +
+      `<div class="card reveal" style="padding:32px; max-width:760px;"><div style="font-size:1.8rem; font-weight:700; color:var(--indigo); margin-bottom:4px;">${esc(p.price.label)}</div>` +
+      `<div style="color:var(--text-muted); margin-bottom:14px;">Speed: ${esc(p.price.delivery)}</div><p style="margin-bottom:18px;">${esc(p.price.includes)}</p>` +
+      `<div class="hero-ctas" style="margin:0;"><a href="${BOOK}" class="btn btn-primary" target="_blank" rel="noopener">Get a quote <span class="btn-arrow">&#8594;</span></a> <a href="/contact?chat=1" data-chat-open class="btn btn-ghost">Send us your files</a></div></div></div></section>`;
+  }
   const big = p.price.from ? `From ${money(p.price.from)} USD` : esc(p.price.label);
   return `<section class="section-pad section-light" id="pricing"><div class="container">${head2('Pricing', p.price.from ? 'What it costs' : 'How pricing works', 'Every project gets a fixed quote in writing before any work starts. We quote in USD, GBP or EUR.')}` +
     `<div class="card reveal" style="padding:32px; max-width:760px;"><div style="font-size:1.8rem; font-weight:700; color:var(--indigo); margin-bottom:4px;">${big}</div>` +
@@ -131,15 +139,31 @@ function related(p) {
     '</div></div></section>';
 }
 
+// Translation page only: language pairs, the localization lead (from the CV) and the tools we work in
+function translationParts(p) {
+  if (!p.pairs) return '';
+  const pairs = `<section class="section-pad section-light"><div class="container">${head2('Languages', 'Language pairs we work in', 'Native-level understanding of the source, professional writing in the target.')}<div class="grid grid-2" style="gap:24px;">` +
+    p.pairs.map(([pair, level, use]) => `<div class="card reveal" style="padding:28px;"><h3 style="margin-bottom:4px;">${esc(pair)}</h3><div style="font-size:0.9rem; color:var(--teal); font-weight:600; margin-bottom:10px;">${esc(level)}</div><p style="color:var(--text-muted);">${esc(use)}</p></div>`).join('') + '</div></div></section>';
+  const l = p.lead;
+  const lead = `<section class="section-pad section-light" style="background:var(--paper-3)" id="team"><div class="container">${head2('Who does the work', 'Meet your localization lead')}` +
+    `<div class="grid grid-2" style="gap:24px; align-items:start;"><div class="card reveal" style="padding:32px;"><h3 style="margin-bottom:4px;">${esc(l.name)}</h3><div style="font-size:0.9rem; color:var(--teal); font-weight:600; margin-bottom:14px;">${esc(l.role)}</div><p style="color:var(--text-muted); line-height:1.75; margin-bottom:18px;">${esc(l.bio)}</p>` +
+    l.education.map(([d, w]) => `<p style="margin-bottom:10px;"><strong>${esc(d)}</strong><br><span style="color:var(--text-muted); font-size:0.92rem;">${esc(w)}</span></p>`).join('') + '</div>' +
+    `<div class="card reveal" style="padding:32px;"><h3 style="margin-bottom:16px;">Experience</h3><ul style="list-style:none; padding:0; display:grid; gap:12px;">${l.points.map((w) => `<li style="display:flex; gap:10px;"><span style="color:var(--teal); font-weight:700;">&#10003;</span><span>${esc(w)}</span></li>`).join('')}</ul></div></div></div></section>`;
+  const tools = `<section class="section-pad section-light"><div class="container">${head2('Tools', 'We work in your tools and file formats', 'No copy and paste between systems: we translate where your text already lives and deliver files ready to import.')}` +
+    `<div class="skill-pill-group reveal">${p.tools.map((t) => `<span class="skill-pill">${esc(t)}</span>`).join(' ')}</div></div></section>`;
+  return pairs + lead + tools;
+}
+
 function main(p, wa) {
   const forWho = `<ul style="list-style:none; padding:0; display:grid; gap:12px;">${p.forWho.map((w) => `<li style="display:flex; gap:10px;"><span style="color:var(--teal); font-weight:700;">&#10003;</span><span>${esc(w)}</span></li>`).join('')}</ul>`;
   return `<main id="main" data-landing="${p.slug}">` + hero(p, wa) +
     `<section class="section-pad section-light"><div class="container"><div class="grid grid-2" style="gap:40px; align-items:start;"><div class="reveal">${head2(p.kind === 'industry' ? 'The challenge' : 'The problem', p.introH2 || (p.kind === 'industry' ? 'What your website has to do' : 'Why this is worth doing properly')).replace('reveal', '')}${prose(p.intro)}</div>` +
     `<div class="card reveal" style="padding:32px;"><h3 style="margin-bottom:16px;">Who this is for</h3>${forWho}</div></div></div></section>` +
     `<section class="section-pad section-light" style="background:var(--paper-3)"><div class="container">${head2('What you get', "What's included")}<div class="grid grid-2" style="gap:24px;">${p.deliverables.map(([h, b]) => card(h, b)).join('')}</div></div></section>` +
+    translationParts(p) +
     (p.sections || []).map(([h, paras], i) => `<section class="section-pad section-light"${i % 2 ? ' style="background:var(--paper-3)"' : ''}><div class="container"><div class="reveal" style="max-width:820px;"><h2 style="margin-bottom:18px;">${esc(h)}</h2>${prose(paras)}</div></div></section>`).join('') +
     priceBlock(p) +
-    `<section class="section-pad section-dark"><div class="container">${head2('How we work', 'From first call to launch, in four steps')}<div class="grid grid-2" style="gap:24px;">${PROCESS.map(([h, b], i) => card((i + 1) + '. ' + h, b)).join('')}</div></div></section>` +
+    `<section class="section-pad section-dark"><div class="container">${head2('How we work', p.process ? 'From first file to final build, in four steps' : 'From first call to launch, in four steps')}<div class="grid grid-2" style="gap:24px;">${(p.process || PROCESS).map(([h, b], i) => card((i + 1) + '. ' + h, b)).join('')}</div></div></section>` +
     caseCards(p) + faq(p) + related(p) +
     `<section class="section-pad section-light"><div class="container"><div class="final-cta reveal"><div class="eyebrow" style="color:var(--teal); justify-content:center;">Ready to start?</div><h2>${esc(p.ctaHeading || "Tell us what you need. We'll tell you what it takes.")}</h2><p>Book a free 30-minute call. You'll get honest advice and a fixed quote, with no obligation.</p>` +
     `<div class="ctas"><a href="${BOOK}" class="btn btn-primary" target="_blank" rel="noopener">Book a Free Call <span class="btn-arrow">&#8594;</span></a> <a href="/contact" class="btn btn-ghost" style="border-color:rgba(255,255,255,.25); color:#fff;">Send us a message</a></div></div></div></section></main>`;
@@ -147,9 +171,9 @@ function main(p, wa) {
 
 function schema(p) {
   const url = SITE + '/' + p.slug;
-  const area = p.kind === 'location' ? [p.name.replace('Web Development ', '')] : AREAS;
+  const area = p.kind === 'location' ? [p.name.replace('Web Development ', '')] : (p.areas || AREAS);
   const service = {
-    '@context': 'https://schema.org', '@type': 'Service', '@id': url + '#service', name: p.name, serviceType: p.kind === 'location' ? 'Web development' : p.name, description: p.description, url,
+    '@context': 'https://schema.org', '@type': 'Service', '@id': url + '#service', name: p.name, serviceType: p.kind === 'location' ? 'Web development' : (p.serviceType || p.name), description: p.description, url,
     provider: { '@id': SITE + '/#organization' }, areaServed: area.map((n) => (n === 'Europe' ? { '@type': 'Place', name: n } : { '@type': 'Country', name: n }))
   };
   if (p.packages) service.offers = { '@type': 'AggregateOffer', priceCurrency: p.price.currency || 'USD', lowPrice: Math.min(...p.packages.map((x) => x[1])), highPrice: Math.max(...p.packages.map((x) => x[1])), url: url + '#pricing' };
@@ -159,7 +183,15 @@ function schema(p) {
     { '@type': 'ListItem', position: 2, name: 'Services', item: SITE + '/services' },
     { '@type': 'ListItem', position: 3, name: p.name, item: url }] };
   const faqs = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: p.faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
-  return [service, crumbs, faqs].map((j) => '<script type="application/ld+json">' + JSON.stringify(j).replace(/</g, '\\u003c') + '</script>').join('');
+  const extra = [];
+  if (p.lead) {
+    // the person behind the service (E-E-A-T): from the CV, no contact details
+    const person = { '@context': 'https://schema.org', '@type': 'Person', '@id': url + '#' + p.lead.name.toLowerCase(), name: p.lead.name, jobTitle: p.lead.role.split(',')[0], description: p.lead.bio,
+      knowsLanguage: p.lead.languages, knowsAbout: ['Game localization', 'Translation', 'Linguistic quality assurance', 'Subtitling', 'Manga translation', 'Software localization'],
+      alumniOf: p.lead.education.map(([, w]) => ({ '@type': 'CollegeOrUniversity', name: w.split(',')[0] })), worksFor: { '@id': SITE + '/#organization' } };
+    extra.push(person);
+  }
+  return [service, crumbs, faqs, ...extra].map((j) => '<script type="application/ld+json">' + JSON.stringify(j).replace(/</g, '\\u003c') + '</script>').join('');
 }
 
 function render(tpl, p) {
@@ -198,6 +230,8 @@ function linkHub() {
     head2('Specialist services', 'Find the right service for your project', 'Detailed pages with what is included, pricing, timelines and related projects.') +
     `<div class="grid grid-2" style="gap:16px;">${group('service')}</div>` +
     `<div class="section-head reveal" style="margin-top:56px;"><div class="eyebrow">Industries</div><h2>Websites built for your industry</h2></div><div class="grid grid-2" style="gap:16px;">${group('industry')}</div>` +
+    PAGES.filter((p) => p.kind === 'translation').map((p) => `<div class="section-head reveal" style="margin-top:56px;"><div class="eyebrow">Translation &amp; localization</div><h2>Game, software, subtitle and manga translation</h2><p>Japanese, English and Thai translation and in-build LQA from our localization team.</p></div>` +
+      `<div class="grid grid-2" style="gap:16px;"><a href="/${p.slug}" class="card" style="display:block; padding:22px; color:inherit; text-decoration:none;"><h3 style="font-size:1.05rem; margin-bottom:6px;">${esc(p.name)}</h3><span class="card-link">${esc(p.price.label)} &#8594;</span></a></div>`).join('') +
     `<p class="reveal" style="margin-top:32px;">Where we work: ${where} &#183; and worldwide. Wherever your business is, we work with you remotely, at times that suit your time zone.</p>` +
     '</div></section><!--/landing-links-->';
   fs.writeFileSync(f, s.slice(0, at) + block + s.slice(at));
@@ -276,6 +310,9 @@ function llmsTxt() {
     '',
     '## Industries', ...kind('industry').map(line),
     '',
+    '## Translation & localization', ...kind('translation').map(line),
+    '- Japanese, English and Thai, including direct Japanese to Thai. Game localization, IT and software localization, subtitling, manga translation and in-build LQA. Quotes per word or per project; NDAs signed.',
+    '',
     '## Countries',
     `- [Web development USA](${SITE}/web-development-usa)`, `- [Web development UK](${SITE}/web-development-uk)`, `- [Web development Europe](${SITE}/web-development-europe)`,
     ...kind('location').map((p) => `- [${p.name}](${SITE}/${p.slug})`),
@@ -300,6 +337,7 @@ function llmsTxt() {
     '- Mike, Full Stack & WordPress Developer. Designs and builds fast, mobile-responsive WordPress and custom websites with Elementor and WooCommerce, structured to turn visitors into clients.',
     '- Clevian, Frontend & CMS Web Developer. Builds clean, fast websites in WordPress, Webflow and Wix, with a focus on clarity, performance and conversion.',
     '- Vicky, AI Automation & CRM Expert. Connects AI to everyday business workflows with n8n, Make.com and Zoho, and builds custom React and Node tools, chatbots and integrations.',
+    ...kind('translation').filter((p) => p.lead).map((p) => `- ${p.lead.name}, ${p.lead.role}. Game localization since 2020, about 450,000 words localized for Japanese mobile RPGs and visual novels, in-build LQA. ${SITE}/${p.slug}`),
     '',
     '## Not to be confused with',
     'CleverStack at cleverstack.dev is a web development studio. It has no connection to the open-source software framework with a similar name.',

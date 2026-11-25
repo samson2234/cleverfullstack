@@ -45,6 +45,10 @@
 - [Websites for Cleaning Companies](https://cleverstack.dev/cleaning-company-websites): from $499. Website design for cleaning companies: service pages, service areas, quote forms and local SEO, built for commercial, carpet and home cleaning businesses.
 - [Websites for Coaches & Consultants](https://cleverstack.dev/coaching-websites): from $499. Website design for coaches and consultants: clear offers, proof, online booking and email sign-up, built to turn visitors into discovery calls and paying clients.
 
+## Translation & localization
+- [Translation & Localization Services](https://cleverstack.dev/translation-services). Japanese, English and Thai translation for games, software, subtitles and manga. 450,000+ words of game text localized, in-build LQA, NDAs signed.
+- Japanese, English and Thai, including direct Japanese to Thai. Game localization, IT and software localization, subtitling, manga translation and in-build LQA. Quotes per word or per project; NDAs signed.
+
 ## Countries
 - [Web development USA](https://cleverstack.dev/web-development-usa)
 - [Web development UK](https://cleverstack.dev/web-development-uk)
@@ -92,6 +96,7 @@ Henry George, full-stack developer and founder of CleverStack.
 - Mike, Full Stack & WordPress Developer. Designs and builds fast, mobile-responsive WordPress and custom websites with Elementor and WooCommerce, structured to turn visitors into clients.
 - Clevian, Frontend & CMS Web Developer. Builds clean, fast websites in WordPress, Webflow and Wix, with a focus on clarity, performance and conversion.
 - Vicky, AI Automation & CRM Expert. Connects AI to everyday business workflows with n8n, Make.com and Zoho, and builds custom React and Node tools, chatbots and integrations.
+- Samson, Localization Lead, Japanese · English · Thai. Game localization since 2020, about 450,000 words localized for Japanese mobile RPGs and visual novels, in-build LQA. https://cleverstack.dev/translation-services
 
 ## Not to be confused with
 CleverStack at cleverstack.dev is a web development studio. It has no connection to the open-source software framework with a similar name.

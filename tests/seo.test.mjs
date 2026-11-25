@@ -341,3 +341,24 @@ test('every footer shows X, LinkedIn and Facebook with clean icons and no Instag
   for (const f of pages) assert.ok(!read(f).includes('footer.copyright">Ac 2026'), f + ': garbled copyright');
   assert.ok(read('contact.html').includes('<a href="https://www.facebook.com/profile.php?id=61593363610983"'), 'contact facebook');
 });
+
+test('translation page: substantial, linked from /services and llms.txt, honest, no personal contact details', async () => {
+  const req = (await import('node:module')).createRequire(import.meta.url);
+  const [p] = req('../landing-src/translation.js');
+  const html = read(p.slug + '.html');
+  const main = html.match(/<main[\s\S]*<\/main>/)[0];
+  const text = main.replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<[^>]+>/g, ' ');
+  assert.ok(text.split(/\s+/).filter(Boolean).length >= 1000, 'thin page');
+  for (const w of ['Game localization', 'IT and software localization', 'Subtitling', 'Manga']) assert.ok(text.includes(w), 'missing niche: ' + w);
+  assert.ok(read('services.html').includes('href="/translation-services"'), 'linked from /services');
+  assert.ok(read('llms.txt').includes(SITE + '/translation-services'), 'listed in llms.txt');
+  assert.ok(read('sitemap.xml').includes('<loc>' + SITE + '/translation-services</loc>'), 'in the sitemap');
+  assert.ok(!read('index.html').includes('href="/translation-services"'), 'kept out of the site-wide footer');
+  const j = ld(html);
+  assert.equal(j.find((x) => x['@type'] === 'Service').provider['@id'], SITE + '/#organization');
+  assert.equal(j.find((x) => x['@type'] === 'FAQPage').mainEntity.length, p.faqs.length);
+  assert.deepEqual(j.find((x) => x['@type'] === 'Person').knowsLanguage, ['ja', 'en', 'th']);
+  assert.doesNotMatch(html, /\+1 \(575\)|575\) 336|falopesamson|@gmail\.com|Kemah/i, 'no personal contact details from the CV');
+  assert.doesNotMatch(text, /\d+(\.\d+)?%/, 'no unsourced percentages');
+  assert.doesNotMatch(html, /Altagram/i, 'no company names from job applications');
+});
